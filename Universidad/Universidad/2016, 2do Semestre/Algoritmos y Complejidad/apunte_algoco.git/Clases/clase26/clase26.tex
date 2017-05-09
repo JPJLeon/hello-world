@@ -1,0 +1,191 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{red!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+\renewcommand{\lstlistingname}{Listado}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{<inserte nombre del documento>}
+\rhead{<inserte contenido>}
+
+
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]
+Clase \#26\\
+Análisis Amortizado}
+\author{Aldo Berrios Valenzuela}
+
+
+\begin{document}
+\maketitle
+
+\section{Análisis Amortizado}
+\emph{Idea:} Analizar \emph{secuencias} de operaciones.
+
+\begin{definition}
+	El \emph{costo amortizado} de una operación es el costo de una secuencia de operaciones dividida por su largo.
+\end{definition}
+
+\begin{ejemplo}[Arreglo dinámico]
+	Un stack se puede representar mediante un arreglo, operaciones son:
+	\begin{lstlisting}
+typedef item ...;
+item A[...];
+static int top = 0;
+
+void push(item A[], item a) {
+	A[top++] = x;
+}
+item pop(item A[]) {
+	return A[--top];
+}
+	\end{lstlisting}
+	Nótese que falta una serie de burocracias que consideran cuando la operación se sale de rango y otros, pero sólo nos interesa lo de arriba.
+	
+	¿Qué hacer si el arreglo se llena?. Bienvenido a \texttt{realloc(3)} \ldots
+	
+	Medida de costo: Nº de items copiados.
+		
+	Si cada vez que llegamos al tamaño del arreglo lo agrandamos en 1, el costo de $n$ \texttt{push} es $n\nparentesis{n+1}/2$, costo medio es $\nparentesis{n+1}/2$ \comentarioc{es por el realloc()}. Inaceptable \ldots
+	
+	El costo de $n$ push es la suma:
+	\begin{align*}
+	1 + 2 + 1 + 4 + 1 + 1 + 1 + 8 + \cdots &= n + \sum_{0 \leq k \leq \left\lfloor \log_2 n \right\rfloor} 2^k\\
+	&= n + 2^{\left\lfloor \log_2 n \right\rfloor + 1} - 1\\
+	&\leq n + 2n\\
+	&= 3n
+	\end{align*}
+	Por lo tanto, costo amortizado $< 3$. \comentarioc{nos interesa el costo de nuestro programa completo, no el costo de operación por operación}
+	
+	\emph{Análisis agregado:} Se calcula el costo total (peor caso) de $n$ operaciones se divide por $n$.
+\end{ejemplo}
+	
+\subsection{Método contable}
+\emph{Idea:} Cada operación paga por \emph{su} costo y ahorra una cantidad para pagar sobre costos de operaciones futuras. Hay que asegurarse que el saldo no se haga negativo \ldots
+	
+\subsection{Función Potencial}
+\emph{Idea:} La estructura tiene un \emph{potencial} $\phi\nparentesis{s}$ ($s$: estado de la estructura). Operaciones $\sigma_1$, $\sigma_2$, \ldots, $\sigma_n$ llevan a la estructura de $s_0$ a $s_1$, a $s_2, \ldots,$ a $s_n$.
+
+El costo de cada operación es $c_i$, su costo amortizado es:
+\begin{equation*}
+a_i = c_i + \phi\nparentesis{s_i} - \phi\nparentesis{s_{i-1}}
+\end{equation*}	
+Costo amortizado de la secuencia (¡Viva la telescópica!) es:
+\begin{align*}
+\sum_{i} a_i &= \sum_i \nparentesis{c_i + \phi \nparentesis{s_i} - \phi \nparentesis{s_{i-1}}}\\
+&= \sum_i c_i + \phi \nparentesis{s_n} - \phi \nparentesis{s_0}
+\end{align*}
+Si (¡Caso común!) $\phi \nparentesis{s_n} \geq \phi \nparentesis{s_0}$:
+\begin{equation*}
+\sum_i a_i \geq \sum _i c_i \rightsquigarrow \dfrac{\sum_i a_i}{n}
+\end{equation*}
+es costo amortizado de los $c_i$.
+
+
+
+
+
+\end{document}
+

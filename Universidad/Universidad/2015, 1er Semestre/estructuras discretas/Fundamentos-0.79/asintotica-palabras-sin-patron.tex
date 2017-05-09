@@ -1,0 +1,151 @@
+% asintotica-palabras-sin-patron.tex
+%
+% Copyright (c) 2013-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\subsection{Número de palabras sin $k$ símbolos repetidos}
+\label{sec:asymptotics-words-no-pattern}
+\index{palabra!asintotica@asintótica}
+
+  Vimos en la sección~\ref{sec:strings-excluding-pattern}
+  que el número de palabras de largo~\(n\)
+  sobre un alfabeto de~\(s\) símbolos
+  que no contienen el patrón~\(p\)
+  de largo~\(k\)
+  tiene función generatriz ordinaria~\eqref{eq:Bp-gf}:
+  \begin{equation*}
+    \frac{c_p(z)}{(1 - s z) c_p(z) + z^k}
+  \end{equation*}
+  Acá \(c_p(z)\)
+  es el polinomio de autocorrelación del patrón~\(p\).
+  Obtener una estimación asintótica de este número
+  sirve de ejemplo detallado
+  de la aplicación de las herramientas discutidas.
+  El caso general es tratado por Guibas y Odlyzko~%
+    \cite{guibas81:_strin_overl_patterns}.
+
+  Para simplificar,
+  trataremos únicamente el caso en que el patrón
+  es un símbolo repetido~\(k\) veces,
+  en cuyo caso \(c_p(z) = 1 + z + \dotsb + z^{k - 1}\).
+  En este caso la función generatriz se reduce a:
+  \begin{equation}
+    \label{eq:Bak-gf}
+    \frac{1 - z^k}{1 - s z + (s - 1) z^{k + 1}}
+  \end{equation}
+  Nos interesa el cero más cercano al origen
+  del denominador de~\eqref{eq:Bak-gf} para \(k\) dado.
+  Sólo tiene sentido el caso \(k > 1\).
+  Llamemos:
+  \begin{equation}
+    \label{eq:h-definition}
+    h(z)
+      = 1 - s z + (s - 1) z^{k + 1}
+  \end{equation}
+  Claramente \(h(1) = 0\)
+  con \(h'(1) = k (s - 1) - 1 > 0\),
+  y \(h(1/s) = (s - 1) s^{-k - 1} > 0\) es pequeño.
+  Podemos acotar:
+  \begin{equation*}
+    h((s - 1)^{-1})
+      = 1 - s (s - 1)^{-1} + (s - 1)^{-k}
+      \le 1 - s + 1
+      = 2 - s
+  \end{equation*}
+  Hay un cero entre \(s^{-1}\) y \((s - 1)^{-1}\).
+  Debemos asegurarnos que sea único.
+  Para ello aplicamos el teorema de Rouché
+  (\ref{theo:Rouche}).
+
+  Consideremos el caso \(s > 2\).
+  Tomemos las funciones:
+  \begin{align*}
+    f(z)
+      &= -s z \\
+    g(z)
+      &= 1 + (s - 1) z^{k + 1}
+  \end{align*}
+  Sobre la circunferencia \(\lvert z \rvert = r\)
+  tenemos las cotas:
+  \begin{align*}
+    \lvert f(z) \rvert
+      &= s r \\
+    \lvert g(z) \rvert
+      &= 1 + (s - 1) r^{k + 1}
+  \end{align*}
+  Nos interesa demostrar que:
+  \begin{align*}
+    s r
+      &> 1 + (s - 1) r^{k + 1} \\
+    0 &> 1 - s r + (s - 1) r^{k + 1}
+       = h(r)
+  \end{align*}
+  Como interesan \(k \ge 2\) y \(s \ge 2\),
+  tenemos:
+  \begin{align*}
+    h(0)
+      &= 1 \\
+    h(1)
+      &= 0 \\
+    h'(1)
+      &= - s + (k + 1) (s - 1)
+       = k (s - 1) - 1
+       > 0
+  \end{align*}
+  En consecuencia,
+  hay \(0 < r^* < 1\) tal que \(h(r) < 0\),
+  o,
+  lo que es lo mismo,
+  \(\lvert f(z) \rvert > \lvert g(z) \rvert\)
+  sobre la circunferencia \(\lvert z \rvert = r^*\)
+  Por el teorema de Rouché,
+  \(f(z)\) y \(f(z) + g(z) = h(z)\) tienen el mismo número de ceros
+  al interior de la circunferencia,
+  uno solo.
+  Como \(h(z)\) es un polinomio de coeficientes reales,
+  sus ceros son reales o vienen en pares complejos.
+  El cero que nos interesa es simple y real.
+  Si lo llamamos \(\rho\),
+  por el teorema de Bender
+  (\ref{theo:Bender}):
+  \begin{equation}
+    \label{eq:asymptotic-strings-no-ak}
+    P_n
+      \sim \frac{1 - \rho^k}{h'(\rho)} \cdot \rho^n
+      = \frac{1 - \rho^k}{(s - 1) (k + 1) \rho^k - s} \cdot \rho^n
+  \end{equation}
+
+  Tenemos cotas para \(\rho\),
+  para obtener una mejor aproximación del cero
+  aplicamos una iteración del método de Newton%
+    \index{Newton, metodo de@Newton, método de}
+  (para detalles,
+   ver textos de análisis numérico,
+   como Acton~%
+     \cite[capítulo~2]{acton90:_numerical_methods_work}
+   o Ralston y Rabinowitz~%
+     \cite[capítulo~8]{ralston12:_first_cours_numer_analy})
+  partiendo con la aproximación \(1 / s\).
+  Resulta que la expresión final
+  es mucho más sencilla si partimos con:
+  \begin{equation*}
+    h_r(u)
+      = u^{k + 1} h(1 / u)
+      = u^{k + 1} - s u^k + s - 1
+  \end{equation*}
+  Los ceros de \(h_r(u)\) son recíprocos de los ceros de \(h(z)\).
+  Tenemos:
+  \begin{equation*}
+    (\rho^*)^{-1}
+      \approx s - \frac{h_r(s)}{h_r'(s)}
+      = s - \frac{s - 1}{s^k}
+  \end{equation*}
+  Para el peor caso posible,
+  \(s = k = 2\),
+  esto da la aproximación \(\rho^* \approx 0,571\),
+  cuando el valor correcto es \(\rho = 1 / \tau = 0,618\).
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

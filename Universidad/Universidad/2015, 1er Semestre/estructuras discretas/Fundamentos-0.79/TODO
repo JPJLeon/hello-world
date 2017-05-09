@@ -1,0 +1,38 @@
+Formato general
+===============
+
+- Agradecimientos, etc (hay un comienzo)
+- Formato para ejercicios + soluciones al final
+- ¡Completar bibliografía!
+- Marcar resultados/secciones importantes
+- Doxygenizar code/*
+- ¡Más programas!
+- Versiones B&W y color
+  + Imágenes (colores de grafos, etc)
+  + Elegir una u otra vía opciones en fuente
+
+
+Contenidos mayores
+==================
+
+- Lógica matemática
+
+
+Contenidos detalle
+==================
+
+- Teoría de números: Teorema de distribución de primos (estimación tiempo
+  de ejecución de buscar primos), teorema sobre
+  \(\prod_{p \le x} (1 - 1/p)\) (para tener idea de cuántas raíces
+  primitivas hay) ~~-> Shoup
+- Códigos de detección/corrección de errores (iniciado)
+- Ataques a sistemas criptográficos
+
+
+A considerar
+============
+
+- Agregar criptografía simétrica (aplicación de funciones, razonamiento)
+- Torpedo oficial (== resumen de lo más relevante) (hay uno parcial para
+  ILI-153)
+- Transparencias...

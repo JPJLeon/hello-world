@@ -1,0 +1,162 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{<inserte nombre del documento>}
+\rhead{<inserte contenido>}
+
+
+\author{Aldo Berrios Valenzuela}
+
+
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase 15\\Lectura de Backtracking}
+\date{Martes 27 de septiembre de 2016}
+
+\begin{document}
+\maketitle
+\section{Lectura de Backtracking}
+Clase basada en \href{http://www3.cs.stonybrook.edu/~algorith/video-lectures/2007/lecture15.pdf}{Lecture15.pdf} de Steven Skiera Backtracking.
+
+$S_k$: conjunto de posibles continuaciones para $k$.
+
+La idea de backtracking es usarlo cuando no tengamos subproblemas similares si cambiamos la iteración. Por ejemplo, en programación dinámica se originan muchos subproblemas similares entre distintas ramas del árbol que se genera\ldots backtracking no es lo ideal para estos casos (en el caso de las 8 reinas, no se originan subproblemas).
+
+\subsection{Sodoku}
+Estrategias para realizar un backtracking sobre el sodoku. Estrategias para elegir siguiente casillero a llenar:
+\begin{itemize}
+	\item Al azar / primero libre.
+	
+	\item Más restringido.
+\end{itemize}
+Estrategias para podar:
+\begin{itemize}
+	\item Cuenta local (revisar si quedan opciones fila/columna/cuadrante)
+	
+	\item Look ahead (revisar si quedan casilleros sin opciones)
+\end{itemize}
+
+Mas combinaciones:
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{l|l|r|r|r}
+		\multicolumn{1}{c|}{Combinaciones} &Criterio de Poda & \multicolumn{1}{c|}{Simple} & \multicolumn{1}{c|}{Mediano} & \multicolumn{1}{c}{Dificil}\\
+		\hline
+		Azar & Local & 1\,904\,832 & 863\,305 & No \ldots\\
+		Azar & Look ahead & 127 & 142 & 12\,507\,212\\
+		Restringida & Local & 48 & 84 & 1\,243\,838\\
+		Restringido & Look ahead & 48 & 65 & 10\,374
+	\end{tabular}
+	\caption{\comentarioc{Simple es el que aparece típicamente en el diario y el dificil es que aparece en la diapositiva. Los números son la cantidad de posiciones que revisa el algoritmo.}}
+\end{table}
+
+
+
+
+
+
+
+\end{document}

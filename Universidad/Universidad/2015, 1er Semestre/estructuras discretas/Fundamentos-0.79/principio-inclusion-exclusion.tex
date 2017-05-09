@@ -1,0 +1,879 @@
+% principio-inclusion-exclusion.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Principio de inclusión y exclusión}
+\label{cha:pie}
+\index{inclusion y exclusion, principio de@inclusión y exclusión, principio de}
+\index{principio de inclusion y exclusion@principio de inclusión y exclusión|see{inclusión y exclusión, principio de}}
+
+  Es común querer contar el número de objetos de una colección
+  que cumplen con ciertos conjuntos de características.
+  Si las características de interés son muchas,
+  o la colección de objetos subyacente es grande,
+  necesitamos un esquema que organice y simplifique
+  los cálculos.
+  Veremos el planteo de Wilf~%
+    \cite{wilf06:_gfology},
+  que además de ser mucho más simple que el tradicional
+  aprovecha de buena forma
+  lo que hemos aprendido de funciones generatrices.
+  Con esto cerramos el estudio de las técnicas fundamentales
+  de la combinatoria.
+
+\section{El problema general}
+\label{sec:PIE-problema-general}
+
+  Concluimos en el capítulo~\ref{cha:combinatoria-elemental}
+  que
+  \(\lvert \mathcal{A} \cup \mathcal{B} \rvert
+      = \lvert \mathcal{A} \rvert
+	   + \lvert \mathcal{B} \rvert
+	   - \lvert \mathcal{A} \cap \mathcal{B} \rvert
+  \).
+  Interesa generalizar para más conjuntos.
+  La figura~\ref{fig:PIE} muestra tres conjuntos
+  y sus intersecciones.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/PIE}
+    \caption{Intersecciones entre tres conjuntos}
+    \label{fig:PIE}
+  \end{figure}
+  Calcular
+    \(\lvert \mathcal{A} \cup \mathcal{B} \cup \mathcal{C} \rvert\)
+  es contar los elementos
+  que pertenecen al menos a uno de los conjuntos.
+  Comenzamos con \(\lvert \mathcal{A} \rvert
+		     + \lvert \mathcal{B} \rvert
+		     + \lvert \mathcal{C} \rvert\).
+  Las intersecciones se cuentan dos veces,
+  debemos restar
+  \(\lvert \mathcal{A} \cap \mathcal{B} \rvert
+      + \lvert \mathcal{A} \cap \mathcal{C} \rvert
+      + \lvert \mathcal{B} \cap \mathcal{C} \rvert\).
+  Hemos restado
+    \(\lvert \mathcal{A}
+	\cap \mathcal{B}
+	\cap \mathcal{C} \rvert\) demás,
+  debemos restituirlo:
+  \begin{equation*}
+    \lvert \mathcal{A} \cup \mathcal{B} \cup \mathcal{C} \rvert
+      = \bigl(
+	  \lvert \mathcal{A} \rvert
+	     + \lvert \mathcal{B} \rvert
+	     + \lvert \mathcal{C} \rvert
+	 \bigr)
+	   - \bigl(
+	       \lvert \mathcal{A} \cap \mathcal{B} \rvert
+		  + \lvert \mathcal{A} \cap \mathcal{C} \rvert
+		  + \lvert \mathcal{B} \cap \mathcal{C} \rvert
+	     \bigr)
+	   + \lvert
+	       \mathcal{A} \cap \mathcal{B} \cap \mathcal{C}
+	     \rvert
+  \end{equation*}
+  El número de elementos
+  que pertenecen exactamente a uno de los conjuntos es:
+  \begin{equation*}
+    \left(
+      \lvert \mathcal{A} \rvert
+	+ \lvert \mathcal{B} \rvert
+	+ \lvert \mathcal{C} \rvert
+    \right)
+      - 2 \cdot \left(
+	    \lvert \mathcal{A} \cap \mathcal{B} \rvert
+	       + \lvert \mathcal{A} \cap \mathcal{C} \rvert
+	       + \lvert \mathcal{B} \cap \mathcal{C} \rvert
+	  \right)
+      + 3 \cdot \lvert
+		  \mathcal{A} \cap \mathcal{B} \cap \mathcal{C}
+		\rvert
+  \end{equation*}
+  Al sumar los tamaños de los tres conjuntos
+  incluimos dos veces las intersecciones en pares
+  y tres veces la intersección entre los tres,
+  debemos restarlas;
+  al restar dos veces las tres intersecciones a pares
+  estamos restando seis veces
+  la intersección entre los tres conjuntos,
+  debemos reponerla tres veces.
+  Al resultado general
+  se le llama \emph{principio de inclusión y exclusión},
+  porque incluimos demás,
+  y luego corregimos excluyendo.
+
+  El tratamiento que sigue no es tradicional,
+  seguimos a Wilf~\cite{wilf06:_gfology}%
+    \index{Wilf, Herbert S.}
+  Tomamos un conjunto universo,
+  y los conjuntos que consideramos
+  se representan mediante propiedades%
+    \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de!propiedades|textbfhy}
+  (un elemento pertenece a uno de los conjuntos
+   si tiene la propiedad que representa a ese conjunto).
+  Las diversas intersecciones quedan expresadas
+  a través de los elementos
+  que tienen todas las propiedades
+  correspondientes a los conjuntos intersectados.
+
+  Sean:
+  \begin{description}
+  \item [\(\Omega\):]
+    El universo.
+    Un conjunto de objetos.
+  \item [\(\mathcal{P}\):]
+    Un conjunto de propiedades que los objetos pueden tener.
+  \item [\(\mathcal{S}\):]
+    Un subconjunto de las propiedades,
+    \(\mathcal{S} \subseteq \mathcal{P}\).
+  \item [\(N ( \supseteq \mathcal{S} )\):]
+    Número de objetos con las propiedades en \(\mathcal{S}\)
+    (puedan tener otras).
+  \end{description}
+
+  Para \(r \ge 0\) definimos:
+  \begin{equation}
+    \label{eq:PIE:definicion-Nr}
+    N_r
+      = \sum_{\lvert \mathcal{S} \rvert = r}
+	  N(\supseteq \mathcal{S})
+  \end{equation}
+  Esto es la suma del tamaño de los conjuntos de objetos
+  con al menos \(r\) de las propiedades.
+  El conjunto de los objetos con al menos cero propiedades
+  es el universo,
+  o sea \(N_0 = \lvert \Omega \rvert\).
+  Si hay \(r\) propiedades en total,
+  \(N_r\) es el número de objetos con todas las propiedades.
+  Estas cantidades,
+  que suelen ser mucho más fáciles de calcular que lo que buscamos,
+  las relacionaremos con el número de objetos
+  que tienen exactamente \(t\) de las propiedades.
+
+  Denote \(\omega \in \Omega\) un objeto,
+  y llamemos \(P(\omega)\) al conjunto de propiedades de \(\omega\).
+  Entonces:
+  \begin{equation}
+    \label{eq:PIE:Nr-objetos}
+    N_r
+      = \sum_{\lvert \mathcal{S} \rvert = r}
+	  N(\supseteq \mathcal{S})
+      = \sum_{\lvert \mathcal{S} \rvert = r}
+	  \biggl(
+	    \sum_{\substack{
+	     \omega \in \Omega \\
+	     \mathcal{S} \subseteq \mathcal{P}(\omega)
+	  }} 1
+	  \biggr)
+      = \sum_{\omega \in \Omega}
+	  \biggl(
+	    \sum_{\substack{
+	     \mathcal{S} \subseteq \mathcal{P}(\omega) \\
+	     \lvert \mathcal{S} \rvert = r
+	  }} 1
+	  \biggr)
+      = \sum_{\omega \in \Omega}
+	   \binom{\lvert \mathcal{P}(\omega) \rvert}{r}
+  \end{equation}
+  En español dice:
+  Si el objeto
+  tiene un total
+  de \(\lvert \mathcal{P}(\omega) \rvert\) propiedades,
+  puedo elegir \(r\) de sus propiedades
+  de \(\binom{\lvert \mathcal{P}(\omega) \rvert}{r}\) formas.
+
+  Ahora sea \(e_t\)
+  el número de objetos con exactamente \(t\) propiedades,
+  es decir:
+  \begin{equation}
+    \label{eq:PIE:definiciom-et}
+    e_t
+      = \sum_{\lvert \mathcal{P}(\omega) \rvert = t} 1
+  \end{equation}
+  Cada uno de los \(e_t\) objetos con \(t\) propiedades
+  aporta lo mismo a \(N_r\)
+  (se considera una vez
+   por cada subconjunto de \(r\) de sus propiedades):
+  \begin{equation}
+    \label{eq:PIE:Nr-et}
+    N_r
+      = \sum_{\omega \in \Omega}
+	  \binom{\lvert \mathcal{P}(\omega) \rvert}{r}
+      = \sum_{t \ge 0} \binom{t}{r} \, e_t
+  \end{equation}
+  Del sistema lineal~\eqref{eq:PIE:Nr-et}
+  se busca
+  despejar los \(e_t\).
+  Para esta tarea definimos las funciones generatrices:%
+    \index{generatriz!ordinaria}%
+    \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de!generatrices|textbfhy}
+  \begin{align}
+    \label{eq:PIE:definicion-E}
+    E(z)
+      &= \sum_{t \ge 0} e_t z^t \\
+    \label{eq:PIE:definicion-N}
+    N(z)
+      &= \sum_{r \ge 0} N_r z^r
+  \end{align}
+  Substituyendo la expresión~\eqref{eq:PIE:Nr-et} para \(N_r\)
+  en la definición~\eqref{eq:PIE:definicion-N} de \(N(z)\):
+  \begin{equation*}
+    N(z)
+      = \sum_{r \ge 0} N_r z^r
+      = \sum_{r \ge 0}
+	  \biggl(
+	    \sum_{t \ge 0} \binom{t}{r} \, e_t
+	  \biggr) z^r
+      = \sum_{t \ge 0} e_t
+	  \biggl(\,
+	    \sum_{r \ge 0} \binom{t}{r} z^r
+	  \biggr)
+      = \sum_{t \ge 0} e_t (1 + z)^t
+      = E(1 + z)
+  \end{equation*}
+  De acá se tiene la fórmula central:
+  \begin{equation}
+    \label{eq:PIE:central}
+    \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de!formula central@fórmula central|textbfhy}
+    E(z)
+      = N(z - 1)
+  \end{equation}
+  De la expresión~\eqref{eq:PIE:central}
+  podemos extraer el \(e_t\) que se quiera.
+  Usando el teorema de Maclaurin:
+  \begin{align}
+    e_t
+      &= \frac{1}{t!} E^{(t)}(0) \\
+      &= \frac{1}{t!} N^{(t)}(-1) \\
+      &= \frac{1}{t!} \sum_{r \ge 0}
+			r^{\underline{t}} N_r (-1)^{r - t} \\
+      &= \sum_{r \ge 0} (-1)^{r - t} \binom{r}{t} N_r
+	   \label{eq:PIE:clasico}
+	   \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de!formula clasica@fórmula clásica}
+  \end{align}
+  La fórmula~\eqref{eq:PIE:clasico}
+  expresa el celebrado principio de inclusión y exclusión.
+  Además de ser mucho más simple que la demostración tradicional,
+  nuestro desarrollo
+  no hace necesario recordar esta engorrosa fórmula,
+  da las herramientas para deducirla sin mayor esfuerzo
+  cada vez que la necesitemos,
+  y en muchos casos obtener los resultados buscados directamente
+  sin tener que recurrir a ella explícitamente,
+  usando la función generatriz \(E(z)\).
+
+  Esta técnica es sencilla de aplicar
+  cuando se buscan los que no tienen ninguna de las propiedades,
+  conviene tratar de ajustar
+  la definición de las propiedades de forma adecuada.
+  También es crítico que el cálculo de los \(N(\supseteq S)\)
+  y,
+  en consecuencia,
+  de los \(N_r\),
+  sea simple,
+  cosa que nuevamente depende de la elección de las propiedades.
+
+  Volvamos al ejemplo de tres conjuntos,
+  donde nos interesa saber cuántos elementos
+  pertenecen exactamente a uno de ellos,
+  o sea \(e_1\),
+  como en la figura~\ref{fig:PIE}.
+  En tal caso:
+  \begin{alignat*}{2}
+    N_0
+      &= \lvert \Omega \rvert
+    &
+    N_1
+      &= \lvert \mathcal{A} \rvert
+	   + \lvert \mathcal{B} \rvert
+	   + \lvert \mathcal{C} \rvert \\
+    N_2
+      &= \lvert \mathcal{A} \cap \mathcal{B} \rvert
+	   + \lvert \mathcal{A} \cap \mathcal{C} \rvert
+	   + \lvert \mathcal{B} \cap \mathcal{C} \rvert
+    \hspace{4em}&
+    N_3
+      &= \lvert \mathcal{A} \cap \mathcal{B} \cap \mathcal{C} \rvert
+  \end{alignat*}
+  Resultan ser:
+  \begin{align*}
+    N(z)
+      &= N_0 + N_1 z + N_2 z^2 + N_3 z^3 \\
+    E(z)
+      &= (N_0 - N_1 + N_2 - N_3)
+	   + (N_1 - 2 N_2 + 3 N_3) z
+	   + (N_2 - 3 N_3) z^2
+	   + N_3 z^3
+  \end{align*}
+  Hay \(e_1 = N_1 - 2 N_2 + 3 N_3\) elementos
+  que pertenecen a exactamente un conjunto,
+  como dedujimos antes.
+
+  Típicamente interesa saber cuántos de los objetos
+  no tienen ninguna de las propiedades,
+  lo que en nuestro caso es
+  \(\overline{(\mathcal{A} \cup \mathcal{B} \cup \mathcal{C})}\).
+  O sea,
+  \(e_0 = E(0) = N(-1) = N_0 - N_1 + N_2 - N_3\).
+
+  La unión de todos los conjuntos,
+  en este caso \(\mathcal{A} \cup \mathcal{B} \cup \mathcal{C}\),
+  la componen los que pertenecen al menos a uno de los conjuntos,
+  vale decir,
+  todos menos los que no pertenecen a ninguno:
+  \begin{equation*}
+    \lvert \mathcal{A} \cup \mathcal{B} \cup \mathcal{C} \rvert
+      = \sum_{t \ge 0} e_t - e_0
+      = E(1) - E(0)
+      = N(0) - N(-1)
+      = N_1 - N_2 + N_3
+  \end{equation*}
+  Nuevamente coincide con lo que obtuvimos antes.
+
+  Si solo interesa calcular
+  el número promedio de propiedades por objeto,
+  como \(t = \binom{t}{1}\) resulta:
+  \begin{equation}
+     \label{eq:E-t}
+     \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de!numero promedio de propiedades@número promedio de propiedades}
+    \E[t]
+      = \frac{\sum_{t \ge 0} t e_t}{\sum_{t \ge 0} e_t}
+      = \frac{N_1}{N_0}
+  \end{equation}
+  Para calcular la varianza del número de propiedades,
+  partimos de:
+  \begin{equation*}
+    \var[t]
+      = \E[t^2] - \left( \E[t] \right)^2
+  \end{equation*}
+  Como \(\binom{t}{2} = (t^2 - t) / 2\):
+  \begin{align*}
+     \label{eq:Var-t}
+     \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de!varianza del numero de propiedades@varianza del número de propiedades}
+    \frac{N_2}{N_0}
+      &= \frac{\sum_{t \ge 0} \binom{t}{2} e_t}{\sum_{t \ge 0} e_t} \\
+      &= \frac{\sum_{t \ge 0} (t^2 - t) e_t}{2 \sum_{t \ge 0} e_t} \\
+      &= \frac{1}{2} \left( \E[t^2] - \E[t] \right)
+  \end{align*}
+  con lo cual:
+  \begin{equation}
+    \var[t]
+      = \frac{2 N_2}{N_0} + \frac{N_1}{N_0} - \frac{N_1^2}{N_0^2}
+  \end{equation}
+
+\subsubsection*{Receta}
+\index{inclusion y exclusion, principio de@inclusión y exclusión, principio de!receta}
+
+  \begin{enumerate}
+  \item
+    Definir \(\Omega\) y \(\mathcal{P}\),
+    expresar lo que se busca en términos de \(e_t\).
+  \item
+    Calcular los \(N(\supseteq \mathcal{S})\).
+  \item
+    Calcular los \(N_r\),
+    y en consecuencia obtener \(N(z)\).
+  \item
+    \(e_t = \left[ z^t \right] N(z - 1)\).
+  \end{enumerate}
+
+  Hay que tener cuidado con esto,
+  acá las series deben converger
+  para que nuestras operaciones tengan sentido.
+  Normalmente el número de propiedades y objetos de interés
+  es finito,
+  así que en realidad estamos manipulando polinomios
+  y no hay problemas.
+
+% Fixme: Agregar ejemplos "típicos" (¿tarea?)
+
+  \begin{example}
+    \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de!ejemplo!cursos}
+    Un curso rinde pruebas
+    con los profesores Ellery, Upham y Atwood.
+    Nos dicen que \(10\) aprobaron la prueba de física,
+    \(15\) la de matemáticas y
+    \(12\) pasaron la prueba de química;
+    \(6\) pasaron física y matemáticas,
+    \(5\) pasaron física y química,
+    mientras \(8\) pasaron matemáticas y química.
+    El total de estudiantes
+    que pasaron al menos una prueba es \(20\).
+    ¿Cuántos pasaron las tres pruebas?
+
+    Aplicamos nuestra receta:
+    \begin{enumerate}
+    \item
+      El universo es el grupo de \(20\) estudiantes
+      que aprobaron alguna de las pruebas,
+      las propiedades son las pruebas aprobadas (\(F, M, Q\)).
+      Interesan los que aprobaron todas las pruebas,
+      o sea \(e_3\).
+    \item
+      Los \(N(\supseteq \mathcal{S})\) están dados
+      en el enunciado.
+      Por ejemplo,
+      dice que \(N(\supseteq \{F, Q\}) = 5\).
+    \item
+      Como se comentó antes,
+      al haber \(3\) propiedades es \(N_3 = e_3\).
+      Tenemos:
+      \begin{align*}
+	N_0
+	  &= \lvert \Omega \rvert = 20 \\
+	N_1
+	  &= N(\supseteq \{F\})
+	       + N(\supseteq \{M\})
+	       + N(\supseteq \{Q\})
+	   = 10 + 15 + 12
+	   = 37 \\
+	N_2
+	  &= N(\supseteq \{F, M\})
+	       + N(\supseteq \{F, Q\})
+	       + N(\supseteq \{M, Q\})
+	   = 6 + 5 + 8
+	   = 19 \\
+	N_3
+	  &= N(\supseteq \{F, M, Q\})
+	   = e_3
+      \end{align*}
+      Resulta:
+      \begin{equation*}
+	N(z) = 20 + 37 z + 19 z^2 + e_3 z^3
+      \end{equation*}
+    \item
+      Como todos los estudiantes del universo
+      han aprobado al menos una de las pruebas:
+      \begin{equation*}
+	e_0 = 0 = E(0) = N(-1) = 2 - e_3
+      \end{equation*}
+      Con esto resulta \(e_3 = 2\).
+
+      Pero también tenemos:
+      \begin{align*}
+	E(z)
+	  &= N(z - 1) \\
+	  &= 5 z + 13 z^2 + 2 z^3
+      \end{align*}
+      lo que dice que \(5\) aprobaron una única prueba
+      y que \(13\) aprobaron dos.
+    \end{enumerate}
+  \end{example}
+
+  \begin{example}
+    \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de!ejemplo!numeros con ceros par@números con ceros par}
+    ¿Cuántos números de largo \(n\) escritos en decimal
+    tienen un número par de ceros?
+
+    Para tener valores con los cuales contrastar,
+    analicemos algunos casos.
+    Anotamos \(9\) para un dígito no cero,
+    y \(0\) para un cero en el cuadro~\ref{tab:par-0},
+    y contamos cuántos de cada tipo hay.
+    \begin{table}[htbp]
+      \centering
+      \begin{tabular}{|>{\(}r<{\)}|>{\(}l<{\)}|>{\(}r<{\)}|}
+	\hline
+	\multicolumn{1}{|c|}
+		    {\rule[-0.7ex]{0pt}{3ex}\(\boldsymbol{n}\)} &
+	  \multicolumn{1}{c|}{\textbf{Descripción}} &
+	  \multicolumn{1}{c|}{\textbf{Nº}} \\
+	\hline\rule[-0.7ex]{0pt}{3ex}%
+	  1 & 9				&      9 \\
+	  2 & 99			&     81 \\
+	  3 & 999 + 900			&    738 \\
+	  4 & 9999 + 9900 + 9090 + 9009 & 6\,804 \\
+	\hline
+      \end{tabular}
+      \caption{Posibilidades con un número par de ceros}
+      \label{tab:par-0}
+    \end{table}
+
+    El universo
+    es el conjunto de todos los números con \(n\) dígitos.
+    La propiedad \(i\)
+    es que el dígito \(i\)\nobreakdash-ésimo es cero.
+    Lo que interesa entonces es:
+    \begin{equation*}
+      e_0 + e_2 + \dotsb
+	= \sum_{r \ge 0} e_{2 r}
+    \end{equation*}
+
+    Podemos extraer
+    únicamente los términos con potencia par mediante:%
+      \index{serie de potencias!decimar}
+    \begin{equation*}
+      \frac{E(z) + E(-z)}{2}
+	= \sum_{r \ge 0} e_{2 r} z^{2 r}
+    \end{equation*}
+    y nuestra suma no es más que:
+    \begin{equation*}
+      \frac{E(1) + E(-1)}{2}
+    \end{equation*}
+    Esto es válido,
+    ya que estamos trabajando con polinomios.
+
+    Un número decimal de \(n\) dígitos
+    comienza con un dígito no cero,
+    los demás \(n - 1\) dígitos pueden ser cualquiera.
+    En este caso podemos calcular los \(e_r\) directamente,
+    observando que hay \(r\) posiciones para los ceros,
+    elegidas de entre \(n - 1\) posiciones,
+    los otros \(n - r\) dígitos
+    (incluyendo el primero)
+    pueden tomar uno de los \(9\) valores restantes:
+    \begin{align*}
+      e_r
+	&= \binom{n - 1}{r} \cdot 9^{n - r} \\
+      E(z)
+	&= 9 \cdot \sum_{r \ge 0}
+		     \binom{n - 1}{r} \cdot 9^{n - 1 - r} \cdot z^r
+	 = 9 \cdot (9 + z)^{n - 1}
+    \end{align*}
+    y el número buscado resulta ser:
+    \begin{equation*}
+      \frac{1}{2} \, \left( E(1) + E(-1) \right)
+	= \frac{1}{2} \, \left(
+		     9 \cdot (9 + 1)^{n - 1}
+		       + 9 \cdot (9 - 1)^{n - 1}
+		  \right)
+	= \frac{9}{2} \, \left(10^{n - 1} + 8^{n - 1}\right)
+    \end{equation*}
+    Esto coincide con los valores calculados antes,
+    cuadro~\ref{tab:par-0}.
+  \end{example}
+
+  \begin{example}
+    \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de!ejemplo!lanzar \(10\) dados}
+    Se lanzan \(10\)~dados.
+    ¿De cuántas maneras puede hacerse esto
+    tal que aparezcan todas las caras?
+
+    Es más fácil calcular el número de lanzamientos
+    en los que una cara dada \emph{no} aparece,
+    lo que a su vez lleva naturalmente a contar el número de maneras
+    en que no falta ninguna cara.
+    Aplicando la receta:
+    \begin{description}
+    \item[\boldmath\(\Omega\)\unboldmath:]
+      El conjunto de todos los lanzamientos posibles de \(10\)~dados
+    \item[Propiedades:]
+      Un lanzamiento tiene la propiedad \(k\) si la cara \(k\) no aparece
+    \item[Resultado:]
+      Interesan los lanzamientos sin propiedades
+    \end{description}
+    Si en un lanzamiento las caras en \(\mathcal{S}\) no aparecen,
+    quiere decir que es una secuencia de largo~\(10\)
+    de las restantes \(6 - \lvert \mathcal{S} \rvert\) caras:
+    \begin{equation*}
+      N(\supseteq \mathcal{S})
+	= (6 - \lvert \mathcal{S} \rvert)^{10}
+    \end{equation*}
+    Como \(\mathcal{S}\) se elige entre \(6\) posibilidades:
+    \begin{equation*}
+      N_r
+	= \binom{6}{r} (6 - r)^{10}
+    \end{equation*}
+    Tenemos:
+    \begin{equation*}
+      N(z)
+	= \sum_{r \ge 0} \binom{6}{r} (6 - r)^{10} z^r
+    \end{equation*}
+    De la fórmula mágica:
+    \begin{align*}
+      e_0
+	&= E(0) \\
+	&= N(-1) \\
+	&= \sum_{r \ge 0} (-1)^r \binom{6}{r} (6 - r)^{10} \\
+	&= 16\,435\,440
+    \end{align*}
+  \end{example}
+
+\section{Desarreglos}
+\label{sec:desarreglos-pie}
+\index{desarreglo}
+
+  Un \emph{punto fijo} de una permutación \(\pi\)%
+    \index{permutacion@permutación!punto fijo}
+  ocurre cuando su elemento número \(k\) es \(k\)
+  (vale decir,
+   \(\pi(k) = k\)).
+  Un \emph{desarreglo}
+  (en inglés \emph{\foreignlanguage{english}{derangement}})%
+    \index{derangement@\emph{\foreignlanguage{english}{derangement}}|see{desarreglo}}
+  es una permutación sin puntos fijos.
+  \glossary{Desarreglo}{Permutación sin puntos fijos}
+  \glossary{Punto fijo (de una permutación)}
+    {Elemento que no cambia de posición}
+  El primero en calcular el número de desarreglos
+  fue \foreignlanguage{french}{Pierre R. de Montmort}
+  (1678--1719)~%
+    \index{Montmort, Pierre R.}%
+    \cite{montmort08:_jeux_hazard}.
+  Hathout~%
+    \index{Hathout, Heba}%
+    \cite{hathout03:_old_hats_probl, hathout04:_old_hats_probl_revis}
+  presenta varias soluciones
+  (incluyendo la presente,
+   debida esencialmente a Nicolaus Bernoulli%
+     \index{Bernoulli, Nicolaus}).
+
+  Siguiendo nuestra receta:
+  \begin{enumerate}
+  \item \(\Omega\):
+    El universo son las \(n!\) permutaciones de \(n\) elementos.
+    La permutación \(\pi\) tiene la propiedad \(i\)
+    si \(i\) es un punto fijo en ella.
+    Interesa obtener \(e_0\).
+  \item
+    Sea \(\mathcal{S} \subseteq \{1, \dotsc, n\}\).
+    Entonces \(N(\supseteq \mathcal{S})\)
+    corresponde a las permutaciones
+    para las cuales los elementos de \(\mathcal{S}\) son fijos,
+    solo se pueden ``mover''
+    los \(n - \lvert \mathcal{S} \rvert\) restantes:
+    \begin{equation*}
+      N(\supseteq \mathcal{S})
+	= \left(n - \lvert \mathcal{S} \rvert\right)!
+    \end{equation*}
+  \item
+    Como \(r\) puntos fijos
+    pueden elegirse de \(\binom{n}{r}\) maneras,
+    se tiene que:
+    \begin{equation}
+      \label{eq:fixed-points-Nr}
+      N_r
+	= \sum_{\lvert \mathcal{S} \rvert = r}
+	    N(\supseteq \mathcal{S})
+	= \sum_{\lvert \mathcal{S} \rvert = r} (n - r)!
+	= \binom{n}{r} \cdot (n - r)!
+    \end{equation}
+    Con esto:
+    \begin{equation}
+      \label{eq:fixed-points-FG}
+      N(z)
+	= \sum_{0 \le r \le n} \binom{n}{r} (n - r)! \, z^r
+	= \sum_{0 \le r \le n}
+	     \frac{n!}{r!(n - r)!} \cdot (n - r)! \cdot z^r
+	= n! \, \sum_{0 \le r \le n} \frac{z^r}{r!}
+    \end{equation}
+    En términos de la función exponencial truncada:%
+      \index{serie de potencias!exponencial}
+    \begin{equation}
+      \label{eq:exp-truncada}
+      \exp \rvert_n (z)
+	= \sum_{0 \le k \le n} \frac{z^k}{k!}
+    \end{equation}
+    la ecuación~\eqref{eq:fixed-points-FG} es:
+    \begin{equation*}
+      N(z) = n! \cdot \exp \rvert_n (z)
+    \end{equation*}
+  \item
+    En particular,
+    \(e_0 = E(0) = N(-1)\)
+    es el número de desarreglos de \(n\) elementos:
+    \begin{align}
+      D_n
+	&=	   n! \exp \rvert_n (-1)
+	    \label{eq:n-derangements} \\
+	&\approx n! \, \mathrm{e}^{-1}
+	    \label{eq:n-derangements-approx}
+      \index{desarreglo!numero de, formula@número de, fórmula}
+    \end{align}
+
+    Consideremos la serie de Maclaurin%
+      \index{Maclaurin, teorema de}
+    para \(\mathrm{e}^x\)
+    con el resto en la forma de Lagrange:%
+      \index{Maclaurin, teorema de!Lagrange, forma del resto}
+    \begin{equation*}
+      \mathrm{e}^{-1}
+	= \sum_{0 \le k \le n} \frac{(-1)^k}{k!}
+	    + \frac{(-1)^{n + 1}}{(n + 1)!}
+	    + \frac{\mathrm{e}^{-\xi}}{(n + 2)!} \, (-1)^{n + 2}
+      \qquad (0 < \xi < 1)
+    \end{equation*}
+    Tenemos las cotas para el valor absoluto
+    del error que comete
+    la fórmula \(D_n \approx n! \mathrm{e}^{-1}\):
+    \begin{align*}
+      n ! \left(
+	    \frac{1}{(n + 1)!} - \frac{\mathrm{e}^0}{(n + 2)!}
+	  \right)
+	&< \epsilon_n
+	 < n! \left(
+		\frac{1}{(n + 1)!}
+		  - \frac{\mathrm{e}^{-1}}{(n + 2)!}
+	      \right) \\
+      \frac{1}{n + 2}
+	&< \epsilon_n
+	 < \frac{n + 2 - \mathrm{e}^{-1}}{(n + 1) (n + 2)}
+	 < \frac{1}{n + 1}
+    \end{align*}
+    Para \(n \ge 1\) el error absoluto es menor a \(1 / 2\),
+    y \(D_n\) es el entero más cercano a \(n! e^{-1}\).
+    Algo como un \(37\)\%
+    de las permutaciones no tienen puntos fijos.
+    Es curioso que este resultado dependa tan poco de \(n\).
+
+    Más en general,
+    tenemos también:
+    \begin{align}
+      e_t
+	&= n! \, \left[ z^t \right] \, \sum_{0 \le r \le n}
+					 \frac{(z - 1)^r}{r!}
+	 = n! \, \left[ z^t \right] \,
+		   \sum_{0 \le r \le n}
+		     \sum_{0 \le k \le r}
+		       \frac{1}{r!} \,
+			 \binom{r}{k} \, z^k \,
+			 (-1)^{r - k} \notag \\
+	&= n! \, \sum_{0 \le r \le n}
+		   \frac{1}{r!} \binom{r}{t} \, (-1)^{r - t}
+	 = n! \, \sum_{t \le r \le n}
+		   \frac{(-1)^{r - t}}{t! (r - t)!}
+	 = \frac{n!}{t!} \,
+	      \sum_{0 \le r \le n - t} \frac{(-1)^r}{r!} \notag \\
+	&= \frac{n!}{t!} \, \exp \rvert_{n - t} (-1)
+	\label{eq:t-puntos-fijos}
+    \end{align}
+    Por~\ref{eq:E-t} y~\ref{eq:fixed-points-Nr}
+    el número promedio de puntos fijos es:
+    \begin{equation*}
+      \bar{t}
+	= \frac{N_1}{N_0}
+	= \frac{\binom{n}{1} (n - 1)!}{n!}
+	= 1
+    \end{equation*}
+    Curiosamente no depende de \(n\).
+  \end{enumerate}
+
+\section{El problema de ménages}
+\label{sec:menages}
+\index{problème des ménages@\emph{\foreignlanguage{french}{problème des ménages}}}
+
+  Lucas~\cite{lucas91:_theo_nombres} en~1891
+  planteó el problema de sentar \(n\) parejas en una mesa circular,
+  alternando hombres y mujeres
+  de forma que ninguna pareja se sentara junta.
+  Este ``problème des ménages''
+  fue resuelto recién en~1934 por Touchard~%
+    \cite{touchard34:_permutations},
+  pero sin dar una demostración.
+  La primera demostración de la fórmula de Touchard
+  fue dada por Kaplansky~\cite{kaplansky43:_menages} en~1943,
+  claro que al insistir en ubicar primero a las damas
+  y luego ordenar a los caballeros
+  lleva a un desarrollo innecesariamente complicado.
+  Seguimos a Bogart y~Doyle~%
+    \cite{bogart86:_non_sexist_soln_menage_probl}
+  en nuestra derivación.
+
+  Observamos primero que \(n\) parejas
+  pueden ubicarse de \(2 (n!)^2\)~maneras alrededor de la mesa
+  (hay dos maneras de elegir los asientos de las mujeres,
+   luego ordenamos a damas y caballeros).
+  Aplicamos el principio de inclusión y exclusión,
+  numerando las parejas de \(1\) a~\(n\),
+  y definiendo que una distribución tiene la propiedad \(i\)
+  si la pareja \(i\) se sienta junta.
+  Si \(W_k\) es el número de maneras de sentar las parejas
+  de manera que \(k\) parejas dadas se sientan juntas,
+  tenemos:
+  \begin{align}
+    \label{eq:menage:N}
+    N_r
+      = \binom{n}{r} W_r
+  \end{align}
+  de la fórmula mágica resulta:
+  \begin{equation}
+    \label{eq:menages:M}
+    M_n
+      = \sum_{0 \le r \le n} (-1)^r \binom{n}{r} W_r
+  \end{equation}
+  donde:
+  \begin{equation}
+    \label{eq:menages:W}
+    W_k
+      = 2 \cdot d_k \cdot k! \cdot \left( (n - k)! \right)^2
+  \end{equation}
+  (debemos elegir asientos de las mujeres y hombres,
+   dónde se ubican las parejas que se sientan juntas,
+   y finalmente cómo se distribuyen las \(n - k\)~damas
+   y los \(n - k\)~caballeros que no forman parte de las parejas).
+  Acá \(d_k\)
+  es el número de formas de ubicar \(k\)~piezas de dominó
+  sobre un ciclo de~\(2 n\)
+  sin que se traslapen,
+  \begin{figure}[ht]
+    \centering
+    \pgfimage{images/menages}
+    \caption{Dominós no traslapados en ciclo}
+    \label{fig:menage}
+  \end{figure}
+  ver la figura~\ref{fig:menage} para un ejemplo.
+
+  Si cortamos el círculo,
+  hay dos posibilidades:
+  Una de las piezas de dominó se corta en dos,
+  queda ubicar \(k - 1\) de ellas en línea
+  sobre \(2 n - 2\) asientos;
+  o ninguna de las piezas se corta,
+  debemos ubicar \(k\) piezas sobre una línea de \(2 n\) asientos.
+  Si llamamos \(f(n, k)\) al número de formas
+  de ubicar \(k\) piezas en una línea de \(n\) asientos,
+  esto resulta de \(k + 1\) bloques entre piezas de dominó,
+  entre los cuales se distribuyen
+  las \(n - 2 k\) posiciones no cubiertas:
+  \begin{align}
+    f(n, k)
+      &= \multiset{k + 1}{n - 2 k} \notag \\
+      &= \binom{n - k}{k}
+	    \label{eq:menage:f}
+  \end{align}
+  Con~\eqref{eq:menage:f} resulta:
+  \begin{align}
+    d_k
+      &= \binom{2 n - k}{k} + \binom{2 n - 2 - (k - 1)}{k - 1}
+	      \notag \\
+      &= \frac{(2 n - k)!}{k! (2 n - 2 k)!}
+	   + \frac{(2 n - k - 1)!}{(k - 1)! (2 n - 2 k)!}
+	      \notag \\
+      &= \frac{(2 n - k - 1)!}{(k - 1)! (2 n - 2 k)!}
+	   \left(
+	     \frac{2 n - k}{k}
+	       + 1
+	   \right)
+	      \notag \\
+      &= \frac{2 n}{2 n - k} \binom{2 n - k}{k}
+	      \label{eq:menage:d}
+  \end{align}
+  Uniendo las relaciones~\eqref{eq:menages:M} a~\eqref{eq:menage:f},
+  como por simetría \(M_n\) debe ser divisible por \(2 n!\),
+  al simplificar resulta la fórmula de Touchard:%
+    \index{Touchard, formula de@Touchard, fórmula de}
+  \begin{align}
+    M_n
+      &= \sum_{0 \le k \le n}
+	   (-1)^k \binom{n}{k}
+	      \cdot 2
+	      \cdot \frac{2 n}{2 n - k} \binom{2 n - k}{k}
+	      \cdot k! \cdot \left( (n - k)! \right)^2 \notag \\
+      &= 2 n! \sum_{0 \le k \le n}
+		(-1)^k \cdot \frac{2 n}{2 n - k}
+		       \cdot \binom{2 n - k}{k}
+		       \cdot (n - k)!
+	  \label{eq:menages}
+  \end{align}
+
+  El principio de inclusión y exclusión
+  completa las herramientas elementales
+  de la combinatoria vistas
+  en el capítulo~\ref{cha:combinatoria-elemental}.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

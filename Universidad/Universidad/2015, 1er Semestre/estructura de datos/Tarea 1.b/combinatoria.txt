@@ -1,0 +1,43 @@
+// Example program
+#include <iostream>
+#include <string>
+using namespace std;
+
+void funcion_combinatoria(int arreglo[],int size,int tam_caset){
+    if (size!=1){
+        int fijo=arreglo[0];        //fijo el primer valor, por ejemplo "a" de {a,b,c,d}
+        for(int i=1;i<size;i++){
+            if(fijo+arreglo[i]==tam_caset){     //evaluo si mi valor fijo "a" me da 
+                cout<<"combinacion!"<<endl;     //el tamaño deseado al sumarle el segundo valor "b",
+            }                                   // 
+        
+            int a_aux[size-1];
+            a_aux[0]=fijo+arreglo[i];       //se crea un arreglo auxiliar que
+                                            //tendra la estructura {a+b,c,d}
+            for(int j=1;j<size-1;j++){
+                if(j>=i){
+                    a_aux[j]=arreglo[j+1];
+                }
+                else{
+                    a_aux[j]=arreglo[j];
+                }
+            }
+            funcion_combinatoria(a_aux,size-1,tam_caset); //recursividad, se evalua la funcion
+        }                                                   //con el nuevo arreglo auxiliar
+    }                                                       //{a+b,c,d}, donde nuestra variable
+}                                                           // fija sera ahora "a+b", notar que
+                                                            //se hace la recursividad dentro del
+                                                            //"for" en donde se suma "a" con "b",
+                                                            //por lo que cuando se termine esta
+                                                            //función se seguira con el caso
+                                                            //para la suma de "a" con "c" y
+                                                            //asi susecivamente.
+
+int main(){
+    int numeros[5]={2,3,5,2,8};
+    int tam_n=(sizeof(numeros)/sizeof(*numeros));
+    int caset=10;
+    
+    funcion_combinatoria(numeros,tam_n,caset);
+    return 0;
+}

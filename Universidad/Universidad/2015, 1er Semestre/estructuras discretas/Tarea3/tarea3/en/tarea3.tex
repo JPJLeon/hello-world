@@ -1,0 +1,91 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsfonts}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{fourier}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2cm, right = 2cm]{geometry}
+
+\newcommand{\num}{3}
+
+\title{Estructuras Discretas \\
+       Tarea \#\num \\
+       ``Demostrando y contando''}
+\author{Funda Dream Team}
+\date{19 de abril de 2015}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{Preguntas}
+
+  Se piden demostraciones claras y completas de cada una de las siguientes.
+
+  \begin{enumerate}
+  \item
+    Demuestre la \emph{propiedad telescópica de la suma}:
+    \begin{equation*}
+      \sum_{0 \le k \le n} (f(k + 1) - f(k))
+	= f(n + 1) - f(0)
+    \end{equation*}
+    \\ \hspace*{\fill}(15 puntos)
+  \item
+    Demuestre que:
+    \begin{equation*}
+      \sum_{1 \le k \le n} \frac{1}{k (k + 1)}
+	= \frac{n}{n + 1}
+    \end{equation*}
+    Puede hacerse de dos formas:
+    \begin{enumerate}
+    \item
+      Directamente por inducción
+    \item
+      Usando:
+      \begin{equation*}
+	\frac{1}{k (k + 1)}
+	  = \frac{1}{k} - \frac{1}{k + 1}
+      \end{equation*}
+      y la propiedad telescópica
+    \end{enumerate}
+    \hspace*{\fill}(30 puntos)
+  \item
+    Los \emph{números de Fibonacci} se definen mediante:
+    \begin{align*}
+      F_0
+	&= 0 \\
+      F_1
+	&= 1 \\
+      F_{n + 2}
+	&= F_{n + 1} + F_n
+	   \qquad\text{si \(n \ge 2\)}
+    \end{align*}
+    Demuestre que cumplen:
+    \begin{equation*}
+      \left( 3/2 \right)^{n - 2}
+	 \le F_n
+	 \le 2^n
+    \end{equation*}
+    \hspace*{\fill}(20 puntos)
+  \item
+    Describa paso a paso cómo resuelve las siguientes:
+    \begin{enumerate}
+    \item
+      ¿En cuántas de las permutaciones de \(n\)~números
+      aparece el~\(1\) antes que el~\(2\)?
+    \item
+      ¿En cuántas de las permutaciones de \(n\)~números
+      no aparecen contiguos \(1\) y \(2\)?
+    \end{enumerate}
+    \hspace*{\fill}(10 puntos)
+  \item
+    Considere un conjunto \(\mathcal{S}\) de \(n\) elementos.
+    ¿Cuántos pares de conjuntos \(\mathcal{A}\) y \(\mathcal{B}\)
+    hay,
+    tales que \(\mathcal{A} \cup \mathcal{B} = \mathcal{S}\)?
+    \\ \hspace*{\fill}(25 puntos)
+  \end{enumerate}
+
+\input{condiciones}
+  \vfill\hfill FDT/HvB/\LaTeXe
+\end{document}

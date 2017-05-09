@@ -1,0 +1,278 @@
+% espacios-vectoriales.tex
+%
+% Copyright (c) 2012-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section{Espacios vectoriales}
+\label{sec:espacios-vectoriales}
+\index{espacio vectorial}
+
+  Una estructura algebraica común es el espacio vectorial.
+  Es aplicable a una gran variedad de situaciones,
+  algunas bastante inesperadas.
+  \begin{definition}
+    Sea \(F\) un campo
+    (sus elementos los llamaremos \emph{escalares})%
+      \index{espacio vectorial!escalar|textbfhy}
+    y \(V\) un conjunto
+    (los \emph{vectores},%
+      \index{espacio vectorial!vector|textbfhy}
+     que por convención anotaremos en negrita).
+    Hay operaciones \emph{suma de vectores}%
+      \index{espacio vectorial!operaciones}
+    (anotada \(+\))
+    y \emph{producto escalar}
+    entre un escalar y un vector
+    (anotada \(\cdot\)).
+    Se dice que \(V\) es un \emph{espacio vectorial sobre \(F\)}
+    si cumple con los siguientes axiomas,%
+      \index{espacio vectorial!axiomas}%
+      \index{axioma!espacio vectorial}
+    donde \(\alpha, \beta, \dotsc \in F\),
+    y \(\boldsymbol{v}_1, \boldsymbol{v}_2, \dotsc \in V\).
+    \begin{enumerate}[label=\textbf{V\arabic{*}:}, ref=V\arabic{*}]
+    \item\label{ax:V:associative}
+      \((\boldsymbol{v}_1 + \boldsymbol{v}_2) + \boldsymbol{v}_3
+	   = \boldsymbol{v}_1
+	       + (\boldsymbol{v}_2
+	       + \boldsymbol{v}_3)\)
+    \item\label{ax:V:neutral}
+      Hay un elemento \(\boldsymbol{0} \in V\)
+      tal que para todo \(\boldsymbol{v} \in V\)
+      se cumple
+      \(\boldsymbol{v} + \boldsymbol{0} = \boldsymbol{v}\)
+    \item\label{ax:V:inverse}
+      Para cada \(\boldsymbol{v} \in V\)
+      hay \(- \boldsymbol{v} \in V\)
+      tal que \(\boldsymbol{v} + (- \boldsymbol{v})
+		  = \boldsymbol{0}\)
+    \item\label{ax:V:commutative}
+       \(\boldsymbol{v}_1 + \boldsymbol{v}_2
+	   = \boldsymbol{v}_2 + \boldsymbol{v}_1\)
+    \item\label{ax:V:scalar(vectorsum)}
+      \(\alpha \cdot ( \boldsymbol{v}_1 + \boldsymbol{v}_2 )
+	  = \alpha \cdot \boldsymbol{v}_1
+	      + \alpha \cdot \boldsymbol{v}_2\)
+    \item\label{ax:V:(scalarsum)vector}
+      \((\alpha + \beta) \cdot \boldsymbol{v}
+	  = \alpha \cdot \boldsymbol{v}
+	      + \beta \cdot \boldsymbol{v}\)
+    \item\label{ax:V:scalar-scalar-vector}
+      \(\alpha \cdot (\beta \cdot \boldsymbol{v})
+	  = (\alpha \beta) \cdot \boldsymbol{v}\)
+     \item\label{ax:V:1-vector}
+       Si \(1\) es el neutro multiplicativo de \(F\),
+       \(1 \cdot \boldsymbol{v} = \boldsymbol{v}\)
+    \end{enumerate}
+  \end{definition}
+  \noindent
+  En resumen,
+  \((V, +)\) es un grupo abeliano%
+    \index{grupo!abeliano}
+  (axiomas~\ref{ax:V:associative} a~\ref{ax:V:commutative}),
+  junto con el campo \(F\) y multiplicación escalar que cumple
+  los axiomas adicionales~\ref{ax:V:scalar(vectorsum)}
+  a~\ref{ax:V:1-vector}.
+  Normalmente indicaremos la multiplicación escalar
+  por simple yuxtaposición.
+  Dejamos de ejercicio
+  demostrar que \(0 \cdot \boldsymbol{v} = \boldsymbol{0}\)
+  y que \((- \alpha) \cdot \boldsymbol{v}
+	    = - ( \alpha \cdot \boldsymbol{v})\).
+  \begin{definition}
+    Sea \(V\) un espacio vectorial sobre el campo \(F\).
+    Si para el conjunto de vectores \(B\)
+    es:
+    \begin{equation*}
+      \sum_{\boldsymbol{b} \in B}
+	\alpha_{\boldsymbol{b}} \boldsymbol{b}
+	= \boldsymbol{0}
+    \end{equation*}
+    solo si \(\alpha_{\boldsymbol{b}} = 0\)
+    para todo \(\boldsymbol{b} \in B\)
+    se dice que esos vectores
+    son \emph{linealmente independientes}.%
+      \index{espacio vectorial!independencia lineal}
+  \end{definition}
+  Si un conjunto de vectores no es linealmente independiente
+  se dice que son \emph{linealmente dependientes}.
+  Nótese que \(\boldsymbol{0}\)
+  nunca pertenece
+  a un conjunto de vectores linealmente independientes,
+  ya que al multiplicarlo
+  por cualquier escalar obtenemos \(\boldsymbol{0}\).
+  \begin{definition}
+    Sea \(V\) un espacio vectorial sobre \(F\),
+    y \(B \subseteq V\) un conjunto de vectores.
+    El \emph{espacio vectorial generado por \(B\)}
+    es el conjunto:
+    \begin{equation*}
+      \langle B \rangle
+	= \left\{
+	    \sum_{\boldsymbol{b} \in B}
+	      \alpha_{\boldsymbol{b}} \boldsymbol{b}
+	       \colon \alpha_{\boldsymbol{b}} \in F
+	  \right\}
+    \end{equation*}
+    Si \(V = \langle B \rangle\),
+    se dice que \(B\) \emph{abarca} \(V\).
+  \end{definition}
+  En particular:
+  \begin{definition}
+    \index{espacio vectorial!base|textbfhy}
+    Una \emph{base} del espacio vectorial \(V\)
+    es un conjunto linealmente independiente de vectores \(B\)
+    que abarca \(V\).
+  \end{definition}
+  La representación de \(\boldsymbol{v} \in V\)
+  en términos de la base \(B\)
+  es única,
+  ya que si hubieran dos representaciones diferentes
+  darían una dependencia lineal en \(B\).
+  Para el vector:
+  \begin{equation*}
+    \boldsymbol{v}
+      = \sum_{\boldsymbol{b} \in B}
+	  \alpha_{\boldsymbol{b}} \boldsymbol{b}
+  \end{equation*}
+  a los coeficientes \(\alpha_{\boldsymbol{b}}\)
+  se les llama \emph{componentes} de \(\boldsymbol{v}\)%
+    \index{espacio vectorial!componentes (de un vector)|textbfhy}
+  (en la base \(B\)).
+  \begin{definition}
+    \index{espacio vectorial!dimension@dimensión|textbfhy}
+    Al número de vectores en una base de \(V\)
+    se le llama la \emph{dimensión} de \(V\),
+    anotada \(\dim V\).
+    Un espacio vectorial abarcado por un conjunto finito de vectores
+    se dice de \emph{dimensión finita},
+    en caso contrario es de \emph{dimensión infinita}.
+    Al espacio vectorial \(\{\boldsymbol{0}\}\)
+    se le asigna dimensión cero.
+    Se anota \([V : F]\)
+    para la dimensión de \(V\) sobre el campo \(F\).
+  \end{definition}
+  En el caso de espacios vectoriales de dimensión finita
+  es simple demostrar que todas las bases
+  tienen la misma cardinalidad,
+  con lo que nuestra definición de dimensión tiene sentido.
+  \begin{theorem}
+    \label{theo:espacio-vectorial-li}
+    Si \(V\) es un espacio vectorial
+    con base
+      \(B = \{\boldsymbol{b}_1, \boldsymbol{b}_2,
+	       \dotsc, \boldsymbol{b}_n\}\),
+    y \(A = \{\boldsymbol{a}_1, \boldsymbol{a}_2,
+	       \dotsc, \boldsymbol{a}_r\}\)
+    es un conjunto linealmente independiente de vectores en \(V\),
+    entonces \(r \le n\).
+  \end{theorem}
+  \begin{proof}
+    Como \(B\) abarca \(V\),
+    \(B \cup \{\boldsymbol{a}_1\}\) también abarca \(V\).
+    Como \(\boldsymbol{a}_1 \ne \boldsymbol{0}\)
+    (\(A\) es linealmente independiente),
+    podemos expresar \(\boldsymbol{a}_1\)
+    como combinación lineal de los \(B\),
+    y en ella algún \(\boldsymbol{b}_t\)
+    tendrá coeficiente diferente de 0.
+    Ese \(\boldsymbol{b}_t\) puede expresarse en términos
+    de \(B_1 = \{\boldsymbol{a}_1, \boldsymbol{b}_1,
+		   \boldsymbol{b}_2,
+		   \dotsc, \boldsymbol{b}_{t - 1},
+		   \boldsymbol{b}_{t + 1},
+		 \dotsc, \boldsymbol{b}_n\}\).
+    Como todo \(\boldsymbol{v} \in V\)
+    puede escribirse como combinación lineal
+    de los \(B\),
+    también puede escribirse como combinación lineal de los \(B_1\)
+    (substituyendo la combinación
+     de \(B_1\) que da \(\boldsymbol{b}_t\)
+     en la combinación lineal para \(\boldsymbol{v}\)
+     se obtiene una nueva combinación lineal).
+    Este proceso puede repetirse
+    intercambiando un \(A\) por uno de los \(B\),
+    manteniendo siempre \(B_k\) como base,
+    finalmente llegando
+    a \(B_r = \{\boldsymbol{a}_1, \dotsc, \boldsymbol{a}_r,
+		\boldsymbol{b}_{m_1}, \boldsymbol{b}_{m_2},
+		\dotsc, \boldsymbol{b}_{m_s}\}\)
+    (posiblemente no queden \(\boldsymbol{b}_{m_k}\) en \(B_r\)).
+    No pueden quedar \(A\) si se acaban los \(B\),
+    ya que si fuera así un \(\boldsymbol{a}_i\) sobrante
+    no podría representarse como combinación lineal
+    de los \(B\),
+    y \(B\) no sería una base.
+    Tenemos \(A \subseteq B_r\),
+    y claramente
+      \(\lvert A \rvert \le \lvert B_r \rvert = \lvert B \rvert\).
+  \end{proof}
+  Esto justifica la definición de la dimensión
+  en el caso de espacios vectoriales de dimensión finita:
+  \begin{corollary}[Teorema de dimensión de espacios vectoriales]
+    \label{cor:espacio-vectorial-dimension}
+    Si \(A\) y \(B\) son bases
+    de un espacio vectorial de dimensión finita,
+    entonces \(\lvert A \rvert = \lvert B \rvert\).
+  \end{corollary}
+  \begin{proof}
+    La base \(A\) es linealmente independiente,
+    con lo que por el teorema~\ref{theo:espacio-vectorial-li}
+    es \(\lvert A \rvert \le \lvert B \rvert\).
+    Por el mismo argumento,
+    intercambiando los roles de \(A\) y \(B\),
+    \(\lvert B \rvert \le \lvert A \rvert\),
+    con lo que \(\lvert A \rvert = \lvert B \rvert\).
+  \end{proof}
+  Esto nos lleva a:
+  \begin{theorem}
+    \label{theo:espacio-vectorial-isomorfos}
+    Todos los espacios vectoriales de la misma dimensión finita
+    sobre \(F\) son isomorfos.
+  \end{theorem}
+  \begin{proof}
+    Sean \(U\) y \(V\) espacios vectoriales
+    de la misma dimensión finita,
+    con bases \(\{\boldsymbol{a}_k\}_{1 \le k \le n}\)
+    y \(\{\boldsymbol{b}_k\}_{1 \le k \le n}\),
+    respectivamente.
+    Podemos representar todos los vectores \(\boldsymbol{u} \in U\)
+    y \(\boldsymbol{v} \in V\)
+    mediante:
+    \begin{equation*}
+      \boldsymbol{u}
+	= \sum_{1 \le k \le n} a_k \boldsymbol{a}_k \hspace{2em}
+      \boldsymbol{v}
+	= \sum_{1 \le k \le n} b_k \boldsymbol{b}_k
+    \end{equation*}
+    Definimos la biyección \(f \colon U \rightarrow V\)
+    mediante:
+    \begin{equation*}
+      f \colon \sum_{1 \le k \le n} a_k \boldsymbol{a}_k
+	\mapsto \sum_{1 \le k \le n} a_k \boldsymbol{b}_k
+    \end{equation*}
+    Demostrar que la suma vectorial
+    y el producto escalar se preservan
+    es rutinario.
+  \end{proof}
+  \noindent
+  En vista de la demostración
+  del teorema~\ref{theo:espacio-vectorial-isomorfos},
+  en un espacio vectorial de dimensión finita
+  basta elegir una base,
+  cada vector puede representarse
+  mediante la secuencia de los coeficientes en \(F\).
+  La suma vectorial es sumar componente a componente,
+  el producto escalar es multiplicar cada componente por el escalar.
+  Es por esta representación que a secuencias de largo fijo
+  les llaman vectores.
+
+  Lo anterior solo cubre una peueña parte
+  de la extensa teoría relacionada con operaciones lineales.
+  Para profundizar en ella recomendamos el texto de Treil~%
+    \cite{treil14:_linear_algeb_done_wrong}.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

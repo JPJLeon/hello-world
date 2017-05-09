@@ -1,0 +1,112 @@
+% irreducible-polynomials.tex
+%
+% Copyright (c) 2013-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\subsection{Polinomios irreductibles en \(\mathbb{F}_q\)}
+\label{sec:count-irreductible-polynomials}
+
+  Recordamos del capítulo~\ref{cha:campos-finitos}
+  que los polinomios
+  \(\mathbb{F}_q[x]\) para \(q\) la potencia de un primo
+  son un dominio euclidiano,
+  por lo que
+  por la teoría de la sección~\ref{sec:dominios-euclidianos},
+  en particular el teorema~\ref{theo:PID=>UFD},
+  nos asegura que hay factorización única
+  (salvo unidades)
+  en \(\mathbb{F}_q[x]\).
+  Para obviar las unidades,
+  consideremos polinomios mónicos.
+
+  Si para el polinomio \(\alpha(x) \in \mathbb{F}_q[x]\)
+  consideramos su grado como tamaño,
+  vemos que multiplicar polinomios es simplemente sumar sus tamaños.
+  Podemos entonces considerar
+  la clase \(\mathcal{P}\)
+  de polinomios mónicos en \(\mathbb{F}_q[x]\)
+  con \(\lvert \alpha(x) \rvert = \deg(\alpha)\),
+  y combinar polinomios corresponde a multiplicarlos.
+  Es claro que hay \(q^n\) polinomios mónicos de grado \(n\),
+  o sea la función generatriz ordinaria
+  que cuenta polinomios mónicos es:
+  \begin{equation*}
+    P(z)
+      = \sum_{n \ge 0} q^n z^n
+      = \frac{1}{1 - q z}
+  \end{equation*}
+
+  Consideremos la clase \(\mathcal{I}\)
+  de polinomios mónicos irreductibles,
+  contados por la función generatriz ordinaria:
+  \begin{equation*}
+    I(z)
+      = \sum_{n \ge 0} N_n z^n
+  \end{equation*}
+  Factorización única significa que todo polinomio
+  corresponde a un multiconjunto de polinomios irreductibles:
+  \begin{equation}
+    \label{eq:polynomials=MSet(irreducibles)}
+    \mathcal{P}
+      = \MSet(\mathcal{I})
+  \end{equation}
+  Resulta interesante
+  contar con una forma de resolver ecuaciones implícitas
+  como~\eqref{eq:polynomials=MSet(irreducibles)}.
+  \begin{theorem}
+    \label{theo:A=MSet(B)}
+    Sean \(\mathcal{A}\) y \(\mathcal{B}\)
+    clases de objetos no rotulados
+    relacionadas mediante:
+    \begin{equation*}
+      \mathcal{A}
+	= \MSet(\mathcal{B})
+    \end{equation*}
+    Entonces las funciones generatrices ordinarias
+    respectivas cumplen:
+    \begin{equation}
+      \label{eq:A=MSet(B)-->B}
+      B(z)
+	= \sum_{k \ge 1} \frac{\mu(k)}{k} \, \ln A(z^k)
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    El método simbólico da:
+    \begin{equation*}
+      A(z)
+	= \exp \left( \sum_{k \ge 1} \frac{B(z^k)}{k} \right)
+    \end{equation*}
+    Tomando logaritmos:
+    \begin{align*}
+      \ln A(z)
+	&= \sum_{r \ge 1} \frac{B(z^r)}{r} \\
+	&= \sum_{r \ge 1} \frac{1}{r} \, \sum_{s \ge 1} b_s z^{r s}
+    \end{align*}
+    Extraemos coeficientes:
+    \begin{align*}
+      n \left[ z^n \right] \ln A(z) \\
+	&= \sum_{r \ge 1} \frac{n}{r} \, \sum_{s \ge 1} b_s z^{r s} \\
+	&= \sum_{r s = n} s b_s
+    \end{align*}
+    Este es exactamente el caso
+    del lema~\ref{lem:GF-Moebius-inversion},
+    lo que entrega lo enunciado.
+  \end{proof}
+
+  Con el teorema~\ref{theo:A=MSet(B)}
+  queda de~\eqref{eq:polynomials=MSet(irreducibles)}:
+  \begin{align*}
+    I(z)
+      = \sum_{k \ge 1} \frac{\mu(k)}{k} \, \frac{1}{1 - q z^k}
+  \end{align*}
+  Tenemos nuevamente el resultado
+  del teorema~\ref{theo:number-irreducible-polynomials}:
+  \begin{equation*}
+    N_n
+      = \frac{1}{n} \, \sum_{d \mid n} \mu(n / d)  \, q^d
+  \end{equation*}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

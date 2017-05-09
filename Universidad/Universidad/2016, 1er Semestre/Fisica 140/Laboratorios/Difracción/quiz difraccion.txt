@@ -1,0 +1,7 @@
+que la difraccion es de naturaleza oindulatoria 
+q cuando es difraccion circular dos oondas tienen la misma amplitud y estan desfasadas en lambda/4 
+def de fuentes coherente 
+q son monocromaticas q tienen la misma relacion de fase 
+el laser de he.ne las caract q son monocromaticas, coherentes y polarizadas 
+patron de difraccion q es ese dibujito q va 
+claro oscuro claro oscuro 

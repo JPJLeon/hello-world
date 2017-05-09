@@ -1,0 +1,475 @@
+% numerabilidad.tex
+%
+% Copyright (c) 2011-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Numerabilidad}
+\label{cha:numerabilidad}
+\index{numerabilidad|textbfhy}
+
+  La manera más básica de contar es construir una biyección%
+    \index{biyeccion@biyección}
+  entre dos conjuntos,
+  que de esa forma tienen la misma cardinalidad
+  (``número de elementos'').
+  Por ejemplo,
+  para determinar si en una sala hay tantos asistentes como sillas
+  basta solicitar que todos se sienten.
+  Si no sobran sillas vacías ni quedan personas de pie,
+  hay tantas personas como sillas.
+
+  Nuestro interés está en la existencia
+  de diferentes infinitos,
+  en particular la demostración de Cantor%
+    \index{Cantor, Georg}
+  de que hay más números reales que enteros.
+  No haremos uso de esto en el texto presente,
+  pero los conceptos y las técnicas de demostración usadas
+  muestran ser centrales en el estudio de la computabilidad
+  (los límites de lo que un algoritmo puede hacer).
+
+\section{Cardinalidad}
+\label{sec:cardinalidad}
+\index{cardinalidad}
+
+  Ya indicamos que la manera fundamental de asignar un ``tamaño'' a un conjunto
+  es hallar una correspondencia con un conjunto prototipo.
+  Si los conjuntos son finitos,
+  esta operación es conocida;
+  buscamos extender la definición de lo que significa a conjuntos infinitos
+  de forma de poder razonar sobre ellos.
+  \begin{definition}
+    La \emph{cardinalidad} del conjunto
+    \(\{1, 2, \dotsc, n\}\) con \(n \in \mathbb{N}\)
+    es \(n\).
+    La cardinalidad de \(\varnothing\) es \(0\).
+    Un conjunto cuya cardinalidad es \(n \in \mathbb{N}_0\)
+    se dice \emph{finito}.%
+      \index{conjunto!finito}
+  \end{definition}
+  A partir de aquí podemos definir igualdad de cardinalidades
+  mediante biyecciones,
+  incluso para conjuntos infinitos.%
+      \index{conjunto!infinito}
+  Anotaremos \(\lvert \mathcal{A} \rvert\)
+  para la cardinalidad del conjunto \(\mathcal{A}\).
+  Formalmente:
+  \begin{definition}
+    \index{conjunto!cardinalidad|textbfhy}
+    Dos conjuntos \(\mathcal{A}\) y \(\mathcal{B}\)
+    tienen la misma cardinalidad,
+    lo que se anota
+      \(\lvert \mathcal{A} \rvert = \lvert \mathcal{B} \rvert\),
+    si hay una biyección
+      \(\phi: \mathcal{A} \rightarrow \mathcal{B}\).
+    Decimos que
+      \(\lvert \mathcal{A} \rvert \le \lvert \mathcal{B} \rvert\)
+    si hay una inyección
+      \(\gamma: \mathcal{A} \rightarrow \mathcal{B}\).
+    Si \(\lvert \mathcal{A} \rvert \le \lvert \mathcal{B} \rvert\)
+    pero no existe biyección
+    entre \(\mathcal{A}\) y \(\mathcal{B}\),
+    decimos
+      \(\lvert \mathcal{A} \rvert < \lvert \mathcal{B} \rvert\).
+  \end{definition}
+  Las notaciones indicadas son sugerentes.
+  Para justificarlas debemos demostrar que
+  la igualdad de cardinalidades
+  es una relación de equivalencia.%
+    \index{relacion@relación!equivalencia}
+  El que la función identidad es una biyección provee reflexividad,
+  como la función inversa de una biyección
+  es una biyección da simetría
+  y ya que la composición de biyecciones
+  es una biyección es transitiva.
+  Además debemos verificar
+  que \(\lvert \mathcal{A} \rvert \le \lvert \mathcal{B} \rvert\)
+  es una relación de orden%
+    \index{relacion@relación!orden}
+  (es transitiva,
+   reflexiva y simétrica
+   bajo el entendido de la igualdad de cardinalidades).
+  La reflexividad es obvia,
+  la función identidad es una inyección.
+  La transitividad es simple,
+  ya que la composición de inyecciones es una inyección.
+  Demostrar simetría es más complejo,
+  es el tema de nuestro siguiente teorema.
+  Como ya es costumbre,
+  fue primeramente demostrado por Dedekind,%
+    \index{Dedekind, Richard}
+  quien no aparece entre los créditos.
+  La demostración que mostramos se debe a Julius Kőnig.%
+    \index{Konig, Julius@König, Julius}
+  \begin{theorem}[Cantor-Bernstein-Schröder]
+    \index{Cantor-Bernstein-Schroder, teorema de@Cantor-Bernstein-Schröder, teorema de}
+    \label{theo:Cantor-Bernstein-Schroeder}
+    Si hay inyecciones
+      \(f \colon \mathcal{A} \rightarrow \mathcal{B}\),
+    y \(g \colon \mathcal{B} \rightarrow \mathcal{A}\),
+    entonces hay una biyección
+    entre \(\mathcal{A}\) y \(\mathcal{B}\).
+  \end{theorem}
+  \begin{proof}
+    Sin pérdida de generalidad podemos suponer que \(\mathcal{A}\)
+    y \(\mathcal{B}\) son disjuntos.
+    Partiendo de un elemento \(a \in \mathcal{A}\) cualquiera,
+    podemos definir
+    una secuencia en \(\mathcal{A}\) y \(\mathcal{B}\)
+    en ambas direcciones
+    aplicando repetidas veces \(f\) y \(g\),
+    y \(f^{-1}\) y \(g^{-1}\) donde estén definidas:
+    \begin{equation*}
+      \cdots \rightarrow f^{-1}(g^{-1}(a))
+	     \rightarrow g^{-1}(a)
+	     \rightarrow a
+	     \rightarrow f(a)
+	     \rightarrow g(f(a))
+	     \rightarrow \cdots
+    \end{equation*}
+    Por ser inyectivas
+    (no hay preimágenes repetidas),
+    esta es una cadena.
+    Cada elemento de \(\mathcal{A} \cup \mathcal{B}\)
+    pertenece a exactamente una cadena,
+    esto define una partición.
+    Hay varias posibilidades de cadenas diferentes,
+    y juntando biyecciones construidas para cada cadena
+    obtenemos una biyección entre \(\mathcal{A}\) y \(\mathcal{B}\).
+    \begin{description}
+    \item[La cadena es infinita en ambas direcciones:]
+      En este caso,
+      \(f\) es una biyección.
+    \item[Es un ciclo:]
+      Nuevamente,
+      \(f\) es una biyección.
+    \item[\boldmath Termina en \(\mathcal{A}\):\unboldmath]
+      También en este caso \(f\) es una biyección
+    \item[\boldmath Termina en \(\mathcal{B}\)
+	  pero no en \(\mathcal{A}\):\unboldmath]
+      En este caso \(g\) define una biyección
+    \end{description}
+    Tenemos la biyección prometida.
+  \end{proof}
+
+  Estudiaremos los conjuntos infinitos en algo más de detalle,
+  partiendo por \(\mathbb{N}\).
+  \begin{definition}
+    \index{conjunto!numerable|textbfhy}
+    Un conjunto \(\mathcal{X}\) se dice \emph{infinito numerable}
+    si hay una biyección entre \(\mathcal{X}\) y \(\mathbb{N}\).
+    Un conjunto se llama \emph{numerable} si es finito
+    o es infinito numerable.
+  \end{definition}
+  Esta definición dice que si \(\mathcal{X}\) es infinito numerable,
+  entonces podemos escribir \(\mathcal{X} = \{x_1, x_2, \dotsc\}\),
+  bajo el entendido
+  que existe la biyección
+    \(\phi \colon \mathcal{X} \rightarrow \mathbb{N}\)
+  con \(\phi(x_n) = n\) para cada \(n \in \mathbb{N}\).
+  \begin{theorem}
+    \label{theo:union-numerable}
+    La unión numerable de conjuntos numerables es numerable.
+  \end{theorem}
+  \begin{proof}
+    Sea \(\mathcal{I}\) un conjunto índice numerable,
+    tal que para cada \(i \in \mathcal{I}\)
+    el conjunto \(\mathcal{X}_i\) es numerable.
+    Entonces \(\mathcal{I}\) es finito o es infinito numerable.
+    Consideraremos solo el segundo caso,
+    el primero requiere modificaciones menores.
+
+    Como \(\mathcal{I}\) es infinito numerable,
+    hay una biyección entre \(\mathcal{I}\) y \(\mathbb{N}\),
+    con lo que podemos adoptar \(\mathbb{N}\) como conjunto índice
+    sin pérdida de generalidad.
+    Definamos:
+    \begin{equation*}
+      \mathcal{X}
+	= \bigcup_{n \in \mathbb{N}} \mathcal{X}_n
+    \end{equation*}
+    Si \(\mathcal{X}\) es finito,
+    estamos listos.
+
+    Supongamos entonces \(\mathcal{X}\) infinito.
+    Como para todo \(n \in \mathbb{N}\)
+    el conjunto \(\mathcal{X}_n\) es numerable,
+    podemos escribir
+      \(\mathcal{X}_n = \{x_{n 1}, x_{n 2}, \dotsc\}\).
+    Con la convención que si \(\mathcal{X}_n\) es finito
+    la secuencia
+       \(\left\langle
+	   x_{n 1}, x_{n 2}, x_{n 3}, \dotsc
+	 \right\rangle\)
+    simplemente repite los elementos de \(\mathcal{X}_n\),
+    podemos escribir la matriz doblemente infinita:
+    \begin{equation*}
+      \begin{array}{*{4}{c}}
+	x_{1 1} & x_{1 2} & x_{1 3} & \dotso \\
+	x_{2 1} & x_{2 2} & x_{2 3} & \dotso \\
+	x_{3 1} & x_{3 2} & x_{3 3} & \dotso \\
+	\vdots	& \vdots  & \vdots  & \ddots
+      \end{array}
+    \end{equation*}
+    Esta matriz podemos recorrerla diagonalmente,
+    siguiendo elementos \(x_{i j}\) en orden de \(i + j\) creciente:
+    Primero \(x_{1 1}\),
+    luego \(x_{1 2}\) y \(x_{2 1}\),
+    después \(x_{1 3}\), \(x_{2 2}\) y \(x_{3 1}\),
+    y así sucesivamente,
+    omitiendo elementos ya listados.
+    Así construimos una biyección
+    entre \(\mathbb{N}\) y \(\mathcal{X}\).
+  \end{proof}
+  \begin{theorem}
+    \label{theo:subconjunto-numerable}
+    Todo subconjunto de un conjunto numerable es numerable.
+  \end{theorem}
+  \begin{proof}
+    Sea \(\mathcal{X}\) un conjunto numerable.
+    Si \(\mathcal{X}\) es finito,
+    la conclusión es inmediata.
+    Supongamos entonces \(\mathcal{X}\) infinito numerable,
+    e \(\mathcal{Y} \subseteq \mathcal{X}\).
+    Si \(\mathcal{Y}\) es finito,
+    estamos listos.
+    Supongamos entonces que \(\mathcal{Y}\) es infinito.
+    Definimos la secuencia
+      \(\left\langle n_1, n_2, \dotsc \right\rangle\)
+    mediante:
+    \begin{align*}
+      n_1
+	&= \min \{n \in \mathbb{N} \colon x_n \in \mathcal{Y}\} \\
+      n_k
+	&= \min \{n \in \mathbb{N} \colon
+		     n > n_{k - 1} \wedge x_n \in \mathcal{Y}\}
+    \end{align*}
+    La secuencia \(\left\langle n_k \right\rangle_{k \ge 1}\)
+    define una biyección entre \(\mathbb{N}\) e \(\mathcal{Y}\)
+    (asocia un índice \(k\) con cada elemento de \(\mathcal{Y}\)).
+  \end{proof}
+
+  Llegamos así a los resultados más importantes que veremos acá.
+  \begin{theorem}
+    \label{theo:Z-numerable}
+    El conjunto \(\mathbb{Z}\) es numerable.
+  \end{theorem}
+  \begin{proof}
+    Tenemos la unión de tres conjuntos numerables:
+    \begin{equation*}
+      \mathbb{Z} = \mathbb{N} \cup \{0\} \cup \{-1, -2, -3, \dotsc\}
+      \qedhere
+    \end{equation*}
+  \end{proof}
+  \begin{theorem}
+    \label{theo:Q-numerable}
+    El conjunto \(\mathbb{Q}\) es numerable.
+  \end{theorem}
+  \begin{proof}
+    Podemos representar \(r \in \mathbb{Q}\) como \(r = a / b\),
+    con \(a \in \mathbb{Z}\) y \(b \in \mathbb{N}\).
+    El conjunto de fracciones con denominador \(b\) es numerable,
+    y la colección de tales conjuntos es numerable.
+    Por el teorema~\ref{theo:union-numerable},
+    su unión \(\mathbb{Q}\) es numerable.
+  \end{proof}
+  \begin{theorem}[Cantor]
+    \index{Cantor, teorema de}
+    \index{Cantor, Georg}
+    \index{demostracion@demostración!argumento diagonal}
+    \label{theo:R-no-numerable}
+    El conjunto \(\mathbb{R}\) no es numerable.
+  \end{theorem}
+  \begin{proof}
+    La demostración es por contradicción.
+    En vista del teorema~\ref{theo:subconjunto-numerable},
+    basta demostrar que \([0, 1)\) no es numerable.
+    Supongamos entonces
+    que hay una biyección entre \([0, 1)\) y \(\mathbb{N}\).
+    Un número \(x \in [0, 1)\)
+    puede expresarse en notación decimal como
+    \(0,d_1 d_2 d_3 \dotso\),
+    donde \(0 \le d_i \le 9\) son los dígitos correspondientes
+    de su expansión decimal.
+    Ponemos la condición adicional
+    que la expansión no es solo nueves
+    a partir de un punto dado,
+    para evitar ambigüedades.
+    Con la biyección supuesta tendremos una matriz
+    en que \(d_{i j}\) corresponde al \(j\)\nobreakdash-ésimo dígito
+    del \(i\)\nobreakdash-ésimo número:
+    \begin{equation*}
+      \begin{array}{r*{10}{c@{\,}}l}
+	1: & d_{1, 1} & d_{1, 2} & d_{1, 3} & d_{1, 4} & d_{1, 5} & d_{1, 6} &
+	     d_{1, 7} & d_{1, 8} & d_{1, 9} & d_{1, 10} & \cdots \\
+	2: & d_{2, 1} & d_{2, 2} & d_{2, 3} & d_{2, 4} & d_{2, 5} & d_{2, 6} &
+	     d_{2, 7} & d_{2, 8} & d_{2, 9} & d_{2, 10} & \cdots \\
+	\vdots\;\;\,
+	   & \multicolumn{10}{c}{\vdots} \\
+	n: & d_{n, 1} & d_{n, 2} & d_{n, 3} & d_{n, 4} & d_{n, 5} & d_{n, 6} &
+	     d_{n, 7} & d_{n, 8} & d_{n, 9} & d_{n, 10} & \cdots \\
+	\vdots\;\;\,
+	   & \multicolumn{10}{c}{\vdots}
+      \end{array}
+    \end{equation*}
+    Consideremos el número \(y = 0,v_1 v_2 v_3 \dotso\),
+    cuyos dígitos se definen por:
+    \begin{equation*}
+      v_i
+	=
+	\begin{cases}
+	  2 & \text{\ si \(d_{i i} = 1\)} \\
+	  1 & \text{\ si \(d_{i i} \ne 1\)}
+	\end{cases}
+    \end{equation*}
+    Claramente \(y \in [0, 1)\),
+    no tiene solo nueves a partir de una posición dada,
+    y es diferente
+    al menos en el dígito \(i\)\nobreakdash-ésimo
+    del \(i\)\nobreakdash-ésimo número de la lista,
+    con lo que \(y\) no está en esta lista
+    que supuestamente los contiene a todos.
+    Esta contradicción completa la demostración.
+  \end{proof}
+  Alguna variante de este argumento diagonal
+  se usa en muchas demostraciones
+  relacionadas a conjuntos infinitos.
+
+  Nótese que el conjunto \(\mathbb{R} \smallsetminus \mathbb{Q}\)
+  no es numerable,
+  con lo que en cierto sentido
+  hay más números irracionales que racionales.%
+    \index{numero@número!irracional}
+  Incluso más:
+  Un número se llama \emph{algebraico}%
+    \index{numero@número!algebraico}
+  si es un cero de un polinomio con coeficientes enteros.%
+     \index{polinomio!coeficientes enteros}
+  Entonces:
+  \begin{theorem}[Cantor]
+    \label{theo:algebraicos-numerable}
+    El conjunto de números reales algebraicos es numerable.
+  \end{theorem}
+  \begin{proof}
+   Dado un polinomio
+   \(a_n x^n + a_{n - 1} x^{n - 1} + \dotsb + a_0\),
+   su \emph{altura} es
+     \(n + \lvert a_n \rvert
+	 + \lvert a_{n - 1} \rvert
+	 + \dotsb
+	 + \lvert a_0 \rvert
+     \).
+   Hay un número finito de polinomios de cada altura
+   y un polinomio de grado \(n\)
+   tiene a lo más \(n\) raíces reales
+   (esto lo demostraremos
+    en el capítulo~\ref{cha:anillos-polinomios}),
+   con lo que hay un número finito de números algebraicos reales
+   de cada altura.
+   Los números algebraicos son entonces una unión numerable
+   de conjuntos numerables,
+   y por tanto numerables.
+  \end{proof}
+  Los números reales no algebraicos se llaman \emph{trascendentes}.%
+    \index{numero@número!trascendente}
+  Euler ya sospechó su existencia,%
+    \index{Euler, Leonhard}
+  la demostración anterior indica
+  que hay muchos más números trascendentes que algebraicos,
+  pero no exhibe ninguno.
+
+  Un importante teorema es el siguiente:
+  \begin{theorem}[Cantor]
+    \label{theo:A<powerset(A)}
+    \(\lvert \mathcal{A} \rvert < \lvert 2^{\mathcal{A}} \rvert\)
+  \end{theorem}
+  \begin{proof}
+    Por contradicción.
+    Sea \(f \colon \mathcal{A} \rightarrow 2^{\mathcal{A}}\)
+    una función cualquiera,
+    construimos un conjunto \(\mathcal{T} \in 2^{\mathcal{A}}\)
+    que no es imagen de ningún \(\alpha \in \mathcal{A}\),
+    con lo que \(f(\cdot)\) no puede ser una biyección
+    por no ser sobre.
+    Para todo \(\alpha \in \mathcal{A}\),
+    debe ser \(\alpha \in \mathcal{T}\)
+    o \(\alpha \notin \mathcal{T}\).
+    Sea \(\mathcal{T}
+	    = \{\alpha \in \mathcal{A} \colon
+		  \alpha \notin f(\alpha)\}\).
+    Si \(\alpha \in \mathcal{T}\),
+    entonces \(\alpha \notin f(\alpha)\),
+    de forma que \(f(\alpha) \ne \mathcal{T}\).
+    Por el otro lado,
+    si \(\alpha \notin \mathcal{T}\),
+    entonces \(\alpha \in f(\alpha)\),
+    y nuevamente \(f(\alpha) \ne \mathcal{T}\).
+    La función \(f\) no es sobre
+    ya que su rango no incluye a \(\mathcal{T}\),
+    no puede ser biyección.
+  \end{proof}
+  Esto es nuevamente el argumento diagonal%
+    \index{demostracion@demostración!argumento diagonal}
+  que usamos para demostrar el teorema~\ref{theo:R-no-numerable}.
+  Este teorema demuestra que hay infinitas cardinalidades
+  mayores que la de \(\mathbb{N}\).
+
+  Resulta que el conjunto
+  de subconjuntos \emph{finitos} de un conjunto numerable
+  es numerable.
+  Si el conjunto universo es finito,
+  el conjunto de sus subconjuntos es finito,
+  y por tanto numerable.
+  Si el conjunto universo es infinito,
+  sin pérdida de generalidad podemos tomarlo como \(\mathbb{N}\).
+  Los conjuntos \(S_n = 2^{[1, n]}\) son todos finitos,
+  y la unión de todos ellos
+  es la unión numerable de conjuntos numerables.
+
+  Vemos también que rangos abiertos y cerrados de \(\mathbb{R}\)
+  tienen la misma cardinalidad:
+  Por ejemplo,
+  como entre \((0, 1)\) y \([0, 1]\) tenemos las inyecciones
+  \(x \mapsto x\) e \(y \mapsto (y + 1) / 3\),
+  por el teorema~\ref{theo:Cantor-Bernstein-Schroeder}
+  tienen la misma cardinalidad.
+  Con la biyección \(x \mapsto (x + a) / (b - a)\)
+  entre \([0, 1]\) y \([a, b]\)
+  todos los rangos finitos tienen la misma cardinalidad.
+  La biyección \(x \mapsto \tanh x\)
+  entre \(\mathbb{R}\) y \((-1, 1)\)
+  muestra que rangos infinitos comparten la misma cardinalidad
+  de rangos finitos.
+
+  Lo que sí resulta sorprendente es que \(\mathbb{R}\)
+  y \(\mathbb{C}\)
+  tienen la misma cardinalidad,
+  e incluso en general
+  \(\lvert \mathbb{R} \rvert
+      = \lvert \mathbb{R}^n \rvert\) para \(n \ge 1\).
+  Para ilustrar la demostración general,
+  mostraremos una biyección entre \((0, 1]\)
+  y el cuadrado \(0 < x, y \le 1\).
+  Representamos \(z \in (0, 1]\)
+  mediante su expansión decimal que no termina
+  (en vez de \(0,5\) escribimos \(0,4\overline{9}\)).
+  Dividimos \(z\) en el par \((x, y)\) en \((0, 1]\)
+  por la vía de cortar la expansión de \(z\)
+  en grupos de ceros y el dígito que sigue.
+  Vale decir,
+  si \(z = 0,1003049\dotso\) obtenemos
+  \(x = 0,104\dotso\) e \(y = 0,0039\dotso\).
+  Nótese que como la expansión decimal de \(z\)
+  no termina en una secuencia infinita de ceros,
+  siempre tendremos dónde cortar para el siguiente;
+  y las expansiones resultantes para \(x\) e \(y\)
+  nunca terminan en secuencias infinitas de ceros.
+  Esto provee una biyección
+  entre un rango finito y un cuadrado finito,
+  podemos extender ambos como antes.
+  La misma idea puede usarse para \(n\) mayor.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

@@ -1,0 +1,112 @@
+#!/usr/bin/perl
+
+# apply-copyright
+#
+# Copyright (c) 2014-2015 Horst H. von Brand
+# Bajo licencia MIT. Vea LICENSE-MIT para detalles
+
+use List::MoreUtils qw/uniq/;
+use File::Basename;
+
+@excluded = qw(COPYRIGHT CREDITS TODO README LICENCE-MIT
+	       LICENSE-MIT.txt LICENSE-apache-2.0.txt cc-by-nc-nd-4.0.txt
+	       .*\.bib .*\.fig .*\.dia .*\.png .*\.jpg .*\.jpeg
+	       .*\.c .*\.cc .*\.cc);
+
+foreach $file (@ARGV) {
+  next if(excluded($file));
+
+  open($LOG, "git log $file |");
+
+  @year = ();
+  while(<$LOG>) {
+    if(/^Date:\s+\S+\s+\S+\s+\S+\s+\S+\s+([0-9]+)\s+\S+$/) {
+      push @year, $1;
+    }
+  }
+  close $LOG;
+
+  $mode = (stat($file))[2];
+  rename $file, "$file.bak";
+  open($IN, "< $file.bak");
+  open($OUT, "> $file");
+
+  ($name, $dir, $ext) = fileparse($file, qr/\..*/);
+
+  if($ext eq ".tex") {
+    print $OUT "% ", basename($file), "\n",
+	       "%\n",
+	       "% Copyright (c) ", range(@year), " Horst H. von Brand\n",
+	       "% Derechos reservados. Vea COPYRIGHT para detalles\n",
+	       "\n";
+  }
+  elsif($ext eq ".asy" || $ext eq ".bc" || $ext eq ".mc") {
+    print $OUT "/* ", basename($file), "*/\n",
+	       "\n",
+	       "/* Copyright (c) ", range(@year), " Horst H. von Brand */\n",
+	       "/* Bajo licencia MIT. Vea LICENSE-MIT para detalles */\n",
+	       "\n";
+  }
+  elsif($name eq "Makefile" || $ext eq ".mk") {
+    print $OUT "# ", basename($file), "\n",
+	       "#\n",
+	       "# Copyright (c) ", range(@year), " Horst H. von Brand\n",
+	       "# Bajo licencia MIT. Vea LICENSE-MIT para detalles\n",
+	       "\n";
+  }
+  else {
+    $sb = <$IN>;
+    if($sb =~ /^\#!/) {
+      print $OUT $sb;
+      print $OUT "\n";
+    }
+    print $OUT "# ", basename($file), "\n",
+	       "#\n",
+	       "# Copyright (c) ", range(@year), " Horst H. von Brand\n",
+	       "# Bajo licencia MIT. Vea LICENSE-MIT para detalles\n",
+	       "\n";
+    if($sb !~ /^\#!/) {
+      print $OUT $sb;
+    }
+
+  }
+
+
+  print $OUT $_ while (<$IN>);
+
+  close $IN;
+  close $OUT;
+  chmod $mode, $file;
+}
+
+sub range {
+  my @year, $oy, $bs, $cs, $open, $y;
+
+  @year = uniq sort @_;
+
+  $oy = $year[0];
+  $bs = $oy;
+  $cs = undef;
+  foreach $y (@year[1 .. $#year]) {
+    unless($y == $oy + 1) {
+      $cs .= defined $cs ? ", " : "";
+      $cs .= ($bs == $oy) ? $oy : "$bs-$oy";
+      $bs = $y;
+    }
+    $oy = $y;
+  }
+  $cs .= defined $cs ? ", " : "";
+  $cs .= ($bs == $oy) ? $bs : "$bs-$oy";
+
+  return $cs;
+}
+
+sub excluded {
+  my $f = basename(@_[0]);
+  my $re;
+
+  foreach $re (@excluded) {
+    return 1 if($f =~ /^$re$/);
+  }
+  return 0;
+}

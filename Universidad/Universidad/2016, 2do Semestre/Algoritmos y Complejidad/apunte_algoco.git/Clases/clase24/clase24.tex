@@ -1,0 +1,272 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{red!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+\renewcommand{\lstlistingname}{Listado}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmo y Complejidad}
+\rhead{\textit{Clase \#24\quad Algoritmo de Kruskal II}}
+
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]
+Clase \#24\\
+Algoritmo de Kruskal II}
+
+\date{Martes 8 de noviembre de 2016}
+
+\author{Aldo Berrios Valenzuela}
+
+
+\usepackage{tikz,ifthen}
+\usetikzlibrary{automata,positioning, babel}
+\definecolor{navyblue}{RGB}{0,148,222}
+\usetikzlibrary{fit}
+\tikzset{shorten >=1pt,node distance=1.8cm,on grid, >=stealth, initial text=Inicio,
+	every state/.style={ draw=black ,fill=black, minimum size=2mm},
+	bend angle=35, every loop/.style={looseness=13}}
+
+
+\begin{document}
+\maketitle
+
+\section{Algoritmo de Kruskal (continuación)}
+Recordamos algunas observaciones de la clase pasada.
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\node [state] (0) {};
+	\node [state, above right of = 0] (1) {};
+	\node [state, below right of = 1] (2) {};
+	\node [state, above left of = 1] (3) {};
+	\node [state, below left of = 3] (4) {};
+	\node [state, above right of = 3, yshift = 25, xshift = 25] (5) {};
+	\node [state, below of = 5, yshift = -9] (6) {};
+	\node [state, below right of = 5, xshift = 25, yshift = -25] (7) {};
+	
+	\path [->] (0) edge (1)
+	(2) edge (1)
+	(1) edge (3)
+	(4) edge (3)
+	(3) edge (5)
+	(6) edge (5)
+	(7) edge (5);
+	
+	\path [->, red] (1) edge [bend right = 7] node [xshift = 32, yshift = -30] {path compression} (5);
+	\end{tikzpicture}
+	\caption{En path compression cambia el puntero al padre original de un nodo por la raíz del árbol más grande (véase el arco rojo).}
+\end{figure}
+
+
+\begin{itemize}
+	\item Si el nodo es raíz y tiene rank $r$, su árbol tiene a lo menos $2^r$ nodos. (si el nodo es una raíz, entonces el número de descendientes es $2^r$)
+	
+	\item A lo largo de un camino a la raíz, rank aumenta.
+\end{itemize}
+
+\begin{definition}
+	Sea $g:\mathbb{R} \rightarrow \mathbb{R}$ tal que para $x > 1$, $g\nparentesis{x} < x$. Definimos:
+	\begin{equation}
+	g^*\nparentesis{x} = \begin{cases}
+	0 & x \leq 1\\
+	1 + g^* \nparentesis{g\nparentesis{x}} & x > 1
+	\end{cases}
+	\end{equation}
+	En el fondo, $g^*$ nos permite obtener cuántas veces debo aplicar la función $g$ para obtener un resultado menor o igual a 1.
+\end{definition}
+Análisis clásico (Hopcroft y Ullman, Tarjan) es lioso\ldots Seidel y Sharir dan un análisis simple (para un valor adecuado de \comillas{simple})
+
+
+\noindent\emph{Idea general:}
+\begin{itemize}
+	\item Reordenar operaciones para simplificar análisis. Todos los \emph{unión} al comienzo, todos los \emph{final} después $\Rightarrow$ ya no llegamos a la raíz, nueva operación \emph{compress} que toma un rango de nodos.
+	
+	El costo de la secuencia no cambia. Solo durante los \emph{union} cambia el rank.
+	
+	\item Dividir el bosque \comillas{alto} (rank alto) y \comillas{bajo} (rank bajo), analizar por separado.
+	
+	Para impedir que se mezcle \comillas{la chusma}, operación \emph{shatter}: Los nodos en el camino quedan de raíces.
+	
+	\emph{Idea:}
+	\begin{figure}[!h]
+		\centering
+		\begin{tikzpicture}[shorten >=1pt,node distance=1cm,on grid, >=stealth]
+			\node [state] (0) {};
+			\node [state, below left of = 0] (1) {};
+			\node [state, below left of = 1] (2) {};
+			\node [state, below left of = 2] (3) {};
+			\node [state, below left of = 3] (4) {};
+			\node [state, below left of = 4] (5) {};
+			\node [state, below left of = 5] (6) {};
+			
+			\path (0) edge (1)
+			(1) edge (2)
+			(2) edge (3)
+			(3) edge (4)
+			(4) edge (5)
+			(5) edge (6);
+			
+			\draw [dashed] (-5, -1.75) -- ++ (11, 0) node [left, pos = 0] {$S$};
+			
+			\draw [->, smooth, tension=0.8, red!70!black!90] plot coordinates{(0.5, -1) (1.0, -0.8) (1.5, -1.1) (1.9, -1) (2.3, -1)} node [below, xshift = -26, yshift = -5] {compress};
+			
+			\draw [->, smooth, tension=0.8, red!70!black!90] plot coordinates{(0.5-1.2, -1-2) (1.0-1.2, -0.8-2) (1.5-1.2, -1.1-2) (1.9-1.2, -1-2) (2.3-1.2, -1-2)} node [below, xshift = -26, yshift = -5] {shatter};
+			
+			\node [state] at (4, -0.5) (10) {};
+			\node [state, below left of = 10] (11) {};
+			\node [state, below right of = 10] (12) {};
+			\path (10) edge (11)
+			(10) edge (12);
+			
+			
+			\node [state] at (2, -2.5) (20) {};
+			\node [state, right of = 20] (21) {};
+			\node [state, right of = 21] (22) {};
+			\node [state, right of = 22] (23) {};
+			
+			\path [->] (20) edge [loop above] ()
+			(21) edge [loop above] ()
+			(22) edge [loop above] ()
+			(23) edge [loop above] ();
+			
+			\node [below left of = 6, yshift = 12, xshift = 12] (30) {$v$};
+			\node [above right of = 0, yshift = -12, xshift = -12] (31) {$u$};
+			
+		\end{tikzpicture}
+		\caption{Todos los nodos cuyo rango es menor o igual que $S$, se les aplica la operación \emph{shatter}. Por el contrario, aquellos que sean mayores se les aplica \emph{compress}. Del bosque total $\mathcal{F}$, se originan dos bosques $\mathcal{F}_-$ y $\mathcal{F}_+$ respectivamente.}
+		\label{24::Shatter:Compress}
+	\end{figure}
+	
+\end{itemize}
+Sea $T\nparentesis{m, n, r}$ el costo máximo en $m$ operaciones compress en un bosque de $n$ nodos con rank a lo más $r$. Una cota trivial es el teorema \ref{24::Teo::Acotacion}.
+\begin{teorema}\label{24::Teo::Acotacion}
+	$T\nparentesis{m, n, r} \leq nr$.
+\end{teorema}
+
+\begin{proof}
+	Cada nodo puede cambiar a lo más $r$ veces de padre.
+\end{proof}
+
+Sea $\mathcal{F}$ un bosque de rank máximo $r$, con $n$ nodos, $C$ una secuencia de $m$ operaciones compress, $T\nparentesis{\mathcal{F}, C}$ el número total de asignaciones \emph{parent} al aplicar $C$ sobre $\mathcal{F}$. Dividimos $\mathcal{F}$ en $\mathcal{F}_-$ (con nodos de rank $\leq s$) y $\mathcal{F}_{+}$ (nodos de rank $> s$). Como rank aumenta al seguir punteros a padres, el padre de un nodo alto es a su vez alto. La secuencia $C$ sobre $\mathcal{F}$ puede descomponerse en secuencias $C_{+}$ sobre $\mathcal{F}_{+}$ y $C_{-}$ sobre $\mathcal{F}_{-}$, del mismo costo total, usando:
+\begin{lstlisting}[escapeinside={(*}{*)}]
+procedure compress((*$u$, $v$, $\mathcal{F}$*))
+	if rank[(*$u$*)](*$> s$*) then
+		compress((*$u$, $v$, $\mathcal{F}_{+}$*))
+	else if rank[(*$v$*)](*$\leq s$*) then
+		compress((*$u$, $v$, $\mathcal{F}_{-}$*))
+	else
+		(*$z \leftarrow u$*)
+		while rank[parent(*$_{\mathcal{F}}$*)[(*$z$*)]](*$\leq s$*) do
+			(*$z \leftarrow $*) parent[(*$z$*)]
+		end
+		compress(parent(*$_{\mathcal{F}}$*)[(*$z$*)], (*$v$*), (*$\mathcal{F}_{+}$*))
+		shatter((*$u$, $z$, $\mathcal{F}_{-}$*))
+		parent[(*$z$*)] (*$\leftarrow$*) (*$z$*)
+\end{lstlisting}
+En la figura \ref{24::Shatter:Compress} partimos el algoritmo desde el nodo $u$ y comprimimos hasta el nodo $v$.
+
+
+\end{document}
+

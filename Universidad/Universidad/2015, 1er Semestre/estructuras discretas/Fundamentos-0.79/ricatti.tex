@@ -1,0 +1,348 @@
+% ricatti.tex
+%
+% Copyright (c) 2013-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section{Recurrencia de Ricatti}
+\label{sec:Ricatti}
+\index{recurrencia!Ricatti|see{Ricatti, recurrencia de}}
+\index{Ricatti, recurrencia de}
+
+  Una recurrencia de la forma:
+  \begin{equation}
+    \label{eq:Ricatti}
+    w_{n + 1}
+      = \frac{a w_n + b}{c w_n + d}
+  \end{equation}
+  donde \(c \ne 0\)
+  y \(a d - b c \ne 0\) se llama \emph{recurrencia de Ricatti}
+  (si \(c = 0\) es simplemente una recurrencia lineal de primer orden;
+   si \(a d = b c\) se reduce a \(w_{n + 1} = \text{constante}\)).
+  Incidentalmente,
+  la recurrencia~\eqref{eq:Fibonacci-search-recurrence-r}
+  para~\(r\)
+  que hallamos al analizar la búsqueda de Fibonacci
+  en la sección~\ref{sec:busqueda-Fibonacci}%
+    \index{Fibonacci, busqueda de@Fibonacci, búsqueda de!analisis@análisis}
+  es una recurrencia de Ricatti.
+
+  Para resolver este tipo de recurrencias hay varias opciones,
+  que exploraremos en lo que sigue.
+
+\subsection{Vía recurrencia de segundo orden}
+\label{sec:Ricatti-2nd}
+
+  Seguimos el esquema de Brand~\cite{brand55:_seq_def_difference_eq}.
+  Si en~\eqref{eq:Ricatti} substituimos \(y_n \mapsto c w_n + d\),
+  queda una recurrencia de la forma:
+  \begin{equation}
+    \label{eq:Ricatti-2nd-aux-1}
+    y_n
+      = \alpha - \frac{\beta}{y_{n - 1}}
+  \end{equation}
+  donde:
+  \begin{align*}
+    \alpha
+      &= a + d \\
+    \beta
+      &= a d - b c
+  \end{align*}
+  Claramente eso solo vale si \(a d - b c \ne 0\).
+  Substituyendo ahora:
+  \begin{equation}
+    \label{eq:Ricatti-2nd-y}
+    y_n
+      = \frac{x_{n + 1}}{x_n}
+  \end{equation}
+  resulta:
+  \begin{equation}
+    \label{eq:Ricatti-2nd-aux}
+    x_{n + 2} - \alpha x_{n + 1} + \beta x_n
+      = 0
+  \end{equation}
+  Esta es una recurrencia lineal de segundo orden,
+  de coeficientes constantes y homogénea.
+  Necesitamos dos valores iniciales para resolverla,
+  podemos elegir bastante arbitrariamente \(x_0 = 1\),
+  dando \(x_1 = y_0\),
+  que a su vez podemos obtener de la condición inicial original.
+
+  Para un ejemplo,
+  tomemos \(w_0 = 3\) y:
+  \begin{equation}
+    \label{eq:Ricatti-ex}
+    w_{n + 1}
+      = \frac{5 w_n + 2}{3 w_n + 4}
+  \end{equation}
+  Siguiendo los pasos indicados:
+  \begin{align*}
+    3 w_{n + 1} + 4
+      &= 3 \cdot \frac{5 w_n + 2}{3 w_n + 4} + 4 \\
+      &= 9 - \frac{14}{3 w_n + 4}
+  \end{align*}
+  Substituyendo:
+  \begin{equation*}
+    3 w_n + 4
+      = \frac{x_{n + 1}}{x_n}
+  \end{equation*}
+  y reordenando resulta:
+  \begin{equation}
+    \label{eq:Ricatti-ex-2nd}
+    x_{n + 2} - 9 x_{n + 1} + 14 x_n
+      = 0
+  \end{equation}
+  Con las condiciones iniciales \(x_0 = 1\), \(x_1 = 3 w_0 + 4 = 13\)
+  la solución de~\eqref{eq:Ricatti-ex-2nd} es:
+  \begin{equation*}
+    x_n
+      = \frac{11 \cdot 7^n - 6 \cdot 2^n}{5}
+  \end{equation*}
+  y finalmente:
+  \begin{equation}
+    \label{eq:Ricatti-ex-2nd-sol}
+    w_n
+      = \frac{11 \cdot 7^n + 2^{n + 2}}{11 \cdot 7^n - 3 \cdot 2^{n + 1}}
+  \end{equation}
+
+\subsection{Reducción a una recurrencia de primer orden}
+\label{sec:Ricatti-1}
+
+  Siguiendo a Mitchell~%
+    \cite{mitchell00:_riccati_solution}
+  definamos la secuencia auxiliar:
+  \begin{equation}
+    \label{eq:Ricatti-1st-x}
+    x_n
+      = \frac{1}{1 + \eta w_n}
+  \end{equation}
+  Expresamos la recurrencia~\eqref{eq:Ricatti}
+  en términos de \(x_n\),
+  y despejamos \(x_{n + 1}\):
+  \begin{equation*}
+    x_{n + 1}
+      = \frac{(d \eta - c) x_n + c}
+	     {(b \eta^2 - (a - d) \eta - c) x_n + a \eta + c}
+  \end{equation*}
+  Buscamos que esta recurrencia sea lineal,
+  o sea:
+  \begin{equation*}
+    b \eta^2 - (a - d) \eta - c
+      = 0
+  \end{equation*}
+  Arbitrariamente elegimos el signo positivo:
+  \begin{equation}
+    \label{eq:Ricatti-1st-aux-eta}
+    \eta
+      = \frac{a - d + \sqrt{(a - d)^2 + 4 b c}}{2 b}
+  \end{equation}
+  Esto lleva a la ecuación auxiliar:
+  \begin{equation}
+    \label{eq:Ricatti-1st-aux}
+    x_{n + 1}
+      = \frac{(d \eta - c) x_n + c}{a \eta + c}
+  \end{equation}
+  Esta es simple de resolver.
+
+  Aplicado al mismo ejemplo anterior,
+  tenemos:
+  \begin{align*}
+    \eta
+      &= \frac{5 - 4 + \sqrt{(5 - 4)^2 + 4 \cdot 2 \cdot 3}}{2 \cdot 2}
+       = \frac{3}{2}
+  \end{align*}
+  La recurrencia auxiliar es:
+  \begin{align}
+    x_{n + 1}
+      &= \frac{(4 \cdot \frac{3}{2} - 3) x_n + 3}
+	      {5 \cdot \frac{3}{2} + 3} \notag \\
+      &= \frac{2 x_n + 2}{7}
+	       \label{eq:Ricatti-ex-1st-aux}
+  \end{align}
+  De la condición inicial tenemos:
+  \begin{equation}
+    \label{eq:Ricatti-ex-1st-initial}
+    x_0
+      = \frac{1}{1 + \eta w_0}
+      = \frac{2}{11}
+  \end{equation}
+  La tradicional danza para resolver recurrencias entrega:
+  \begin{equation}
+    \label{eq:Ricatti-ex-1st-aux-sol}
+    x_n
+      = \frac{2}{5} - \frac{84}{385} \cdot \left( \frac{2}{7} \right)^n
+  \end{equation}
+  De acá con~\eqref{eq:Ricatti-1st-x} resulta:
+  \begin{equation}
+    \label{eq:Ricatti-ex-1st-sol}
+    w_n
+      = \frac{11 \cdot 7^n + 2^{n + 2}}{11 \cdot 7^n - 3 \cdot 2^{n + 1}}
+  \end{equation}
+  Tal como antes.
+
+\subsection{Transformación de Möbius}
+\label{sec:Ricatti-Moebius}
+
+  A una transformación de la forma:
+  \begin{equation}
+    \label{eq:Moebius-tranform}
+    w = \frac{a_{1 1} z + a_{1 2}}{a_{2 1} z + a_{2 2}}
+  \end{equation}
+  donde \(a_{11} a_{22} - a_{12} a_{21} \ne 0\)
+  (de lo contrario,
+   la expresión se reduce a una constante)
+  se le llama \emph{transformación de Möbius}.%
+    \index{Mobius, transformacion de@Möbius, transformación de}%
+    \index{recurrencia!Ricatti!transformacion de Möbius@transformación de Möbius}
+  Una de sus características interesantes es que forman un grupo
+  con la composición de funciones,%
+    \index{grupo}
+  como es fácil demostrar.
+  A nosotros puntualmente nos interesa lo siguiente:
+  Sean \(A(z)\), \(B(z)\) transformaciones de Möbius.
+  \begin{align}
+    A(z)
+     &= \frac{a_{1 1} z + a_{1 2}}{a_{2 1} z + a_{2 2}}
+	  \label{eq:Moebius-A} \\
+    B(z)
+     &= \frac{b_{1 1} z + b_{1 2}}{b_{2 1} z + b_{2 2}}
+	  \label{eq:Moebius-B}
+  \end{align}
+  La composición es:
+  \begin{equation}
+    \label{eq:Moebius-AB}
+    A(B(z))
+      = \frac{(a_{11} b_{11} + a_{12} b_{21}) z
+		 + (a_{11} b_{12} + a_{12} b_{22})}
+	     {(a_{21} b_{11} + a_{22} b_{21}) z
+		 + (a_{21} b_{12} + a_{22} b_{22})}
+  \end{equation}
+  Si representamos las transformaciones
+  por las respectivas matrices de coeficientes,
+  vemos que la composición corresponde al producto de las matrices.
+  Lo que hace la recurrencia~\eqref{eq:Ricatti}
+  es aplicar la transformación de Möbius repetidas veces:
+  \begin{equation}
+    \label{eq:Ricatti-Moebius}
+    w_n
+      = A^n(w_0)
+  \end{equation}
+  a lo que naturalmente corresponde
+  el calcular la potencia de la matriz respectiva.
+  Para cálculo numérico puede usarse
+  entonces una técnica eficiente para calcular potencias,
+  como las dadas en la sección~\ref{sec:potencias}.%
+    \index{potencia!calculo eficiente@cálculo eficiente}
+
+  En nuestro caso de matrices de \(2 \times 2\)
+  los valores propios son simples de obtener:%
+    \index{matriz!valor propio}
+  \begin{equation}
+    \label{eq:diagonalizable-lambda-eqn}
+    (a_{11} - \lambda) (a_{22} - \lambda) - a_{12} a_{21}
+      = 0
+  \end{equation}
+  La fórmula cuadrática da:
+  \begin{equation}
+    \label{eq:diagonalizable-lambda}
+    \lambda
+      = \frac{a_{11} + a_{22}
+		\pm \sqrt{(a_{11} + a_{22})^2
+			     - 4 (a_{11} a_{22} - a_{12} a{21})}}
+	     {2}
+  \end{equation}
+  Las columnas de la matriz \(\boldsymbol{P}\) a su vez
+  son los vectores propios correspondientes:
+  \begin{equation}
+    \label{eq:diagonalizable-p-eqn}
+    \begin{pmatrix}
+      a_{11} - \lambda_i & a_{12} \\
+      a_{21}		 & a_{22} - \lambda_i
+    \end{pmatrix}
+    \cdot
+    \begin{pmatrix}
+      p_{1 i} \\
+      p_{2 i}
+    \end{pmatrix}
+      =
+      \begin{pmatrix}
+	0 \\
+	0
+      \end{pmatrix}
+  \end{equation}
+  Por construcción,
+  la matriz del sistema~\eqref{eq:diagonalizable-p-eqn}
+  es singular,
+  y solo da una relación entre \(p_{1 i}\) y \(p_{2 i}\).
+  Podemos imponer cualquier condición que resulte cómoda.
+  Conociendo \(\boldsymbol{D}\) y \(\boldsymbol{P}\)
+  podemos calcular las potencias
+  y así obtener la solución buscada.
+
+  Volviendo a nuestro manoseado ejemplo,
+  tenemos:
+  \begin{equation}
+    \label{eq:Ricatti-ex-Moebius-A}
+    \boldsymbol{A} =
+    \begin{pmatrix}
+      5 & 2 \\
+      3 & 4
+    \end{pmatrix}
+  \end{equation}
+  Los valores propios son \(\lambda_1 = 7\) y \(\lambda_2 = 2\),
+  eligiendo valores \(p_{1 i} = 1\):
+  \begin{equation}
+    \label{eq:eq:Ricatti-ex-Moebius-P}
+    \boldsymbol{D} =
+    \begin{pmatrix}
+	7  & 0 \\
+	0  & 2
+    \end{pmatrix} \qquad
+    \boldsymbol{P} =
+    \begin{pmatrix}
+	1  & 1 \\
+	1  & - \sfrac{3}{2}
+    \end{pmatrix} \qquad
+    \boldsymbol{P}^{-1} =
+    \begin{pmatrix}
+      \sfrac{3}{5} & \sfrac{2}{5} \\
+      \sfrac{2}{5} & -\sfrac{2}{5}
+    \end{pmatrix}
+  \end{equation}
+  Podemos entonces calcular:
+  \begin{align}
+    \boldsymbol{A}^n
+     &= \boldsymbol{P}^{-1}
+	  \cdot \boldsymbol{D}^n
+	  \cdot \boldsymbol{P} \notag \\
+     &=
+     \begin{pmatrix}
+       \displaystyle \frac{3 \cdot 7^n + 2^{n + 1}}{5} &
+	 \displaystyle \frac{3 \cdot 7^n - 3 \cdot 2^n}{5} \\
+       \\
+       \displaystyle \frac{2 \cdot 7^n - 2^{n + 1}}{5} &
+	 \displaystyle \frac{2 \cdot 7^n + 3 \cdot 2^n}{5}
+     \end{pmatrix}
+	\label{eq:Ricatti-ex-Moebius-An}
+  \end{align}
+  Con esto es:
+  \begin{equation}
+    \label{eq:Ricatti-ex-Moebius-sol-gral}
+    w_n
+      = \frac{(3 \cdot 7^n + 2^{n + 1}) w_0
+		+ (2 \cdot 7^n - 2^{n + 1})}
+	     {(2 \cdot 7^n - 2^{n + 1}) w_0
+		+ (2 \cdot 7^n + 3 \cdot 2^n)}
+  \end{equation}
+  Nótese que esta solución muestra explícitamente la dependencia
+  de la condición inicial.
+  Con nuestra condición inicial \(w_0 = 3\) resulta nuevamente:
+  \begin{equation}
+    \label{eq:Ricatti-ex-Moebius-sol}
+    w_n
+      = \frac{11 \cdot 7^n + 2^{n + 2}}{11 \cdot 7^n - 3 \cdot 2^{n + 1}}
+  \end{equation}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

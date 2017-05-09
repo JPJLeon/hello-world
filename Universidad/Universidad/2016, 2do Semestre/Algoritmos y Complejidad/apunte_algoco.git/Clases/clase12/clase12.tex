@@ -1,0 +1,276 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#12\quad Subsecuencia común más larga}}
+
+\author{Aldo Berrios Valenzuela}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#12\\Subsecuencia común más larga}
+\date{Miércoles 7 de septiembre de 2016}
+
+\begin{document}
+\maketitle
+\section{Subsecuencia común más larga}
+En inglés conocido como Longest Common Subsequence, LCS. La \emph{idea} consiste en que tenemos dos archivos: $X$ e $Y$, y queremos hacer \texttt{diff}\footnote{pruebe \texttt{man diff} para ver qué es lo que hacer} sobre ellos, es decir:
+\begin{lstlisting}
+diff X Y
+\end{lstlisting}
+Para ello:
+\begin{itemize}
+	\item Hallar la subsecuencia común más larga (LCS) entre ellos.
+	\item Marcar líneas agregadas/borradas
+\end{itemize}
+
+\begin{ejemplo}
+	Supongamos que tenemos dos archivos: $X$ e $Y$, cuyo contenido se muestra en el cuadro \ref{12::ContenidoArchivos}.
+	\newcolumntype{T}{>{\ttfamily}l}
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{T|T}
+			\multicolumn{1}{c|}{$X$}&\multicolumn{1}{c}{$Y$}\\
+			\hline
+			foo&bar\\
+			bar&xyzzy\\
+			baz&plugh\\
+			quux&baz\\
+			windows&foo\\
+			&quux\\
+			&linux
+		\end{tabular}
+		\caption{Contenido de los archivos $X$ e $Y$. Note que cada fila de la tabla representa una línea del archivo correspondiente.}
+		\label{12::ContenidoArchivos}
+	\end{table}
+	En consecuencia, si hacemos un \begin{lstlisting}
+	diff X Y
+	\end{lstlisting}
+	obtenemos como resultado, la columna \comillas{Resultado} del Cuadro \ref{12::DiffXY}.
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{c|T|T|TT}
+			Línea&\multicolumn{1}{c|}{$X$}&\multicolumn{1}{c|}{$Y$}&\multicolumn{2}{c}{\textrm{Resultado}}\\
+			\hline
+			1&foo&bar&-&foo\\
+			2&bar&xyzzy&&bar\\
+			3&baz&plugh&+&xyzzy\\
+			4&quux&baz&+&plugh\\
+			5&windows&foo&&baz\\
+			6&&quux&+&foo\\
+			7&&linux&&quux\\
+			&&&-&windows\\
+			&&&+&linux
+		\end{tabular}
+		\caption{La columna \comillas{Resultado} se obtiene a través de: \comillas{Partiendo de $X$, ¿cómo obtengo $Y$}. Los \texttt{(-)} significa que debemos remover la línea asociada  para construir $Y$ a partir de $X$ y los \texttt{(+)} es que debemos agregarla.}
+		\label{12::DiffXY}
+	\end{table}
+	
+	Explicamos con más detalle cómo funciona el algoritmo acorde a lo arrojado por el Cuadro \ref{12::DiffXY}:
+	\begin{itemize}
+		\item Comenzamos leyendo ambos archivos. Como podemos observar en el Cuadro \ref{12::ContenidoArchivos}, la primera línea de $Y$ es \texttt{bar}. Por lo tanto, buscamos en $X$ la primera línea que tenga \texttt{bar}. En $X$, la línea \texttt{bar} se encuentra en la línea 2, así que tendremos que eliminar el contenido de la línea 1 de $X$. Por lo tanto, en la columna \comillas{Resultado} agregamos \texttt{-bar}.
+		
+		\item En este momento, ambos archivos comienzan con \texttt{bar}, así que no realizamos ningún cambio y agregamos esto a \comillas{Resultado}. El Cuadro \ref{12::PrimeraCoincidencia} muestra nuestra dónde estamos ubicados actualmente.
+		\begin{table}[!h]
+			\centering
+			\begin{tabular}{c|T|T|TT}
+				Línea&\multicolumn{1}{c|}{$X$}&\multicolumn{1}{c|}{$Y$}&\multicolumn{2}{c}{\textrm{Resultado}}\\
+				\hline
+				1&foo&\cellcolor{blue!10}bar&-&foo\\
+				2&\cellcolor{blue!10}bar&xyzzy&&bar\\
+				3&\cellcolor{red!10}baz&plugh&&\\
+				4&quux&\cellcolor{red!10}baz&&\\
+				5&windows&foo&&\\
+				6&&quux&&\\
+				7&&linux&&\\
+			\end{tabular}
+			\caption{Las celdas \textcolor{blue!60}{azules} representan dónde estamos ya sea para el archivo $X$ e $Y$. Por otro lado, las celdas remarcadas con color \textcolor{red!60}{rojo} representan nuestra siguiente coincidencia.}
+			\label{12::PrimeraCoincidencia}
+		\end{table}
+		
+		\item Iteramos hasta encontrar la siguiente coincidencia (en este punto nos encontramos en la línea 2 de $X$ y 1 de $Y$). La siguiente coincidencia es la línea \texttt{baz}. Como podemos observar en el Cuadro \ref{12::PrimeraCoincidencia}, para poder construir $Y$ a partir de $X$ agregamos las líneas \texttt{xyzzy} y \texttt{plugh}. Luego, nos ubicamos en las líneas donde se produjo dicha coincidencia para ambos archivos y aprovechamos a de agregarlos (ver Cuadro \ref{12::SegundaCoincidencia}).
+		\begin{table}[!h]
+			\centering
+			\begin{tabular}{c|T|T|TT}
+				Línea&\multicolumn{1}{c|}{$X$}&\multicolumn{1}{c|}{$Y$}&\multicolumn{2}{c}{\textrm{Resultado}}\\
+				\hline
+				1&foo&bar&-&foo\\
+				2&bar&xyzzy&&bar\\
+				3&\cellcolor{blue!10}baz&plugh&+&xyzzy\\
+				4&\cellcolor{red!10}quux&\cellcolor{blue!10}baz&+&plugh\\
+				5&windows&foo&&baz\\
+				6&&\cellcolor{red!10}quux&&\\
+				7&&linux&&\\
+			\end{tabular}
+			\caption{Siga la misma convención de colores del Cuadro \ref{12::PrimeraCoincidencia}. Por otro lado, agregamos \texttt{xyzzy} y \texttt{plugh} a \comillas{Resultado}.}
+			\label{12::SegundaCoincidencia}
+		\end{table}
+		
+		\item La siguiente coincidencia es \texttt{quux}.
+		\begin{itemize}
+			\item En $X$, \texttt{quux} está inmediatamente después de la línea que tiene \texttt{baz}.
+			\item En $Y$, para llegar a  la línea que tiene \texttt{quux} desde \texttt{baz} tendremos que pasar \texttt{foo}.
+		\end{itemize}
+		Dado lo anterior, en $X$ tendremos que agregar la línea \texttt{foo} para poder construir $Y$. Los resultados se pueden apreciar en el Cuadro \ref{12::TerceraCoincidencia}.
+		\begin{table}[!h]
+			\centering
+			\begin{tabular}{c|T|T|TT}
+				Línea&\multicolumn{1}{c|}{$X$}&\multicolumn{1}{c|}{$Y$}&\multicolumn{2}{c}{\textrm{Resultado}}\\
+				\hline
+				1&foo&bar&-&foo\\
+				2&bar&xyzzy&&bar\\
+				3&baz&plugh&+&xyzzy\\
+				4&\cellcolor{blue!10}quux&baz&+&plugh\\
+				5&windows&foo&&baz\\
+				6&&\cellcolor{blue!10}quux&+&foo\\
+				7&&linux&&quux\\
+			\end{tabular}
+			\caption{Siga la misma convención de colores del Cuadro \ref{12::PrimeraCoincidencia}. Por otro lado, agregamos \texttt{foo} a \comillas{Resultado}.}
+			\label{12::TerceraCoincidencia}
+		\end{table}
+		
+		\item Como podemos apreciar en el Cuadro \ref{12::TerceraCoincidencia}, ya no tenemos más coincidencias. Por lo tanto, para terminar simplemente eliminamos \texttt{windows} y agregamos \texttt{linux}\footnote{No nos arrepentimos de nada.}. La tabla resultante puede verse a través del Cuadro \ref{12::DiffXY}.
+	\end{itemize}
+\end{ejemplo}
+
+\subsection{Aspectos formales}
+Arreglos $X\ncorchetes{1, \ldots, n}$, $Y\ncorchetes{1, \ldots, m}$, palabras sobre un alfabeto (\comillas{símbolo} es una línea). Hallar la secuencia de pares de índices $\nparentesis{x_1, y_1}$, $\nparentesis{x_2, y_2}$, \ldots, $\nparentesis{x_q, y_q}$ tales que \comentarioc{DUDA: ¿los $x_i$ e $y_i$ es el número de línea?}:
+\begin{align*}
+x_1&<x_2<\ldots <x_q\qquad ;\forall x_i\in\mathbb{N}\\
+y_1&<y_2<\ldots <y_q\qquad ;\forall x_i\in\mathbb{N}\\
+X\ncorchetes{x_i}&=Y\ncorchetes{y_i}\qquad\text{para } 1\leq i\leq q
+\end{align*}
+Interesa la secuencia más larga (máximo $q$, correspondiente a la cantidad coincidencias). Para ello, consideremos $X\ncorchetes{n}$, $Y\ncorchetes{m}$. Tres opciones:
+\begin{enumerate}
+	\item $X\ncorchetes{n}$ queda fuera de la subsecuencia. En consecuencia, lo marcamos con \texttt{(-)}
+	\item $Y\ncorchetes{m}$ queda fuera de la subsecuencia. Para efectos de \texttt{diff} marcamos con \texttt{(+)}
+	\item [+] O ambos
+	\item Si $X\ncorchetes{n}=Y\ncorchetes{m}$, hacer $x_q=n$, $y_q=m$.
+\end{enumerate}
+Notar que si $X\ncorchetes{n}\ne Y\ncorchetes{m}$ no pueden pertenecer ambos a la LCS.
+
+Tres opciones. Subproblemas:
+\begin{enumerate}
+	\item $X\ncorchetes{1, \ldots, n-1}$, $Y$
+	\item $X$, $Y\ncorchetes{1, \ldots, m-1}$
+	\item $X\ncorchetes{1, \ldots, n-1}$, $Y\ncorchetes{1, \ldots, m-1}\leftarrow X\ncorchetes{n}=Y\ncorchetes{m}$
+\end{enumerate}
+
+Sea $LCS\nparentesis{A, B}$ la subsecuencia común más larga entre $A$ y $B$. Entonces \comentarioc{hasta el momento sólo nos interesa el largo de la subsecuencia óptima, después vemos como encontrar la secuencia}:
+\begin{align*}
+\nabsoluto{LCS\nparentesis{X, Y}}=\max\{\nabsoluto{LCS\nparentesis{X\ncorchetes{1, \ldots, n-1}, Y}}+0, \nabsoluto{LCS\nparentesis{X, Y\ncorchetes{1, \ldots, m-1}}}+0,\\
+ \nabsoluto{LCS\nparentesis{X\ncorchetes{1, \ldots, n-1}, Y\ncorchetes{1, \ldots, m-1}}+1}\}
+\end{align*}
+$\rightsquigarrow$ Arreglo $L\ncorchetes{i, j}$:
+\begin{equation}
+L\ncorchetes{i, j}=\nabsoluto{LCS\nparentesis{X\ncorchetes{1, \ldots, i}, Y\ncorchetes{1, \ldots, j}}}
+\end{equation}
+Sabemos $L\ncorchetes{0, j}=L\ncorchetes{i, 0}=0$. Para calcular $L\ncorchetes{i, j}$ necesitamos $L\ncorchetes{i-1, j}$, $L\ncorchetes{i, j-1}$, $L\ncorchetes{i-1, j-1}$ (posiblemente). Llenar el arreglo, calculando $L\ncorchetes{i, k}$ para $i$ de $1$ a $n$, llenando los $j$ de $1$ a $m$.
+\begin{itemize}
+	\item [$\rightsquigarrow$] Costo total es $O\nparentesis{n\cdot m}$
+\end{itemize}
+
+
+\end{document}

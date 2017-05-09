@@ -1,0 +1,375 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{cancel}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#13\quad Recursividad}}
+
+\author{Aldo Berrios Valenzuela\and Hernán Herreros Niño\and Vicente Lizana Estivill}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#13\\Recursividad}
+\date{Martes 13 de septiembre de 2016}
+
+\addto{\captionsspanish}{\renewcommand{\abstractname}{Agradecimientos}}
+
+\usepackage{tikz,ifthen}
+\usepackage{pgfplots}
+\usepackage{tikz,ifthen}
+\usetikzlibrary{automata,positioning, babel}
+\usetikzlibrary{calc}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+	Agradezco a las personas que me mandaron sus apuntes para poder elaborar este debido a mi ausencia.
+\end{abstract}
+
+\section{Recursión}
+Nuestra herramienta principal es \emph{reducir} problemas a problemas más \comillas{simples}. Por ejemplo: Expresión regular $\rightarrow$ programa eficiente para reconocer el problema descrito usamos:
+\begin{itemize}
+	\item Expresión Regular a NFA (por ejemplo Thompson)
+	
+	\item NFA a DFA (algoritmo de subconjuntos)
+	
+	\item DFA a DFA mínimo (varias opciones)
+	
+	\item Interpretar el DFA y traducirlo a código.
+\end{itemize}
+
+Al resolver un problema, lo dividimos en subproblemas y combinamos resultados. Notar que al hacer esto (por ejemplo, invocar \texttt{printf(3)} en C) confiamos en que la solución al subproblema hace su trabajo correctamente. \emph{Confiamos} en terceros. De la misma manera, al invocar una función que nosotros escribimos, \emph{confiamos} en que hace su trabajo correctamente. Usar recursión es lo mismo\ldots solo que la función se invoca a sí misma (directa o indirectamente). Recursión es inducción en programa.
+
+\subsection{Torres de Hanoi}
+\paragraph{Descripción del problema:} Hay 64 placas redondas ubicadas de mayor a menor (Figura \ref{13::TorreHanoi1}). Solo se puede mover una placa a la vez y nunca placa mayor sobre una placa menor.
+\begin{figure}[!h]
+	\centering
+	\newcommand{\hanoiDisk}[4]{\draw [fill=#4] (#1-#3/2, #2) -- ++ (#3, 0) -- ++ (0, 0.15) -- ++ (-#3, 0) -- cycle} %(x, y, width, color)
+	\begin{tikzpicture}
+		% Dibujo de la primera plataforma
+		\hanoiDisk{0}{0}{2.5}{green!60!black!80};
+		\hanoiDisk{2.5}{0}{2.5}{blue!60!black!60};
+		\hanoiDisk{5}{0}{2.5}{green!60!black!80};
+		\draw (0, 0.15) -- ++ (0, 2);
+		\draw (2.5, 0.15) -- ++ (0, 2);
+		\draw (5, 0.15) -- ++ (0, 2);
+		
+		% Dibujo de los discos de la primera plataforma
+		\hanoiDisk{0}{0.15}{2}{gray!40};
+		\hanoiDisk{0}{0.15+0.15}{1.8}{gray!20};
+		\hanoiDisk{0}{0.15+2*0.15}{1.6}{gray!40};
+		\hanoiDisk{0}{0.15+3*0.15}{1.4}{gray!20};
+		\hanoiDisk{0}{0.15+4*0.15}{1.2}{gray!40};
+		\hanoiDisk{0}{0.15+5*0.15}{1.0}{gray!20};
+		\hanoiDisk{0}{0.15+6*0.15}{0.8}{gray!40};
+		\hanoiDisk{0}{0.15+7*0.15}{0.6}{gray!20};
+		\hanoiDisk{0}{0.15+8*0.15}{0.4}{gray!40};
+		\node at (0, -0.25) (A) {$A$};
+		\node at (2.5, -0.25) (B) {$B$};
+		\node at (5, -0.25) (C) {$C$};
+		
+		% Dibujo de la segunda plataforma
+		\hanoiDisk{0+8.5}{0}{2.5}{green!60!black!80};
+		\hanoiDisk{2.5+8.5}{0}{2.5}{blue!60!black!60};
+		\hanoiDisk{5+8.5}{0}{2.5}{green!60!black!80};
+		\draw (0+8.5, 0.15) -- ++ (0, 2);
+		\draw (2.5+8.5, 0.15) -- ++ (0, 2);
+		\draw (5+8.5, 0.15) -- ++ (0, 2);
+		
+		% Dibujo de los discos de la segunda plataforma
+		\hanoiDisk{5+8.5}{0.15}{2}{gray!40};
+		\hanoiDisk{5+8.5}{0.15+0.15}{1.8}{gray!20};
+		\hanoiDisk{5+8.5}{0.15+2*0.15}{1.6}{gray!40};
+		\hanoiDisk{5+8.5}{0.15+3*0.15}{1.4}{gray!20};
+		\hanoiDisk{5+8.5}{0.15+4*0.15}{1.2}{gray!40};
+		\hanoiDisk{5+8.5}{0.15+5*0.15}{1.0}{gray!20};
+		\hanoiDisk{5+8.5}{0.15+6*0.15}{0.8}{gray!40};
+		\hanoiDisk{5+8.5}{0.15+7*0.15}{0.6}{gray!20};
+		\hanoiDisk{5+8.5}{0.15+8*0.15}{0.4}{gray!40};
+		\node at (0+8.5, -0.25) (A2) {$A$};
+		\node at (2.5+8.5, -0.25) (B2) {$B$};
+		\node at (5+8.5, -0.25) (C2) {$C$};
+		
+		\draw [->, thick, red!60!black!80] (6.35, 1.25) -- ++ (0.75, 0);
+	\end{tikzpicture}
+	\caption{Queremos mover las placas ubicadas en la plataforma $A$ y dejarlas en la plataforma $C$. }
+	\label{13::TorreHanoi1}
+\end{figure}
+
+\subsubsection{Solución (recursiva)}
+Una solución (recursiva) es como se muestra en la Figura \ref{13::TorreHanoi2}.
+\begin{figure}[!h]
+	\centering
+	\newcommand{\hanoiDisk}[4]{\draw [fill=#4] (#1-#3/2, #2) -- ++ (#3, 0) -- ++ (0, 0.15) -- ++ (-#3, 0) -- cycle} %(x, y, width, color)
+	\begin{tikzpicture}
+	% Dibujo de la primera plataforma
+	\hanoiDisk{0}{0}{2.5}{green!60!black!80};
+	\hanoiDisk{2.5}{0}{2.5}{blue!60!black!60};
+	\hanoiDisk{5}{0}{2.5}{green!60!black!80};
+	\draw (0, 0.15) -- ++ (0, 2);
+	\draw (2.5, 0.15) -- ++ (0, 2);
+	\draw (5, 0.15) -- ++ (0, 2);
+	
+	% Dibujo de los discos de la primera plataforma
+	\hanoiDisk{0}{0.15}{2}{gray!40};
+	\hanoiDisk{2.5}{0.15+0*0.15}{1.8}{gray!20};
+	\hanoiDisk{2.5}{0.15+1*0.15}{1.6}{gray!40};
+	\hanoiDisk{2.5}{0.15+2*0.15}{1.4}{gray!20};
+	\hanoiDisk{2.5}{0.15+3*0.15}{1.2}{gray!40};
+	\hanoiDisk{2.5}{0.15+4*0.15}{1.0}{gray!20};
+	\hanoiDisk{2.5}{0.15+5*0.15}{0.8}{gray!40};
+	\hanoiDisk{2.5}{0.15+6*0.15}{0.6}{gray!20};
+	\hanoiDisk{2.5}{0.15+7*0.15}{0.4}{gray!40};
+	\node at (0, -0.25) (A) {$A$};
+	\node at (2.5, -0.25) (B) {$B$};
+	\node at (5, -0.25) (C) {$C$};
+	
+	% Dibujo de la segunda plataforma
+	\hanoiDisk{0+8.5}{0}{2.5}{green!60!black!80};
+	\hanoiDisk{2.5+8.5}{0}{2.5}{blue!60!black!60};
+	\hanoiDisk{5+8.5}{0}{2.5}{green!60!black!80};
+	\draw (0+8.5, 0.15) -- ++ (0, 2);
+	\draw (2.5+8.5, 0.15) -- ++ (0, 2);
+	\draw (5+8.5, 0.15) -- ++ (0, 2);
+	
+	% Dibujo de los discos de la segunda plataforma
+	\hanoiDisk{5+8.5}{0.15}{2}{gray!40};
+	\hanoiDisk{2.5+8.5}{0.15+0*0.15}{1.8}{gray!20};
+	\hanoiDisk{2.5+8.5}{0.15+1*0.15}{1.6}{gray!40};
+	\hanoiDisk{2.5+8.5}{0.15+2*0.15}{1.4}{gray!20};
+	\hanoiDisk{2.5+8.5}{0.15+3*0.15}{1.2}{gray!40};
+	\hanoiDisk{2.5+8.5}{0.15+4*0.15}{1.0}{gray!20};
+	\hanoiDisk{2.5+8.5}{0.15+5*0.15}{0.8}{gray!40};
+	\hanoiDisk{2.5+8.5}{0.15+6*0.15}{0.6}{gray!20};
+	\hanoiDisk{2.5+8.5}{0.15+7*0.15}{0.4}{gray!40};
+	\node at (0+8.5, -0.25) (A2) {$A$};
+	\node at (2.5+8.5, -0.25) (B2) {$B$};
+	\node at (5+8.5, -0.25) (C2) {$C$};
+	
+	\draw [->, thick, red!60!black!80] (6.35, 1.25) -- ++ (0.75, 0);
+	\end{tikzpicture}
+	\caption{Luego de mover todos los discos entre las tres plataformas y dejarlos ordenados como se muestran en $B$, sólo nos queda mover el último disco (más grande) de $A$ a $C$ directamente.}
+	\label{13::TorreHanoi2}
+\end{figure}
+Esto es solución porque traduce el problema de mover $n$ piezas a mover $n-1$ recursivamente, luego mover $1$ (trivial, Figura \ref{13::TorreHanoi2}), luego mover $n-1$ recursivamente.
+
+\paragraph{Problema:} Mover $n$ piezas de $A$ a $C$.
+
+\begin{proof}[Base:]
+	Si $n=0$, no hay que hacer nada.
+\end{proof}
+
+\begin{proof}[Inducción:]
+	Supongamos que sabemos mover $k$ piezas de $i$ a $j$ (con $i\ne j$). Para mover $k+1$ piezas de $A$ a $B$ (con $C$ de \comillas{apoyo}):
+	\begin{itemize}
+		\item Movemos las $k$ piezas superiores de $A$ a $C$.
+		
+		\item Movemos la pieza inferior de $A$ a $B$.
+		
+		\item Movemos las $k$ piezas de $C$ a $B$.
+	\end{itemize}
+\end{proof}
+
+Pseudocódigo:
+\begin{lstlisting}
+hanoi (n, src, dst, tmp):
+	if n > 0:
+		hanoi (n-1, src, tmp, dst)
+		move src -> dst
+		hanoi (n-1, tmp, dst, src)
+\end{lstlisting}
+
+Aún falta convencerse de que \emph{nunca} movemos uno grande sobre uno menor ($\rightarrow$ luego de \texttt{hanoi (n, src, dst, tmp)}, \texttt{tmp} queda libre).
+
+¿Cuántas movidas se requieren?. Sea $T\nparentesis{n}$ el número de movidas para transferir $n$ platos.
+\begin{align*}
+T\nparentesis{0}&=0\\
+T\nparentesis{n+1}&=2T\nparentesis{n}+1,\qquad n\geq 0
+\end{align*}
+Sea:
+\begin{equation}\label{13::Generatriz:hz}
+h\nparentesis{z}=\sum_{n\geq 0}T\nparentesis{n}z^n
+\end{equation}
+Por propiedades:
+\begin{equation*}
+\dfrac{h\nparentesis{z}-T\nparentesis{0}}{z}=2h\nparentesis{z}+\dfrac{1}{1-z}
+\end{equation*}
+Entonces, despejando $h\nparentesis{z}$ de lo anterior se obtiene:
+\begin{align*}
+h\nparentesis{z}&=\dfrac{z}{\nparentesis{1-z}\nparentesis{1-2z}}\numberthis\label{13::hzPlanteo}\\
+h\nparentesis{z}&=\dfrac{A}{1-z}+\dfrac{B}{1-2z}\\
+h\nparentesis{z}\nparentesis{1-z}&=A + \dfrac{\nparentesis{1-z}B}{1-2z}
+\end{align*}
+En seguida, aplicamos límite cuando $z\rightarrow 1$:
+\begin{align*}
+h\nparentesis{z}\nparentesis{1-z}&=A + \dfrac{\nparentesis{1-z}B}{1-2z}\qquad\Bigg / \lim_{z\rightarrow 1}\nparentesis{\,}\\
+\lim_{z\rightarrow 1}h\nparentesis{z}\nparentesis{1-z}&=\lim_{z\rightarrow 1}\nparentesis{A+\cancelto{0}{\dfrac{\nparentesis{1-z}B}{1-2z}}\hspace{4mm}}\\
+\lim_{z\rightarrow 1}h\nparentesis{z}\nparentesis{1-z}&=A\numberthis\label{13::Limite:hz}
+\end{align*}
+Luego, reemplazamos $h\nparentesis{z}$ de \eqref{13::Limite:hz} por lo que está en \eqref{13::hzPlanteo}:
+\begin{align*}
+A&=\lim_{z\rightarrow 1}\nparentesis{\dfrac{z}{\nparentesis{1-z}\nparentesis{1-2z}}\nparentesis{1-z}}\\
+A&=\lim_{z\rightarrow 1}\dfrac{z}{1-2z}\\
+\therefore A&=-1\numberthis
+\end{align*}
+Análogamente:
+\begin{equation}
+B=1
+\end{equation}
+Entonces:
+\begin{align*}
+h\nparentesis{z}&=\dfrac{1}{1-2z}-\dfrac{1}{1-z}\numberthis\label{13::hz:final}
+\end{align*}
+Usando la fórmula de series geométricas, es sabido que:
+\begin{equation}\label{13::Uso:PropGeometrica}
+\dfrac{1}{1-2z}=\sum_{n\geq 0}2^nz^n\qquad\wedge\qquad \dfrac{1}{1-z}=\sum_{n\geq 0}z^n
+\end{equation}
+Luego, si reemplazamos $h\nparentesis{z}$ por \eqref{13::Generatriz:hz} en \eqref{13::hz:final} y las fracciones de \eqref{13::hz:final} por las obtenidas en \eqref{13::Uso:PropGeometrica} se obtiene:
+\begin{align*}
+\sum_{n\geq 0}T\nparentesis{n}z^n&=\sum_{n\geq 0}2^nz^n-\sum_{n\geq 0}z^n\\
+\Rightarrow T\nparentesis{n}&=2^n-1
+\end{align*}
+
+
+\subsection{Mergesort}
+Queremos ordenar $A\ncorchetes{1, \ldots, n}$. Nuestro pseudocódigo para mergesort es:
+\begin{align*}
+&\mathtt{mergeSort}\nparentesis{A\ncorchetes{1, \ldots, n}}:\\
+&\hspace{2em}\mathtt{if }\hspace{1ex} n>1:\\
+&\hspace{4em}\mathtt{mergeSort}\nparentesis{A\ncorchetes{1, \ldots, \left\lfloor \frac{n}{2}\right\rfloor}}\\
+&\hspace{4em}\mathtt{mergeSort}\nparentesis{A\ncorchetes{\left\lfloor \frac{n}{2}\right\rfloor+1, \ldots, n}}\\
+&\hspace{4em}\mathtt{merge}\nparentesis{ A\ncorchetes{1, \ldots, \left\lfloor \frac{n}{2}\right\rfloor}   , A\ncorchetes{\left\lfloor \frac{n}{2}\right\rfloor+1, \ldots, n}}
+\end{align*}
+
+De la misma forma que lo hicimos con las torres de Hanoi: ¿Cuántas iteraciones se requieren?. Sea $M\nparentesis{n}$ el número de iteraciones  para completar el merge sort. Es claro que:
+\begin{align*}
+M\nparentesis{0}&=M\nparentesis{1}\\
+M\nparentesis{n}&=M\nparentesis{\left \lfloor\frac{n}{2}\right\rfloor}+M\nparentesis{\left \lceil \frac{n}{2}\right \rceil}+n\numberthis\label{13::M1}
+\end{align*}
+Supongamos $n=2^k$. Reemplazando sobre \eqref{13::M1} vamos obteniendo:
+\begin{align*}
+M\nparentesis{2^k}&=M\nparentesis{\left\lfloor \dfrac{2^k}{2}\right\rfloor}+M\nparentesis{\left\lceil \dfrac{2^k}{2}\right\rceil}+2^k\\
+&=M\nparentesis{\left\lfloor 2^{k-1}\right \rfloor}+M\nparentesis{\left\lceil 2^{k-1}\right \rceil}+2^k\numberthis\label{13::MPiso}
+\end{align*}
+Es claro que $2^{k-1}\in\mathbb{N}$, por lo tanto:
+\begin{equation}\label{13::PrimeraIguladadM}
+M\nparentesis{\left\lfloor 2^{k-1}\right \rfloor}=M\nparentesis{\left\lceil 2^{k-1}\right \rceil}=M\nparentesis{2^{k-1}}
+\end{equation}
+Luego, reemplazando \eqref{13::PrimeraIguladadM} en \eqref{13::MPiso} obtenemos:
+\begin{equation}\label{13::Final:M}
+M\nparentesis{2^k}=2M\nparentesis{2^{k-1}}+2^k
+\end{equation}
+Sea $m\nparentesis{k}=M\nparentesis{2^{k-1}}$ \comentarioc{DUDA: en los apuntes entregados dice $m\nparentesis{k}=M\nparentesis{2^k}$\ldots ¿realmente es así?}. Entonces, reemplazando sobre \eqref{13::Final:M} se tiene:
+\begin{equation}
+m\nparentesis{k+1}=2m\nparentesis{k}+2^k
+\end{equation}
+\comentarioc{DUDA: hay cosas que no calzan en los apuntes\ldots }
+
+
+\end{document}

@@ -1,0 +1,4812 @@
+% grafos.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Grafos}
+\label{cha:grafos}
+
+  Un grafo corresponde a una abstracción
+  de la situación en la cual hay objetos (\emph{vértices}),
+  algunos de los cuales están conectados entre sí
+  (mediante \emph{arcos}).
+  El interés es razonar solo con el hecho
+  que existen o no conexiones entre los vértices.
+  Esta área es una de las más antiguas entre lo que se conoce
+  como matemáticas discretas,
+  con un amplio rango de aplicaciones.
+  Los grafos
+  (y estructuras afines)
+  sirven para abstraer y representar objetos del más variado tipo,
+  desde redes de transporte
+  hasta rangos de validez de valores al analizar el código de un programa,
+  pasando por aplicaciones como asignación de horarios.
+
+  Como modelan una variedad de situaciones,
+  estudiamos algoritmos para efectuar operaciones comunes sobre grafos.
+  Demostraremos que son correctos,
+  y daremos un somero análisis de su rendimiento.
+
+\section{Algunos ejemplos de grafos}
+\label{sec:ejemplos-grafos}
+
+  Aplicaciones de grafos son circuitos eléctricos,
+  donde interesa cómo están conectados entre sí los componentes
+  (ver un ejemplo en la figura~\ref{fig:circuito-electrico})
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage[width=0.6\textwidth]{images/LowPass3poleCauer}
+    % http://commons.wikimedia.org/wiki/File:LowPass3poleCauer.png
+    % Public domain
+    \caption[Diagrama de circuito de un filtro de paso bajo
+	     de tercer orden]
+	    {Diagrama de circuito de un filtro de paso bajo
+	     de tercer orden~\cite{wikimedia06:LowPass3poleCauer}}
+    \label{fig:circuito-electrico}
+  \end{figure}
+  y representaciones de redes de transporte,
+  como el esquema~\ref{fig:tube-1908}
+  de la red de metro de Londres en 1908.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage[width=0.9\textwidth]{images/Tube_map_1908-2}
+    % http://upload.wikimedia.org/wikipedia/commons/9/90/Tube_map_1908-2.jpg
+    % Public domain
+    \caption[Esquema del metro de Londres (1908)]
+	    {Esquema del metro de Londres (1908)~%
+	       \cite{London_tube1908}}
+    \label{fig:tube-1908}
+  \end{figure}
+
+  En computación los grafos son ubicuos
+  porque son una forma cómoda
+  de representar relaciones entre objetos,
+  como programas o personas.
+  Un arco puede representar que dos personas se llevan bien
+  (o no),
+  que un ramo debe tomarse antes de otro,
+  o que una función llama a otra.
+  Muchas estructuras de datos,
+  particularmente las enlazadas,
+  pueden representarse mediante grafos,
+  y muchos problemas de optimización importantes
+  se modelan mediante grafos.
+  También sirven como notación gráfica
+  de algunos modelos de computación.
+  Una advertencia:
+  A pesar de ser un área bastante antigua de las matemáticas,
+  aún no hay consenso en la notación o la nomenclatura.
+  Curiosamente,
+  recién en 1936 Kőnig
+  publicó el primer texto sobre teoría de grafos~%
+    \cite{koenig36:_theor_graph},
+  cuando el área data de la época de Euler (1707\nobreakdash--1783).%
+    \index{Euler, Leonhard}
+  En caso de duda,
+  revise las definiciones dadas por el autor.
+  Acá usaremos básicamente la notación y nomenclatura
+  de uno de los textos estándar del área,
+  el de Diestel~%
+    \cite{diestel10:_graph_theor}.
+  Un tratamiento más accesible para no especialistas es el de Ore~%
+    \cite{ore90:_graph_uses}.
+
+  Formalmente:
+  \begin{definition}
+    \index{grafo|textbfhy}
+    Un \emph{grafo} \(G = (V, E)\) consta de:
+    \begin{center}
+      \begin{description}
+	\item[\boldmath \(V\):\unboldmath]
+	  Conjunto finito no vacío de \emph{vértices}.%
+	    \index{grafo!vertice@vértice|textbfhy}
+	\item[\boldmath \(E\):\unboldmath]
+	  Conjunto de \emph{arcos},%
+	    \index{grafo!arco|textbfhy}
+	  pares de vértices pertenecientes a \(V\).
+	  Un arco \(\{a, b\} \in E\)
+	  consta de \(a, b \in V\).
+      \end{description}
+    \end{center}
+  \end{definition}
+  Para nuestros efectos no interesa
+  el caso de conjuntos infinitos de vértices.
+  Al número de vértices de un grafo se le llama su \emph{orden.}%
+    \index{grafo!orden|textbfhy}
+  Consideramos en esta definición que un arco
+  conecta un par de vértices diferentes
+  (sin importar el orden),
+  y no pueden haber varios arcos uniendo el mismo par de vértices.
+  A veces para abreviar se anota \(a b\) por el arco \(\{a, b\}\).
+  En tal caso \(a b = b a\).
+
+  Dos vértices contenidos en un arco se llaman \emph{adyacentes}%
+    \index{grafo!vertices adyacentes@vértices adyacentes}
+  o \emph{vecinos}.%
+    \index{grafo!vertices vecinos@vértices vecinos}
+  Al número de arcos en que participa un vértice se llama su \emph{grado},%
+    \index{grafo!vertice@vértice!grado}
+  Si todos los vértices del grafo tienen el mismo grado,
+  el grafo se llama \emph{regular}.%
+    \index{grafo!regular}
+  que para el vértice \(v\) se anota \(\delta(v)\).%
+    \index{\(\delta\) (grado de un vertice)@\(\delta\) (grado de un vértice)}
+  Un arco que contiene al vértice \(v\) se dice \emph{incide} en él.
+  Dos arcos que tienen un vértice en común
+  también se llaman \emph{adyacentes}.%
+    \index{grafo!arcos adyacentes}
+  Si de un grafo \(G = (V, E)\)
+  se eliminan arcos o vértices
+  (con los arcos que los contienen)
+  el resultado \(G' = (V', E')\)
+  es un \emph{subgrafo} de \(G\).%
+    \index{grafo!subgrafo}
+  El \emph{vecindario} de \(v\) son los vértices adyacentes a él,%
+    \index{grafo!vecindario}
+  anotamos \(N_G(v) = \{v_1, v_2, \dotsc, v_k\}\)
+  si \(\{v, v_i\} \in E\).
+  Normalmente omitiremos el subíndice que identifica al grafo
+  cuando es claro del contexto.
+
+  Para evitar notación engorrosa,
+  identificaremos el grafo \(G = (V, E)\)
+  con su conjunto de vértices o arcos.
+  Así,
+  diremos simplemente \(v \in G\) para indicar \(v \in V\),
+  \(u v \in G\) cuando \(\{u, v\} \in E\)
+  o \(G \smallsetminus u v\)
+  para el grafo \(G' = (V, E \smallsetminus \{u, v\})\).
+
+  Se dice que el grafo \(G' = (V', E')\)
+  es un \emph{subgrafo} del grafo \(G = (V, E)\)
+  si \(V' \subseteq V\) y \(E' \subseteq E\).
+  Decir que \(G'\) es un grafo
+  hace que los vértices que aparecen en \(E'\)
+  están en \(V'\),
+  y hace también que \(V' \ne \varnothing\).
+
+  Variantes de grafos son \emph{multigrafos},%
+    \index{multigrafo|textbfhy}
+  en los cuales se permiten varios arcos
+  entre el mismo par de vértices,
+  e incluso arcos que comienzan y terminan en el mismo vértice.
+  Muchas de nuestras conclusiones se aplican a ellos también,
+  pero no los trataremos explícitamente.
+
+  Como los grafos son empleados en muchas áreas,
+  los nombres suelen ajustarse al área bajo estudio,
+  por ejemplo a veces se les llama \emph{redes}.%
+    \index{red|see{grafo}}
+  Los vértices pueden llamarse también \emph{nodos}%
+    \index{grafo!nodo|see{grafo!vértice}}
+  o \emph{puntos},%
+    \index{grafo!punto|see{grafo!vértice}}
+  y hay quienes hablan de \emph{aristas} en vez de arcos.%
+    \index{grafo!arista|see{grafo!arco}}
+  Nosotros excluimos la posibilidad \(V = \varnothing\),
+  dado que resulta un contraejemplo trivial
+  a muchos teoremas importantes.
+  Al dejar fuera este caso muchos resultados
+  se pueden expresar en forma más simple,
+  sin embargo esta convención no es universal.
+  En general,
+  hay consenso en el significado de los términos,
+  pero el tratamiento de casos excepcionales varía.
+
+  Al dibujar grafos se representan los vértices mediante puntos
+  y los arcos mediante líneas que los unen.
+  Los vértices normalmente no se identifican.
+  Notar que \(u\) conectado con \(v\) o \(v\) conectado con \(u\),
+  para el caso significa lo mismo.
+  No importa la ruta o el largo del arco,
+  ni si accidentalmente cruza otros.
+  Sólo el hecho que un par de vértices están conectados importa.
+
+  \begin{example}
+    Definición de un grafo.
+
+    \(G\) dado por:
+    \begin{align*}
+      V &= \{a, b, c, d, z\} \\
+      E &= \{\{a, d\}, \{b, z\}, \{c, d\}, \{d, z\}\}
+    \end{align*}
+    Gráficamente está dado por la figura~\ref{fig:grafo-a}.
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/grafo-ejemplo}
+      \caption{Un grafo}
+      \label{fig:grafo-a}
+    \end{figure}
+  \end{example}
+
+\section{Representación de grafos}
+\label{sec:representacion}
+\index{grafo!representacion@representación}
+
+  Un dibujo es útil para seres humanos,
+  pero bastante inútil para razonar con él
+  o para el uso en computadoras.
+  Veremos algunas opciones adicionales.
+
+\subsection{Lista de adyacencia}
+\label{sec:lista-adyacencia}
+\index{grafo!representacion@representación!lista de adyacencia}
+
+  La \emph{lista de adyacencia}
+  es una tabla donde para cada vértice
+  se listan los vértices adyacentes.
+  Para el caso del grafo de la figura~\ref{fig:grafo-a}
+  se tiene la lista de adyacencia en el cuadro~\ref{tab:la-grafo-a}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|>{\(}r<{\)}|>{\(}l<{\)}|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{V}} &
+	\multicolumn{1}{c|}{\textbf{Ady}} \\
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+      a & d \\
+      b & z \\
+      c & d \\
+      d & a, c, z \\
+      z & b, d \\
+      \hline
+    \end{tabular}
+    \caption{Lista de adyacencia
+	     para el grafo de la figura~\ref{fig:grafo-a}}
+    \label{tab:la-grafo-a}
+  \end{table}
+
+\subsection{Matriz de adyacencia}
+\label{sec:matriz-adyacencia}
+\index{grafo!representacion@representación!matriz de adyacencia}
+
+  Representar un grafo mediante una \emph{matriz de adyacencia}
+  corresponde a definir una matriz cuyos índices son los vértices,
+  y los elementos son 1 o 0 dependiendo de si los vértices del caso
+  están conectados o no.
+  El grafo de la figura~\ref{fig:grafo-a}
+  queda representado en el cuadro~\ref{tab:ma-grafo-a}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{l|*{5}{c}}
+	  & $a$ & $b$ & $c$ & $d$ & $z$ \\
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+      $a$ &   0 &   0 &	  0 &	1 &   0 \\
+      $b$ &   0 &   0 &	  0 &	0 &   1 \\
+      $c$ &   0 &   0 &	  0 &	1 &   0 \\
+      $d$ &   1 &   0 &	  1 &	0 &   1 \\
+      $z$ &   0 &   1 &	  0 &	1 &   0
+    \end{tabular}
+    \caption{Matriz de adyacencia
+	     del grafo de la figura~\ref{fig:grafo-a}}
+    \label{tab:ma-grafo-a}
+  \end{table}
+  Es claro que esta matriz es simétrica
+  (vale decir,
+   \(a[i, j] = a[j, i]\))
+  ya que \(i\) conectado a \(j\)
+  es lo mismo que \(j\) conectado a \(i\).
+  Los elementos en la diagonal son todos cero
+  porque no hay arcos que conectan vértices consigo mismos.
+
+  Los multigrafos permiten rizos%
+    \index{multigrafo!rizo}
+  (en inglés \emph{\foreignlanguage{english}{loops}})%
+    \index{multigrafo!loop@\emph{\foreignlanguage{english}{loop}}|see{multigrafo!rizo}}
+  que conectan vértices consigo mismos.
+  En tal caso la diagonal no necesariamente es ceros.
+  Si hay más de un arco entre un par de vértices,
+  es natural considerar que la entrada de la matriz
+  es el número de arcos entre los vértices.
+  Igualmente,
+  si consideramos que el arco tiene dirección
+  (va de \(u\) a \(v\)),
+  resulta una matriz no necesariamente simétrica
+  (estamos representando \emph{grafos dirigidos},%
+    \index{grafo!dirigido|see{digrafo}}%
+    \index{digrafo}
+   que se discuten en mayor detalle
+   en el capítulo~\ref{cha:digrafos}).
+
+\subsection{Representación enlazada}
+\label{sec:grafo-punteros}
+\index{grafo!representacion@representación!enlazada}
+
+  Una opción es representar los vértices por nodos
+  con punteros que lo conectan a sus vecinos.
+  Como el número de vecinos no necesariamente es el mismo
+  (o siquiera razonablemente acotado)
+  es natural que cada nodo tenga una lista de punteros a los vecinos
+  (terminan siendo las listas de adyacencia).
+
+\subsection{Representación implícita}
+\label{sec:grafo-implicita}
+\index{grafo!representacion@representación!implicita@implícita}
+
+  En muchas aplicaciones
+  el grafo nunca existe como estructura de datos,
+  se van generando
+  (y descartando)
+  los vértices vecinos conforme se requieren.
+  Un ejemplo de esta situación se da
+  cuando un programa juega al ajedrez:
+  Los nodos son posiciones de las piezas,
+  y dos nodos son adyacentes
+  si son posiciones relacionadas mediante una movida.
+  El grafo del caso es finito,
+  pero tan grande que es totalmente impracticable generarlo completo
+  (y aún menos almacenarlo).
+  Se van generando los vértices conforme los requiera el programa.
+
+\section{Isomorfismo entre grafos}
+\label{sec:isomorfismo}
+\index{grafo!isomorfismo}
+
+  Intuitivamente,
+  si dos grafos pueden dibujarse de la misma forma,
+  los consideraremos iguales.
+  Sin embargo,
+  como los conjuntos de vértices
+  (y en consecuencia,
+   arcos)
+  no serán los mismos,
+  esta idea debe interpretarse de otra forma.
+  \begin{definition}
+    Si \(G_1 = (V_1, E_1)\) y \(G_2 = (V_2, E_2)\) son grafos
+    se dice que son \emph{isomorfos}
+    si existe una biyección \(\alpha \colon V_1 \rightarrow V_2\)
+    tal que \(\{\alpha(u), \alpha(v)\} \in E_2\)
+    exactamente cuando \(\{u, v\} \in E_1\).
+    En tal caso se anota \(G_1 \cong G_2\).
+  \end{definition}
+  Nótese que esto es coherente con lo que indicamos antes,
+  en que los vértices no se identifican.
+  Cuando hablamos de un grafo en realidad estamos refiriéndonos
+  a una clase de grafos isomorfos.
+
+  Una regla simple que resulta de la definición
+  es que el número de vértices
+  y arcos es el mismo entre grafos isomorfos.
+  Al buscar isomorfismos solo deben considerarse como candidatos
+  vértices del mismo grado,
+  y vértices adyacentes deberán mapear a vértices adyacentes.
+  La figura~\ref{fig:isomorfismo}
+  muestra un par de grafos isomorfos,
+  indicando las correspondencias entre vértices.
+  \begin{figure}[htbp]
+    \setbox1=\hbox{\pgfimage{images/isomorfo-a}}
+    \setbox2=\hbox{\pgfimage{images/isomorfo-b}}
+    \centering
+    \subfloat{
+      \copy1
+    }%
+    \hspace{3em}%
+    \subfloat{
+      \raisebox{0.5\ht1-0.5\ht2}{\copy2}
+    }
+    \caption{Ejemplo de isomorfismo entre grafos}
+    \label{fig:isomorfismo}
+  \end{figure}
+  Otro par de grafos isomorfos
+  dan la figura~\ref{fig:isomorfismo-2}.
+  \begin{figure}[htbp]
+    \setbox1=\hbox{\pgfimage{images/Petersen1}}
+    \setbox2=\hbox{\pgfimage{images/Petersen2}}
+    \centering
+    \subfloat{
+      \copy1
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \raisebox{0.5\ht1-0.5\ht2}{\copy2}
+    }
+    \caption[Dos formas de dibujar el grafo de Petersen]
+	    {Dos formas de dibujar el grafo de Petersen~%
+	      \cite{kempe86:_memoir_theor_mathem_form,
+		    petersen98:_sur_tait}}
+    \label{fig:isomorfismo-2}
+    \index{Petersen, grafo de|textbfhy}
+  \end{figure}
+  De los ejemplos se nota que incluso para grafos más bien chicos
+  no es posible determinar a simple vista si son isomorfos.
+  Resulta que el problema de determinar si dos grafos son isomorfos
+  es \NP\nobreakdash-completo,%
+    \index{NP-completo, problema@\NP-completo, problema}
+  una categoría de problemas difíciles introducida por Cook~%
+    \cite{cook71:_compl_theor_provin_proced}
+  para los cuales no se conocen algoritmos
+  que tomen un tiempo razonable.
+  Para la definición precisa véanse textos de algoritmos
+  y teoría de autómatas,
+  como~%
+    \cite{aho74:_design_anal_comp_algor,
+	  hopcroft06:_intro_autom_theor_languag_comput,
+	  parberry94:_probl_algor},
+  y a Garey y Johnson~%
+    \cite{garey79:_comput_intrac}
+  para un tratamiento detallado.
+  El problema de isomorfismo de grafos
+  fue uno de los primeros problemas clásicos
+  demostrado \NP\nobreakdash-completo.
+
+\section{Algunas familias de grafos especiales}
+\label{sec:grafos-especiales}
+
+  Algunos grafos se repiten en aplicaciones,
+  o son útiles para ejemplos y casos de estudio.
+  Se les dan nombres y notación especiales.
+  \begin{itemize}
+  \item
+    \index{grafo!camino|textbfhy}
+    \(P_n\): Camino simple de \(n\) vértices,
+    donde \(n \ge 2\),
+    ver la figura~\ref{fig:Ps}.
+    Tiene \(n - 1\) arcos,
+    los vértices son de grados \(1\) y \(2\).
+    \begin{figure}[htbp]
+      \centering
+      \setbox2=\hbox{\pgfimage{images/P2}}
+      \setbox3=\hbox{\pgfimage{images/P3}}
+      \setbox4=\hbox{\pgfimage{images/P4}}
+      \setbox5=\hbox{\pgfimage{images/P5}}
+      \centering
+      \subfloat[\(P_2\)]{
+	\raisebox{0.5\ht5-0.5\ht2}{\copy2}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(P_3\)]{
+	\raisebox{0.5\ht5-0.5\ht3}{\copy3}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(P_4\)]{
+	\raisebox{0.5\ht5-0.5\ht4}{\copy4}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(P_5\)]{
+	\copy5
+      }
+      \caption{Algunos grafos $P_n$}
+      \label{fig:Ps}
+    \end{figure}
+  \item
+    \index{grafo!ciclo|textbfhy}
+    \(C_n\): Ciclo de \(n\) vértices,
+    donde el vértice \(i\) está conectado
+    con los vértices \(i - 1\) e \(i + 1\)
+    módulo \(n\).
+    Para que sea realmente un ciclo,
+    es \(n \ge 3\).
+    Tiene \(n\) arcos,
+    es regular de grado \(2\).
+    Ver figura~\ref{fig:Cs}.
+    \begin{figure}[htbp]
+      \setbox3=\hbox{\pgfimage{images/C3}}
+      \setbox4=\hbox{\pgfimage{images/C4}}
+      \setbox5=\hbox{\pgfimage{images/C5}}
+      \setbox6=\hbox{\pgfimage{images/C6}}
+      \centering
+      \subfloat[\(C_3\)]{
+	\raisebox{0.5\ht6-0.5\ht3}{\copy3}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(C_4\)]{
+	\raisebox{0.5\ht6-0.5\ht4}{\copy4}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(C_5\)]{
+	\raisebox{0.5\ht6-0.5\ht5}{\copy5}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(C_6\)]{
+	\copy6
+      }
+      \caption{Algunos grafos $C_n$}
+      \label{fig:Cs}
+    \end{figure}
+  \item
+    \index{grafo!completo|textbfhy}
+    \(K_n\): Grafo completo de \(n\) vértices
+    cada uno conectado con todos los demás,
+    con \(n \ge 1\).
+    Tiene \(n (n - 1) / 2\) arcos,
+    es regular de grado \(n - 1\).
+    La figura~\ref{fig:Ks} muestra algunos ejemplos.
+    \begin{figure}[htbp]
+      \setbox3=\hbox{\pgfimage{images/K3}}
+      \setbox4=\hbox{\pgfimage{images/K4}}
+      \setbox5=\hbox{\pgfimage{images/K5}}
+      \setbox6=\hbox{\pgfimage{images/K6}}
+      \centering
+      \subfloat[\(K_3\)]{
+	\raisebox{0.5\ht6-0.5\ht3}{\copy3}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(K_4\)]{
+	\raisebox{0.5\ht6-0.5\ht4}{\copy4}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(K_5\)]{
+	\raisebox{0.5\ht6-0.5\ht5}{\copy5}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(K_6\)]{
+	\copy6
+      }
+      \caption{Algunos grafos $K_n$}
+      \label{fig:Ks}
+    \end{figure}
+  \item
+    \index{grafo!rueda|textbfhy}
+    \(W_n\): Rueda
+    (en inglés \emph{\foreignlanguage{english}{wheel}})
+    de \(n\) vértices,
+    que consiste en un grafo \(C_{n - 1}\)
+    más un ``centro'' conectado a cada vértice del ciclo.
+    Nótese que algunos autores llaman \(W_n\) a \(W_{n + 1}\)
+    (solo cuentan los vértices de afuera).
+    Tiene \(2 (n - 1)\) arcos,
+    \(n - 1\) vértices de grado \(3\)
+    y uno de grado \(n - 1\).
+    Algunas ruedas muestra la figura~\ref{fig:Wn}.
+    \begin{figure}[htbp]
+      \setbox4=\hbox{\pgfimage{images/W4}}
+      \setbox5=\hbox{\pgfimage{images/W5}}
+      \setbox6=\hbox{\pgfimage{images/W6}}
+      \setbox7=\hbox{\pgfimage{images/W7}}
+      \centering
+      \subfloat[\(W_4\)]{
+	\raisebox{0.5\ht7-0.5\ht4}{\copy4}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(W_5\)]{
+	\raisebox{0.5\ht7-0.5\ht5}{\copy5}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(W_6\)]{
+	\raisebox{0.5\ht7-0.5\ht6}{\copy6}
+      }%
+      \hspace{2.5em}%
+      \subfloat[\(W_7\)]{
+	\copy7
+      }
+      \caption{Algunos grafos $W_n$}
+      \label{fig:Wn}
+    \end{figure}
+  \item
+    \index{grafo!cubo|textbfhy}
+    \(Q_n\): Cubo de orden \(n\).
+    Donde:
+    \begin{center}
+      \begin{description}
+      \item[Vértices:]
+	  Secuencias de \(n\) símbolos \(\{0, 1\}\).
+	\item[Arcos:]
+	  Conectan a todos los pares de vértices
+	  que difieren en un símbolo.
+      \end{description}
+    \end{center}
+    Nótese que el número de vértices
+    es \(2^n\).
+    Tiene \(n \, 2^{n - 1}\) arcos,
+    es regular de grado \(n\).
+    La figura~\ref{fig:Qn} muestra algunos grafos \(Q_n\).
+    \begin{figure}[htbp]
+      \setbox2=\hbox{\pgfimage{images/Q2}}
+      \setbox3=\hbox{\pgfimage{images/Q3}}
+      \centering
+      \subfloat[\(Q_2\)]{
+	\raisebox{0.5\ht3-0.5\ht2}{\copy2}
+      }%
+      \hspace{5em}%
+      \subfloat[\(Q_3\)]{
+	\copy3
+      }
+      \caption{Algunos cubos}
+      \label{fig:Qn}
+    \end{figure}
+  \end{itemize}
+  Resulta que \(C_3 \cong K_3\),
+  \(Q_2 \cong C_4\)
+  y  \(W_4 \cong K_4\).
+
+\section{Algunos resultados simples}
+\label{sec:resultados-simples}
+
+  Algunos teoremas simples de demostrar son sorprendentemente útiles.
+  \begin{theorem}
+    \label{theo:sum-degree=2edges}
+    Sea \(G = (V, E)\) un grafo,
+    entonces:
+    \begin{equation*}
+      \sum_{v \in V} \delta(v) = 2 \cdot \lvert E \rvert
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Consideremos \(S \subseteq V \times E\)
+    tal que \((v, e) \in S\) siempre que \(v \in e\).
+    Contando los elementos de \(S\) ``por filas'' y ``por columnas''
+    (ver la discusión respectiva
+     en el capítulo~\ref{cha:combinatoria-elemental})
+    tenemos:
+    \begin{description}
+    \item[Por filas:]
+      Cada vértice aparece una vez
+      por cada arco en el cual participa:
+      \begin{equation*}
+	\lvert S \rvert = \sum_{v \in V} \delta(v)
+      \end{equation*}
+    \item[Por columnas:]
+      Cada vértice aparece dos veces
+      (una por cada extremo del arco):
+      \begin{equation*}
+	\lvert S \rvert
+	  = \sum_{e \in E} 2 = 2 \cdot \lvert E \rvert
+      \end{equation*}
+    \end{description}
+    Estas dos expresiones deben ser iguales,
+    lo que corresponde precisamente a lo que se quería demostrar.
+  \end{proof}
+
+  \begin{lemma}[Handshaking]
+    \label{lem:handshaking}
+    El número de vértices de grado impar en un grafo es par.
+  \end{lemma}
+  \begin{proof}
+    Sean \(V_o\) los vértices de grado impar
+    y \(V_e\) los vértices de grado par del grafo.
+    Entonces:
+    \begin{equation*}
+      \sum_{v \in V_o} \delta(v) + \sum_{v \in V_e} \delta(v)
+	= 2 \cdot \lvert E \rvert
+    \end{equation*}
+    El lado derecho de esta ecuación es par.
+    El segundo término del lado izquierdo
+    es una suma de números pares,
+    por lo que es par.
+    Con esto,
+    el primer término debe ser par,
+    pero es la suma de números impares.
+    Esto significa que hay un número par de estos,
+    que es exactamente lo que se quería demostrar.
+  \end{proof}
+
+\section{Secuencias gráficas}
+\label{sec:secuencias-graficas}
+
+  Nos interesa resolver problemas como el siguiente:
+  \begin{example}
+    ¿Es posible tener grafos con vértices
+    de grados \(1, 2, 2, 3, 4\)?
+
+    Es factible dibujar este grafo,
+    ver figura~\ref{fig:12234}.
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/grafo-12234}
+      \caption{Un grafo con grados 1, 2, 2, 3 y 4}
+      \label{fig:12234}
+    \end{figure}
+  \end{example}
+
+  Diremos que una secuencia de enteros es \emph{gráfica}%
+    \index{grafo!secuencia grafica@secuencia gráfica|textbfhy}
+  si corresponde a los grados de los vértices de un grafo.
+  Hay algunas condiciones simples,
+  como que el número de vértices de grado impar debe ser par
+  (lema~\ref{lem:handshaking})
+  y que el grado máximo debe ser menor que el número de vértices.
+  Para determinar si una secuencia es gráfica
+  veremos primero cómo reorganizar los arcos
+  sin afectar los grados de los vértices.
+  Esto lo usaremos para modificar grafos
+  de forma que responder la pregunta sea más fácil.
+  \begin{definition}
+    En un grafo \(G = (V, E)\)
+    un \emph{2\nobreakdash-switch}
+    respecto de los arcos \(u v, x y \in E\)
+    (donde \(u x, v y \notin E\))
+    reemplaza esos arcos por \(u x\) y \(v y\).
+    Denotamos \(G \stackrel{2s}{\longrightarrow} H\)
+    si se puede obtener \(H\) de \(G\)
+    mediante una secuencia finita de 2\nobreakdash-switch.
+  \end{definition}
+  Para ilustración véase la figura~\ref{fig:2-switch}.
+  \begin{figure}[htbp]
+    \centering
+    \subfloat{\pgfimage{images/example-2switch-a}}%
+    \hspace{4em}%
+    \subfloat{\pgfimage{images/example-2switch-b}}
+    \caption{La operación 2-switch entre los arcos $u v$ y $x y$}
+    \label{fig:2-switch}
+  \end{figure}
+  Nótese que si \(G \stackrel{2s}{\longrightarrow} H\)
+  entonces también \(H \stackrel{2s}{\longrightarrow} G\),
+  ya que podemos aplicar la secuencia en el orden inverso.
+  En realidad,
+  esta es una relación de equivalencia%
+    \index{relacion@relación!equivalencia}
+  (es reflexiva,
+     ya que no hacer nada
+     equivale a aplicar \(0\) \(2\)\nobreakdash-switch;
+   es claro que es transitiva;
+   y es simétrica
+     porque podemos aplicar
+     una secuencia de \(2\)\nobreakdash-switch
+   al revés en orden inverso).
+  Antes de demostrar el teorema de Berge,
+  vemos que podemos ordenar los arcos
+  de forma que conecten los vértices en orden de grado decreciente:
+  \begin{lemma}
+    \label{lem:Berge}
+    Sea \(G\) un grafo de orden \(n\),
+    con \(\delta_G(v_i) = d_i\)
+    tal que \(d_1 \ge d_2 \ge \dotso \ge d_n\).
+    Entonces hay un grafo \(G'\)
+    tal que \(G \stackrel{2s}{\longrightarrow} G'\)
+    con \(N_{G'} (v_1) = \{v_2, v_3, \dotsc, v_{d_1 + 1}\}\).
+  \end{lemma}
+  \begin{proof}
+    Consideremos un grafo
+    con los vértices ordenados según grado decreciente
+    en que lo indicado no se cumple,
+    o sea,
+    hay un primer vértice \(v_i\) con \(2 \le i \le d_1 + 1\)
+    tal que \(v_1 v_i \notin E\).
+    Demostraremos que un \(2\)\nobreakdash-switch
+    corrige esto para ese vértice,
+    repitiendo el proceso logramos lo prometido.
+
+    Como \(\delta_G(v_1) = d_1\),
+    hay \(v_j\) con \(j \ge d_1 + 2\) tal que \(v_1 v_j \in E\).
+    Debe ser \(d_i \ge d_j\),
+    ya que \(i < j\).
+    Como \(v_1 v_j \in E\),
+    es \(d_j = \delta_G(v_j) \ge 1\).
+    Así sabemos que \(v_j\)
+    es adyacente a \(v_1\) y a \(d_j - 1\) otros vértices,
+    mientras \(v_i\) es adyacente a \(d_i\) vértices
+    que no incluyen a \(v_1\).
+    Como por el orden de los vértices \(d_i \ge d_j > d_j - 1\),
+    los conjuntos \(N(v_i)\) y \(N(v_j) \smallsetminus \{v_1\}\)
+    no pueden coincidir
+    (por ser de tamaños diferentes);
+    o sea hay algún \(t \ne 1\)
+    tal que \(v_i v_t \in E\) pero \(v_j v_t \notin E\).
+    Aplicando un 2\nobreakdash-switch a \(v_1 v_j\) y \(v_i v_t\)
+    (son arcos \(v_1 v_j\) y \(v_i v_t\)
+     y no están unidos \(v_1\) con \(v_i\) ni \(v_j\) con \(v_t\),
+     con lo que esta operación es válida)
+    ninguno de los vértices involucrados cambia de grado
+    y se intercambian \(v_i\) con \(v_j\) en el vecindario de \(v_1\).
+    Aplicando repetidas veces
+    esta operación obtendremos lo prometido.
+  \end{proof}
+  Ahora podemos demostrar:
+  \begin{theorem}[Berge, 1973]
+    \index{Berge, teorema de}
+    \label{theo:Berge}
+    Dos grafos \(G\) y \(H\)
+    sobre el mismo conjunto de vértices \(V\)
+    satisfacen \(\delta_G(v) = \delta_H(v)\) para todo \(v \in V\)
+    si y solo si \(G \stackrel{2s}{\longrightarrow} H\).
+  \end{theorem}
+  \begin{proof}
+    Demostramos implicancia en ambos sentidos.
+    Ya vimos que al aplicar un \(2\)\nobreakdash-switch
+    el grado de los vértices no cambia,
+    con lo que si \(G \stackrel{2s}{\longrightarrow} H\)
+    entonces los vértices tienen los mismos grados en ambos.
+
+    Para demostrar necesidad,
+    aplicamos inducción sobre el número de vértices en \(G\).%
+      \index{demostracion@demostración!induccion@inducción}
+    La base,
+    \(\lvert V \rvert = 1\) es trivial.
+    Para inducción,
+    por el lema~\ref{lem:Berge},
+    si elegimos el vértice \(v\) de grado máximo en \(G\) y \(H\),
+    hay grafos \(G'\) y \(H'\) tales que
+    \(G \stackrel{2s}{\longrightarrow} G'\)
+    y \(H \stackrel{2s}{\longrightarrow} H'\)
+    y tales que \(N_{G'}(v) = N_{H'}(v)\).
+    Si eliminamos \(v\) de \(G'\) y \(H'\)
+    obteniendo grafos \(G''\) y \(H''\),
+    ambos tienen los mismos grados
+    ya que estamos eliminando los mismos arcos de \(G'\) y \(H'\).
+    Por la hipótesis de inducción,
+    \(G'' \stackrel{2s}{\longrightarrow} H''\),
+    y por tanto también \(G' \stackrel{2s}{\longrightarrow} H'\).
+    Esto basta para demostrar lo aseverado,
+    dado que es una relación de equivalencia.
+  \end{proof}
+
+  Con estas herramientas
+  estamos en posición de atacar nuestro problema original.
+  \begin{definition}
+    Sea \(\left\langle d_1, d_2, d_3, \dotsc, d_n \right\rangle\)
+    una secuencia descendente de números naturales,
+    o sea, \(d_1 \ge d_2 \ge d_3 \ge \dotso \ge d_n\).
+    Tal secuencia se dice \emph{gráfica}
+    si hay un grafo \(G = (V, E)\)
+    con \(V = \{v_1, v_2, \dotsc, v_n\}\)
+    tal que \(d_i = \delta(v_i)\).
+  \end{definition}
+  Entonces\footnote{%
+    Según Allenby y Slomson~\cite[página~159]{allenby11:_how_count},
+    Havel~\cite{havel55:_poznamka}
+    publicó este resultado en checo,
+    Hakimi~\cite{hakimi62:_realiz_set_int_degrees_vertices_linear_graph}
+    es independiente del resultado previo.}:
+  \begin{theorem}[Havel-Hakimi]
+    \index{Havel-Hakimi, teorema de}
+    \label{theo:Havel}
+    Una secuencia \(d_1 \ge d_2 \ge d_3 \ge \dotso \ge d_n\)
+    (con  \(d_1 \ge 1\) y \(n \ge 2\))
+    es gráfica si y solo si lo es la secuencia siguiente
+    ordenada de mayor a menor:
+    \begin{equation*}
+      d_2 - 1, d_3 - 1, \dotsc, d_{d_1 + 1} - 1,
+	d_{d_1 + 2}, d_{d_1 + 3}, \dotsc d_n
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Demostramos implicancias en ambas direcciones.
+    Para el recíproco,
+    consideremos un grafo \(G\)
+    de orden \(n - 1\) con vértices y grados:
+    \begin{equation*}
+      \delta_G(v_2) = d_2 - 1,
+	\dotsc, \delta_G(v_{d_1 + 1}) = d_{d_1 + 1} - 1,
+		   \delta_G(v_{d_1 + 2}) = d_{d_1 + 2},
+	\dotsc, \delta_G(v_n) = d_n.
+    \end{equation*}
+    Agregue el vértice \(v_1\)
+    con arcos \(v_1 v_i\) para \(2 \le i \le d_1 + 1\) para dar el grafo \(H\),
+    que cumple \(\delta_H(v_1) = d_1\),
+    y \(\delta_H(v_i) = d_i\) para todo \(2 \le i \le n\).
+
+    Para el directo,
+    suponga un grafo \(G\) tal que \(\delta_G(v_i) = d_i\)
+    para \(1 \le i \le n\).
+    Por el lema~\ref{lem:Berge}
+    podemos suponer que \(N_G(v_1) = \{v_2, \dotsc, v_{d_1 + 1}\}\).
+    Si eliminamos el vértice \(v_1\) de \(G\)
+    obtenemos un grafo con la secuencia de grados indicada.
+  \end{proof}
+
+  Aplicando repetidas veces el teorema de Havel-Hakimi,
+  teorema~\ref{theo:Havel},
+  podemos determinar rápidamente si una secuencia es o no gráfica.
+  Por ejemplo,
+  considérese la secuencia
+    \(\left\langle 4, 4, 4, 3, 2, 1 \right\rangle\).
+  Tenemos:
+  \begin{align*}
+    \left\langle 4, 4, 4, 3, 2, 1 \right\rangle
+      &\text{\ es gráfica si y solo si\ }
+	 \left\langle 3, 3, 2, 1, 1 \right\rangle
+	 \text{\ es gráfica} \\
+      &\text{\ es gráfica si y solo si\ }
+	 \left\langle 2, 1, 1, 0 \right\rangle
+	 \text{\ es gráfica} \\
+      &\text{\ es gráfica si y solo si\ }
+	 \left\langle 0, 0, 0 \right\rangle
+	 \text{\ es gráfica}
+  \end{align*}
+  Esta última corresponde al grafo de tres vértices y sin arcos,
+  por lo que es gráfica.
+
+  El teorema de Havel-Hakimi da una forma de construir un grafo
+  con los grados prescritos:
+  Se ordenan los grados de mayor a menor,
+  luego el vértice \(v_1\)
+  está conectado con \(v_2\) a \(v_{d_1} + 1\),
+  el vértice \(v_2\)
+  se conecta con los siguientes desde \(v_{d_1 + 2}\)
+  hasta completar su grado,
+  y así sucesivamente.
+  Donde en el proceso se reordenan los grados
+  deben reordenarse los vértices
+  de la misma manera.
+  Para un ejemplo de este proceso,
+  tomemos:
+  \begin{align*}
+    \langle 8, 8, 6, 5, 4, 3, 3, 3, 1, 1 \rangle
+      &\rightarrow \langle 7, 5, 4, 3, 2, 2, 2, 0, 1 \rangle
+	 \hspace*{3.5em} \text{\(v_{10}\) pasa a \(v_9\)} \\
+      &\phantom{{} \rightarrow {}}
+		   \langle 7, 5, 4, 3, 2, 2, 2, 1, 0 \rangle \\
+      &\rightarrow \langle \phantom{7,}
+			      4, 3, 2, 1, 1, 1, 0, 0 \rangle \\
+      &\rightarrow \langle \phantom{7, 4,}
+				 2, 1, 0, 0, 1, 0, 0 \rangle
+	 \hspace*{3.5em} \text{\(v_8\) pasa a \(v_6\)} \\
+      &\phantom{{} \rightarrow {}}
+		   \langle \phantom{7, 5,}
+				 2, 1, 1, 0, 0, 0, 0 \rangle \\
+      &\rightarrow \langle \phantom{7, 5, 4,}
+				    0, 0, 0, 0, 0, 0 \rangle
+  \end{align*}
+  La última secuencia es gráfica
+  (son seis vértices aislados).
+  Los comentarios
+  indican los cambios de posición que sufrieron los vértices:
+  Se intercambiaron \(v_{9}\) con \(v_{10}\);
+  luego \(v_6\) fue a \(v_7\),
+  \(v_7\) a \(v_8\) y \(v_8\) pasó a \(v_6\).
+  \begin{figure}[ht]
+    \centering
+    \pgfimage{images/Havel}
+    \caption{Un grafo con vértices
+	     de grados $\langle 8, 8, 6, 5, 4, 3, 3, 3, 1, 1 \rangle$}
+    \label{fig:ex-Havel}
+  \end{figure}
+  La figura~\ref{fig:ex-Havel} muestra el grafo resultante.
+
+  \begin{definition}
+    \(G = (V,E)\) es un grafo.
+    Entonces se define:
+    \begin{description}
+      \item[Camino:]
+	Es una secuencia de vértices
+	  \(\left\langle v_1, v_2, \dots, v_n \right\rangle\)
+	tal que \(v_i, v_{i + 1}\) son adyacentes
+	(\emph{\foreignlanguage{english}{walk}} en inglés).
+      \item[Camino simple:]
+	Es un camino en los que los \(v_i\) son todos distintos
+	(en inglés, \emph{\foreignlanguage{english}{path}}).
+      \item[Ciclo:]
+	Es un camino
+	  \(\left\langle v_1, v_2, \dots, v_n, v_1 \right\rangle\),
+	en el cual no se repite más que el primer y último vértice.
+	Se llama \emph{\(r\)\nobreakdash-ciclo}
+	(ciclo de largo \(r\))
+	si tiene \(r\) arcos y \(r\) vértices.
+      \item[Circuito:]
+	Un camino cerrado
+	\(\left\langle v_1, v_2, \dots, v_n, v_1 \right\rangle\)
+	(pueden repetirse vértices).
+	Algunos les llaman ciclos,
+	y llaman \emph{ciclos simples}
+	a lo que nosotros llamamos ciclos.
+    \end{description}
+  \end{definition}
+
+  \begin{definition}
+    Sea \(G = (V,E)\) un grafo.
+    Definimos la relación \(\sim\) entre vértices,
+    tal que \(x \sim y\) si \(x\) e \(y\)
+    están en un camino de \(G\),
+    o sea \(x = v_1, v_2, \dots, v_k = y\) es un camino.
+  \end{definition}
+
+  Es fácil ver que \(\sim\) es una relación de equivalencia:
+  \begin{description}
+  \item[Reflexiva:]
+    \(x \sim x\).
+    Un camino de \(0\) arcos cumple con la definición.
+  \item[Simétrica:]
+    \(x \sim y \implies y \sim x\):
+    Esto es
+    \(x = v_1, \dots, v_k = y \implies y = v_k, \dots, v_1 = x\),
+    que claramente es cierto.
+  \item[Transitiva:]
+    \((x \sim y) \wedge (y \sim z) \implies x \sim z\).
+    Esto es decir:
+    \begin{equation*}
+      x = v_1, \dots, v_k = y = u_1, \dots, u_k = z
+    \end{equation*}
+    Esto es un camino que de \(x\) va a \(z\),
+    \(x \sim z\).
+  \end{description}
+
+  \begin{definition}
+    \index{grafo!componente conexo|textbfhy}
+    \index{grafo!conexo|textbfhy}
+    Sea \(G= (V, E)\) un grafo.
+    Si \(V_1, V_2, \dotsc, V_k\)
+    son las clases de equivalencia de \(\sim\),
+    y \(E_1, E_2, \dots, E_k\)
+    conjuntos de arcos tales que \(E_i\)
+    contiene solo vértices de \(V_i\),
+    a los grafos \(G_i = (V_i, E_i)\)
+    se les llama \emph{componentes conexos} de \(G\).
+    Si \(G\) tiene un único componente conexo
+    es llamado \emph{conexo}.
+  \end{definition}
+
+  En el grafo de la figura~\ref{fig:2componentes}
+  se distinguen vértices a los cuales
+  no se puede acceder desde algunos de los otros vértices.
+  Este grafo tiene dos componentes conexos.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/2componentes}
+    \caption{Un grafo con dos componentes conexos}
+    \label{fig:2componentes}
+  \end{figure}
+
+  Un resultado simple
+  es la relación entre el número de vértices y arcos
+  en grafos conexos.
+  \begin{theorem}
+    \label{theo:VEC}
+    Todo grafo \(G = (V, E)\) tiene
+    a lo menos \(\lvert V \rvert - \lvert E \rvert\)
+    componentes conexos.
+  \end{theorem}
+  Nótese que para \(K_n\) esto nos dice
+  que tiene al menos \(n (3 - n) / 2\)~componentes conexos,
+  y para \(n > 3\) esto es negativo.
+  La cota no es para nada ajustada.
+  \begin{proof}
+    Usamos inducción sobre el número de arcos.%
+      \index{demostracion@demostración!induccion@inducción}
+    \begin{description}
+    \item[Base:]
+      En un grafo con 0 arcos,
+      cada vértice es un componente conexo,
+      y hay
+      \(\lvert V \rvert - 0 = \lvert V \rvert\) componentes conexos.
+    \item[Inducción:]
+      Suponemos que la hipótesis
+      vale para todo grafo de \(n\) arcos,
+      y demostramos que vale para todo grafo de \(n + 1\) arcos,
+      con \(n \ge 0\).
+      Considérese un grafo \(G = (V, E)\) con \(n + 1\) arcos.
+      Eliminamos un arco arbitrario \(a b\) del grafo,
+      dejando el grafo \(G'\) con \(n\) arcos.
+      Por la hipótesis,
+      \(G'\) tiene a lo menos \(\lvert V \rvert - n\)
+      componentes conexos.
+      Reponemos el arco eliminado,
+      con lo que tenemos de vuelta el grafo original \(G\).
+      Si \(a\) y \(b\) pertenecían al mismo componente conexo
+      de \(G'\),
+      \(G\) tiene el mismo número de componentes conexos de \(G'\),
+      que es a lo menos \(\lvert V \rvert - n\) por hipótesis.
+      Si \(a\) y \(b\) pertenecen
+      a componentes conexos distintos de \(G'\),
+      \(G\) tiene un componente conexo menos que \(G'\),
+      ya que el arco \(a b\)
+      une esos dos componentes conexos de \(G'\)
+      en uno solo en \(G\).
+      Como \(G'\)
+      tenía a lo menos \(\lvert V \rvert - n\) componentes conexos,
+      \(G\) tiene entonces a lo menos uno menos que esto,
+      vale decir
+	\(\lvert V \rvert - n - 1 = \lvert V \rvert - (n + 1)\).
+      Esto demuestra el paso de inducción.
+    \qedhere
+    \end{description}
+  \end{proof}
+
+  Algunos puntos se deben notar de esta demostración.
+  Primeramente,
+  usamos inducción sobre el número de arcos.
+  Esto es común en demostraciones en grafos,
+  al igual que inducción sobre el número de vértices.
+  Sólo si ninguna de estas dos estrategias sirve
+  vale la pena considerar otras opciones.
+
+  Por otro lado,%
+    \index{grafo!eliminar y reponer}
+  usamos la táctica de eliminar un arco
+  y reponerlo en nuestra demostración.
+  Esta es la forma más sencilla de evitar errores lógicos comunes,
+  ya que asegura que el elemento que queremos agregar es posible
+  y lleva en la dirección correcta.
+  Si se usa inducción en grafos
+  (ya sea sobre arcos o vértices),
+  siempre conviene usar esta idea de encoger-expandir.
+
+  \begin{corollary}
+    \label{cor:grafo-conexo-vertices-arcos}
+    Todo grafo conexo de \(n\) vértices
+    tiene a lo menos \(n - 1\) arcos.
+  \end{corollary}
+  \begin{proof}
+    Usamos la misma estrategia
+    de la demostración del teorema~\ref{theo:VEC}:
+    Partiendo con \(\lvert V \rvert\) vértices aislados
+    (\(\lvert V \rvert\) componentes conexos),
+    cada vez que agregamos un arco
+    disminuye el número de componentes conexos
+    en \(0\) o \(1\).
+    Si siempre elegimos un arco
+    que conecta componentes conexos distintos,
+    al agregar \(n - 1\) arcos queda un único componente conexo.
+  \end{proof}
+
+  \begin{definition}
+    Sea \(G = (V, E)\) un grafo.
+    Entonces:
+    \begin{itemize}
+      \item
+	Un camino simple que visita todos los vértices
+	es un \emph{camino hamiltoniano}.%
+	  \index{grafo!camino hamiltoniano|textbfhy}
+	Un ciclo que contiene todos los vértices del grafo
+	es llamado \emph{ciclo hamiltoniano}.%
+	  \index{grafo!ciclo hamiltoniano|textbfhy}
+      \item
+	Un camino que pasa exactamente una vez por cada arco
+	es denominado \emph{camino de Euler}.%
+	  \index{grafo!camino de Euler|textbfhy}
+	Un circuito que pasa exactamente una vez por cada arco
+	se llama \emph{circuito de Euler}.%
+	  \index{grafo!circuito de Euler|textbfhy}
+    \end{itemize}
+  \end{definition}
+
+  Determinar si hay un camino o ciclo hamiltoniano
+  es \NP\nobreakdash-completo.%
+    \index{NP-completo, problema@\NP-completo, problema}
+  Incluso tiene la distinción de ser uno de los 21~problemas
+  identificados inicialmente como tales por Karp~%
+    \cite{karp72:_reduc_among_combin_prob}.
+
+  En cambio,
+  un camino (o circuito) de Euler es sencillo de hallar.
+  Si consideramos vértices cualquiera hay dos opciones:
+  \begin{enumerate}
+  \item
+    Comienzo en un vértice,
+    termino en otro.
+  \item
+    Comienzo en un vértice,
+    termino en el mismo.
+  \end{enumerate}
+
+  Si inicio y fin son diferentes
+  (es un camino de Euler):
+  \begin{itemize}
+  \item
+    Inicio:
+    \emph{Salgo} una vez,
+    \emph{paso} por él (entro y salgo) varias veces,
+    lo que significa que \(\delta(\mathit{inicio})\) es impar.
+  \item
+    Fin:
+    \emph{Llego} una vez,
+    \emph{paso} por él (entro y salgo) varias veces,
+    con lo que también \(\delta(\mathit{fin})\) es impar.
+  \item
+    Otros vértices:
+    \emph{Paso} por él (entro y salgo) varias veces,
+    por lo que \(\delta(\mathit{otro})\) es par.
+  \end{itemize}
+  Si inicio y fin son el mismo
+  (es un circuito de Euler):
+  \begin{itemize}
+  \item
+    Inicio (y fin):
+    \emph{Salgo} una vez,
+    \emph{paso} por él (entro y salgo) varias veces,
+    \emph{llego} una vez,
+    y \(\delta(\mathit{inicio})\) es par.
+  \item
+    Otros vértices:
+    \emph{Paso} por él (entro y salgo) varias veces,
+    con lo que \(\delta(\mathit{otro})\) es siempre par.
+  \end{itemize}
+  Estas dos son las únicas posibilidades,
+  y por tanto es condición necesaria
+  para la existencia de un camino de Euler
+  en un grafo conexo el que o todos los vértices sean de grado par
+  (en tal caso podemos comenzar en cualquiera de ellos,
+  terminamos en el mismo,
+  es un \emph{circuito de Euler}),
+  o que hayan exactamente dos vértices de grado impar
+  (comenzamos en uno de ellos,
+  terminamos en el otro,
+  es un \emph{camino de Euler}).
+  Más adelante demostraremos que estas condiciones son suficientes,
+  y daremos algoritmos
+  para encontrar un camino (o circuito) de Euler.
+
+  \begin{example}
+    \index{Koenigsberg, puentes de@Königsberg, puentes de}
+    Puentes de \foreignlanguage{german}{Königsberg}
+
+    Supóngase que se desea dar un paseo
+    por la ciudad de \foreignlanguage{german}{Königsberg},
+    pasando una única vez por cada uno de los siete puentes,
+    situados según la figura~\ref{fig:puentes}.
+    ¿Es posible realizar esta tarea?
+
+    La respuesta es no,
+    como demostró Euler en 1735,%
+      \index{Euler, Leonhard}
+    dando inicio al estudio de lo que hoy es la teoría de grafos.
+    Representando los sectores unidos por los puentes en un grafo
+    como en la misma figura~\ref{fig:puentes},
+    se aprecia claramente
+    que hay más de dos vértices de grado impar.
+    Debido a esto no es posible que exista un camino de Euler
+    que permita cumplir con la tarea requerida.
+    Si bien la representación no es un grafo propiamente tal%
+      \index{multigrafo}
+    -- es un multigrafo
+	pues hay vértices que están conectados por más de un arco --
+    aún así los principios son aplicables.
+    \begin{figure}[htbp]
+      \centering
+      \subfloat[Königsberg en tiempos de Euler]
+	       {\pgfimage[width=0.3\textwidth]{images/Konigsberg}}%
+      \hspace*{1.5em}%
+      \subfloat[Königsberg y sus puentes]
+	       {\pgfimage[width=0.3\textwidth]{images/Konigsberg_colour}}%
+      \hspace*{2.5em}%
+      \subfloat[Puentes de Königsberg como multigrafo]
+	       {\pgfimage{images/puentesdeK}}
+      \caption[Puentes de Königsberg]
+	      {Puentes de Königsberg~%
+		 \cite{oconnor00:_koenigsberg_bridges}}
+      \label{fig:puentes}
+      % http://www-history.mcs.st-andrews.ac.uk/Diagrams/Konigsberg.jpeg
+      % http://www-history.mcs.st-andrews.ac.uk/Diagrams/Konigsberg_colour.jpeg
+    \end{figure}
+  \end{example}
+
+  Del resultado siguiente Euler demostró la necesidad en 1736,
+  Hierholzer~%
+    \cite{hierholzer73:_ueber_moegl_linien}
+  demostró suficiencia recién en~1873.
+  Igual se atribuye a Euler.
+  \begin{theorem}[Euler]
+    \label{theo:Euler-circuito-camino}
+    \index{Euler, teorema de}
+    Sea \(G\) un grafo conexo.
+    Entonces hay un camino de Euler si y solo si
+    hay exactamente dos vértices de grado impar
+    (y todo camino de Euler comienza en uno de ellos
+     y termina en el otro),
+    y hay un circuito de Euler
+    si y solo si todos los vértices son de grado par.
+  \end{theorem}
+% Fixme: Paulina Silva <pasilva@alumnos.inf.utfsm.cl> dice que esta
+%	 demostración es muy larga y confusa. Reorganizarla.
+  \begin{proof}
+    Demostramos implicancia en ambas direcciones.
+    Que las condiciones son necesarias ya lo vimos antes,
+    demostramos ahora que son suficientes por inducción fuerte
+    sobre el número de arcos de \(G\).%
+      \index{demostracion@demostración!induccion@inducción!fuerte}
+    \begin{description}
+    \item[Base:]
+      Si \(G\) tiene un único arco,
+      la conclusión es trivial.
+    \item[Inducción:]
+      Sea un grafo \(G\) con \(n + 1\) arcos,
+      todos cuyos vértices son de grado par
+      o hay exactamente dos vértices de grado impar.
+      La estrategia general es eliminar un arco,
+      y analizar por separado las situaciones
+      en las cuales esta operación
+      divide el grafo en dos componentes conexos
+      y aquellas en que sigue siendo conexo.%
+	\index{grafo!componente conexo}
+
+      Consideremos primero el caso en que todos los vértices
+      de \(G\) son de grado par.
+      Elijamos un vértice \(x\) y un arco \(e = x y\).
+      Si eliminamos el arco \(e\),
+      obtenemos un nuevo grafo \(G'\),
+      en el cual ahora \(x\) e \(y\)
+      son los únicos vértices de grado impar.
+      Entonces \(G'\) es conexo,
+      ya que si no fuera conexo
+      \(x\) e \(y\) en \(G'\)
+      pertenecerían a componentes conexos diferentes,
+      y en \(G'\) los vértices \(x\) e \(y\)
+      serían los únicos de grado impar
+      en sus respectivos componentes conexos.
+      Esto es absurdo,
+      contradice al lema~\ref{lem:handshaking}.
+      Por inducción,
+      como \(G'\) es conexo y tiene \(n\) arcos,
+      hay un camino de Euler
+      que comienza en \(x\) y termina en \(y\);
+      al reponer el arco \(x y\) hay entonces un circuito de Euler
+      (el camino anterior junto con este arco).
+
+      Supongamos ahora que \(G\)
+      tiene exactamente dos vértices de grado impar,
+      llamémosles \(x\) e \(y\).
+      Consideremos primero el caso
+      en que \(x\) e \(y\) son adyacentes.
+      Eliminando el arco \(x y\)
+      tenemos un grafo \(G'\) con \(n\) arcos,
+      y todos sus vértices son de grado par.
+      Si \(G'\) es conexo,
+      tiene un circuito de Euler,
+      y agregando el arco \(x y\) a este tenemos un camino de Euler
+      que comienza en \(x\) y termina en \(y\).
+      Si \(G'\) no es conexo,
+      tiene dos componentes conexos,
+      llamémosles \(G_1\) y \(G_2\).
+      Pero tanto \(G_1\) como \(G_2\)
+      tienen solo vértices de grado par,
+      y tienen menos de \(n\) arcos,
+      con lo que cada uno de ellos tiene un circuito de Euler,
+      que podemos suponer comienza y termina en \(x\)
+      (respectivamente \(y\)).
+      Conectando estos dos circuitos mediante el arco \(x y\)
+      obtenemos un camino de Euler para \(G\),
+      que comienza en \(x\) y termina en \(y\).
+      Si no hay un arco que conecte a \(x\) e \(y\),
+      debe haber un arco \(x z\) para algún vértice \(z\).
+      Eliminando este arco,
+      tenemos un grafo \(G'\) con \(n\) arcos
+      en el cual hay exactamente dos vértices de grado impar,
+      \(z\) e \(y\).
+      Por inducción,
+      si \(G'\) es conexo
+      hay un camino de Euler
+      que comienza en \(z\) y termina en \(y\),
+      reponiendo el arco \(x z\)
+      tenemos un camino de Euler
+      que comienza en \(x\) y termina en \(y\).
+      Si \(G'\) no es conexo,
+      tendrá componentes conexos \(G_1\)
+      (que contiene a \(x\))
+      y \(G_2\).
+      Entonces \(z\) estará en \(G_2\)
+      (en caso contrario, \(G'\) sería conexo),
+      e \(y\) estará en \(G_2\) también
+      (de otra forma,
+       sería el único vértice de grado impar en \(G_1\)).
+      O sea,
+      \(G_1\) tiene solo vértices de grado par,
+      y \(G_2\) tiene exactamente dos vértices de grado impar
+      (\(y\) y \(z\)).
+      Por inducción,
+      hay un circuito de Euler en \(G_1\),
+      que podemos suponer comienza y termina en \(x\),
+      y un camino de Euler en \(G_2\),
+      que comienza en \(z\) y termina en \(y\).
+      Reponiendo el arco \(x z\)
+      tenemos un camino de Euler que comienza en \(x\),
+      recorre \(G_1\) para volver a \(x\),
+      luego pasa a \(G_2\) por \(x z\)
+      y sigue el camino de Euler en \(G_2\) para terminar en \(y\).
+    \qedhere
+    \end{description}
+  \end{proof}
+
+  La demostración del teorema~\ref{theo:Euler-circuito-camino}
+  no da muchas luces sobre cómo hallar el camino
+  (circuito) de Euler.
+  Curiosamente,
+  Euler mismo nunca dio un método para hallar tal camino o circuito.
+  Una técnica elegante da el algoritmo de Fleury~%
+    \cite{fleury83:_deux_probl_geomet_situac}:%
+    \index{Fleury, algoritmo de}
+  Si hay vértices de grado impar,
+  comience en uno de ellos,
+  en caso contrario elija uno cualquiera.
+  En cada paso,
+  elija un arco desde el vértice actual y atraviéselo,
+  luego lo elimina del grafo.
+  Al hacer esto,
+  debe tener cuidado que el grafo resultante sea conexo
+  (salvo que no tenga alternativa).
+
+  Una técnica más eficiente para hallar un circuito de Euler
+  se debe a Hierholzer~%
+    \cite{hierholzer73:_ueber_moegl_linien}:%
+    \index{Hierholzer, algoritmo de}
+  Parta de un vértice \(v\) cualquiera
+  y siga un camino sin repetir arcos a través del grafo
+  hasta volver a \(v\).
+  Es imposible quedar sin posibilidades de continuar,
+  ya que los vértices son de grado par,
+  de llegar a un vértice
+  tiene que haber al menos un arco que permita salir;
+  y como hay un número finito de vértices
+  tarde o temprano retornaremos al inicio.
+  Si esto no visita todos los arcos,
+  elija algún vértice \(v'\) en el circuito construido
+  que tenga arcos no visitados,
+  y comience el proceso nuevamente desde \(v'\),
+  integrando luego el nuevo circuito en el anterior.
+
+% Fixme: Correctitud de los algoritmos
+
+  \begin{example}
+    \begin{figure}[htbp]
+     \centering
+      \pgfimage{images/casita}
+      \caption{Dibuja una casita}
+      \label{fig:casita}
+   \end{figure}
+    Se pide dibujar la figura~\ref{fig:casita} en un papel,
+    de manera que el lápiz no se levante en ningún momento del papel
+    y no dibuje dos veces el mismo trazo.
+    ¿Es posible realizar esto?
+
+    La respuesta es sí,
+    puesto que hay exactamente dos vértices de grado impar.
+    Debemos elegir uno de ellos como punto de partida,
+    y terminaremos en el otro.
+  \end{example}
+
+  \begin{example}
+    \label{ex:queso}
+    Un cubo de queso cortado en \(3 \times 3\).
+
+    Un ratón comienza en una de las esquinas,
+    come ese cubito y sigue con uno de los vecinos (no en diagonal).
+    ¿Puede comerse todo el queso terminando con el cubo del centro?
+    Los arcos en la figura~\ref{fig:cubo-queso}
+    muestran las movidas legales.
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/cubo-queso}
+      \caption{Queso cortado en nueve cubitos}
+      \label{fig:cubo-queso}
+    \end{figure}
+
+    La respuesta a esto es no.
+    Considere el grafo de la figura~\ref{fig:cubo-queso-bipartito},
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/cubo-queso-bipartito}
+      \caption{Cubitos de queso de colores}
+      \label{fig:cubo-queso-bipartito}
+    \end{figure}
+    en el cual se han coloreado de rojo y azul vértices adyacentes.
+    Se ve que hay 14~vértices azules y 13~rojos.
+    En cualquier camino que nuestro roedor siga
+    irá alternando colores,
+    por lo que si comienza en una de las esquinas,
+    que son azules,
+    necesariamente terminará en un cubito azul
+    de comerse todo el queso.
+    Pero el cubito central es rojo.
+  \end{example}
+
+\section{Árboles}
+\label{sec:arboles}
+\index{grafo!arbol@árbol|textbfhy}
+\index{arbol@árbol|seealso{grafo!árbol}}
+
+  En muchas aplicaciones aparecen grafos conexos
+  sin enlaces redundantes
+  (sin ciclos).
+  Esta idea es capturada por la definición siguiente.
+  \begin{definition}
+    El grafo \(T = (V, E)\) es un \emph{árbol} si:
+    \begin{enumerate}[label=\textbf{T\arabic{*}:}, ref=T\arabic{*}]
+    \item
+      \label{T:conexo}
+      \(T\) es conexo.
+    \item
+      \label{T:aciclico}
+      No hay ciclos en \(T\).
+    \end{enumerate}
+  \end{definition}
+  Aclaramos que los árboles binarios%
+    \index{arbol binario@árbol binario}
+  vistos en el ramo Estructuras de Datos,
+  \emph{no son árboles}.
+  Acá no hay raíz,
+  hijos ni descendientes,
+  y aún menos ``hijos izquierdos'' y ``derechos'',
+  solo \emph{vecinos}.
+  Y como estos son grafos,
+  no hay árboles sin nodos.
+
+  \begin{definition}
+    \index{grafo!arbol@árbol!hoja}
+    \index{grafo!arbol@árbol!vertice interno@vértice interno}
+    En un árbol \(T = (V, E)\)
+    un vértice \(v \in V\) se llama \emph{hoja}
+    si tiene grado uno.
+    En caso contrario es un \emph{vértice interno}.
+  \end{definition}
+
+  Buena parte de la importancia de los árboles
+  reside en que tienen una colección de propiedades interesantes,
+  como las siguientes.
+  \begin{theorem}
+    \index{grafo!arbol@árbol!propiedades}
+    \label{theo:arbol-propiedades}
+    Si \(T = (V, E)\) es un árbol entonces:
+    \begin{enumerate}[label=\textbf{T\arabic{*}:},
+		      ref=T\arabic{*},
+		      resume]
+      \item
+	\label{T:unico-camino}
+	Para cualquier par de vértices en \(V\)
+	hay un único camino simple entre ellos.
+      \item
+	\label{T:nuevo-arco}
+	Al agregar un arco a \(T\) se forma un ciclo.
+      \item
+	\label{T:quitar-arco}
+	Al eliminar un arco de \(T\),
+	quedan dos componentes conexos que son árboles.
+      \item
+	\label{T:hojas}
+	Un árbol con al menos dos vértices tiene al menos dos hojas.
+      \item
+	\label{T:vertices-arcos}
+	\(\lvert E \rvert = \lvert V \rvert - 1\).
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Demostramos cada una de las aseveraciones por turno.
+    \begin{enumerate}[label=\textbf{T\arabic{*}:},
+		      ref=T\arabic{*},
+		      start=3]
+    \item
+      Supongamos que \(T = (V, E)\) es un árbol
+      y que hay dos vértices \(x, y\)
+      con más de un camino simple que los conecta,
+      digamos:
+      \begin{align*}
+	x &= u_1, u_2, \dots, u_r =  y \\
+	x &= v_1, v_2, \dots, v_s =  y
+      \end{align*}
+      Sea ahora \(i\) el \emph{menor} índice
+      tal que \(v_{i + 1} \ne u_{i + 1}\);
+      y sea \(j\) el \emph{mayor} índice
+      tal que \(u_{j - 1} \ne v_{k - 1}\),
+      pero \(u_j = v_k\) para algún \(k\).
+      Vea la figura~\ref{fig:teo-T3}.
+      \begin{figure}[htbp]
+	\centering
+	\pgfimage{images/teo3}
+	\caption{Esquema de vértices
+		 en la parte~\ref{T:unico-camino}
+		 el teorema~\ref{theo:arbol-propiedades}}
+	\label{fig:teo-T3}
+      \end{figure}
+      Se nota que
+      \(v_i, v_{i + 1}, \dots,
+	 v_{k - 1}, v_k, u_{j - 1}, u_{j - 2}, u_{i + 1}, u_i\)
+      son un ciclo,
+      pero siendo \(T\) un árbol no tiene ciclos.
+      Esta contradicción completa la demostración de esta parte.
+    \item
+      Al agregar un arco \(x y\) al árbol,
+      este junto con el camino entre \(x\) e \(y\)
+      (que existe porque \(T\) es conexo)
+      forman un ciclo.
+    \item
+      Consideremos un arco \(x y\) del árbol.
+      Si lo eliminamos,
+      ya no hay caminos entre \(x\) e \(y\)
+      (por~\ref{T:unico-camino}
+       hay un único camino entre \(x\) e \(y\),
+       precisamente este arco).
+      Luego el grafo resultante tiene dos componentes conexos,
+      cada uno conexo y sin ciclos.
+      Ambos son árboles.
+    \item
+% Fixme: Paulina Silva <pasilva@alumnos.inf.utfsm.cl> dice que esto
+% no se entiende bien
+      Consideremos un camino de largo máximo en \(T\),
+      con vértices \(v_1\), \(v_2\), \ldots, \(v_m\).
+      Entonces \(m \ge 2\),
+      dado que un árbol con al menos dos vértices
+      tiene que tener al menos un arco.
+      No pueden haber arcos \(v_1 v_i\) para \(i \ge 2\),
+      ya que de otra forma
+      tendríamos un ciclo \(v_1, \dotsc, v_i, v_1\).
+      Tampoco puede haber un arco \(u v_1\),
+      ya que de haberlo
+      tendríamos un camino más largo \(u, v_1, \dotsc, v_m\).
+      O sea,
+      \(v_1\) es una hoja.
+      De forma similar,
+      \(v_m\) es una hoja,
+      y hay al menos dos hojas.
+
+      Nótese que el caso extremo de dos hojas se da en un camino.
+    \item
+      Queremos demostrar
+      que \(\lvert E \rvert = \lvert V \rvert - 1\).
+      Usamos inducción sobre el número de vértices.%
+	\index{demostracion@demostración!induccion@inducción}
+      En un árbol con un único vértice,
+      la aseveración se cumple.
+      Supongamos ahora que la aseveración se cumple
+      para todos los árboles con \(n\) vértices,
+      y consideremos un árbol con \(n + 1\) vértices.
+      Elijamos una hoja \(x\)
+      (por~\ref{T:hojas} hay al menos dos hojas),
+      hay un único arco \(x y\) que incluye a \(x\).
+      Al eliminar el vértice \(x\) de \(T\)
+      junto con el arco \(x y\)
+      queda un árbol de \(n\) vértices,
+      que por inducción tiene \(n - 1\) arcos.
+      Al reponer el vértice y el arco,
+      el número de arcos y el de vértices aumenta en uno,
+      y tenemos el resultado.
+    \qedhere
+    \end{enumerate}
+  \end{proof}
+  La parte~\ref{T:vertices-arcos}
+  y el corolario~\ref{cor:grafo-conexo-vertices-arcos}
+  dicen que un árbol es el grafo conexo con mínimo número de arcos%
+    \index{grafo!conexo}
+  para ese conjunto de vértices.
+  Es común querer conectar los vértices de un grafo
+  con el mínimo número de arcos:
+  \begin{definition}
+    \index{grafo!arbol recubridor@árbol recubridor|textbfhy}
+    \index{grafo!spanning tree@\emph{\foreignlanguage{english}{spanning tree}}|see{grafo!árbol recubridor}}
+    Sea \(G = (V, E)\) un grafo conexo.
+    A un árbol \(T = (V, E')\),
+    donde \(E' \subseteq E\)
+    se le llama \emph{árbol recubridor}
+    (en inglés, \emph{\foreignlanguage{english}{spanning tree}})
+    de \(G\).
+  \end{definition}
+
+  \begin{example}
+    Dibujar los árboles no isomorfos de \(6\) vértices.
+
+    La mejor forma de solucionar esto
+    es empezar a dibujar los grafos,
+    partiendo por el caso
+    en que se encuentre un vértice de grado máximo,
+    es decir,
+    de grado~\(5\).
+    Véase la figura~\ref{subfig:a6-d5}.
+    Luego los árboles con grado máximo~\(4\)
+    (figura~\ref{subfig:a6-d4}),
+    los de grado~\(3\)
+    (figura~\ref{subfig:a6-d3}),
+    y finalmente los de grado máximo~\(2\)
+    (figura~\ref{subfig:a6-d2}).
+    \begin{figure}[htbp]
+      \centering
+      \subfloat[Grado máximo \(5\)]{
+	\pgfimage{images/a6-d5}
+	\label{subfig:a6-d5}
+      }%
+      \hspace*{4em}%
+      \subfloat[Grado máximo \(4\)]{
+	\pgfimage{images/a6-d4}
+	\label{subfig:a6-d4}
+      }
+
+      \subfloat[Grado máximo \(3\)]{
+	\pgfimage{images/a6-d3a}%
+	\hspace{2.5em}%
+	\pgfimage{images/a6-d3b}%
+	\hspace{2.5em}%
+	\pgfimage{images/a6-d3c}
+	\label{subfig:a6-d3}
+      }
+
+      \subfloat[Grado máximo \(2\)]{
+	\pgfimage{images/a6-d2}
+	\label{subfig:a6-d2}
+      }
+      \caption{Los \(6\) árboles con \(6\) vértices}
+      \label{fig:arbol6}
+    \end{figure}
+    Estos son la solución a nuestro problema.
+    Hay un total de \(6\) árboles no isomorfos de \(6\) vértices.
+    Obtener el número de árboles para cualquier número de vértices
+    es uno de los problemas abiertos famosos de la teoría de grafos.
+  \end{example}
+
+\section{Árboles con raíz}
+\label{sec:arboles-raiz}
+\index{grafo!arbol con raiz@árbol con raíz|textbfhy}
+
+  Veremos algunas aplicaciones de árbol
+  con un vértice especial designado como raíz.
+  Esto aparece en aplicaciones en las cuales hay una jerarquía,
+  como al representar un organigrama.
+  Así \emph{no} son isomorfos los árboles con raíz
+  (el vértice en blanco marca el distinguido como raíz)
+  mostrados en la figura~\ref{fig:arbol-raiz},
+  a pesar de ser isomorfos si los consideramos como árboles
+  (no distinguimos raíces).
+  \begin{figure}[htbp]
+    \setbox1=\hbox{\pgfimage{images/arbol-raiz-1}}
+    \setbox2=\hbox{\pgfimage{images/arbol-raiz-2}}
+    \centering
+    \subfloat{
+      \raisebox{0.5\ht2-0.5\ht1}{\copy1}
+    }%
+    \hspace{3.5em}%
+    \subfloat{
+      \copy2
+    }
+    \caption{Ejemplos de árbol con raíz}
+    \label{fig:arbol-raiz}
+  \end{figure}
+  Aparte de la raíz distinguimos \emph{vértices internos}
+  con \(\delta(v) \ge 2\),
+  y \emph{hojas} con \(\delta(v) = 1\).
+  Normalmente dibujaremos la raíz y debajo de ella sus vecinos,
+  y así sucesivamente hasta llegar a las hojas.
+
+  En muchas aplicaciones encontraremos
+  que la raíz y los vértices internos tienen el mismo grado.
+  Si tienen grado \(m\)
+  se habla de \emph{árboles \(m\)\nobreakdash-arios}.
+
+  Podemos enumerar los vértices de un árbol con raíz,
+  analizando su distancia desde la raíz,
+  donde la distancia es el largo
+  (número de arcos)
+  del camino entre la raíz y el vértice considerado:
+  \begin{description}
+  \item[\boldmath Nivel \(0\):\unboldmath]
+    La raíz.
+  \item[\boldmath Nivel \(1\):\unboldmath]
+    Los vecinos de la raíz.
+  \item[\boldmath Nivel \(2\):\unboldmath]
+    Los vecinos de vértices en el nivel \(1\),
+    salvo los que están en el nivel \(0\).
+  \item[\boldmath\(\dotsb\)\unboldmath]
+  \item[\boldmath Nivel \(n\):\unboldmath]
+    Los vecinos de los vértices en el nivel \(n - 1\),
+    salvo los que están en nivel \(n - 2\).
+  \end{description}
+  Esto motiva la siguiente definición:
+  \begin{definition}
+    \index{grafo!arbol con raiz@árbol con raíz!altura|textbfhy}
+    La \emph{altura} del árbol con raíz
+    es el máximo \(k\) para el que el nivel \(k\) no es vacío.
+  \end{definition}
+  La interpretación como una jerarquía
+  similar a una genealogía sugiere:
+  \begin{definition}
+    \index{grafo!arbol con raiz@árbol con raíz!ancestro}
+    \index{grafo!arbol con raiz@árbol con raíz!descendiente}
+    \index{grafo!arbol con raiz@árbol con raíz!padre}
+    \index{grafo!arbol con raiz@árbol con raíz!hijo}
+    Sea \(T\) un árbol con raíz \(r\).
+    Si hay un camino de \(r\) a \(v\) que pasa por \(u\),
+    se dice que \(u\) es \emph{ancestro} de \(v\),
+    y \(v\) es un \emph{descendiente} de \(u\).
+    Si \(u\) y \(v\) son vecinos,
+    se dice que \(u\) es el \emph{padre} de \(v\),
+    y que \(v\) es \emph{hijo} de \(u\).
+  \end{definition}
+
+  La enumeración en niveles que da lugar a la definición de altura
+  sugiere el algoritmo~\ref{alg:recorrer-arbol}
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{Recorrer}{recorrer}
+
+    \KwProcedure \Recorrer{\(v\)} \;
+    \BlankLine
+    \eIf{\(v\) es hoja}{
+      Visitar \(v\) \;
+    }{
+      Visitar \(v\) en preorden \;
+      \For{\(x\) hijo de \(v\)}{
+	\Recorrer{\(x\)} \;
+      }
+      Visitar \(v\) en postorden \;
+    }
+    \caption{Recorrer árboles con raíz}
+    \label{alg:recorrer-arbol}
+  \end{algorithm}
+  para recorrer un árbol con raíz.
+  Se invoca el procedimiento recorrer inicialmente con la raíz.
+  En este algoritmo podemos considerar visitar
+  (procesar de alguna forma)
+  cada vértice la primera o la última vez que pasamos por él,
+  dando lugar a recorridos en \emph{preorden}
+  o en \emph{postorden},%
+    \index{grafo!arbol con raiz@árbol con raíz!recorrer}
+  alternativas que suelen presentarse por separado.
+  Cual se elija
+  (o incluso si se usan ambos)
+  dependerá de la aplicación.
+  Como no hay orden definido entre los hijos de un vértice,
+  en caso de haber varios elegimos uno arbitrariamente.
+
+  \begin{theorem}
+    \label{theo:maximo-hojas}
+    Si el número máximo de hijos
+    de los vértices de un árbol con raíz es \(d\)
+    y su altura es \(h\)
+    entonces el árbol tiene a lo más \(d^h\) hojas.
+  \end{theorem}
+  \begin{proof}
+    La demostración es por inducción fuerte sobre \(h\).%
+      \index{demostracion@demostración!induccion@inducción!fuerte}
+    \begin{description}
+    \item[Base:]
+      Cuando \(h = 0\) hay un único vértice
+      (la raíz es hoja)
+      y hay \(1 \le d^0 = 1\) hojas.
+    \item[Inducción:]
+      Supongamos que todos los árboles
+      de altura menor o igual a \(h\)
+      tienen a lo más \(d^h\) hojas.
+      Consideremos un árbol de altura \(h + 1\).
+      Este es la raíz
+      y a lo más \(d\) árboles de altura a lo más \(h\),
+      cada uno de los cuales aporta a lo más \(d^h\) hojas,
+      para un total de	a lo más \(d \cdot d^h = d^{h + 1}\) hojas.
+    \qedhere
+    \end{description}
+  \end{proof}
+
+  \begin{corollary}
+    \label{cor:arbol-hojas}
+    Un árbol en el cual cada nodo tiene a lo más \(d\) hijos
+    y que tiene \(r\) hojas tiene altura a lo menos de \(\log_d r\).
+  \end{corollary}
+
+  En particular,
+  árboles binarios%
+    \index{arbol binario@árbol binario}
+  (que como ya se comentó realmente no son árboles,
+   pero tienen suficiente en común con ellos
+   para los efectos presentes)
+  con \(r\) hojas tienen altura a lo menos \(\log_2 r\),
+  y árboles binarios de altura \(h\) tienen a lo más \(2^h\) hojas.
+
+\section{Árboles ordenados}
+\label{sec:arbol-ordenado}%
+\index{grafo!arbol ordenado@árbol ordenado}
+
+  Una situación afín a los árboles con raíz
+  se da cuando hay un orden entre los hijos de un vértice.
+  Así,
+  hay un primer,
+  segundo,
+  tercer,
+  etc.~hijo.
+  Muchas situaciones son naturales de modelar de esta forma.
+
+\subsection{Árboles de decisión}
+\label{sec:arbol-decision}
+\index{arbol de decision@árbol de decisión}
+
+  Un árbol de decisión representa una secuencia de decisiones
+  y los resultados de estas.
+  Se comienza en la raíz,
+  cada vértice interno representa una decisión,
+  y las hojas son resultados finales.
+  Un camino entre la raíz y una hoja representa
+  una ejecución del procedimiento,
+  a través de la secuencia de decisiones y sus resultados
+  que el camino representa.
+
+  \begin{example}
+    Búsqueda de monedas falsas.
+
+    Tenemos una moneda \(O\) (la sabemos buena)
+    y \(r\) otras monedas,
+    una de las cuales puede ser falsa
+    (puede que sea más pesada o más liviana que la moneda \(O\)).
+    ¿Cuál es el número mínimo de pesadas
+    (comparar el peso de dos colecciones de monedas)
+    para determinar si hay una falsa y saber exactamente cuál es?
+
+    Un nodo del árbol de decisiones puede representarse
+    como en la figura~\ref{fig:pesar-monedas},
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/decision-monedas}
+      \caption{Vértice del árbol de decisión al pesar monedas}
+      \label{fig:pesar-monedas}
+    \end{figure}
+    para cada pesada hay tres opciones:
+    La izquierda es más liviana,
+    son iguales,
+    la derecha es más liviana.
+
+    Las hojas que debemos obtener
+    (resultados finales del proceso)
+    son las siguientes:
+    \begin{itemize}
+      \item
+	Todas buenas.
+      \item
+	\#1 Pesada.
+      \item
+	\#1 Liviana.
+      \item
+	(Muchas alternativas omitidas)
+      \item
+	\#\(r\) Pesada.
+      \item
+	\#\(r\) Liviana.
+    \end{itemize}
+    Hay \(2 r + 1\) resultados,
+    con lo que se requieren
+    a lo menos \(\lceil \log_3 (2 r + 1) \rceil\) pesadas.
+    Pueden ser más que esto,
+    solo hemos demostrado que es imposible hacerlo con menos.
+  \end{example}
+
+% Fixme: ¿Árboles AND/OR?
+
+\subsection{Análisis de algoritmos de ordenamiento}
+\label{sec:arbol_ordenamiento}
+\index{ordenamiento!cotas|textbfhy}
+
+  Supongamos un método de ordenamiento basado en comparaciones.
+  Una pregunta obvia es:
+  ¿Cuántas comparaciones se requieren para ordenar \(n\) elementos?
+
+  El suponer que todos los elementos son diferentes
+  hace más duro resolver el problema,
+  con lo que nos concentramos en ese caso.
+  El ordenar \(n\) elementos involucra determinar en qué orden están
+  (o, lo que es lo mismo, han de ubicarse).
+  Modelamos un algoritmo de ordenamiento
+  especificando cuáles de los elementos originales
+  se comparan en cada paso,
+  y organizamos los distintos caminos que sigue el algoritmo
+  como ramas de un árbol con raíz.
+  Cada vértice representa
+  el resultado de comparar dos elementos con las opciones \(<,>\).
+  Pueden aparecer comparaciones redundantes
+  o incluso contradictorias en el árbol.
+  Las hojas son órdenes de los \(n\) elementos de entrada
+  (aunque también es posible que aparezcan entre las hojas
+   situaciones imposibles,
+   al especificar el camino desde la raíz
+   situaciones contradictorias).
+
+  \begin{example}
+    Comparamos tres elementos \(\{a, b, c\}\),
+    todos distintos.
+
+    Como se ve en la figura~\ref{fig:arbol_decision},
+    tomando cada comparación \(x \colon y\) como un vértice
+    cuyos resultados son \(x < y\) o \(x > y\),
+    el árbol tiene \(6\)~hojas,
+    que corresponden a las \(3!\)~formas de ordenar \(3\)~objetos.
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/ordenamiento}
+      \caption{Árbol de decisión al ordenar $3$ objetos}
+      \label{fig:arbol_decision}
+    \end{figure}
+  \end{example}
+  Esto muestra que la altura del árbol de decisión
+  (el número de comparaciones requeridas en el peor caso)
+  es \(\lceil \log_2 n! \rceil\).
+  Aproximamos el factorial en la sección~\ref{sec:em-Stirling}
+  como \(\ln n! = n \ln n - n + O(1)\).
+  Por nuestro análisis
+  el número de comparaciones requerido
+  es entonces \(\Omega(n \log n)\).
+
+\subsection{Generar código}
+\label{sec:Sethi-Ullman}
+\index{generar codigo@generar código}
+
+% Fixme: ¿Agregar un programa (parser + generador)?
+% Conversado con Paulina Silva <pasilva@alumnos.inf.utfsm.cl>,
+% sugiere un programa completo (parser + construir árbol
+% sintáctico + mostrar este + calcular números de Sethi
+% + generar código) como ejemplo externo, tal vez mostrar en
+% el texto solo los pasos discutidos acá.
+
+% Fixme: Revisar en Aho-Ullman (citar)
+
+  Una aplicación interesante de árboles ordenados
+  se da al generar código
+  para expresiones aritméticas
+  mediante la técnica de Sethi y Ullman~%
+    \cite{sethi70:_gener_optim_code_arith_expres}.
+  Considerando un modelo de máquina
+  que tiene cierto número de registros de propósito general,
+  con operaciones aritméticas tradicionales
+  que toman sus argumentos de dos registros cualquiera
+  y dejan el resultado en alguno cualquiera.
+  Lo que interesa
+  es generar código óptimo para expresiones aritméticas
+  en esta clase de máquinas.
+
+   Por ejemplo,
+   la expresión
+     \lstinline[language=C]!a * x + b * y + c * (-(u + v))!
+   queda representada
+   por el árbol de la figura~\ref{fig:Sethi-Ullman}.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/Sethi}
+    \caption{Árbol sintáctico de una expresión}
+    \label{fig:Sethi-Ullman}
+  \end{figure}%
+    \index{Sethi-Ullman, algoritmo de}
+  Los números que adornan los vértices del árbol
+  representan el número de registros requeridos
+  para calcular el valor de ese vértice
+  (se les llama \emph{números de Sethi-Ullman},%
+     \index{Sethi-Ullman, numeros de@Sethi-Ullman, números de}
+   en honor a los inventores del algoritmo que discutiremos).
+
+  Al calcular una expresión
+  vista de esta forma como un árbol
+  nada puede ganarse calculando parte de una rama,
+  seguir con otra,
+  para luego volver a completar la primera.
+  El caso más simple es el de una variable o constante,
+  basta cargar el valor en un registro libre.
+  Consideremos ahora una operación cualquiera dentro del árbol,
+  suponiendo operaciones con dos argumentos
+  (las ideas se pueden extender sin problemas
+   a casos en que hay más de dos parámetros).
+  Toma los valores de sus argumentos de dos registros.
+  Para calcular estas expresiones más complejas,
+  supongamos que evaluar los operandos
+  requiere \(m\) y \(n\) registros respectivamente.
+  Se dan dos casos:
+  \begin{description}
+  \item[\boldmath Caso \(m = n\):\unboldmath]
+    De ser así,
+    la estrategia consiste en calcular el argumento izquierdo
+    (se usan \(m\) registros en el proceso,
+     queda el resultado en uno de ellos).
+    Luego calculamos el argumento derecho,
+    usando \(m\) registros más,
+    lo que con el registro usado para almacenar temporalmente
+    el valor del operando izquierdo
+    hace un total de \(m + 1\) registros.
+    Finalmente calculamos el valor buscado,
+    sin usar registros adicionales.
+  \item[\boldmath Caso \(m \ne n\):\unboldmath]
+    Consideremos \(m < n\),
+    el otro caso es totalmente simétrico.
+    En este caso calculamos primero aquel argumento
+    que requiere más registros,
+    (el derecho en nuestro caso),
+    usando \(n\) registros,
+    y dejando el resultado en uno de ellos.
+    Luego calculamos el otro argumento
+    (el izquierdo en nuestro caso),
+    para lo que se requieren \(m < n\) registros,
+    reusando los que quedaron libres del cálculo anterior.
+    En total,
+    se requieren \(n\) registros.
+  \end{description}
+  El algoritmo para generar código óptimo en este caso particular
+  (este tipo de arquitecturas
+   y expresiones sin subexpresiones repetidas)
+  resulta inmediato de la discusión anterior:
+  \begin{enumerate}
+  \item
+    Calcule los números de Sethi-Ullman para los vértices del árbol
+    en un recorrido en postorden.%
+      \index{grafo!arbol@árbol!recorrido}
+  \item
+    Considere cada vértice en un recorrido en postorden.
+    Si es una variable o constante,
+    cargue su valor en algún registro libre.
+    Si es una operación,
+    calcule primero aquel argumento que requiere más registros,
+    luego el otro,
+    y efectúe la operación.
+  \end{enumerate}
+  Si faltan registros,
+  la solución es guardar en una variable temporal
+  el contenido de aquel registro que no se usará por más tiempo,
+  para reponerlo cuando se necesite.
+  Esto resulta óptimo,
+  ya que minimiza el número de instrucciones adicionales
+  (cada operación requiere al menos una instrucción,
+   y nuestro algoritmo usa exactamente una instrucción por operación
+   si no quedamos cortos de registros).
+  Nótese también que basta con operaciones
+  que trabajen entre dos registros
+  (origen y destino),
+  no hacen falta operaciones con dos orígenes
+  y un destino para el resultado.
+  Eso sí pueden hacer falta operaciones simétricas,
+  con efectos por ejemplo \(a \leftarrow a - b\)
+  y \(a \leftarrow b - a\)
+  (aunque pueden obtenerse sus efectos
+   con una secuencia de dos operaciones,
+   por ejemplo calculando \(a \leftarrow a - b\)
+   y cambiando el signo).
+
+% Fixme: ¿Ejemplo en descenso recursivo y/o bison/flex?
+
+  \begin{table}[htbp]
+    \begin{align*}
+      r0 &\leftarrow u	     \\
+      r1 &\leftarrow v	     \\
+      r0 &\leftarrow r0 + r1 \\
+      r0 &\leftarrow -r0     \\
+      r1 &\leftarrow c	     \\
+      r0 &\leftarrow r0 * r1 \\
+      r1 &\leftarrow b	     \\
+      r2 &\leftarrow y	     \\
+      r1 &\leftarrow r1 * r2 \\
+      r0 &\leftarrow r0 + r1 \\
+      r1 &\leftarrow a	     \\
+      r2 &\leftarrow x	     \\
+      r1 &\leftarrow r1 * r2 \\
+      r0 &\leftarrow r0 + r1
+    \end{align*}
+    \caption{Código óptimo para la expresión ejemplo}
+    \label{tab:Sethi-Ullman}
+  \end{table}
+  Para el árbol de la figura~\ref{fig:Sethi-Ullman}
+  resulta el código del cuadro~\ref{tab:Sethi-Ullman}.
+  El formato de las instrucciones
+  es por ejemplo \(r0 \leftarrow r1 - r2\),
+  para indicar que al registro \(r0\)
+  se le asigna el valor \(r1 - r2\).
+  Sólo se aceptan operaciones entre registros,
+  traer datos de memoria a un registro
+  y llevar datos de un registro a memoria.
+  Lamentablemente en situaciones más realistas
+  (registros de uso específico,
+   instrucciones que no solo operan entre registros,
+   subexpresiones comunes,
+   aplicar identidades algebraicas)
+  la situación es bastante más compleja
+  y no hay algoritmos tan simples y eficientes.
+
+\section{Grafos planares}
+\label{sec:grafos-planares}
+\index{grafo!planar|textbfhy}
+
+  Un grafo se dice \emph{planar} si puede dibujarse en un plano
+  sin que se crucen arcos.
+  Un caso particular del siguiente resultado
+  dio Descartes en 1639,%
+    \index{Descartes, Rene@Descartes, René}
+  el caso general se debe a Euler en 1751.%
+    \index{Euler, Leonhard}
+  Eppstein lista 19 demostraciones en~%
+    \cite{eppstein05:_nineteen_proofs_Euler},
+  la brillante demostración siguiente es de von~Staudt~%
+    \cite{staudt47:_geometrie_lage}.
+  \begin{theorem}[Fórmula de Euler]
+    \index{Euler, formula de (grafos planares)@Euler, fórmula de (grafos planares)}
+    Sea \(G = (V, E)\) un grafo planar conexo dibujado en el plano.
+    Definimos \(f\) como el número de caras del grafo
+    (las áreas separadas por arcos,
+     incluyendo el área infinita fuera del grafo),
+    \(e = \lvert E \rvert\) y \(v = \lvert V \rvert\).
+    Entonces:
+    \begin{equation*}
+      v - e + f
+	= 2
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Sea \(G\) un grafo planar conexo,
+    dibujado en el plano.
+    Definimos el \emph{dual} de \(G\) como el multigrafo \(G^*\),
+    cuyos vértices son las caras de \(G\)
+    y cuyos arcos pasan por los puntos medios de los arcos de \(G\)
+    que separan las caras,
+    vea la figura~\ref{fig:Euler-formula}.
+    \begin{figure}[ht]
+      \centering
+      \pgfimage{images/Euler-formula}
+      \caption{Ilustración de la demostración de la fórmula de Euler }
+      \label{fig:Euler-formula}
+    \end{figure}
+    El multigrafo \(G^*\) es conexo,%
+      \index{multigrafo}
+    ya que podemos ir de cualquiera de las caras de \(G\)
+    a cualquiera otra atravesando arcos.
+    Consideremos un árbol recubridor de \(G^*\),%
+      \index{grafo!arbol recubridor@árbol recubridor}
+    llamémosle \(T^*\).
+    Si eliminamos los arcos de \(G\) cortados por arcos de \(T^*\),
+    queda un grafo que llamaremos \(T\).
+    Como \(T^*\) es un árbol,
+    no tiene ciclos y no puede cortar \(G\) en componentes conexos,
+    así que \(T\) es conexo.
+    Por el otro lado,
+    \(T\) no tiene ciclos,
+    ya que podemos ir de cualquiera de los vértices de \(G^*\)
+    a cualquier otro a través de arcos de \(T^*\).
+    O sea,
+    \(T\) también es un árbol.
+    Por construcción,
+    el número de arcos de \(G\)
+    es la suma del número de arcos de \(T\)
+    con el número de arcos de \(T^*\):
+    \begin{equation*}
+      (v - 1) + (f - 1)
+	= e
+    \end{equation*}
+    Esto es lo que se quería probar.
+  \end{proof}
+
+  Llamemos \emph{\(k\)\nobreakdash-cara}
+  a una cara acotada por \(k\) arcos,
+  y sea \(f_k\) el número de \(k\)\nobreakdash-caras en \(G\).
+  Del lema~\ref{lem:handshaking} sabemos que:
+  \begin{equation*}
+    2 e
+      = \sum_{x \in V} \delta(x)
+  \end{equation*}
+  De forma similar tenemos:
+  \begin{equation*}
+    f
+      = \sum_k f_k \qquad
+    2 e
+      = \sum_k k f_k
+  \end{equation*}
+  El número promedio de lados por cara es:
+  \begin{equation*}
+    \overline{f}
+      = \frac{2 e}{f}
+  \end{equation*}
+  Con esto podemos demostrar que \(K_5\) y \(K_{3, 3}\)
+  (\(K_{3, 3}\)
+   es el grafo formado por dos conjuntos de tres vértices,
+   en el cual todos los vértices de un conjunto están conectados
+   con todos los vértices del otro
+   pero no hay conexiones dentro de los conjuntos,
+   ver la figura~\ref{fig:K33})
+   \begin{figure}[htbp]
+     \centering
+     \pgfimage{images/K33}
+     \caption{El grafo $K_{3, 3}$}
+     \label{fig:K33}
+   \end{figure}
+  no son planares.
+  Consideremos \(K_5\),
+  con \(v = 5\) y \(e = \binom{5}{2} = 10\).
+  Para un supuesto dibujo de \(K_5\) en el plano
+  calculamos \(f = 2 + e - v = 7\);
+  el número promedio de lados por cara
+  sería \(\overline{f} = 2 \cdot 10 / 7 < 3\),
+  lo que es ridículo.
+  De forma similar,
+  para \(K_{3, 3}\) resultan \(v = 6\), \(e = 9\) y \(f = 5\),
+  con lo que \(\overline{f} = 2 \cdot 9 / 5 < 4\).
+  Es fácil verificar
+  (ver la figura~\ref{fig:K33})
+  que \(K_{3, 3}\) no tiene ciclos de largo tres,
+  así que esto es imposible.
+
+  Como toda cara tiene al menos tres lados,
+  y al sumar sobre todas las caras los arcos se cuentan dos veces,
+  tenemos:
+  \begin{equation*}
+    2 e
+      \ge 3 f
+  \end{equation*}
+  Substituyendo en la fórmula de Euler:
+  \begin{align}
+    e + 2
+      &\le v + \frac{2 e}{3} \notag \\
+    e
+      &\le 3 v - 6
+	 \label{eq:planar-arcs-vertices}
+  \end{align}
+  O sea,
+  los grafos planares son ralos,
+  tienen mucho menos que los arcos posibles.
+
+  Otra conclusión inmediata
+  viene de combinar el teorema~\ref{theo:sum-degree=2edges}
+  con~\eqref{eq:planar-arcs-vertices}:
+  \begin{align}
+    \sum_i \delta(v_i)
+      &= 2 e \notag \\
+    \overline{\delta}
+      &=   \frac{2 e}{v} \notag \\
+      &\le \frac{6 v - 12}{v} \notag \\
+      &<   6
+	 \label{eq:planar-average-degree}
+  \end{align}
+  Por lo tanto,
+  tienen que haber vértices de grado menor a seis
+  en todo grafo planar.
+
+  \begin{theorem}
+    \index{solido regular@sólido regular|see{poliedro!regular}}
+    \index{poliedro!regular}
+    Hay cinco sólidos regulares.
+  \end{theorem}
+  \begin{proof}
+    Si tomamos el sólido,
+    eliminamos una de sus caras
+    y extendemos sus aristas en un plano,
+    obtenemos un grafo planar
+    al tomar los vértices del sólido como vértices del grafo,
+    y las aristas como arcos.
+    Un ejemplo lo da el dodecaedro
+    (sólido con \(12\)~caras pentagonales),
+    figura~\ref{fig:dodecaedro}.
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/dodecaedro}
+      \caption{El grafo del dodecaedro}
+      \label{fig:dodecaedro}
+    \end{figure}
+    Podemos aplicar la fórmula de Euler al grafo resultante.%
+      \index{Euler, formula de (grafos planares)@Euler, fórmula de (grafos planares)}
+    Sean las caras del sólido de \(p\) lados,
+    y se encuentran \(q\) aristas en cada vértice.
+    Por lo anterior,
+    \(p f = 2 e\).
+    Además,
+    como cada arista conecta dos vértices,
+    \(q v = 2 e\).
+    Substituyendo estos en la fórmula de Euler
+    resulta:
+    \begin{align}
+      \frac{2 e}{p} + \frac{2 e}{q} - e
+	&= 2 \notag \\
+      \frac{1}{p} + \frac{1}{q}
+	&= \frac{1}{2} + \frac{1}{e}
+	     \label{eq:Euler-solidos-regulares}
+    \end{align}
+    Por otro lado,
+    debe ser \(p \ge 3\) y \(q \ge 3\),
+    las caras deben tener al menos tres lados
+    y deben encontrarse al menos tres aristas en un vértice.
+    Si \(p\) y \(q\) fueran ambos mayores que tres,
+    quedaría:
+    \begin{equation*}
+      \frac{1}{p} + \frac{1}{q}
+	\le \frac{1}{4} + \frac{1}{4}
+	= \frac{1}{2}
+    \end{equation*}
+    Esto contradice a~\eqref{eq:Euler-solidos-regulares},
+    por tanto debe ser \(p = 3\) o \(q = 3\).
+    Si \(p = 3\),
+    de~\eqref{eq:Euler-solidos-regulares} resulta:
+    \begin{equation}
+      \label{eq:Euler-solidos-regulares-p=3}
+      \frac{1}{q} - \frac{1}{6}
+	= \frac{1}{e}
+    \end{equation}
+    Como~\eqref{eq:Euler-solidos-regulares-p=3} debe ser positivo,
+    solo están las posibilidades \(q = 3, 4, 5\).
+    Estas dan,
+    respectivamente \(e = 6, 12, 30\).
+    De la misma forma,
+    \(q = 3\) da opciones \(p = 3, 4, 5\)
+    que dan \(e = 30, 12, 6\).
+    \begin{table}[htbp]
+      \centering
+      \begin{tabular}{|l|r|r|r|l|}
+	\hline
+	\multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}%
+				\(\boldsymbol{\{p, q\}}\)} &
+	  \multicolumn{1}{c|}{\(\boldsymbol{f}\)} &
+	  \multicolumn{1}{c|}{\(\boldsymbol{e}\)} &
+	  \multicolumn{1}{c|}{\(\boldsymbol{v}\)} &
+	  \multicolumn{1}{c|}{\textbf{Nombre}} \\
+	\hline
+	\(\{3, 3\}\) &	4 &  6 &  4 & tetraedro	 \\
+	\(\{4, 3\}\) &	6 & 12 &  8 & cubo	 \\
+	\(\{3, 4\}\) &	8 & 12 &  6 & octaedro	 \\
+	\(\{5, 3\)\} & 12 & 30 & 20 & dodecaedro \\
+	\(\{3, 5\}\) & 20 & 30 & 12 & icosaedro	 \\
+	\hline
+      \end{tabular}
+      \caption{Poliedros regulares}
+      \label{tab:poliedros}
+    \end{table}
+    Esto da las cinco combinaciones
+    listadas en el cuadro~\ref{tab:poliedros},
+    que resultan ser todas posibles.
+  \end{proof}
+
+  Un problema famoso,
+  planteado en~1852 por Francis Guthrie,
+  es demostrar que bastan cuatro colores para pintar un mapa
+  de forma que no hayan regiones del mismo color con fronteras
+  (líneas, no simplemente puntos)
+  en común.%
+    \index{cuatro colores, teorema de}
+  Esto es equivalente a demostrar
+  que bastan cuatro colores para colorear todos los grafos planares:
+  Considere cada región a colorear como un vértice del grafo,
+  y conecte regiones vecinas con arcos.
+  Este grafo claramente es planar,
+  y un coloreo de él
+  corresponde a una asignación de colores a las regiones.
+  La primera demostración fue publicada por Appel y Haken~%
+    \cite{appel77:_four_color_theorem_1,
+	  appel77:_four_color_theorem_2}.
+  La demostración parte de que todo posible contraejemplo
+  contiene uno de \(1\,936\)~mapas irreductibles,
+  y verificar que todos ellos pueden colorearse con cuatro colores.
+  Esta tarea se hizo mediante un programa de computador,
+  lo que produjo un motín entre los matemáticos
+  (ver por ejemplo Swart~%
+     \cite{swart80:_philos_impl_four_color_problem}),
+  e intentos de una nueva manera de ver
+  lo que significa ``demostración''
+  (Tymoczko~\cite{tymoczko80:_comput_proof_mathem}).
+  Fue el primer teorema importante
+  en cuya demostración el computador resulta indispensable,
+  es de suponer que es por esto que Petkovšek, Wilf y Zeilberger~%
+    \cite{petkovsek96:_AeqB}
+  tienen tanto cuidado de indicar
+  que sus técnicas de demostración de identidades con sumatorias
+  (que requieren el apoyo del computador,
+   es común que deban revisar centenares de opciones)
+  dan lugar a un ``certificado'',
+  que permite verificar el resultado manualmente.
+
+  Algunos detalles de la historia del problema
+  y de las técnicas empleadas por Appel y Haken discute Thomas~%
+    \cite{thomas98:_updates_four_color_theorem},
+  desde entonces se han publicado demostraciones adicionales
+  (todas apoyadas de una forma u otra por el computador,
+   con lo que desafortunadamente no aplacan los recelos).
+
+\section{Algoritmos de búsqueda en grafos}
+\label{sec:busquedas}
+\index{grafo!recorrido}
+\index{grafo!busqueda@búsqueda|see{grafo!recorrido}}
+
+  En muchas aplicaciones
+  se requiere recorrer un grafo en forma completa
+  (visitar cada uno de sus vértices),
+  o al menos encontrar algún vértice
+  que cumpla ciertas condiciones especiales.
+  Esto lleva a considerar algoritmos de búsqueda en grafos
+  (aunque tal vez un mejor nombre sería algoritmos de recorrido).
+
+\subsection{Búsqueda en profundidad}
+\label{sec:DFS}
+\index{grafo!recorrido!profundidad}
+
+  La idea de este algoritmo es partir de un vértice,
+  visitar algún vecino de este y continuar de allí
+  hasta llegar a un vértice ya visitado o no poder continuar,
+  para luego retornar al vértice anterior
+  y continuar con su siguiente vecino.
+  Se le llama \emph{búsqueda en profundidad}
+  porque la estrategia esbozada avanza a través del grafo
+  todo lo que puede antes de considerar alternativas.
+  En inglés
+  se llama \emph{\foreignlanguage{english}{Depth First Search}},%
+    \index{Depth First Search@\emph{\foreignlanguage{english}{Depth First Search}}|see{grafo!recorrido!profundidad}}
+  abreviado \emph{DFS}.
+  \begin{example}
+    Búsqueda en profundidad
+
+    Consideremos el grafo de la figura~\ref{fig:a-recorrer}.
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/grafo-recorrer}
+      \caption{Grafo para ejemplos de recorrido}
+      \label{fig:a-recorrer}
+    \end{figure}
+    El grafo de la figura~\ref{fig:DFS}
+    fue recorrido siguiendo el algoritmo búsqueda en profundidad.
+    Se partió desde el vértice \(1\),
+    y desde allí se recorrió y enumeró el resto de los vértices,
+    eligiendo uno al azar como vecino a considerar luego.
+    En rojo quedan registrados los arcos por los cuales se pasó.
+    \begin{figure}
+      \centering
+      \pgfimage{images/grafo-recorrer-dfs}
+      \caption{El grafo de la figura~\ref{fig:a-recorrer}
+	       recorrido en profundidad}
+      \label{fig:DFS}
+    \end{figure}
+  \end{example}
+
+  Búsqueda en profundidad recorre un árbol recubridor del grafo.%
+    \index{grafo!arbol recubridor@árbol recubridor}
+  En general entrega un componente conexo del grafo,%
+    \index{grafo!componente conexo}
+  para encontrar todos los componentes conexos
+  basta con repetir la búsqueda
+  partiendo cada vez de un vértice aún no visitado
+  hasta agotar los vértices.
+  Ver el algoritmo~\ref{alg:DFS-recursivo}
+  para una versión recursiva,
+  que se invoca como \(DFS(v)\) para un vértice del grafo.
+  Se usan marcas \emph{considerado}
+  y \emph{visitado} en este algoritmo
+  (y sus sucesores)
+  para evitar caer en ciclos infinitos:
+  Un vértice \emph{considerado} pero no \emph{visitado}
+  está pendiente;
+  si está \emph{visitado}
+  ya fue procesado y no requiere más atención.
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{DFS}{DFS}
+
+    \KwProcedure \DFS{\(x\)} \;
+    \BlankLine
+    Marque \(x\) considerado \;
+    \If{\(x\) no visitado}{
+      Marque \(x\) visitado \;
+      \ForEach{\(y\) adyacente a \(x\), no visitado y no considerado}{
+	Marque \(y\) considerado \;
+	\DFS{\(y\)} \;
+      }
+    }
+    \caption{Búsqueda en profundidad,
+	     versión recursiva}
+    \label{alg:DFS-recursivo}
+  \end{algorithm}
+  El algoritmo~\ref{alg:DFS} es una versión
+  que usa un \emph{\foreignlanguage{english}{stack}} explícitamente
+  (resultado de eliminar la recursión).
+  Debe tenerse cuidado de no incluir los vértices varias veces,
+  por eso se marcan como considerados
+  cuando se agregan al \emph{\foreignlanguage{english}{stack}}.
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{DFS}{DFS}
+    \SetKwFunction{Push}{push}
+    \SetKwFunction{Pop}{pop}
+
+    \KwProcedure \DFS{\(x\)} \;
+    \BlankLine
+    \KwVariables \(S\): Stack de vértices \;
+    \BlankLine
+    Marque \(x\) considerado \;
+    \Push{\(S, \; x\)} \;
+    \While{\(S\) no vacío}{
+      \(x \leftarrow \Pop{S}\) \;
+      \If{\(x\) no visitado}{
+	Marque \(x\) visitado \;
+	\ForEach{\(y\) adyacente a \(x\), no visitado y no considerado}{
+	  Marque \(y\) considerado \;
+	  \Push{\(S, \; y\)} \;
+	}
+      }
+    }
+    \caption{Búsqueda en profundidad,
+	     versión no recursiva}
+    \label{alg:DFS}
+  \end{algorithm}
+
+\subsection{Búsqueda a lo ancho}
+\label{sec:BFS}
+\index{grafo!recorrido!a lo ancho}
+
+  Acá se visitan los vecinos del punto de partida,
+  y recién cuando se han visitado todos ellos
+  se avanza a los vecinos de estos.
+  Por la forma en que avanza en el grafo
+  se le llama \emph{búsqueda a lo ancho},
+  en inglés \emph{\foreignlanguage{english}{Breadth First Search}},%
+    \index{Breadth First Search@\emph{\foreignlanguage{english}{Breadth First Search}}|see{grafo!recorrido!a lo ancho}}
+  que se abrevia \emph{BFS}.
+  Una manera simple de manejar primero todos los vecinos,
+  y recién después los vecinos de estos,
+  es ingresar los nodos en una cola de espera
+  (\emph{\foreignlanguage{english}{queue}} en inglés).
+
+  \begin{example}
+    Búsqueda a lo ancho
+
+    Tomando el grafo del ejemplo de búsqueda en profundidad
+    (ver figura~\ref{fig:a-recorrer}),
+    ahora se enumeran los vértices y se marcan los arcos recorridos,
+    pero ahora con el método de búsqueda a lo ancho.
+    Véase la figura~\ref{fig:BFS}.
+    \begin{figure}
+      \centering
+      \pgfimage{images/grafo-recorrer-bfs}
+      \caption{El grafo de la figura~\ref{fig:a-recorrer}
+	       recorrido a lo ancho}
+      \label{fig:BFS}
+    \end{figure}
+  \end{example}
+  Más formalmente el algoritmo
+  para buscar a lo ancho es el~\ref{alg:BFS}.
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{BFS}{BFS}
+    \SetKwFunction{Enqueue}{enqueue}
+    \SetKwFunction{Dequeue}{dequeue}
+
+    \KwProcedure \BFS{\(x\)} \;
+    \BlankLine
+    \KwVariables \(Q\): Queue de vértices \;
+    \BlankLine
+    Marque \(x\) considerado \;
+    \Enqueue{\(Q, \; x\)} \;
+    \While{\(Q\) no vacío}{
+      \(x \leftarrow \Dequeue{Q}\) \;
+      \If{\(x\) no visitado}{
+	Marque \(x\) visitado \;
+	\ForEach{\(y\) adyacente a \(x\), no visitado y no considerado}{
+	  Marque \(y\) considerado \;
+	  \Enqueue{\(Q, \; y\)} \;
+	}
+      }
+    }
+    \caption{Búsqueda a lo ancho}
+    \label{alg:BFS}
+  \end{algorithm}
+  Usamos marcas para asegurarnos de no agregar el mismo nodo varias veces.
+
+\subsection{Búsqueda a lo ancho versus búsqueda en profundidad}
+\label{sec:BFS+DFS}
+
+  Si comparamos los dos procedimientos
+  (algoritmos~\ref{alg:DFS} y~\ref{alg:BFS})%
+    \index{grafo!recorrido}
+  se ve que la única diferencia
+  es el orden en que se procesan los vértices.
+  En el peor caso,
+  se exploran todos los vértices
+  y se recorren todos los arcos,
+  y la complejidad
+  es simplemente \(O(\lvert V \rvert + \lvert E \rvert)\)
+  para ambos.
+  Podemos resumir las características de ambos algoritmos
+  como sigue:
+  \begin{itemize}
+    \item
+      Ambos llegan a todos los vértices del componente conexo.
+    \item
+      Los programas son similares,
+      aunque búsqueda en profundidad (recursivo)
+      es un tanto más simple de programar.
+    \item
+      Complejidad (equivalente a tiempo de ejecución) similares.
+  \end{itemize}
+
+  La pregunta entonces es cómo elegir entre los dos.
+  \begin{itemize}
+    \item
+      Si interesa una solución cualquiera:
+      Usar búsqueda en profundidad.
+    \item
+      Si interesa ``la mejor''
+      (por lo general referida a cercanía de vértices):
+      Usar búsqueda a lo ancho.
+  \end{itemize}
+
+  Pero un análisis más profundo de los dos algoritmos
+  muestra que tienen una estructura común:
+  Guardan vértices para considerarlos más adelante
+  en alguna estructura,
+  la única diferencia es si se procesan en orden de llegada
+  (al buscar a lo ancho)
+  o se atiende primero al último en llegar
+  (búsqueda en profundidad).
+  Claramente podemos usar algún otro criterio
+  para elegir el siguiente vértice a considerar,
+  no solamente el momento
+  en que nos encontramos con él por primera vez.
+  Esto da lugar a una gama de métodos de búsqueda heurísticos.
+
+% Fixme (next):
+%
+% Aplicaciones de búsqueda en grafos
+% - Componentes conexos
+% - Fuertemente conexo
+% - Puntos de articulación
+% - ...
+
+\section{Colorear vértices}
+\label{sec:colorear-vertices}
+\index{grafo!coloreo!vertices@vértices}
+
+  Hay muchas situaciones
+  en las cuales interesa encontrar una asignación
+  que respeta restricciones dadas.
+  Una forma de representar estas
+  es modelando las entidades a recibir asignaciones
+  como vértices,
+  las asignaciones como colores de los vértices,
+  las restricciones entre asignaciones
+  como arcos entre los vértices,
+  y buscamos asignar colores
+  a los vértices de forma que vértices vecinos
+  siempre tengan colores diferentes.
+
+  \begin{example}
+    Consideremos la situación
+    en que deseamos programar seis charlas,
+    cada una de una hora.
+    Hay interesados en asistir a varias de ellas,
+    en particular,
+    hay interesados en las charlas \(1\) y \(2\),
+    en las \(1\) y \(4\),
+    en \(1\) y \(6\),
+    en \(2\) y \(6\),
+    en \(3\) y \(5\),
+    en \(4\) y \(5\),
+    en \(5\) y \(6\).
+    Debemos programar las charlas en el mínimo número de horas.
+
+    Podemos modelar esto mediante un grafo,
+    conectando las charlas que tienen asistentes en común,
+    véase la figura~\ref{fig:charlas}.
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/charlas}
+      \caption{Grafo representando charlas}
+      \label{fig:charlas}
+    \end{figure}
+    Por ejemplo,
+    podemos asignar
+    las charlas \(v_1\) y \(v_3\) a la hora \(1\),
+    \(v_2\) y \(v_4\) a la hora \(2\),
+    \(v_5\) a la hora \(3\),
+    y finalmente \(v_6\) a la hora \(4\).
+    Si representamos la hora \(1\) con color azul,
+    la \(2\) con rojo,
+    la \(3\) con amarillo
+    y la \(4\) con verde,
+    se obtiene lo que muestra la figura~\ref{fig:charlas-coloreo1}.
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/charlas-coloreo1}
+      \caption{Asignación de horas a charlas como colores}
+      \label{fig:charlas-coloreo1}
+    \end{figure}
+
+    En términos matemáticos,
+    hemos particionado los vértices del grafo en cuatro,
+    de forma que no hayan vértices adyacentes
+    en ninguna de las partes.
+    Una forma de representar esta situación usa la función
+    \(c \colon V \rightarrow [4]\)
+    que a cada vértice
+    (charla)
+    le asigna una hora.
+    Generalmente hablamos de colores de los vértices,
+    no de horas asignadas,
+    aunque claramente la naturaleza exacta
+    de los objetos \(\{1, 2, 3, 4\}\) es irrelevante.
+    Podemos hablar de colores azul, rojo, amarillo, verde,
+    o de hora \(1\), hora \(2\), hora \(3\), hora \(4\).
+    Lo único que importa
+    es que vértices vecinos tienen colores diferentes.
+  \end{example}
+
+  \begin{definition}
+    \index{grafo!coloreo!vertices@vértices|textbfhy}
+    Un \emph{coloreo de vértices} de un grafo \(G = (V, E)\)
+    es una función \(c \colon V \rightarrow \mathbb{N}\)
+    tal que \(c(x) \ne c(y)\)
+    siempre que \(x y \in E\).
+  \end{definition}
+  \begin{definition}
+    \index{grafo!numero cromatico@número cromático|textbfhy}
+    \index{grafo!numero cromatico@número cromático|seealso{grafo!coloreo!vértices}}
+    El \emph{número cromático} de un grafo \(G = (V, E)\),
+    escrito \(\chi(G)\),
+    es el mínimo entero \(k\)
+    tal que el grafo tiene un coloreo de \(k\) colores.
+  \end{definition}
+
+  Volviendo a nuestro ejemplo,
+  la asignación de horas de la figura~\ref{fig:charlas-coloreo1}
+  corresponde a un coloreo con \(4\) colores.
+  Pero probando un poco con \(3\) horas
+  vemos que podemos asignar \(v_1\) y \(v_5\) a la hora \(1\),
+  \(v_2\) y \(v_3\) a la hora \(2\),
+  y dejar \(v_4\) y \(v_6\) para la hora \(3\).
+  Ver la figura~\ref{fig:charlas-coloreo2}.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/charlas-coloreo2}
+    \caption{Otra asignación de horas a charlas}
+    \label{fig:charlas-coloreo2}
+  \end{figure}
+  Por lo demás,
+  se requieren al menos \(3\) colores
+  ya que \(v_1\), \(v_2\) y \(v_6\)
+  están conectados entre sí.
+  Hemos demostrado que el número cromático de este grafo es \(3\).
+
+  En general,
+  para demostrar que el número cromático de un grafo es \(k\)
+  se requiere:
+  \begin{enumerate}
+  \item
+    Encontrar un coloreo con \(k\) colores.
+  \item
+    Demostrar que es imposible hacerlo con menos de \(k\) colores.
+  \end{enumerate}
+  Este problema es \NP\nobreakdash-completo,
+  uno de los \(21\)~problemas
+  identificados inicialmente como intratables por Karp~%
+    \cite{karp72:_reduc_among_combin_prob}.
+
+  \begin{example}
+    Números cromáticos
+
+    Veamos cuántos colores se necesitan para colorear
+    el grafo de la figura~\ref{fig:chromatic1}.
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/chromatic1}
+      \caption{Grafo a colorear}
+      \label{fig:chromatic1}
+    \end{figure}
+
+    Como el grafo contiene ciclos de largo impar
+    (por ejemplo el de la figura~\ref{fig:chromatic1-ciclo}),
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/chromatic1-ciclo}
+      \caption{Un ciclo de largo impar
+	       en el grafo de la figura~\ref{fig:chromatic1}}
+      \label{fig:chromatic1-ciclo}
+    \end{figure}
+    se desprende la necesidad de al menos 3 colores.
+    La figura~\ref{fig:chromatic1-coloreo}
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/chromatic1-coloreo}
+      \caption{Un coloreo con tres colores
+	       del grafo de la figura~\ref{fig:chromatic1}}
+      \label{fig:chromatic1-coloreo}
+    \end{figure}
+    muestra un coloreo con \(3\)~colores,
+    por lo que el número cromático del grafo es precisamente \(3\).
+  \end{example}
+
+  \begin{example}
+    Números cromáticos: Otro caso.
+
+    Consideremos el grafo de la figura~\ref{fig:chromatic2}.
+    \begin{figure}
+      \centering
+      \pgfimage{images/chromatic2}
+      \caption{Otro grafo a colorear}
+      \label{fig:chromatic2}
+    \end{figure}
+
+    Dado que son \(6\) vértices,
+    el número de colores es a lo más \(6\).
+    En la figura~\ref{subfig:chromatic2-C5}
+    \begin{figure}[htbp]
+      \centering
+      \subfloat[Subgrafo \(C_5\)]{
+	\pgfimage{images/chromatic2-C5}
+	\label{subfig:chromatic2-C5}
+      }%
+      \hspace{2.5em}%
+      \subfloat[Subgrafo \(K_4\)]{
+	\pgfimage{images/chromatic2-K4}
+	\label{subfig:chromatic2-K4}
+      }
+      \caption{Subgrafos del grafo
+	       de la figura~\ref{fig:chromatic2}}
+      \label{fig:chromatic2-subgrafos}
+% Fixme: Poca diferencia en BN
+    \end{figure}
+    se marca un ciclo impar en rojo,
+    lo que indica que necesitan a lo menos \(3\) colores.
+    Pero se ve en azul en la figura~\ref{subfig:chromatic2-K4}
+    que el grafo tiene \(K_4\) como subgrafo,
+    lo que indica que el número de colores
+    tiene que ser a lo menos \(4\).
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/chromatic2-coloreo}
+      \caption{Coloreo con cuatro colores
+	       del grafo de la figura~\ref{fig:chromatic2}}
+      \label{fig:chromatic2-coloreo}
+    \end{figure}
+    La figura~\ref{fig:chromatic2-coloreo}
+    muestra un coloreo con 4~colores,
+    el número cromático es \(4\).
+  \end{example}
+
+  Como se comentó antes,
+  muchos problemas de asignación de recursos
+  pueden modelarse mediante coloreo de grafos.
+  Por esta razón el encontrar soluciones óptimas
+  (coloreo usando \(\chi(G)\) colores)
+  o al menos buenas
+  (pocos más que \(\chi(G)\) colores)
+  tienen inmensa importancia práctica.
+  Siendo un problema \NP\nobreakdash-completo%
+    \index{NP-completo, problema@\NP-completo, problema}
+  la investigación
+  se concentra en hallar soluciones a casos especiales
+  o hallar métodos aproximados.
+
+  Por ejemplo,
+  al compilar código para un programa%
+    \index{generar codigo@generar código}
+  interesa guardar los más valores posibles
+  en los registros del procesador,
+  de forma de que acceder a ellos sea más rápido,
+  compárese con la sección~\ref{sec:Sethi-Ullman}.
+  Una manera de hacer esto da Chaitin~%
+    \cite{chaitin82:_regis_alloc_spill_via_graph_color}
+  vía construir un grafo
+  (el \emph{grafo de interferencia})
+  cuyos vértices son los valores
+  y hay un arco entre un par de valores si sus vidas
+  (desde el instante de creación hasta el último uso)
+  se traslapan.
+  El mínimo número de registros requeridos
+  es simplemente el número cromático
+  del grafo de interferencia,
+  y un coloreo mínimo
+  es una asignación de valores a esos registros.
+  Se obtiene un coloreo ordenando
+  los vértices en orden de grado decreciente
+  y aplicando el algoritmo voraz.
+  Esto es rápido
+  y da un coloreo suficientemente bueno en la práctica.
+
+  Delahaye~%
+    \cite{delahaye06:_sci_behind_sudoku}
+  indica que el popular puzzle Sudoku puede interpretarse
+  como completar un coloreo
+  de un grafo de \(81\)~vértices con \(9\)~colores.%
+    \index{Sudoku}
+
+\subsection{El algoritmo voraz para colorear grafos}
+\label{sec:coloreo-voraz}
+
+  Encontrar el número cromático de un grafo
+  es un problema \NP\nobreakdash-completo.%
+    \index{NP-completo, problema@\NP-completo, problema}
+  Sin embargo,
+  hay una forma simple de construir un coloreo de vértices
+  usando un número ``razonable'' de colores.
+  La idea es ir asignando colores a los vértices
+  de forma de usar siempre el primer color
+  que no produce conflictos.%
+    \index{algoritmo voraz}
+  El algoritmo representa los colores asignados a los vértices
+  mediante el arreglo \(c\)
+  (índices son los vértices).
+  Usamos el ``color'' \(0\)
+  para indicar que el vértice aún no ha sido coloreado.
+  El conjunto \(S\) recoge los colores de los vecinos del vértice
+  bajo consideración.
+
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{GreedyColoring}{GreedyColoring}
+    % Note that this should not be changed to iterate over vertices
+    % as sets, the ordering in which the vertices are considered is
+    % relevant.
+
+    \KwProcedure \GreedyColoring{\(G\)} \;
+    \BlankLine
+    \(n \leftarrow \text{Número de vértices de \(G\)}\) \;
+    \For{\(i \leftarrow 1\) \KwTo \(n\)}{
+      \(c[v_i] \leftarrow 0\) \;
+    }
+    \(c[v_1] \leftarrow 1\) \;
+    \For{\(i \leftarrow 2\) \KwTo \(n\)}{
+      \(S \leftarrow \varnothing\) \;
+      \For{\(j \leftarrow 1\) \KwTo \(i - 1\)}{
+	\If{\(v_j\) es adyacente a \(v_i\) y no ha sido coloreado}{
+	  \(S \leftarrow S \cup \{c[v_j]\}\) \;
+	}
+      }
+      \(c[v_j] \leftarrow\) primer color no en \(S\) \;
+    }
+    \caption{Coloreo voraz}
+    \label{alg:coloreo-voraz}
+  \end{algorithm}
+  Por ejemplo,
+  el coloreo de la figura~\ref{fig:charlas-coloreo1}
+  resulta aplicando el algoritmo~\ref{alg:coloreo-voraz}
+  a los vértices del grafo de la figura~\ref{fig:charlas}
+  en orden del número del vértice.
+  El coloreo de la figura~\ref{fig:chromatic1-coloreo}
+  resulta de asignar colores azul, rojo, amarillo
+  mediante el algoritmo voraz
+  partiendo del vértice superior
+  y avanzando en sentido contra reloj.
+  El lector podrá entretenerse usando este algoritmo
+  para colorear el grafo de la figura~\ref{fig:a-recorrer}
+  siguiendo ya sea el orden de la figura~\ref{fig:DFS}
+  o de la figura~\ref{fig:BFS},
+  y de hallar el número cromático.
+
+  El algoritmo~\ref{alg:coloreo-voraz} es corto de vista,
+  por lo que el coloreo que entrega no necesariamente es bueno.
+  Sin embargo,
+  puede producir el coloreo con el mínimo número de colores,
+  dependiendo del orden en que se consideren los vértices.
+  Lo malo es que si hay \(n\)~vértices
+  son \(n!\)~órdenes diferentes a considerar.
+  A pesar de esto,
+  el algoritmo es útil en teoría y en la práctica.
+  Demostraremos un teorema usando esta estrategia.
+  \begin{theorem}
+    \label{theo:grafo-grados-cromatico}
+    Si \(G\) es un grafo de grado máximo \(k\),
+    entonces:
+    \begin{enumerate}
+    \item
+      \(\chi(G) \le k + 1\).
+    \item
+      Si \(G\) no es regular,
+      entonces \(\chi(G) \le k\).
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Como el coloreo de cada componente conexo
+    es independiente del resto del grafo,
+    basta discutir la situación de un grafo conexo.
+    Demostramos cada aseveración por turno.
+    \begin{enumerate}
+    \item
+      Sea \(v_1, v_2, \dotsc, v_n\)
+      un orden de los vértices de \(G\).
+      Si aplicamos el algoritmo de coloreo voraz,
+      al considerar un vértice cualquiera
+      tendrá a lo más \(k\) vecinos con colores ya asignados.
+      Si contamos con \(k + 1\) colores,
+      siempre habrá uno que podamos asignarle.
+    \item
+      Para este caso consideraremos los vértices
+      en un orden especial.
+      Como el grafo no es regular,
+      habrá al menos un vértice cuyo grado es menor a \(k\).
+      Llamémosle \(v_n\) a uno de ellos.
+      Numeremos los vecinos de \(v_n\)
+      como \(v_{n - 1}\), \(v_{n - 2}\), \(\dots\)
+      (hay a lo más \(k - 1\) de estos).
+      Una vez agotados los vecinos de \(v_n\),
+      numeramos los vecinos de \(v_{n - 1}\) distintos de \(v_n\);
+      nuevamente habrá a lo más \(k - 1\) de estos.
+      Continuamos de esta forma,
+      siempre dejando fuera de consideración
+      los que ya tienen número asignado.
+      Si ahora aplicamos el algoritmo voraz,
+      siempre que considere un vértice
+      tendrá a lo más \(k - 1\) vecinos ya coloreados,
+      y se requerirán a lo más \(k\) colores.
+    \qedhere
+    \end{enumerate}
+  \end{proof}
+  La demostración del primer caso parece poco inteligente,
+  pero considerar el grafo \(K_{k + 1}\),
+  regular de grado \(k\),
+  muestra que en realidad es lo mejor que puede hacerse.
+  Por el otro lado,
+  el grafo bipartito completo \(K_{n, n}\)
+  es regular de grado \(n\),
+  pero \(\chi(K_{n, n}) = 2\).
+
+  Esta demostración sugiere la heurística
+  de ordenar los vértices por grado decreciente
+  y luego aplicar el algoritmo voraz
+  como manera de obtener una buena coloración.
+
+% Fixme: Ejemplos de números cromáticos
+% Fixme: Polinomios cromáticos
+
+\section{Colorear arcos}
+\label{sec:colorear-arcos}
+\index{grafo!colorear!arcos}
+
+  Una situación análoga al coloreo de vértices
+  se produce si coloreamos arcos
+  de forma que no hayan arcos adyacentes
+  (que comparten vértices)
+  del mismo color.
+  Formalmente:
+  \begin{definition}
+    Dado un grafo \(G= (V, E)\) un \emph{coloreo de arcos}
+    es una función \(c \colon E \rightarrow \mathbb{N}\)
+    tal que \(c(e_1) \neq c(e_2)\)
+    si \(e_1 \ne e_2\) y \(e_1 \cap e_2 \neq \varnothing\).
+  \end{definition}
+
+  Acá tenemos una partición de los arcos
+  \(E_1 \cup E_2 \cup \dotso \cup E_n\)
+  tal que los arcos en \(E_i\) no tienen vértices en común.
+  La nomenclatura difiere,
+  hay autores que le llaman \emph{número cromático de arcos}%
+    \index{grafo!numero cromatico de arcos@número cromático de arcos|see{grafo!índice cromático}}
+  al mínimo número de colores en un coloreo de arcos,
+  otros le llaman el \emph{índice cromático} del grafo.%
+    \index{grafo!indice cromatico@índice cromático}
+  Se anota \(\chi'(G)\) o \(\chi_1(G)\),
+  aunque la noción
+  (y la notación)
+  es mucho menos usada que el número cromático.
+  Nosotros le llamaremos índice cromático,
+  y anotaremos \(\chi'(G)\).
+
+  El índice cromático es \(2\) para un ciclo de orden par,
+  y \(3\) para un ciclo de orden impar.
+  Esto provee cotas para el índice cromático
+  de grafos que contienen los anteriores.
+  Obviamente el índice cromático
+  es a lo menos el grado máximo de un vértice.
+
+  Un bonito ejemplo es el coloreo de arcos del grafo de Frucht~%
+    \cite{frucht39:_herst_graph_gruppe}%
+    \index{Frucht, grafo de}
+  dado en la figura~\ref{fig:Frucht}.
+  Como hay vértices de grado \(3\)
+  (en realidad es un grafo \(3\)\nobreakdash-regular),
+  es imposible un coloreo con menos colores,
+  y su índice cromático es \(3\).
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/Frucht}
+    \caption{Un coloreo de arcos del grafo de Frucht}
+    \label{fig:Frucht}
+  \end{figure}
+
+  Aplicaciones de esto ocurren
+  en muchos problemas de asignar recursos y tareas
+  de manera que no interfieran en el tiempo
+  (ver por ejemplo el texto de Skiena~%
+    \cite{skiena08:_algor_desig_manual}).
+  Al programar la primera ronda de un torneo de fútbol
+  (donde compiten ``todos contra todos'')
+  debe hallarse un calendario
+  de forma que a nadie se le solicite
+  estar jugando dos partidos a la vez,
+  pero que también use el mínimo de tiempo
+  (si hay \(N\) equipos en competencia,
+   son \(N (N - 1) / 2\) los partidos a jugar,
+   con lo que la solución obvia de programar un partido por semana
+   tomaría demasiado tiempo).
+  Esto se modela mediante un grafo
+  en el que los vértices son los equipos participantes,
+  mientras los arcos son partidos que deben jugarse.
+  El coloreo de arcos entonces asigna fechas a los partidos,
+  de forma que ningún equipo
+  esté jugando dos partidos la misma fecha.
+  Es de suponer que el problema real a resolver por la ANFP
+  es mucho más complejo,
+  al tratar de lograr que todos los fines de semana
+  haya un partido entretenido.
+
+\section{Grafos bipartitos}
+\label{sec:grafos-bipartitos}
+\index{grafo!bipartito|textbfhy}
+
+  Un caso especial muy importante son los grafos
+  para los cuales \(\chi(G) = 2\).
+  En este caso,
+  los vértices se dividen en dos grupos \(V_1\) y \(V_2\)
+  que corresponden a los coloreados con los colores \(1\) y \(2\),
+  respectivamente,
+  y los arcos unen uno de cada grupo.
+  En consecuencia,
+  estos grafos se llaman \emph{bipartitos}.
+  Aplicamos esta idea
+  en el ejemplo~\ref{ex:queso} del ratón que come queso.
+  Para representar un grafo bipartito escribiremos
+  \(G = (V_1 \cup V_2, E)\),
+  bajo el entendido que \(V_1\) y \(V_2\)
+  son las particiones de los vértices según color.
+  Hay muchas situaciones que se pueden modelar de esta forma,
+  veremos algunos ejemplos pronto.
+  Un caso importante es cuando cada vértice de \(V_1\)
+  está conectado con todos los vértices de \(V_2\).
+  Así obtenemos el \emph{grafo bipartito completo},%
+    \index{grafo!bipartito completo|textbfhy}
+  que se anota \(K_{m, n}\)
+  si \(\lvert V_1 \rvert = m\) y \(\lvert V_2 \rvert = n\).
+  Nótese que \(K_{2,2} \cong C_4\).
+
+  Algunos ejemplos muestran las figuras~\ref{fig:K1n}
+  y~\ref{fig:Kmn}.
+  Por razones obvias
+  a los grafos \(K_{1, n}\) se les suele llamar \emph{estrellas}.%
+    \index{grafo!estrella|textbfhy}
+  \begin{figure}[htbp]
+    \setbox1=\hbox{\pgfimage{images/K11}}
+    \setbox2=\hbox{\pgfimage{images/K12}}
+    \setbox3=\hbox{\pgfimage{images/K13}}
+    \setbox7=\hbox{\pgfimage{images/K17}}
+    \centering
+    \subfloat[\(K_{1, 1}\)]{
+      \begin{minipage}[c]{1.0\wd3}
+	\centering
+	\makebox{\copy1}
+      \end{minipage}
+      \label{subfig:K11}
+    }%
+    \hspace*{4em}%
+    \subfloat[\(K_{1, 2}\)]{
+      \begin{minipage}[c]{1.0\wd2}
+	\centering
+	\makebox{\copy2}
+      \end{minipage}
+      \label{subfig:K12}
+    }
+    \\[1ex]
+    \subfloat[\(K_{1, 3}\)]{
+      \begin{minipage}[c][1.0\ht7][c]{1.0\wd3}
+	\centering
+	\makebox{\copy3}
+      \end{minipage}
+      \label{subfig:K13}
+    }%
+    \hspace*{4em}%
+    \subfloat[\(K_{1, 7}\)]{
+      \begin{minipage}[c]{1.0\wd2}
+	\centering
+	\makebox{\copy7}
+      \end{minipage}
+      \label{subfig:K17}
+    }
+    \caption{Algunas estrellas}
+    \label{fig:K1n}
+  \end{figure}
+  \begin{figure}[htbp]
+    \setbox1=\hbox{\pgfimage{images/K22}}
+    \setbox2=\hbox{\pgfimage{images/K23}}
+    \setbox3=\hbox{\pgfimage{images/K33}}
+    \setbox4=\hbox{\pgfimage{images/K34}}
+    \setbox5=\hbox{\pgfimage{images/K35}}
+    \centering
+    \subfloat[\(K_{2, 2}\)]{
+      \raisebox{0.5\ht3-0.5\ht1}{\copy1}
+      \label{subfig:K22}
+    }%
+    \hspace{3.5em}%
+    \subfloat[\(K_{2, 3}\)]{
+      \raisebox{0.5\ht3-0.5\ht2}{\copy2}
+      \label{subfig:K23}
+    }%
+    \hspace{3.5em}%
+    \subfloat[\(K_{3, 3}\)]{
+      \raisebox{0.5\ht3-0.5\ht3}{\copy3}
+      \label{subfig:K33}
+    } \\[1ex]
+    \subfloat[\(K_{3, 4}\)]{
+      \raisebox{0.5\ht5-0.5\ht4}{\copy4}
+      \label{subfig:K34}
+    }%
+    \hspace{4.5em}%
+    \subfloat[\(K_{3, 5}\)]{
+      \copy5
+      \label{subfig:K35}
+    }
+    \caption{Algunos grafos bipartitos completos}
+    \label{fig:Kmn}
+  \end{figure}
+
+  Para grafos bipartitos tenemos:
+  \begin{theorem}
+    Un grafo es bipartito
+    si y solo si no tiene ciclos de largo impar.
+  \end{theorem}
+  \begin{proof}
+    Demostramos implicancias en ambas direcciones.
+
+    Si hay un ciclo de largo impar,
+    se requieren tres colores solo para colorear ese ciclo,
+    y \(\chi(G) \ge 3\).
+    Por el otro lado,
+    si no hay ciclos de largo impar,
+    construiremos un ordenamiento de los vértices
+    que produce un coloreo con dos colores.
+    Elijamos un vértice cualquiera,
+    llamémosle \(v_1\),
+    y le asignamos el nivel \(0\).
+    A los vecinos de \(v_1\) les llamamos
+    \(v_2, \dotsc, v_r\),
+    les asignamos el nivel \(1\).
+    A los vecinos de los vértices de nivel \(1\)
+    que no están ya numerados
+    les asignamos el nivel \(2\),
+    \ldots,
+    a los vecinos no numerados de los vértices de nivel \(l - 1\)
+    les asignamos el nivel \(l\).
+    De esta forma completamos un componente conexo de \(G\),
+    y procesamos a los demás componentes conexos de la misma forma.
+    Lo crucial de este orden es que un vértice del nivel \(l\)
+    solo tiene vecinos en los niveles \(l - 1\) y \(l + 1\).
+    Para ver esto,
+    supongamos que hay dos vértices conectados en el mismo nivel.
+    Siguiendo sus conexiones hacia atrás
+    a través de los distintos niveles,
+    encontraremos caminos simples hacia un vértice común,
+    que tendrán el mismo largo,
+    ver la figura~\ref{fig:ciclo-impar}.
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/ciclo-impar}
+      \caption{Un ciclo de largo $2 l + 1$
+	       si hay conexiones cruzadas}
+      \label{fig:ciclo-impar}
+    \end{figure}
+    Pero estos forman un ciclo de largo impar
+    junto con el arco entre los vértices del mismo nivel
+    que supusimos conectados.
+  \end{proof}
+
+  Una manera tal vez más simple de entender lo anterior
+  (y, a la pasada,
+   dar un algoritmo para determinar si un grafo es bipartito
+   y obtener las particiones)
+  es tomar un vértice cualquiera y pintarlo de rojo,
+  sus vecinos colorearlos de azul,
+  y así sucesivamente
+  ir pintando vértices vecinos aún no coloreados
+  del color contrario
+  (esto corresponde a búsqueda a lo ancho).
+  Si esto termina con todos los vértices coloreados
+  (recomenzando con otro aún no coloreado
+   si se acabaran los vecinos)
+  el grafo es bipartito,
+  si encontramos conflictos
+  (vecinos del mismo color)
+  no lo es.
+  Esto es una aplicación de los algoritmos de recorrido de grafos,
+  y la complejidad
+  es simplemente \(O(\lvert V \rvert + \lvert E \rvert)\).
+
+  \begin{lemma}
+    \label{lem:bipartito-grados}
+    Sea \(G = (X \cup Y, E)\) un grafo bipartito
+    con arcos entre \(X\) e \(Y\).
+    Entonces:
+    \begin{equation*}
+      \sum_{x \in X} \delta(x) = \sum_{y \in Y} \delta(y)
+	= \lvert E\rvert
+    \end{equation*}
+  \end{lemma}
+  \begin{proof}
+    Cada arco tiene un vértice en \(X\),
+    y la primera suma
+    es el número total de arcos vistos desde \(X\).
+    Lo mismo respecto a la segunda suma e \(Y\).
+  \end{proof}
+
+  \begin{theorem}
+    \label{theo:bipartito-cromatico}
+    El índice cromático de un grafo bipartito%
+      \index{grafo!bipartito!indice cromatico@índice cromático}
+      \index{grafo!indice cromatico@índice cromático}
+    es su grado máximo.
+  \end{theorem}
+  \begin{proof}
+    Sea el grafo \(G = (V, E)\).
+    Usamos inducción
+    sobre el número de arcos \(m = \lvert E \rvert\).%
+      \index{demostracion@demostración!induccion@inducción}
+    \begin{description}
+    \item[Base:]
+      Cuando \(m = 1\),
+      hay un único arco,
+      y el grado máximo es \(1\).
+      Claramente basta un color en este caso.
+    \item[Inducción:]
+      Supongamos ahora que es cierto
+      para todos los grafos bipartitos
+      de \(m\) arcos y grado máximo \(k\).
+      Consideremos un grafo bipartito \(G = (X \cup Y, E)\)
+      con \(m + 1\) arcos
+      y grado máximo \(k\).
+      Elegimos un arco \(x y \in E\),
+      y consideramos el grafo \(G' = (X \cup Y, E')\) donde
+      \(E' = E \smallsetminus x y\).
+      El grafo \(G'\) tiene \(m\) arcos,
+      y por inducción admite un coloreo de arcos con \(k\) colores.
+      En \(G\),
+      tanto \(x\) como \(y\) tienen grado a lo más \(k\);
+      y al eliminar el arco \(x y\),
+      en \(G'\) es \(\delta(x) \le k - 1\).
+      De la misma forma \(\delta(y) \le k - 1\).
+      Luego tanto \(x\) como \(y\)
+      participan en a lo más \(k - 1\) arcos
+      y por tanto están rodeados por a lo más \(k - 1\) colores.
+
+      Ahora sea \(\alpha\) un color no adyacente a \(x\)
+      y \(\beta\) un color no adyacente a \(y\)
+      (los llamaremos \emph{libres} en \(x\) e \(y\),
+       respectivamente).
+      Estos colores deben existir por lo anterior.
+      Se pueden presentar dos casos:
+      \begin{description}
+	\item[Caso simple:]
+	  Podemos elegir \(\alpha = \beta\).
+	  Tomamos ese color para el arco y asunto resuelto.
+	\item[Caso complejo:]
+	  No podemos elegir \(\alpha = \beta\).
+	  Entonces hay un arco \(x y_1\) de color \(\beta\)
+	  (de caso contrario \(\beta\) estaría libre en \(x\)
+	   y podría elegir \(\alpha = \beta\)
+	   como en el caso anterior).
+	  Puede haber un arco \(x_1 y_1\) de color \(\alpha\),
+	  un arco \(x_1 y_2\) de color \(\beta\) y así sucesivamente
+	  (vamos de \(X\) a \(Y\) mediante arcos de color \(\beta\),
+	   y de \(Y\) a \(X\)
+	   a través de arcos de color \(\alpha\)).
+	  Este proceso de crear un camino debe terminar,
+	  ya que el grafo tiene un número finito de vértices,
+	  y no puede formar un ciclo
+	  ya que no hay arco de color \(\alpha\)
+	  en \(x\).
+% Fixme: Rehacer el ejemplo, usar maquinaria de grafos colorinches, ...
+	  \begin{figure}[htbp]
+	    \centering
+	    \subfloat{\pgfimage{images/zigzag-1}}%
+	    \hspace*{4em}%
+	    \subfloat{\pgfimage{images/zigzag-2}}
+	    \caption{Cómo operar
+		     en el teorema~\ref{theo:bipartito-cromatico}}
+	    \label{fig:zig-zag}
+	  \end{figure}
+	  Como ilustra la figura~\ref{fig:zig-zag},
+	  luego de este proceso
+	  podemos intercambiar los colores \(\alpha\) y \(\beta\),
+	  cayendo en el caso simple.
+      \end{description}
+    \end{description}
+    Por inducción,
+    el resultado vale para todos los grafos bipartitos.
+  \end{proof}
+  Esta técnica de zig-zag
+  e intercambio vale la pena tenerla presente,
+  bastantes demostraciones se basan en ella.
+
+\subsection{Matchings}
+\label{sec:matchings}
+\index{grafo!matching|textbfhy}
+% Fixme: Encontrar término en castellano
+
+  Supongamos la situación
+  en que hay un conjunto \(X\) de personas
+  y un conjunto \(Y\) de trabajos.
+  Una pregunta con implicancias obvias
+  es la siguiente:
+  ¿Cómo asignamos personas a las tareas,
+  de forma que el número máximo de personas queda asignada
+  a una tarea para la que está calificada?
+  Esta pregunta la traduciremos al lenguaje de grafos bipartitos.
+  La relación ``estar calificado'' da un grafo bipartito
+  \(G = (X \cup Y, E)\):
+  El arco \(x y\) indica que la persona \(x\)
+  está calificada para la tarea \(y\).
+  Una asignación de tareas a personas
+  corresponde a un \emph{\foreignlanguage{english}{matching}}
+  en el sentido técnico que definiremos ahora.
+  Otras aplicaciones de estas ideas
+  ocurren en una gran variedad de áreas,
+  llegando a la economía.
+  Cabe hacer notar
+  que los conjuntos \(X\) e \(Y\)
+  no necesariamente son de la misma cardinalidad.
+  Bajo nuestra interpretación
+  tiene perfecto sentido considerar situaciones en que hay más
+  (o menos)
+  tareas a asignar que personas,
+  tareas para las que no hay calificados,
+  y personas que no están calificadas para ninguna de las tareas.
+
+  \begin{definition}
+    Sea \(G = (V, E)\) un grafo.
+    Un \emph{\foreignlanguage{english}{matching}}
+    es un subconjunto \(M \subseteq E\) de arcos
+    tal que no hay vértices en común entre dos arcos.
+    El \emph{tamaño} del \emph{\foreignlanguage{english}{matching}}
+    es el número de arcos en él.
+    Un \emph{\foreignlanguage{english}{matching}} de \(G\)
+    se dice \emph{maximal}
+    si no hay \emph{\foreignlanguage{english}{matchings}}
+    de mayor tamaño
+    en \(G\).
+    Un \emph{\foreignlanguage{english}{matching}} \(M\)
+    se dice que \emph{satura} a los vértices \(U \subseteq V\)
+    si todos los vértices de \(U\) participan en \(M\).
+  \end{definition}
+
+  El caso más importante de lo anterior se da en grafos bipartitos,
+  como se comentó antes.%
+    \index{grafo!bipartito!matching@\emph{\foreignlanguage{english}{matching}}|textbfhy}
+  Por ejemplo,
+  la figura~\ref{fig:matchings}
+  muestra dos \emph{\foreignlanguage{english}{matchings}}
+  de un grafo,
+  donde los arcos en \(M\) están marcados.
+  \begin{figure}[htbp]
+    \centering
+    \subfloat[\(M_1\)]
+	     {\pgfimage{images/match-3}\label{subfig:matching-1}}%
+    \hspace*{4em}%
+    \subfloat[\(M_2\)]
+	     {\pgfimage{images/match-max}\label{subfig:matching-2}}
+    \caption{Matchings en un grafo bipartito}
+    \label{fig:matchings}
+  \end{figure}
+  El \emph{\foreignlanguage{english}{matching}} \(M_2\) es mayor,
+  en el sentido que contiene más arcos.
+  No puede haber uno mayor,
+  ya que si consideramos el conjunto \(\{x_1, x_2, x_5\}\),
+  en total solo están capacitados para \(\{y_3, y_4\}\),
+  por lo que necesariamente quedará uno de los tres
+  sin trabajo asignado.
+  Esto motiva lo siguiente.
+  \begin{definition}
+    \index{grafo!bipartito!matching completo|textbfhy}
+    Sea \(G = (X \cup Y, E)\) un grafo bipartito.
+    Un \emph{\foreignlanguage{english}{matching}}
+    es \emph{completo} si \(\lvert M \rvert = \lvert X \rvert\)
+    (vale decir,
+     satura a \(X\)).
+  \end{definition}
+
+  Analicemos primero las condiciones
+  bajo las cuales
+  hay \emph{\foreignlanguage{english}{matchings}} completos.
+  Supongamos un grafo bipartito \(G = (X \cup Y, E)\),
+  y para todo \(A \subseteq X\) definimos
+  el conjunto de vértices vecinos
+  (\emph{\foreignlanguage{english}{neighbors}} en inglés) como:
+  \begin{equation*}
+    N(A) = \{y \colon x y \in E \text{\ para algún\ } x \in A\}
+  \end{equation*}
+  En un \emph{\foreignlanguage{english}{matching}} completo
+  el conjunto de tareas asignadas a los integrantes de \(A\)
+  es un subconjunto de \(N(A)\),
+  debe ser \(\lvert N(A) \rvert \ge \lvert A \rvert\)
+  para todo \(A \subseteq X\).
+  En nuestro ejemplo
+  es \(N(\{x_1, x_2, x_5\}) = \{y_3, y_4\}\),
+  y como
+    \(\lvert N(\{x_1, x_2, x_5\}) \rvert
+	< \lvert \{x_1, x_2, x_5\} \rvert\)
+  no hay \emph{\foreignlanguage{english}{matching}} completo
+  posible.
+
+  Resulta que esta condición se cumpla
+  para todo subconjunto de \(X\) es necesario y suficiente
+  para la existencia
+  de un \emph{\foreignlanguage{english}{matching}} completo,
+  como demostraremos a continuación.
+
+  \begin{theorem}[Hall]
+    \index{Hall, teorema de}
+    \label{theo:Hall}
+    Sea \(G = (X \cup Y, E)\) un grafo bipartito.
+    Entonces
+    hay
+    un \emph{\foreignlanguage{english}{matching}} completo de \(G\)
+    si y solo si para todo \(A \subseteq X\)
+    tenemos \(\lvert N(A) \rvert \ge \lvert A \rvert\).
+  \end{theorem}
+  \begin{proof}
+    Demostramos implicancia en ambos sentidos.
+    Para simplificar la discusión,
+    seguiremos hablando de trabajos,
+    calificación para los mismos y trabajos asignados.
+
+    Si hay un \emph{\foreignlanguage{english}{matching}} completo,
+    para cada subconjunto \(A \subseteq X\)
+    tenemos en \(N(A)\)
+    al menos los trabajos asignados a los integrantes de \(A\),
+    o sea \(\lvert N(A) \rvert \ge \lvert A \rvert\).
+
+    Al revés,
+    supongamos que para todo \(A \subseteq X\)
+    se cumple \(\lvert N(A) \rvert \ge \lvert A \rvert\),
+    y consideremos
+    un \emph{\foreignlanguage{english}{matching}} maximal \(M\)
+    de \(G\).
+    Demostraremos por contradicción que \(M\) es completo.
+    Si \(M\) no es completo,
+    demostraremos cómo construir
+    un nuevo \emph{\foreignlanguage{english}{matching}} \(M'\)
+    tal que \(\lvert M' \rvert = \lvert M \rvert + 1\),
+    lo que contradice a que \(M\) era maximal.
+    Llamaremos \(A_M(B)\) al conjunto de personas
+    a las que el \emph{\foreignlanguage{english}{matching}} \(M\)
+    asigna los trabajos en \(B \subseteq Y\).
+
+    Como \(M\) no es completo,
+    hay \(x_0 \in X\) que no participa en \(M\).
+    Por hipótesis \(x_0\) está calificado al menos para un trabajo,
+    el conjunto de tareas para las que está calificado \(x_0\)
+    es \(N( \{ x_0 \} )\).
+    Consideremos el conjunto \(X_0 = A_M(N( \{ x_0 \} ))\)
+    (vale decir,
+     las personas que tienen asignados los trabajos
+     para los que está calificado \(x_0\)).
+    Junto con \(x_0\) son \(\lvert X_0 \rvert + 1\) personas,
+    que por hipótesis están calificadas en conjunto
+    al menos para \(\lvert X_0 \rvert + 1\) trabajos.
+    Esto significa que hay al menos una persona en \(X_0\)
+    que está calificada para un trabajo
+    que no está en \(N(\{ x_0 \})\),
+    y que no tiene ese trabajo asignado.
+    Si agregamos las personas
+    (de haberlas)
+    que tienen asignados esos trabajos a \(X_0\)
+    construimos un conjunto \(X_1\).
+    Aplicando el mismo proceso nuevamente a \(X_1\)
+    construimos un conjunto \(X_2\),
+    y así sucesivamente.
+    Este proceso debe terminar,
+    ya que los conjuntos \(X_i\)
+    no pueden crecer en forma indefinida.
+    Pero el proceso termina por hallar trabajos
+    que no están asignados.
+    Tomando uno de ellos y trazando el proceso hacia atrás
+    tenemos un camino que parte de \(x_0\),
+    va a \(Y\) por una tarea sin asignar,
+    vuelve a \(X\) por una tarea asignada,
+    \ldots,
+    y finalmente pasa de \(X\) a \(Y\) por una tarea sin asignar.
+    Este camino tiene un arco más fuera de \(M\) que en \(M\),
+    intercambiando las tareas asignadas con las sin asignar en él
+    da un \emph{\foreignlanguage{english}{matching}}
+    mayor que \(M\).
+    Pero habíamos supuesto que \(M\) es maximal,
+    una contradicción.
+    Por tanto,
+    si \(M\) es maximal bajo la hipótesis dada,
+    es completo.
+  \end{proof}
+
+  La demostración del teorema de Hall motiva la siguiente:
+  \begin{definition}
+    \index{grafo!bipartito!camino alternante|textbfhy}
+    Sea \(G = (X \cup Y, E)\) un grafo bipartito,
+    y \(M\) un \emph{\foreignlanguage{english}{matching}} de \(G\).
+    Un camino en \(G\)
+    se llama \emph{alternante para \(M\)}
+    si alterna arcos de \(M\) con arcos que no están de \(M\).
+    Un camino alternante se llama \emph{aumentante para \(M\)}
+    si comienza y termina en vértices que no participan en \(M\)
+    (el primer y el último arco del camino no están en \(M\)).
+  \end{definition}
+
+  Nuestra discusión previa
+  indicaría que de \(A\)
+  a lo más \(\lvert N(A) \rvert\) podrán encontrar trabajo.
+  Esto lleva a:
+  \begin{definition}
+    Sea \(G = (X \cup Y, E)\) un grafo bipartito.
+    La \emph{deficiencia} de \(G\) es:%
+      \index{grafo!bipartito!deficiencia|textbfhy}
+    \begin{equation*}
+      d = \max_{A \subseteq X} \{\lvert A \rvert - \lvert N(A) \rvert\}
+    \end{equation*}
+  \end{definition}
+  Siempre podemos tomar \(A = \varnothing\),
+  y en tal caso \(\lvert A \rvert - \lvert N(A) \rvert = 0\),
+  con lo que la deficiencia nunca es negativa.
+
+  Con esto podemos demostrar:
+  \begin{theorem}
+    \label{theo:maximal-matching}
+    \index{grafo!bipartito!matching maximal|textbfhy}
+    Sea \(G = (X \cup Y, E)\)
+    un grafo bipartito de deficiencia \(d\).
+    Entonces
+    el \emph{\foreignlanguage{english}{matching}} maximal \(M\)
+    de \(G\)
+    cumple \(\lvert M \rvert = \lvert X \rvert - d\).
+  \end{theorem}
+  \begin{proof}
+    Primeramente,
+    si \(A \subseteq X\) es un conjunto
+    para el cual \(d = \lvert A \rvert - \lvert N(A) \rvert\),
+    a lo menos \(d\) elementos de \(A\) quedarán sin \(Y\) asignado,
+    y así ningún \emph{\foreignlanguage{english}{matching}}
+    puede tener más que el tamaño indicado.
+    Basta entonces demostrar
+    que hay un \emph{\foreignlanguage{english}{matching}}
+    de ese tamaño.
+
+    Sea \(D\) un conjunto de vértices nuevos
+    con \(\lvert D \rvert = d\).
+    Definimos el grafo \(G^{*} = (X^{*} \cup Y^{*}, E^{*})\)
+    mediante:
+    \begin{align*}
+      X^{*} &= X \\
+      Y^{*} &= Y \cup D \\
+      E^{*} &= E \cup \{ x y : x \in X \wedge y \in D \}
+    \end{align*}
+    Estamos agregando un nuevo conjunto de trabajos \(D\)
+    para los que todos están calificados.
+    Entonces \(G^{*}\)
+    cumple con las condiciones del teorema de Hall
+    y tiene
+    un \emph{\foreignlanguage{english}{matching}} completo
+    \(M^{*}\).
+    Pero \(M^{*}\) incluye todos los vértices de \(D\),
+    ya que si \(A\) es un conjunto
+    para el cual \(d = \lvert A \rvert - \lvert N(A) \rvert\)
+    es máximo,
+    la única forma de parear todos los elementos de \(A\)
+    es incluir los elementos de \(D\) en el pareo.
+    Eliminando los arcos que incluyen vértices de \(D\) de \(M^{*}\)
+    obtenemos un \emph{\foreignlanguage{english}{matching}}
+    de tamaño \(\lvert X \rvert - d\).
+  \end{proof}
+
+  El teorema~\ref{theo:maximal-matching} no es particularmente útil
+  para encontrar
+  un \emph{\foreignlanguage{english}{matching}} maximal,
+  ni ayuda a la hora de hallar su tamaño
+  ya que considera
+  analizar los \(2^{\lvert X \rvert}\) subconjuntos de \(X\)
+  para determinar la deficiencia.
+  Una forma práctica
+  de encontrar \emph{\foreignlanguage{english}{matchings}} maximales
+  las da el siguiente teorema.
+  \begin{theorem}[Lema de Berge]
+    \label{theo:matching-augmenting-path}
+    \index{Berge, lema de}
+    Sea \(G = (X \cup Y, E)\) un grafo bipartito,
+    y \(M\) un \emph{\foreignlanguage{english}{matching}} de \(G\).
+    Si \(M\) no es maximal,
+    \(G\) contiene un camino aumentante para \(M\).
+  \end{theorem}
+  \begin{proof}
+    Sea \(M^{*}\)
+    un \emph{\foreignlanguage{english}{matching}} maximal de \(G\),
+    y sea \(F = M^{*} \vartriangle M\)
+    el conjunto de arcos en que están en \(M^{*}\) o \(M\),
+    pero no en ambos.
+    Los arcos en \(F\) y los vértices que contienen
+    forman un grafo bipartito
+    cuyos vértices tienen grado \(1\) o \(2\),
+    por lo que sus componentes conexos son caminos y ciclos.
+    Pero en todo camino o ciclo
+    los arcos de \(M\) alternan con arcos no de \(M\),
+    por lo que en todo ciclo el número de arcos en \(M\)
+    debe ser igual al número de arcos no en \(M\)
+    (al ser \(G\) bipartito,
+     no tiene ciclos de largo impar).
+    Como \(\lvert M^{*} \rvert > \lvert M \rvert\),
+    hay más arcos de \(M^{*}\) que arcos de \(M\) en \(F\).
+    Por lo tanto,
+    hay al menos un componente conexo de \(F\)
+    que es un camino con más arcos en \(M^{*}\)
+    que en \(M\),
+    y este es un camino aumentante para \(M\).
+  \end{proof}
+
+  Esto sugiere la siguiente estrategia
+  para hallar un \emph{\foreignlanguage{english}{matching}} maximal:
+  \begin{enumerate}
+  \item \label{enum:step1}
+    Comience
+    con
+    un \emph{\foreignlanguage{english}{matching}} \(M\) cualquiera
+    (un arco por sí solo sirve).
+  \item \label{enum:step2}
+    Busque un camino aumentante para \(M\).
+  \item \label{enum:step3}
+    Si encontró un camino aumentante,
+    construya un \emph{\foreignlanguage{english}{matching}} \(M'\)
+    mejor intercambiando arcos
+    que pertenecen
+    al \emph{\foreignlanguage{english}{matching}} con los que no
+    de la forma usual,
+    y vuelva al paso (\ref{enum:step2}) con \(M'\) en vez de \(M\).
+  \item \label{enum:step4}
+    Si no hay camino aumentante,
+    \(M\) es maximal.
+  \end{enumerate}
+  Para hallar un camino aumentante,
+  podemos usar búsqueda a lo ancho.
+  Comenzando
+  con un vértice \(x_0\) que no tiene trabajo asignado
+  construimos un árbol
+  de caminos aumentantes ``parciales'' desde \(x_0\)
+  como sigue:
+  \begin{enumerate}
+  \item
+    En el nivel \(1\) inserte los vértices \(y_1, y_2, \dotsc, y_k\)
+    adyacentes a \(x_0\).
+    Si alguno de estos vértices
+    no tiene \emph{\foreignlanguage{english}{match}},
+    digamos \(y_i\),
+    deténgase.
+    En este caso \(\left\langle x_0, y_i \right\rangle\)
+    es un camino aumentante.
+  \item
+    Si todos los vértices en el nivel \(1\)
+    tienen \emph{\foreignlanguage{english}{match}},
+    inserte vértices \(x_1, x_2, \dotsc, x_k\),
+    los \emph{\foreignlanguage{english}{matches}}
+    de \(y_1, y_2, \dotsc, y_k\),
+    en el nivel \(2\).
+  \item
+    En el nivel \(3\),
+    inserte los vértices adyacentes a los de nivel \(2\)
+    que no tienen \emph{\foreignlanguage{english}{match}} con ellos.
+    Si alguno de ellos
+    no tiene \emph{\foreignlanguage{english}{match}},
+    deténgase:
+    El camino desde \(x_0\) hasta él es un camino aumentante.
+  \item
+    Si todos los vértices de nivel \(3\)
+    tienen \emph{\foreignlanguage{english}{match}},
+    inserte sus \emph{\foreignlanguage{english}{matches}}
+    en el nivel \(4\),
+    \ldots
+  \end{enumerate}
+  Claramente este proceso puede terminar
+  porque no hay vértices a insertar en un nivel impar.
+  En tal caso,
+  no hemos hallado un camino aumentante,
+  y habrá que intentar otro punto de partida.
+  Si ninguno de los vértices
+  sin \emph{\foreignlanguage{english}{match}}
+  resulta en un camino aumentante,
+  el \emph{\foreignlanguage{english}{match}} que tenemos es maximal.
+
+  Consideremos el \emph{\foreignlanguage{english}{matching}}
+  en el grafo bipartito
+  de la figura~\ref{subfig:match-ini}.
+  \begin{figure}[htbp]
+    \setbox1=\hbox{\pgfimage{images/match-ini}}
+    \setbox2=\hbox{\pgfimage{images/match-bca}}
+    \centering
+    \subfloat[Matching inicial]{
+      \copy1
+      \label{subfig:match-ini}
+    }%
+    \hspace{3em}%
+    \subfloat[Búsqueda de un camino aumentante]{
+      \raisebox{0.5\ht1-0.5\ht2}{\copy2}
+      \label{subfig:match-bca}
+    }
+    \caption{Aumentando un matching}
+    \label{fig:matching-1}
+  \end{figure}
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/match-fin}
+    \caption{Matching resultante}
+    \label{fig:match-fin}
+  \end{figure}
+  El vértice \(x_2\)
+  no tiene \emph{\foreignlanguage{english}{match}};
+  la figura~\ref{subfig:match-bca} muestra el ``árbol''
+  construido a partir de ese vértice según la estrategia descrita,
+  indicando un camino aumentante identificado en el proceso;
+  y finalmente la figura~\ref{fig:match-fin}
+  da el \emph{\foreignlanguage{english}{matching}}
+  que resulta de intercambiar los arcos
+  pertenecientes
+  al \emph{\foreignlanguage{english}{matching}} inicial
+  con los que no aparecen en él.
+  Si todos los caminos desde el vértice elegido
+  son como el camino
+    \(\left\langle x_2\;y_2\;x_4\;y_6\;x_5 \right\rangle\),
+  con el mismo número de arcos en \(M\) y fuera de él,
+  quiere decir que desde ese vértice no hay camino aumentante.
+
+  Un algoritmo mejor es el de Hopcroft-Karp~%
+    \cite{hopcroft73:_alg_max_match_bipar_graph},%
+    \index{Hopcroft-Karp, algoritmo de}
+  que usa la misma estrategia básica,
+  pero identifica todas las extensiones posibles en paralelo.
+
+\subsection{Transversales de familias de conjuntos finitos}
+\label{sec:transversals}
+% Fixme: Encontrar término en castellano
+
+  Una situación de interés se da
+  cuando tenemos varios conjuntos que se intersectan,
+  y buscamos encontrar un representante único
+  para cada conjunto.
+
+  \begin{example}
+    En la Universidad de Miskatonic
+    todo se resuelve en comités de sus académicos.
+    Hay seis profesores que participan en los distintos comités,
+    los profesores Atwood, Dexter, Ellery, Freeborn, Halsey y Upham.
+    Están organizados en los siguientes comités:
+
+    \begin{tabular}[c]{l}
+      Académico: Atwood, Upham \\
+      Investigación: Atwood, Dexter, Upham \\
+      Administración: Dexter, Upham \\
+      Estacionamientos: Ellery, Freeborn, Halsey
+    \end{tabular}
+
+    \noindent
+    Se decide que cada comité envíe un representante
+    al nuevo Comité de Comités de la Universidad,
+    y cada uno puede representar solo a un comité.
+    Si un integrante pertenece a varios comités,
+    asiste como representante de uno de ellos solamente.
+    En el ejemplo,
+    Atwood puede representar al comité académico
+    o al de investigación,
+    pero no ambos.
+    ¿Es posible crear este comité?
+
+    Dados los miembros de los distintos comités,
+    esto se puede lograr de diferentes formas.
+    Por ejemplo,
+    podemos elegir a Atwood, Dexter, Ellery y Freeborn.
+    Sin embargo,
+    si el comité de estacionamientos
+    estuviera formado solo por Dexter y Ellery,
+    no se puede formar el Comité de Comités.
+  \end{example}
+
+  La forma general de este problema se expresa más claramente
+  usando la noción de \emph{familia de conjuntos}.%
+    \index{conjunto!familia|textbfhy}
+  Tenemos la familia
+    \(\mathcal{F} = \{\mathcal{S}_i \colon i \in \mathcal{I}\}\)
+  de conjuntos
+  (usamos \(\mathcal{I}\) como el conjunto de los índices,
+   básicamente los nombres de los conjuntos),
+  no necesariamente diferentes,
+  y buscamos un representante \(s_i\)
+  para cada \(i \in \mathcal{I}\),
+  tales que cada \(s_i \in \mathcal{S}_i\)
+  y son todos diferentes.
+  Tal conjunto de representantes distintos
+  se llama \emph{transversal} de \(\mathcal{F}\).
+  Nuestro problema es entonces hallar condiciones
+  que aseguren que la familia \(\mathcal{F}\) tenga un transversal.
+  Esto tiene perfecto sentido
+  incluso cuando~\(\mathcal{I}\) es infinito,
+  pero acá nos restringimos a familias finitas.
+  En nuestro ejemplo,
+  el conjunto índice \(\mathcal{I}\)
+  no es más que los nombres de los comités,
+  y \(\mathcal{S}_i\) son los integrantes del comité \(i\).
+
+  En realidad,
+  esto no es más que una forma disfrazada del problema
+  de hallar un \emph{\foreignlanguage{english}{matching}}.
+  Para ver esto,
+  construimos un grafo bipartito
+  cuyas partes corresponden a los conjuntos
+  y a los elementos,
+  y hay arcos que unen a los elementos
+  con los conjuntos a los que pertenecen.
+  La figura~\ref{fig:comites}
+  muestra la situación
+  de los comités de la Universidad de Miskatonic.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/comites}
+    \caption{Comités de la Universidad de Miskatonic}
+    \label{fig:comites}
+  \end{figure}
+
+  Formalmente,
+  definimos \(G = (X \cup Y, E)\) mediante:
+  \begin{equation*}
+    \begin{array}{l@{{}={}}l@{\qquad}l}
+       X & \mathcal{I}
+	     & \text{(los nombres de los conjuntos)} \\
+       Y & \bigcup_{i \in \mathcal{I}} \mathcal{S}_i
+	     & \text{(todos los elementos de los conjuntos)}
+    \end{array}	 \end{equation*}
+  y el arco \(i y\) está en \(E\) si \(y \in \mathcal{S}_i\).
+  Entonces un transversal de \(\mathcal{F}\)
+  no es más que
+  un \emph{\foreignlanguage{english}{matching}} completo de \(G\).
+  En estos términos la condición de Hall es fácil de expresar.
+  Un subconjunto \(\mathcal{H}\) de \(\mathcal{I}\)
+  es una subfamilia de \(\mathcal{F}\),
+  y \(N(\mathcal{H})\)
+  es simplemente los miembros de todos esos conjuntos:
+  \begin{equation*}
+    N(\mathcal{H}) = \bigcup_{i \in \mathcal{H}} \mathcal{S}_i
+  \end{equation*}
+  Usando esta interpretación,
+  el teorema de Hall~%
+    \cite{hall35:_repres_subset}
+  es:
+  \begin{theorem}[Hall, versión original]
+    \index{Hall, teorema de}
+    La familia finita de conjuntos:
+    \begin{equation*}
+      \mathcal{F} = \{\mathcal{S}_i \colon i \in \mathcal{I}\}
+    \end{equation*}
+    tiene un transversal si y solo si:
+    \begin{equation*}
+      \biggl| \bigcup_{i \in \mathcal{H}} \mathcal{S}_i \biggr|
+	\ge \bigl| \mathcal{H} \bigr|
+	  \text{\ para todo\ } \mathcal{H} \subseteq \mathcal{I}
+    \end{equation*}
+  \end{theorem}
+  Una forma simple de expresar esto es decir
+  que cualquier unión de \(k\) de los conjuntos
+  debe tener al menos \(k\) miembros en total.
+
+  En realidad este es el teorema de Hall original,
+  que también se conoce
+  como ``\emph{\foreignlanguage{english}{Hall's Marriage Theorem}}'',
+  por la interpretación siguiente:
+  \(\mathcal{I}\) es un conjunto de mujeres,
+  mientras \(\mathcal{S}_i\) corresponde al conjunto de hombres
+  con los cuales \(i \in \mathcal{I}\) estaría dispuesta a casarse.
+  Entonces hay forma de conseguirle pareja a todas las mujeres
+  si y solo si para cada conjunto de mujeres
+  el conjunto de hombres
+  con los que estarían dispuestas a casarse en total
+  no es menor a ese conjunto de mujeres.
+
+% Fixme: Mencionar aplicaciones de esto
+
+\section{Grafos rotulados}
+\label{sec:grafos-rotulados}
+\index{grafo!rotulado}
+
+  En muchas aplicaciones
+  los arcos tienen asociados ``pesos'' (costos),
+  definimos entonces un \emph{grafo rotulado} como un grafo
+  \(G = (V, E)\) y una función \(p \colon E \rightarrow C\)
+  (típicamente \(C\) es \(\mathbb{R}\)),
+  que asocia el rótulo
+  (peso)
+  \(p(e)\) al arco \(e\).
+
+  Una situación similar se da con rótulos en los vértices
+  (una función \(r \colon V \rightarrow C\)).
+  Esto va más allá de la identidad del vértice,
+  pueden haber varios vértices con el mismo rótulo.
+  Hay aplicaciones en las cuales están rotulados los arcos,
+  los vértices,
+  o ambos.
+
+\subsection{Árboles rotulados}
+\label{sec:arboles-rotulados}
+\index{grafo!rotulado!arbol@árbol}
+
+  El resultado siguiente,
+  debido a Cayley~%
+    \cite{cayley89:_theo_trees},
+  fue uno de los máximos triunfos de la combinatoria del siglo~XIX.
+  \begin{theorem}[Cayley]
+    \index{Cayley, teorema de}
+    \label{theo:cayley}
+    Hay \(n^{n - 2}\) árboles
+    con \(n\) vértices rotulados.
+  \end{theorem}
+  \begin{proof}
+    Sea \(\mathcal{T}\) la clase de árboles con vértices rotulados.%
+      \index{metodo simbolico@método simbólico}
+    La clase de árboles rotulados con raíz
+    corresponde a marcar uno de los vértices,
+    o sea es \(\mathcal{T}^\bullet\).
+    Estos a su vez están conformados por el vértice raíz
+    conectado a las raíces de una colección de árboles rotulados.
+    Esto lleva a la ecuación simbólica:
+    \begin{equation*}
+      \mathcal{T}^\bullet
+	= \mathcal{Z} \star \MSet(\mathcal{T}^\bullet)
+    \end{equation*}
+    Para la función generatriz exponencial correspondiente%
+      \index{generatriz!exponencial}
+    \(z \widehat{T}'(z)\)
+    el teorema~\ref{theo:ms-EGF} da:
+    \begin{equation*}
+      z \widehat{T}'(z)
+	= z \mathrm{e}^{z \widehat{T}'(z)}
+    \end{equation*}
+    Aplicar la fórmula de inversión de Lagrange,%
+      \index{Lagrange, inversion de@Lagrange, inversión de}
+    teorema~\ref{theo:LIF},
+    da los coeficientes de \(z \widehat{T}'(z)\):
+    \begin{align*}
+      n \frac{t_n}{n!}
+	&= \frac{1}{n} [ u^{n - 1} ] \mathrm{e}^{n u} \\
+	&= \frac{1}{n} \cdot \frac{n^{n - 1}}{(n - 1)!} \\
+      t_n
+	&= n^{n - 2}
+    \qedhere
+    \end{align*}
+  \end{proof}
+  Acá lo derivamos de forma muy simple,
+  las demostraciones tradicionales son complejas.
+  Esta derivación
+  es una clara demostración del poder del método simbólico
+  (capítulo~\ref{cha:metodo-simbolico})
+  en conjunto con herramientas analíticas
+  como el teorema de inversión de Lagrange
+  (teorema~\ref{theo:LIF}).
+
+\subsection{Costo mínimo para viajar entre vértices}
+\label{sec:costo-minimo-entre-vertices}
+
+  En muchos casos interesa saber el costo
+  (suma de los pesos de los arcos)
+  para llegar a cada uno de los vértices de \(G\) partiendo desde
+  el vértice \(v\).
+  Hay varios algoritmos para resolver este importante problema.
+
+\subsubsection{Algoritmo de Dijkstra}
+\label{sec:Dijkstra}
+\index{Dijkstra, algoritmo de}
+
+  Una solución,
+  debida a Dijkstra~%
+   \cite{dijkstra59:_note_two_probl_connex_graph},
+  es aplicar una variante de búsqueda a lo ancho.
+  Supongamos que tenemos establecido que el camino más corto
+  de \(v\) a \(x\) tiene largo \(l[x]\).
+  Supongamos que tenemos un vecino \(y\),
+  para el que tenemos la estimación \(l[y]\).
+  La ruta más corta que tenemos de \(v\) a \(y\) pasando por \(x\)
+  tiene costo \(l[x] + w(x y)\),
+  y si nuestra estimación previa \(l[y] > l[x] + w(x y)\),
+  debiéramos actualizar \(l[y]\).
+
+  Informalmente,
+  el algoritmo es el siguiente:
+  Inicialmente sabemos que \(l[v] = 0\).
+  Podemos partir con \(l[p] = \infty\)
+  para todos los demás vértices \(p\),
+  e ir actualizando los \(l[p]\)
+  en búsqueda a lo ancho partiendo de \(v\)
+  con nuestra mejor estimación hasta el momento
+  del largo del camino de \(v\) a cada vértice.
+
+  Una manera de entenderlo
+  es considerar el grafo como una colección de hilos
+  de los largos de los arcos
+  y los vértices nudos entre ellos,
+  y ponemos esto sobre la mesa.
+  Tomamos el nudo que representa el vértice inicial,
+  y lo levantamos hasta que un primer nudo se separa de la mesa.
+  Este nudo es el que está más cerca del inicial,
+  y registramos su distancia desde este.
+  Continuamos de la misma forma,
+  cada vez que un nudo se despega de la mesa
+  es que hemos llegado a su distancia mínima del nudo inicial.
+  En términos de trabajar con el grafo,
+  significa mantener una colección de vértices
+  a los cuales ya conocemos la distancia mínima
+  (inicialmente solo el vértice inicial),
+  y luego ir agregando aquel vértice no incluido aún en la colección
+  que queda más cerca de alguno
+  cuya distancia mínima ya es definitiva.
+
+  Una versión más formal es el algoritmo~\ref{alg:Dijkstra}.
+  Lo que hacemos acá es ir calculando distancias tentativas,
+  y las dejamos definitivas
+  una vez que esté claro que no cambiarán más.
+% Fixme: Demostrar correctitud
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{Dijkstra}{Dijkstra}
+
+    \KwProcedure \Dijkstra{\(G, \; v\)} \;
+    \BlankLine
+    \KwVariables \(Q\): Conjunto de vértices \;
+    \BlankLine
+    \(Q \leftarrow V\) \;
+    Marque todos los vértices \(x \in Q\) con \(l[x] = \infty\) \;
+    \(l[v] \leftarrow 0\) \;
+    \While{\(Q\) no vacío}{
+      Elija \(x \in Q\) con \(l[x]\) mínimo \;
+      \If(Los restantes no son alcanzables){\(l[x] = \infty\)}{
+	\KwBreak \;
+      }
+      \(Q \leftarrow Q \smallsetminus \{x\}\) \;
+      \ForEach{\(y\) vecino de \(x\)}{
+	\(l[y] \leftarrow \min \{ l[y], l[x] + w(x y) \}\) \;
+      }
+    }
+    \caption{Costos mínimos desde el vértice $v$ (Dijkstra)}
+    \label{alg:Dijkstra}
+  \end{algorithm}
+  El ciclo externo se ejecuta para cada vértice,
+  el ciclo interno considera cada arco una vez.
+  El tiempo de ejecución de este algoritmo
+  depende de la estructura de datos
+  usada para representar el conjunto \(Q\),
+  siendo:
+  \begin{equation*}
+    O(\lvert E \rvert
+	  \cdot \left\langle
+		  \text{\emph{disminuir clave en}\ \(Q\)}
+		\right\rangle
+	+ \lvert V \rvert
+	    \cdot \left\langle
+		    \text{\emph{extraer mínimo de}\ \(Q\)}
+		  \right\rangle)
+  \end{equation*}
+  Si mantenemos los \(l[x]\) en un arreglo,
+  disminuir la clave es simplemente dos accesos al arreglo,
+  extraer el mínimo es recorrer el arreglo.
+  Esto es:
+  \begin{equation*}
+    O(\lvert E \rvert + \lvert V \rvert^2)
+      = O(\lvert V \rvert^2)
+  \end{equation*}
+  Usando una estructura más sofisticada,
+  como un \emph{\foreignlanguage{english}{Fibonacci heap}}~%
+     \cite{fredman87:_fibonacci_heaps},
+  los costos amortizados son:
+  \begin{align*}
+    \left\langle
+      \text{\emph{extraer mínimo de}\ \(Q\)}
+    \right\rangle
+      &= O(\log \lvert Q \rvert)
+       = O(\log \lvert V \rvert) \\
+    \left\langle
+      \text{\emph{disminuir clave en}\ \(Q\)}
+    \right\rangle
+      &= O(\log \lvert Q \rvert)
+       = O(\log \lvert V \rvert)
+  \end{align*}
+  y el costo resulta ser:
+  \begin{equation*}
+    O\left( (\lvert E \rvert
+	      + \lvert V \rvert) \log \lvert V \rvert \right)
+  \end{equation*}
+
+\subsubsection{Algoritmo de Bellman-Ford}
+\label{sec:Bellman-Ford}
+\index{Bellman-Ford, algoritmo de}
+
+  Otro algoritmo que resuelve el mismo problema,
+  pero que tiene la ventaja
+  de poder manejar arcos con costo negativo
+  (claro que no ciclos de costo negativo,
+   en cuyo caso la distancia mínima no está bien definida),
+  es el de Bellman-Ford~%
+    \cite{bellman58:_routin_probl}
+  (algoritmo~\ref{alg:Bellman-Ford}).
+% Fixme: Demostrar correctitud
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{BellmanFord}{BellmanFord}
+
+    \KwProcedure \BellmanFord{\(G, \; v\)} \;
+    \BlankLine
+    \(l[v] \leftarrow 0\) \;
+    Marque todos los vértices \(x \in V \smallsetminus \{v\}\)
+      con \(l[x] = \infty\) \;
+    \For{\(i \leftarrow 1\) \KwTo \(\lvert V \rvert - 1\)}{
+      \ForEach{\(x y \in E\)}{
+	\(l[y] \leftarrow \min\{l[y], l[x] + w(x y)\}\) \;
+      }
+    }
+    \BlankLine
+    \If{hay un arco \(x y\) con \(l[x] + w(x y) < l[y]\)}{
+      \tcc{Hay un ciclo de costo negativo}
+    }
+    \caption{Costos mínimos desde el vértice $v$ (Bellman-Ford)}
+    \label{alg:Bellman-Ford}
+  \end{algorithm}
+  Que este algoritmo es correcto
+  se demuestra por inducción%
+    \index{demostracion@demostración!induccion@inducción}
+  sobre las ejecuciones del ciclo \textbf{for} externo.
+  \begin{theorem}
+    Después de \(k\) repeticiones del ciclo,
+    si para un vértice \(u\) tenemos \(l[u] < \infty\)
+    entonces es el largo de algún camino desde \(v\) a \(u\).
+    Si hay un camino de \(v\) a \(u\) de a lo más \(k\) arcos,
+    entonces \(l[u]\) es a lo más el largo del camino más corto
+    con a lo más \(k\) arcos de \(v\) a \(u\).
+  \end{theorem}
+  \begin{proof}
+    Por inducción sobre el número de iteraciones.%
+      \index{demostracion@demostración!induccion@inducción}
+    \begin{description}
+    \item[Base:]
+      Cuando \(k = 0\),
+      antes de ejecutar el ciclo por primera vez.
+      En esta situación \(l[v] = 0\)
+      y para los demás \(l[u] = \infty\),
+      que corresponde a la situación descrita.
+    \item[Inducción:]
+      Primero lo primero.
+      Al ajustar
+	\(l[y] \leftarrow \min\{l[y], l[x] + w(x y)\}\),
+      por inducción tenemos que \(l[x]\)
+      es el largo de algún camino de \(v\) a \(x\),
+      y \(l[x] + w(x y)\) es entonces el largo del camino
+      que va de \(v\) a \(x\) y luego pasa por el arco \(x y\)
+      para llegar a \(y\).
+      También \(l[y]\) es el largo de algún camino de \(v\) a \(y\),
+      y al ajustar
+      estamos depositando en \(l[y]\)
+      el largo de algún camino de \(v\) a \(y\).
+
+      Para lo segundo,
+      consideremos el camino más corto de \(v\) a \(y\)
+      con a lo más \(k\) arcos.
+      Sea \(z\) el último vértice antes de \(y\) en este camino.
+      Por inducción,
+      después de \(k - 1\) iteraciones tenemos que \(l[z]\)
+      es a lo más el largo de un camino con a lo más \(k - 1\) arcos
+      desde \(v\) a \(z\),
+      y \(l[y]\) el largo de un camino de a lo más \(k - 1\) arcos
+      desde \(v\) a \(y\).
+      Agregando el arco \(z y\) al camino de \(v\) a \(z\)
+      tenemos un camino de \(k\) arcos,
+      si resulta más corto que el que tiene a lo más \(k - 1\) arcos
+      actualizamos \(l[y]\).
+      El resultado final,
+      luego de considerar todos los arcos que llegan a \(y\),
+      es que tenemos el largo
+      del camino más corto con a lo más \(k\) arcos.
+    \qedhere
+    \end{description}
+  \end{proof}
+
+  Para completar la demostración
+  de que el algoritmo~\ref{alg:Bellman-Ford} es correcto,
+  basta observar que luego de \(\lvert V \rvert - 1\) iteraciones
+  hemos calculado los costos mínimos
+  de los caminos de largo a lo más \(\lvert V \rvert - 1\),
+  que es el largo máximo posible de un camino en el grafo.
+  Si aún pueden hacerse mejoras,
+  es porque hay un ciclo de largo negativo.
+
+  El tiempo de ejecución de este algoritmo es
+  \(O(\lvert V \rvert \cdot \lvert E \rvert)\)).
+  Esto es mayor que la complejidad del algoritmo de Dijkstra,
+  pero como ya indicamos
+  este algoritmo tiene la virtud de manejar arcos de largo negativo.
+  Por lo demás,
+  si en algún ciclo del \textbf{for} externo no hay cambios,
+  ya no los habrá más y podemos terminar el algoritmo
+  (básicamente hemos llegado al final del camino más largo),
+  por lo que esta complejidad es pesimista.
+  Hay una mejora debida a Yen~%
+    \cite{yen70:_algor_findin_short_routes_all}
+  que efectivamente disminuye a la mitad el número de pasadas
+  requeridas.
+
+% Fixme: Agregar un ejemplo paso a paso (también para los otros!)
+
+  Una variante de este algoritmo se usa en redes de computadores
+  (por ejemplo, es parte del protocolo RIP~\cite{RFC4822})%
+    \index{red de computadores!protocolo RIP@protocolo \texttt{RIP}}
+  para encontrar rutas óptimas,
+  ya que los cómputos pueden distribuirse a los nodos:
+  Cada nodo calcula los largos
+  (y el primer paso del camino más corto)
+  hacia todos los destinos en la red,
+  recogiendo información de rutas y distancias óptimas estimadas
+  desde sus vecinos,
+  actualiza sus propias estimaciones de las mejores rutas
+  y sus costos,
+  y distribuye los resultados de vuelta a sus vecinos.
+
+% Fixme: Análisis más detallado
+
+\subsubsection{Algoritmo de Floyd-Warshall}
+\label{sec:Floyd-Warshall}
+\index{Floyd-Warshall, algoritmo de}
+
+% Fixme: Monos paso a paso (ídem otros algoritmos)
+% Sugerido por Paulina Silva <pasilva@alumnos.inf.utfsm.cl>
+
+  A diferencia de los anteriores,
+  este algoritmo~%
+     \cite{floyd62:_algorithm97,warshall62:_theo_boolean_matrices}
+  calcula los costos de los caminos mínimos
+  entre todos los pares de vértices del grafo.
+  Tomamos como los vértices del grafo
+  los números \(\{1, 2, \dotsc, \lvert V \rvert\}\),
+  y actualizamos un arreglo \(l[i, j]\)
+  de forma que después de la iteración \(k\)
+  el valor del elemento \(l[i, j]\)
+  es el costo del camino más corto entre los vértices \(i\) y \(j\)
+  que visita únicamente
+  algunos de los vértices \(\{1, 2, \dotsc, k\}\) entremedio.
+  Llamemos \(l^{(k)}[i, j]\) a este valor.
+  Claramente \(l^{(0)}[i, j] = w(i j)\),
+  el costo de ir directamente de \(i\) a \(j\),
+  ya que no podemos pasar por ningún vértice intermedio.
+  Para calcular el valor de \(l^{(k + 1)}[i, j]\),
+  consideramos que el camino más corto
+  que pasa a lo más por \(k + 1\)
+  tiene dos posibilidades:
+  Nunca pasa por \(k + 1\),
+  solo llega hasta \(k\),
+  el costo es \(l^{(k)}[i, j]\) en tal caso;
+  o pasa por \(k + 1\),
+  lo que significa que de \(i\) va a \(k + 1\)
+  y luego de \(k + 1\) va a \(j\),
+  en ambos casos pasando a lo más por \(\{1, 2, \dotsc, k\}\),
+  con costo \(l^{(k)}[i, k + 1] + l^{(k)}[k + 1, j]\).
+  Calculamos:
+  \begin{equation*}
+    l^{(k + 1)}[i, j]
+      = \min \{l^{(k)}[i, j], l^{(k)}[i, k + 1]
+		+ l^{(k)}[k + 1, j]\}
+  \end{equation*}
+  Una vez alcanzado \(k = \lvert V \rvert\),
+  ya no hay restricciones sobre los vértices visitados en el camino
+  y hemos calculado los costos mínimos.
+  Posibles caminos de largo negativo
+  no afectan al funcionamiento del algoritmo.
+  Esto resulta en el algoritmo~\ref{alg:Floyd-Warshall},
+  donde anotamos simplemente \(l[i, j]\) para \(l^{(k)}[i, j]\).
+  Nótese que si no hay cambios entre dos iteraciones,
+  ya no habrán más cambios y el algoritmo puede terminarse.
+  No seguimos rigurosamente la descripción anterior,
+  a veces usamos valores ya actualizados
+  (en el fondo,
+   de la iteración siguiente)
+  de \(l^{(k)}[i, j]\).
+  Esto no afecta la correctitud,
+  pero ahorra espacio
+  (no requiere guardar dos juegos de valores de \(l^{(k)}[i, j]\))
+  y hace que el algoritmo sea algo más rápido al adelantar pasos
+  si se detiene cuando ya no hay cambios.
+% Fixme: Demostrar correctitud
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{FloydWarshall}{FloydWarshall}
+
+    \KwProcedure \FloydWarshall{\(G = (V, E)\)} \;
+    \BlankLine
+    \For{\(i \leftarrow 1\) \KwTo \(\lvert V \rvert\)}{
+      \For{\(j \leftarrow 1\) \KwTo \(\lvert V \rvert\)}{
+	\(l[i, j] \leftarrow w(i j)\) \;
+      }
+    }
+    \For{\(k \leftarrow 1\) \KwTo \(\lvert V \rvert\)}{
+      \For{\(i \leftarrow 1\) \KwTo \(\lvert V \rvert\)}{
+	\For{\(j \leftarrow 1\) \KwTo \(\lvert V \rvert\)}{
+	  \(l[i, j] \leftarrow
+		      \min \{l[i, j], l[i, k] + l[k, j]\}\) \;
+	}
+      }
+    }
+    \caption{Costos mínimos entre todos los vértices
+	     (Floyd-Warshall)}
+    \label{alg:Floyd-Warshall}
+  \end{algorithm}
+  Lo notable de este algoritmo es que en un grafo con \(n\) vértices
+  es que efectúa solo \(2 n^3\) comparaciones,
+  cuando pueden haber hasta \(n - 1\) arcos en cada camino,
+  y debemos considerar \(n (n -1) / 2 \) pares de vértices
+  como inicio y fin.
+
+% Fixme: Análisis más detallado
+% Fixme: Aplicaciones (p.ej. ruteo): Stallings, Stevens, RFCs
+% Fixme: Mostrar los algoritmos paso a paso
+
+\subsection{Árbol recubridor mínimo}
+\label{sec:MST}
+\index{grafo!arbol recubridor minimo@árbol recubridor mínimo}
+
+  En muchas aplicaciones interesa encontrar el grafo de costo mínimo
+  (el costo es simplemente la suma de los pesos de los arcos
+   en el subgrafo)
+  que conecta a un conjunto dado de vértices.
+  Claramente tal grafo será un árbol recubridor,
+  el \emph{árbol recubridor mínimo}
+  (\emph{\foreignlanguage{english}{Minimal Spanning Tree}}
+   en inglés,
+   abreviado \emph{MST}).
+  Veremos varios algoritmos para construirlo.
+
+\subsubsection{Algoritmo de Prim}
+\label{sec:MST-Prim}
+\index{Prim, algoritmo de}
+
+  Una estrategia,
+  debida a Prim~%
+   \cite{prim57:_short_connection_networks}
+   es agregar a un árbol parcial
+  aquel arco que conecta a un vértice al árbol
+  de forma que el costo sea mínimo.%
+    \index{algoritmo voraz}
+
+  Un poco más formalmente,
+  eso sí abusando de la notación dando el nombre del grafo
+  como su conjunto de vértices o arcos según corresponda:
+  Inicialmente \(T\) es solo un vértice cualquiera del grafo.
+  Sea \(T\) el árbol actual,
+  elegimos el vértice \(v \in V \smallsetminus T\)
+  tal que el costo de llegar a él
+  desde un vértice \(x \in T\) es mínimo.
+  Agregamos el arco \(v x\) a \(T\).
+  Esto se repite hasta que no queden vértices sin cubrir.
+
+  Aplicando el algoritmo al grafo de la figura~\ref{fig:MST},
+  \begin{figure}
+    \centering
+    \pgfimage{images/grafo-mst}
+    \caption{Ejemplo de grafo para árbol recubridor mínimo}
+    \label{fig:MST}
+  \end{figure}
+  paso a paso se obtienen los árboles de la figura~\ref{fig:Prim}.
+  \begin{figure}
+    \centering
+    \subfloat[Paso \(1\)]{
+      \pgfimage{images/grafo-Prim-1}
+    }%
+    \hspace{2em}%
+    \subfloat[Paso \(2\)]{
+      \pgfimage{images/grafo-Prim-2}
+    }
+
+    \subfloat[Paso \(3\)]{
+      \pgfimage{images/grafo-Prim-3}
+    }%
+    \hspace{2em}%
+    \subfloat[Paso \(4\)]{
+      \pgfimage{images/grafo-Prim-4}
+    }
+
+    \subfloat[Paso \(5\)]{
+      \pgfimage{images/grafo-Prim-5}
+    }
+    \caption{El algoritmo de Prim
+	     aplicado al grafo de la figura~\ref{fig:MST}}
+    \label{fig:Prim}
+  \end{figure}
+
+  \begin{theorem}
+    El algoritmo de Prim obtiene un árbol recubridor mínimo.
+  \end{theorem}
+  \begin{proof}
+    Por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Sea \(w(G)\)  el costo total de los arcos en el grafo \(G\).
+    Sea \(T\) el árbol recubridor construido por el algoritmo,
+    con \(e_1, e_2, \dots, e_n\) los arcos
+    en el orden en que los elige el algoritmo.
+    Entonces:
+    \begin{equation*}
+      w(T) = w(e_1) + w(e_2) + \dotsb + w(e_n)
+    \end{equation*}
+    Sea \(U\) un árbol recubridor mínimo de \(G\),
+    y supongamos que el árbol recubridor \(T\)
+    que construye el algoritmo
+    no es mínimo,
+    vale decir \(w(U) < w(T)\).
+
+    Sea \(e_k\) el primer arco en \(T\)
+    (en el orden en que los elige el algoritmo)
+    que no está en \(U\).
+    Eliminando \(e_k\) de \(T\),
+    por el teorema~\ref{theo:arbol-propiedades}
+    (propiedad~\ref{T:quitar-arco})
+    obtenemos dos componentes conexos que son árboles.
+    Habrá algún arco \(e^{*} \in U\)
+    que conecta estos dos componentes conexos.
+    Si \(w(e^{*}) < w(e_k)\)
+    el algoritmo habría elegido \(e^{*}\) en vez de \(e_k\),
+    así que \(w(e^{*}) \ge w(e_k)\).
+
+    Aplicando la misma idea al grafo obtenido
+    al eliminar los arcos \(e_1\) a \(e_{k - 1}\)
+    (y los vértices que contienen)
+    del grafo
+    vemos que nuestro algoritmo siempre habría elegido un arco
+    de costo no mayor
+    que el incluido en \(U\),
+    con lo que \(w(T) \le w(U)\)
+    y \(T\) es un árbol recubridor mínimo.
+  \end{proof}
+
+  En este caso,
+  la estrategia voraz de elegir ``el mejor ahora''
+  sin considerar consecuencias futuras tiene éxito.
+
+  La complejidad del algoritmo depende de cómo se almacena el grafo
+  y los respectivos costos por arco.
+  Con la representación obvia de matriz de adyacencia
+  en la que \(a[i, j]\) es el costo del arco \(i j\)
+  y se busca en la matriz es \(O(\lvert V \rvert^2)\),
+  almacenando el grafo en una lista de adyacencia
+  y usando una estructura eficiente
+  para ubicar el mínimo en cada paso
+  esto se reduce
+  a \(O(\lvert E \rvert + \lvert V \rvert \log \lvert V \rvert)\).
+% Fixme: Discutir posibles estructuras de datos
+
+\subsubsection{Algoritmo de Kruskal}
+\label{sec:kruskal}
+\index{Kruskal, algoritmo de}
+
+  Otra idea,
+  debida a Kruskal~%
+    \cite{kruskal56:_short_spann_subtree},
+  es ordenar los arcos en orden de costo creciente,
+  y agregar sucesivamente el siguiente arco que no forma un ciclo.%
+    \index{algoritmo voraz}
+  Un ejemplo paso a paso para el grafo de la figura~\ref{fig:MST}
+  se muestra en la figura~\ref{fig:Kruskal}.
+  \begin{figure}
+    \centering
+    \subfloat[Paso \(1\)]{
+      \pgfimage{images/grafo-Kruskal-1}
+    }%
+    \hspace{2em}%
+    \subfloat[Paso \(2\)]{
+      \pgfimage{images/grafo-Kruskal-2}
+    }
+
+    \subfloat[Paso \(3\)]{
+      \pgfimage{images/grafo-Kruskal-3}
+    }%
+    \hspace{2em}%
+    \subfloat[Paso \(4\)]{
+      \pgfimage{images/grafo-Kruskal-4}
+    }
+
+    \subfloat[Paso \(5\)]{
+      \pgfimage{images/grafo-Kruskal-5}
+    }
+    \caption{El algoritmo de Kruskal
+	     aplicado al grafo de la figura~\ref{fig:MST}}
+    \label{fig:Kruskal}
+  \end{figure}
+
+  Aplicando el algoritmo,
+  vamos creando un bosque%
+    \index{grafo!bosque|textbfhy}
+  (una colección de árboles,
+   en inglés ``\emph{\foreignlanguage{english}{forest}}'')
+  Inicialmente el bosque es cada vértice por sí solo,
+  luego en cada paso conectamos dos árboles.
+  Se van agregando arcos con el menor costo posible
+  que no generen un ciclo.
+  Como el grafo resultante es conexo y no tiene ciclos,
+  es un árbol recubridor del grafo.
+  En adición,
+  resulta un árbol recubridor mínimo,
+  por un razonamiento similar al dado para el algoritmo de Prim.
+  Nuevamente la estrategia voraz de tomar el mejor localmente
+  tiene éxito.
+
+  Para construir un programa eficiente para el algoritmo de Kruskal
+  bastan estructuras simples.
+  Sabemos de la sección~%
+    \ref{sec:dividir-y-conquistar}
+  que podemos ordenar los \(\lvert E \rvert\)
+  arcos por orden de costo
+  con \(O(\lvert E \rvert \log \lvert E \rvert)\) comparaciones.
+  Luego consideramos cada arco por turno,
+  y vemos si sus extremos están en árboles distintos del bosque
+  que estamos construyendo.
+
+  Requerimos seguir la pista a los árboles,
+  fundamentalmente mantener conjuntos de vértices
+  en cada uno de ellos,
+  determinar rápidamente en qué conjunto está cada vértice,
+  y unir dos conjuntos.
+  Una forma sencilla
+  (y suficientemente eficiente para los propósitos presentes)
+  es representar cada conjunto mediante una lista,
+  en la cual cada elemento
+  mantiene un puntero al primer elemento de la lista.
+  Para ver en qué lista está un vértice dado
+  basta hacer referencia al primer elemento de su lista,
+  lo que toma tiempo constante.
+  Esta operación se efectúa \(2 \lvert E \rvert\) veces,
+  para un total de \(O(\lvert E \rvert)\).
+  Crear las \(\lvert V \rvert\) listas
+  que representan los vértices individuales
+  toma \(O(\lvert V \rvert)\)
+  Para unir dos conjuntos
+  se agregan los elementos de la lista más corta a la más larga,
+  ajustando los punteros correspondientes.
+  El costo total en que incurre el algoritmo
+  uniendo conjuntos hasta tener uno solo
+  podemos calcularlo
+  a través de contar cuántas veces en el peor caso
+  el puntero al primer elemento de la lista debe ajustarse
+  para un vértice \(v\) cualquiera.
+  Esto ocurrirá solo si \(v\) pertenece a la lista menor
+  en una unión,
+  y cada vez que esto ocurra la lista a la que pertenece \(v\)
+  al menos se duplica,
+  con lo que esto podrá ocurrir
+  a lo más \(\log_2 \lvert V \rvert\) veces.
+  Como hay un total de \(\lvert V \rvert\) vértices,
+  el costo total de las uniones
+  será \(O(\lvert V \rvert \log \lvert V \rvert)\).
+  El costo total del algoritmo es entonces,
+  dado que \(\lvert E \rvert = O(\lvert V \rvert^2)\):
+  \begin{equation*}
+    O(\lvert E \rvert \log \lvert E \rvert)
+      + O(\lvert E \rvert)
+      + O(\lvert V \rvert \log \lvert V \rvert)
+      = O(\lvert E \rvert \log \lvert V \rvert)
+  \end{equation*}
+
+\subsubsection{Árboles recubridores en redes de computadores}
+\label{sec:STP}
+\index{grafo!arbol recubridor@árbol recubridor}
+\index{red de computadores}
+
+  Las redes de área local actualmente en uso
+  (ver algún texto del área,
+   como Stallings~%
+     \cite{stallings10:_data_comput_commun,
+	   tanenbaum10:_comput_networ})
+  son redes de difusión,
+  vale decir,
+  lo que una de las estaciones transmite
+  lo pueden recibir todas las demás conectadas
+  al mismo medio físico.
+  Suele ser de interés conectar entre sí redes de área local,
+  lo que se hace a través de equipos
+  denominados \emph{\foreignlanguage{english}{bridges}},%
+    \index{red de computadores!bridge@\emph{\foreignlanguage{english}{bridge}}}
+  que se encargan de retransmitir
+  solo el tráfico de interés en la otra rama.
+  Por razones de confiabilidad
+  interesa tener conexiones redundantes,
+  vale decir,
+  varios caminos entre redes.
+  Pero esto introduce la posibilidad de crear ciclos,
+  y por tanto tráfico que se retransmite indefinidamente.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage[width=0.85\textwidth]{images/red-esquema}
+    \caption{Esquema de redes interconectadas por \emph{bridges}}
+    \label{fig:red-esquema}
+  \end{figure}
+  Un ejemplo se muestra en la figura~\ref{fig:red-esquema}.
+  Esta situación puede modelarse mediante un grafo,
+  en el cual las redes son vértices
+  y las conexiones entre redes son arcos.
+  Para la red de la figura~\ref{fig:red-esquema}
+  resulta el grafo de la figura~\ref{fig:red-grafo}.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/red-grafo}
+    \caption{La red de la figura~\ref{fig:red-esquema} como grafo}
+    \label{fig:red-grafo}
+  \end{figure}
+  En estos términos,
+  lo que se busca es hallar un árbol recubridor del grafo
+  (inhabilitando \emph{\foreignlanguage{english}{bridges}}
+   que no participan en él).
+  Para cumplir con redundancia y tolerancia a fallas
+  (y evitar el siempre presente error humano)
+  interesa que en caso de falla
+  la red se reconfigure automáticamente.
+  Los \emph{\foreignlanguage{english}{bridges}}
+  originalmente contemplados
+  (que conectan entre sí a dos redes)
+  han sido desplazados
+  por \emph{\foreignlanguage{english}{switches}},
+  que cumplen la misma función
+  pero pueden conectar varias redes entre sí.
+
+  Para la tarea descrita se han estandarizado algoritmos
+  (conocidos como STP,%
+    \index{red de computadores!protodolo STP@protocolo \texttt{STP}}
+   por \emph{\foreignlanguage{english}{Spanning Tree Protocol}}
+   y RSTP,%
+    \index{red de computadores!protodolo RSTP@protocolo \texttt{RSTP}}
+   por \emph{\foreignlanguage{english}{Rapid Spanning Tree Protocol}},
+   definidos por IEEE~\cite{ieee:_802.1d-2004})
+  mediante los cuales
+  los equipos cooperan para
+  configurar un árbol recubridor automáticamente.
+  Perlman~%
+    \cite{Perlman:1985:ADC:318951.319004}
+  describe cómo se hace.
+  En resumen
+  es que intercambian sus prioridades
+  (fijadas por el administrador de la red)
+  junto con sus identificadores
+  (fijados de fábrica, únicos en el mundo).
+  Aquel que tenga el mínimo par prioridad e identificador
+  se elige de raíz,
+  y todos los demás calculan sus distancias hacia la raíz
+  a través de cada una de sus interfases.
+  Se habilitan únicamente las interfases
+  que dan el camino más corto hacia la raíz.
+  Este proceso se repite periódicamente,
+  de forma de reaccionar frente a fallas y reconfiguraciones.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

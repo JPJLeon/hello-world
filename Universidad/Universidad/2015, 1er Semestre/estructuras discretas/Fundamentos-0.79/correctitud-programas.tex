@@ -1,0 +1,708 @@
+% correctitud-programas.tex
+%
+% Copyright (c) 2012-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Correctitud de programas}
+\label{cha:programas}
+\index{programa!correctitud}
+
+  Cada día dependemos más de programas computacionales.
+  Lamentablemente,
+  muchos programas han demostrado ser incorrectos,
+  errores de programación han dado lugar a costos inmensos
+  (el reporte de Calude, Calude y Marcus~%
+     \cite{calude07:_provin_progr}
+   da algunos ejemplos notorios,
+   pero todos hemos sufrido en menor o mayor medida
+   a causa del comportamiento erróneo de programas).
+  Dijkstra~\cite{dijkstra89:_cruelty_teach_comput_scien}%
+    \index{Dijkstra, Edsger W.}
+  observa que la computación
+  significa un cambio radical en nuestro mundo,
+  al introducir artefactos cuyo funcionamiento no es continuo,
+  y más aún dar lugar a fenómenos que abarcan órdenes de magnitud
+  absolutamente inimaginables en otras disciplinas.
+  Veremos cómo aplicar técnicas de razonamiento matemático
+  a la tarea de asegurar que un programa funcione como se espera.
+
+\section{Lógica de Hoare}
+\label{sec:logica-de-hoare}
+\index{Hoare, logica de@Hoare, lógica de}
+
+% Lógica de Hoare
+%   \cite{floyd67:_assig_meanin_progr,
+%	  hoare69:_axiom_basis_comput_progr,
+%	  gries87:_scien_progr}
+%
+% Correctitud parcial/total
+% Técnicas de razonamiento
+% Ejemplos ~~--> Programming Pearls
+% Herramientas como splint <http://www.splint.org>
+% o sparse <http://www.kernel.org/pub/software/devel/sparse>
+% (a la pasada cosas como doxygen, valgrind, ...?)
+
+  Ya a fines de los años 60,
+  Floyd~\cite{floyd67:_assig_meanin_progr}%
+    \index{Floyd, Robert W.}
+  y luego Hoare~\cite{hoare69:_axiom_basis_comput_progr}%
+    \index{Hoare, Tony (Sir Charles Anthony Richard)}
+  propusieron demostrar formalmente
+  que los programas cumplen con sus especificaciones,
+  idea que fue luego desarrollada por Dijkstra~%
+    \cite{dijkstra76:_discip_progr}
+  y de alguna manera completada por Gries~%
+    \cite{gries87:_scien_progr}.%
+    \index{Gries, David}
+  Posiblemente la formalización más completa es la que da Apt~%
+    \cite{apt81:_ten_years_hoare_logic,
+	  apt84:_ten_years_hoare_logic}.
+  Una descripción formal reciente
+  (con orientación pedagógica)
+  dan Gordon y~Collavizza~%
+    \cite{gordon10:_forwar_hoare}.
+  Jones~%
+    \cite{jones03:_early_searc_tract_ways_reason_about_progr}
+  resume la historia desde sus comienzos.
+  Una crítica del área da Gutmann en su tesis~%
+    \cite[capítulos~4 y~5]{gutmann04:_crypt_sec_arch}.
+
+  Demostrar correctitud de programas aumenta la confianza
+    \index{programa!verificacion formal@verificación formal}
+  de que funcionen correctamente,
+  pero las técnicas formales son complejas y caras
+  de aplicar en general.
+  Aún con ayuda del computador
+  hoy solo es posible verificar completamente
+  programas relativamente pequeños.
+  Tal vez el ejemplo más notable de verificación
+  es la del micronúcleo seL4~%
+    \cite{Klein:2010:SFV:1743546.1743574, klein11:_l4},%
+    \index{seL4}
+  un sistema de unas \(8\,700\)~líneas de C
+  de las cuales se verificaron formalmente unas \(7\,500\).
+  Para contraste,
+  el núcleo de un sistema operativo de uso común,
+  como Linux,
+    \index{Linux}
+  tiene casi doce millones de líneas de código.
+
+  Sigue vigente el famoso dicho:
+  \hybridblockquote{english}
+      [Donald E. Knuth~%
+	 \cite{knuth77:_notes_emde_boas_const_prior_deques}]{%
+    Beware of bugs in the above code;
+    I have only proved it correct,
+    not tried it%
+  }.%
+    \index{Knuth, Donald E.}
+  Al efecto,
+  Berry~\cite{berry92:_academ_legit_softw_eng_discipl}
+  cita el ejemplo de un programita de \(25\)~líneas de Algol%
+    \index{Algol (lenguaje de programacion)@Algol (lenguaje de programación)}
+  especificado
+  y demostrado correcto informalmente en 1969
+  por Naur~\cite{naur69:_progr_action_clust},%
+    \index{Naur, Peter}
+  publicado sin probarlo.
+  El año siguiente,
+  revisando la publicación de Naur Leavenworth~%
+    \cite{leavenworth70:_19420}
+  encontró un error que habría sido evidente
+  de ejecutar el programa.
+  Aún después,
+  London~\cite{london71:_softw_reliab_proving_prog_correct}
+  halló tres errores adicionales que habrían sido fáciles de hallar
+  probando el programa.
+  Ofreció un programa corregido,
+  acompañando esta vez una demostración formal de correctitud.
+  Igualmente,
+  Goodenough y Gerhart~%
+    \cite{goodenough75:_towar_theor_test_data_selec}
+  hallaron tres errores adicionales en el programa de London,
+  que nuevamente habrían sido evidentes al probar el programa.
+  A su vez,
+  las especificaciones dieron lugar
+  a una comedia de errores adicional.
+    \index{programa!verificacion formal@verificación formal!comedia}
+  El hecho que incluso ejemplos mínimos,
+  de las manos de los máximos expertos del área,
+  den lugar a tal espectáculo
+  es prueba patente de lo complejo del tema.
+
+  Siempre debe tenerse presente el dicho:
+  \hybridblockquote{english}
+      [C. A. R. Hoare~\cite{hoare81:_old_clothes}]{%
+    There are two ways of constructing a software design:
+    One way is to make it so simple
+    that there are \emph{obviously} no deficiencies,
+    and the other way is to make it so complicated
+    that there are no \emph{obvious} deficiencies.
+    The first method is far more difficult.%
+  }.%
+    \index{Hoare, Tony (Sir Charles Anthony Richard)}
+  En la misma línea nos advierten:
+  \hybridblockquote{english}
+      [D. E. Knuth~%
+	 \cite{knuth74:_struc_progr_goto, knuth89:_errors_TeX}]{%
+    Premature optimization is the root of all evil.%
+  }.%
+    \index{Knuth, Donald E.}%
+    \index{premature optimization@\emph{\foreignlanguage{english}{premature optimization}}}
+
+\section{Lógica de Hoare}
+\label{sec:logica-Hoare}
+\index{Hoare, logica de@Hoare, lógica de|textbfhy}
+
+  La idea tras el trabajo de Hoare y sus sucesores
+  es que durante su ejecución un programa pasa por \emph{estados}
+  bien definidos,
+  y que estos estados cambian conforme se ejecutan instrucciones.
+  Mediante \emph{predicados}
+  sobre los valores de las variables
+  se describen los aspectos de interés de cada estado,
+  y se busca demostrar que dadas ciertas condiciones iniciales
+  al finalizar el programa se cumple lo solicitado
+  (\emph{correctitud parcial})%
+    \index{programa!correctitud parcial|textbfhy}
+  y,
+  generalmente en forma separada de lo anterior,
+  que el programa siempre termina con el resultado correcto
+  (\emph{correctitud total}).%
+    \index{programa!correctitud total|textbfhy}
+  Esto involucra relacionar los predicados antes y después
+  de las distintas instrucciones del lenguaje empleado.
+
+  La forma general de expresar los resultados es:
+  \begin{equation*}
+    \{P\} \text{\ programa\ } \{Q\}
+  \end{equation*}
+  para expresar que si se cumple \(P\) antes del programa,
+  cuando éste termine se cumple \(Q\).
+
+\section{Búsqueda binaria}
+\label{sec:busqueda-binaria}
+\index{busqueda binaria@búsqueda binaria}
+
+  Como un ejemplo,
+  desarrollaremos paso a paso una función de búsqueda binaria,
+  siguiendo la exposición de Bentley~%
+    \cite[capítulo 4]{bentley00:_progr_pearl}.%
+    \index{Bentley, Jon}
+  Es también de interés histórico,
+    \index{busqueda binaria@búsqueda binaria!historia}
+  la primera exposición del programa fue publicada en 1946,
+  la primera versión correcta recién en 1962.
+  Bentley reporta haber usado el programa
+  como ejercicio en cursos para programadores profesionales.
+  Al cabo de una hora,
+  revisaban sus programas durante media hora adicional,
+  y consistentemente \(90\)\% de ellos hallaban errores.
+  Bentley reconoce
+  que no está seguro si el \(10\)\% restante era correcto.
+
+  Nuestro problema es determinar si el arreglo ordenado
+  \(x[1..N]\) contiene el valor \(t\).
+  Más precisamente,
+  sabemos que \(N \ge 0\)
+  y que \(x[1] \le x[2] \le \dotso \le x[N]\).
+  Los tipos de \(t\)
+  y de los elementos de \(x\) son los mismos,
+  el pseudocódigo debiera funcionar igualmente bien para enteros,
+  reales o \foreignlanguage{english}{strings}.
+  La respuesta es el entero \(p\);
+  si \(p\) es cero
+  \(t\) no está en \(x[1..N]\),
+  en caso contrario \(1 \le p \le N\)
+  y \(t = x[p]\).
+
+  Búsqueda binaria resuelve este problema
+  siguiendo la pista a un rango dentro del arreglo
+  en el que \(t\) tiene que estar
+  si es que está en el arreglo.
+  Inicialmente el rango es el arreglo completo.
+  El rango se acorta comparando \(t\)
+  con el elemento medio del rango
+  y descartando la mitad que no puede contenerlo.
+  El proceso continúa hasta que se halle el elemento
+  o el rango esté vacío.
+
+\subsection{Escribiendo el programa}
+\label{sec:busqueda-binaria-escribir}
+
+  La idea clave es que siempre sabemos que si \(t\)
+  está en alguna parte de \(x[1..N]\),
+  está en un cierto rango.
+  Usaremos \(\mathrm{DebeEstar}(\mathit{rango})\)
+  para significar que si \(t\) está en el arreglo,
+  debe estar en el \(\mathit{rango}\) indicado.
+  Con esto,
+  la descripción informal
+  se puede transformar
+  en el esbozo de programa~\ref{alg:bs-sketch-1}.
+  \begin{algorithm}[H]
+    \DontPrintSemicolon
+    Inicialice \(\mathit{rango}\) para designar \(x[1..N]\) \;
+    \Loop{
+      \{ Invariante: \(\mathrm{DebeEstar}(\mathit{rango})\) \} \;
+      \If{\(\mathit{rango}\) es vacío}{
+	Retorne que \(t\) no está en el arreglo \;
+      }
+      Calcule \(m\), el punto medio de \(\mathit{rango}\) \;
+      Use \(m\) como prueba para encoger el rango,
+	si halla \(t\) en el proceso retorne su posición \;
+    }
+    \caption{Esbozo de búsqueda binaria}
+    \label{alg:bs-sketch-1}
+  \end{algorithm}
+  Parte crucial de nuestro esbozo es el \emph{invariante de ciclo},
+    \index{programa!invariante de ciclo|textbfhy}
+  que encerramos entre llaves.
+  Se cumple siempre al comienzo de cada ciclo
+  (de allí su nombre),
+  y formaliza nuestra idea intuitiva presentada antes.
+
+  Refinamos el esbozo,
+  asegurándonos que nuestras acciones respetan el invariante.
+  Primeramente debemos decidir
+  cómo representar el \(\mathit{rango}\).
+  Usaremos dos índices \(i\) (inferior)
+  y \(s\) (superior) para el rango \(i..s\).
+  (Hay otras opciones,
+   como inicio y largo.)
+  El siguiente paso es la inicialización:
+  ¿Qué valores deben tener \(i\) y \(s\) para que
+  \(\mathrm{DebeEstar}(i, s)\) se cumpla inicialmente?
+  La respuesta obvia es \(i = 1\) y \(s = N\):
+  \(\mathrm{DebeEstar}(1, N)\) dice que si \(t\) está en \(x\),
+  está en \(x[1..N]\),
+  exactamente lo que sabemos al comenzar el programa.
+  El siguiente paso es verificar si el rango es vacío,
+  cosa que se da siempre que \(i > s\).
+  Hallar el punto medio del rango es:
+  \begin{equation*}
+    m = \left\lfloor \frac{i + s}{2} \right\rfloor
+  \end{equation*}
+  Uniendo las piezas
+  obtenemos el segundo esbozo~\ref{alg:bs-sketch-2}.
+  Para evitar confusiones con la relación de igualdad u otras,
+  en nuestros algoritmos
+  usaremos \(\leftarrow\) para indicar asignación.
+  \begin{algorithm}
+    \DontPrintSemicolon
+
+    \(i \leftarrow 1\); \(s \leftarrow N\) \;
+    \Loop{
+      \{ Invariante: \(\mathrm{DebeEstar}(i, s)\) \} \;
+      \If{i > s}{
+	\(p \leftarrow 0\); \KwBreak \;
+      }
+      \(m \leftarrow \lfloor (i + s) / 2 \rfloor\) \;
+      Use \(m\) como prueba para encoger el rango \(i .. s\),
+	si halla \(t\) en el proceso retorne su posición \;
+    }
+    \caption{Búsqueda binaria: Segundo esbozo}
+    \label{alg:bs-sketch-2}
+  \end{algorithm}
+  Resta refinar la última acción del ciclo.
+  Corresponderá a comparar \(t\) con \(x[m]\)
+  y tomar la acción apropiada:
+
+  \RestyleAlgo{plain}
+  \begin{algorithm}[H]
+    \DontPrintSemicolon
+
+    \lCase{\(t < x[m]\):}{Acción a} \;
+    \lCase{\(t = x[m]\):}{Acción b} \;
+    \lCase{\(t > x[m]\):}{Acción c} \;
+  \end{algorithm}
+  \RestyleAlgo{algoruled}
+
+  \noindent
+  Sabemos que la acción correcta
+  en el segundo caso es asignar \(m\) a \(p\)
+  y quebrar el ciclo.
+  En el primer caso el rango se reduce a \(i .. m - 1\),
+  en el tercero a \(m + 1 .. s\).
+  Esto se logra asignando a \(s\) o \(i\),
+  respectivamente.
+  Expresado en términos de las estructuras de control comunes
+  resulta~\ref{alg:bs-sketch-3}.
+  \begin{algorithm}
+    \DontPrintSemicolon
+    \(i \leftarrow 1\); \(s \leftarrow N\) \;
+    \Loop{
+      \{ Invariante: \(\mathrm{DebeEstar}(i, s)\) \} \;
+      \If{i > s}{
+	\(p \leftarrow 0\); \KwBreak \;
+      }
+      \(m \leftarrow \lfloor (i + s) / 2 \rfloor\) \;
+      \uIf{\(t < x[m]\)}{
+	\(s \leftarrow m - 1\) \;
+       }
+       \eIf{\(t = x[m]\)}{
+	 \(p \leftarrow m\); \KwBreak \;
+       }
+       {
+	 \(i \leftarrow m + 1\) \;
+       }
+    }
+    \caption{Búsqueda binaria: Pseudocódigo final}
+    \label{alg:bs-sketch-3}
+  \end{algorithm}
+  En rigor,
+  solo hemos demostrado
+  (muy informalmente,
+   claro está)
+  que si el ciclo termina entrega el resultado correcto.
+  Debemos asegurar además que el ciclo siempre termina,
+  vale decir,
+  que el largo del rango disminuye en cada paso.
+  Como el largo es un entero,
+  no puede disminuir indefinidamente.
+
+  Igualmente,
+  en implementaciones en máquinas reales
+  el algoritmo~\ref{alg:bs-sketch-3}
+  tiene un error fatal:
+  Si la suma de \(i + s\)
+  es mayor que el máximo entero representable,
+  el cálculo del nuevo valor de \(m\) falla.
+  Esto puede sonar a sofisma,
+  pero fue un error real en la biblioteca de Java.
+  La solución correcta es escribir esa línea como
+  \(m \leftarrow i + \lfloor (s - i) / 2 \rfloor\).
+  De esa forma,
+  las variables y valores intermedios están acotados por \(n\),
+  y no hay rebalses.
+
+  Sea \(l\) el largo del rango al comenzar un ciclo.
+  Llamemos \(l'\) al largo después del ciclo,
+  suponiendo \(t \ne x[m]\).
+  Entonces:
+  \begin{equation*}
+    l'
+      = \begin{cases}
+	  (m - 1) - i + 1
+	    = (\lfloor (i + s) / 2 \rfloor - 1) - i + 1
+	    \le (s - i) / 2
+	    = (l + 1) / 2 & \text{si \(t < x[m]\)} \\
+	  s - (m + 1) - 1
+	    = s - (\lfloor (i + s) / 2 \rfloor + 1) - 1
+	    \le s - (i + s) / 2 - 1
+	    = l / 2 - 3 / 2
+	    < l & \text{si \(t > x[m]\)}
+	\end{cases}
+  \end{equation*}
+  En el caso \(t < x[m]\),
+  si \(l > 1\) claramente \(l' \le (l + 1) / 2 < l\),
+  pero para \(l = 1\) resulta la cota inútil \(l' \le 1\).
+  En esta última situación
+  es \(i = s\),
+  y el algoritmo asigna \(s = m - 1 = i - 1\),
+  cumpliendo la condición de término.
+  Cada iteración
+  nos acerca a la condición que hace terminar el ciclo,
+  el programa termina.
+
+  Es sencillo ahora traducir el pseudocódigo~\ref{alg:bs-sketch-3}
+  a un lenguaje de programación como C,%
+    \index{C (lenguaje de programacion)@C (lenguaje de programación)}
+  ver el listado~\ref{lst:busqueda-binaria}.
+  Nuestra versión incluye la precaución contra rebalses aritméticos
+  mencionada antes.
+  \lstinputlisting[language=C,
+		   caption={Búsqueda binaria en C},
+		   label=lst:busqueda-binaria]
+		   {code/binary-search.c}
+  Nuestro desarrollo cuidadoso
+  da gran confianza de que el programa resultante sea correcto.
+  El registrar el invariante del ciclo ayudará a nuestros lectores
+  convencerse de ello.
+
+  Para no caer en un programa demostrado correcto
+  que falla con el primer caso de prueba
+    \index{programa!casos de prueba}
+  (como se narra en la introducción del presente capítulo),
+  usamos el computador para lo que es mejor:
+  Tareas rutinarias.
+  Un pequeño programa bombardea esta función con casos de prueba:
+  Se crea un arreglo de \(22\) elementos
+  que se llena con los valores \(0\) a \(21\),
+  luego se buscan los valores de \(1\) a \(N\) en él
+  dando el rango de \(1\) a \(N\) para la búsqueda,
+  con \(N\) variando de \(1\) a \(20\).
+  Después se buscan los valores \(0\) y \(N + 1\)
+  (ambos presentes,
+   pero fuera del rango indicado),
+  y finalmente los valores de \(0,5\) a \(N + 0,5\)
+  con paso \(1\).
+  Con esto cubrimos valores populares para errores:
+  \(1\), \(2\), \(3\),
+  algunas potencias de \(2\),
+  números que difieren de potencias de \(2\) en \(1\).
+  Y se cumplió lo indicado
+  respecto de que los errores se cometen
+  principalmente en las partes simples
+  del programa:
+  Algunos de los casos de prueba iniciales fallaron,
+  estaban escritos incorrectamente\ldots
+
+\section{Exponenciación}
+\label{sec:programa-exponenciar}
+\index{programa!exponenciar}
+
+  El calcular una potencia vía multiplicaciones sucesivas
+  viene directamente de la definición de potencia.
+  Sin embargo,
+  hay métodos más eficientes.
+  Partiendo de la identidad:
+  \begin{equation*}
+    n = d \cdot \left\lfloor \frac{n}{d} \right\rfloor + n \bmod d
+  \end{equation*}
+  donde \(n \bmod d\) es el resto de la división de \(n\) por \(d\),
+  podemos expresar potencias:
+  \begin{equation}
+    \label{eq:exponenciacion-binaria}
+    x^n
+      = \left( x^{\lfloor n / 2 \rfloor} \right)^2
+	  \cdot x^{n \bmod 2}
+  \end{equation}
+  Tenemos inmediatamente el algoritmo recursivo~%
+    \ref{alg:exponenciacion-binaria-recursivo}.
+  \begin{algorithm}
+    \DontPrintSemicolon
+    \SetKwFunction{Power}{power}
+
+    \KwFunction \Power\FuncSty{(}\ArgSty{\(x, \; n\)}\FuncSty{)} \;
+    \BlankLine
+    \uIf{\(n = 0\)}{\Return{\(1\)}}
+    \Else{
+      \(s \leftarrow \Power(x, \; \lfloor n / 2 \rfloor)\) \;
+      \(r \leftarrow s^2\) \;
+      \If{\(n \bmod 2 = 1\)}{\(r \leftarrow r \cdot x\)}
+      \Return{\(r\)} \;
+    }
+    \caption{Exponenciación binaria recursiva}
+    \label{alg:exponenciacion-binaria-recursivo}
+  \end{algorithm}
+  La justificación
+  es que suponiendo que la función \(\mathtt{power}(x, k)\)
+  hace correctamente su trabajo para \(k < n\),
+  por la identidad~\eqref{eq:exponenciacion-binaria}
+  calcula correctamente la potencia \(n\).
+  Para justificar que termina,
+  vemos que cada vez se invoca la función recursivamente
+  con un valor menor para el parámetro \(n\),
+  por lo que tarde o temprano llega al valor \(0\),
+  que no involucra recursión.
+  Esto es en esencia una demostración por inducción fuerte.
+
+  Una versión alternativa
+  (no recursiva)
+  del algoritmo~\ref{alg:exponenciacion-binaria-recursivo}
+  es el algoritmo~\ref{alg:exponenciacion-binaria}.
+  Usamos operaciones con bits
+  al estilo C~\cite{kernighan88:_c_progr_lang}.
+  \begin{algorithm}
+    \DontPrintSemicolon
+    \SetKwFunction{Power}{power}
+
+    \KwFunction \Power\FuncSty{(}\ArgSty{\(x, \; n\)}\FuncSty{)} \;
+    \BlankLine
+    \If{\(n = 0\)}{
+      \Return{\(1\)} \;
+    }
+    \BlankLine
+    \For{\(i \leftarrow 0\);
+	 \(n \mathbin{\&} (1 \ll i)\);
+	 \(i \leftarrow i + 1\)}{
+      \tcc{Nada}
+    }
+    \tcc{Ahora \((i \ge 0) \wedge (2^i \le n < 2^{i + 1})\)} \;
+    \(r \leftarrow x\) \;
+    \For{; \(i > 0\); \(i \leftarrow i - 1\)}{
+      \tcc{Invariante: \(u = \lfloor n / 2^i \rfloor\),
+		       \(v = n \bmod 2^i\),
+	    \((r = x^u) \wedge (x^n = r^{2^i} \cdot x^v)\)}
+      \(r \leftarrow r^2\) \;
+      \If{\(n \mathbin{\&} (1 \ll (i - 1))\)}{
+	\(r \leftarrow r \cdot x\) \;
+      }
+    }
+    \tcc{Del invariante con \(i = 0\) resulta \(r = x^n\)}
+    \Return{\(r\)} \;
+    \caption{Exponenciación binaria no recursiva}
+    \label{alg:exponenciacion-binaria}
+  \end{algorithm}
+
+  Un ejemplo adicional es el algoritmo~\ref{alg:sqrt-integer}%
+    \index{programa!raiz cuadrada entera@raíz cuadrada entera}
+  para obtener la raíz cuadrada entera,
+  vale decir,
+  calcular \(\lfloor \sqrt{n} \rfloor\).
+  Todas las variables del algoritmo son enteras.
+  Es simple verificar el invariante,
+  y con la condición de término del ciclo
+  tenemos que \(u^2 \le n < (u + 1)^2\),
+  vale decir,
+  \(u \le \sqrt{n} < u + 1\),
+  o sea \(u = \lfloor \sqrt{n} \rfloor\).
+  En cada ciclo aumenta \(u\) o disminuye \(v\),
+  por lo que el algoritmo termina.
+
+  \begin{algorithm}
+    \DontPrintSemicolon
+    \SetKwFunction{ISqrt}{isqrt}
+
+    \KwFunction \ISqrt \FuncSty{(}\ArgSty{\(n\)}\FuncSty{)} \;
+    \BlankLine
+    \(u \leftarrow 0\) \;
+    \(v \leftarrow n + 1\) \;
+    \While{ \(u + 1 \ne v\)}{
+      \tcc{Invariante: \(u^2 \le n \le v^2\) y \(u + 1 \le v\)}
+      \(x \leftarrow \lfloor (u + v) / 2 \rfloor\) \;
+      \uIf{ \(x^2 \le n\) }{
+	\(u \leftarrow x\) \;
+      }
+      \Else{
+	\(v \leftarrow x\) \;
+      }
+    }
+    \Return{\(u\)} \;
+    \caption{Cálculo de $\lfloor \sqrt{n} \rfloor$}
+    \label{alg:sqrt-integer}
+  \end{algorithm}
+
+\section{Algunos principios}
+\label{sec:algunos-principios}
+
+  El ejemplo de búsqueda binaria
+  ilustra las fortalezas de la verificación de programas:
+  El problema a resolver es importante y requiere código cuidadoso,
+  lo desarrollamos guiados por ideas de verificación,
+  y el análisis de correctitud usa herramientas generales.
+  En todo caso,
+  en la práctica el nivel de detalle del desarrollo
+  será substancialmente menor.
+  Algunos principios generales resultan de la discusión:
+  \begin{description}
+  \item[Afirmaciones:]\index{programa!afirmaciones}
+    Permiten expresar las relaciones entre datos de entrada,
+    variables internas y resultados en forma precisa.
+  \item[Estructuras de control secuenciales:]%
+      \index{programa!estructuras de control}
+    La estructura de control más simple es ejecutar una acción,
+    seguida por otra.
+    Entendemos un programa por afirmaciones entre las instrucciones
+    y razonamos de una a la siguiente.
+  \item[Estructuras de selección:]
+    Durante la ejecución,
+    se toma una de varias acciones.
+    Demostramos la correctitud de tales estructuras
+    razonando de la afirmación antes de la estructura
+    junto a la condición especial que nos lleva al presente caso.
+    Lo que podemos concluir luego de cada una de las opciones
+    se cumple al finalizar la estructura completa.
+  \item[Estructuras de iteración:]
+    Argüir la correctitud de un ciclo tiene tres fases:
+    Inicialización,
+    preservación
+    y término.
+    Primero demostramos que el invariante del ciclo
+    se establece antes del ciclo
+    (inicialización),
+    luego que si el invariante se cumple al comienzo del ciclo
+    se cumple cuando el ciclo termina,
+    y finalmente demostramos que el ciclo
+    se ejecuta un número finito de veces.
+    Después del ciclo sabemos que se cumple el invariante
+    y la condición de término se cumplió.
+  \item[Variables:]\index{programa!variables}
+    Muchos programas modifican los valores de variables,
+    pero interesa expresar
+    que cierta relación se cumple respecto de los valores iniciales.
+    Una posibilidad
+    es usar la convención que si la variable es \(n\),
+    su valor original se representa mediante \(n_0\).
+    Otra opción es definir variables fantasmas
+    que recogen valores de interés.
+    Usamos variables fantasmas
+    en el algoritmo~\ref{alg:exponenciacion-binaria}
+    para expresar el invariante en forma más sencilla.
+  \item[Subrutinas:]\index{programa!subrutinas}
+    Para verificar una subrutina,
+    explicitamos su propósito mediante dos afirmaciones:
+    Su precondición describe el estado antes de ejecutarla,
+    la postcondición describe lo que garantiza del estado
+    una vez que finaliza.
+    Externamente
+    usamos estas afirmaciones para razonar sobre sus usos,
+    internamente verificamos que dadas las precondiciones
+    estamos garantizando las postcondiciones.
+    Esto es válido también en el caso de rutinas recursivas:
+    Suponemos que las llamadas recursivas
+    ``hacen lo correcto'',
+    y en base a ello demostramos que la rutina cumple su contrato.
+  \item[Recursión:]\index{programa!recursión}
+    Verificar la versión recursiva de la exponenciación binaria
+    resulta substancialmente más sencillo
+    que verificar la versión no recursiva.
+    Esta observación es aplicable en general.
+  \end{description}
+  Hallar afirmaciones simples
+  (particularmente invariantes de ciclos)%
+    \index{programa!invariante de ciclo}
+  no es nada fácil.
+  Esta manera de enfrentar el problema de escribir un programa
+  formaliza la manera en que entendemos un programa
+  (muchas veces la explicación del funcionamiento
+   es a través de una traza de la ejecución,
+     \index{programa!traza}
+   pero está claro
+   que el detalle de los valores que toman las variables
+   en esa instancia particular
+   no es todo lo que se está transmitiendo).
+  Por esta razón conviene familiarizarse con este enfoque.
+
+  Las partes difíciles de un programa
+  hacen que se recurra a métodos más formales,
+  mientras las partes simples
+  se desarrollan de la forma tradicional.
+  La experiencia común es que las partes difíciles
+  luego funcionan correctamente la primera vez,
+  las fallas están en las partes simples.
+
+  No se ha logrado el objetivo inicial de estos esfuerzos:
+  Contar con algún artilugio que tome un programa
+  e indique ``correcto'' o ``incorrecto''.
+  Igualmente logramos algo muy valioso:
+  Una comprensión mejor del proceso de programación.
+  Lenguajes de programación actuales se definen al menos en parte
+  cuidando que sea fácil razonar con sus operaciones.
+  Técnicas similares a las usadas acá para demostrar correctitud
+  emplean los compiladores para ``optimizar'' código
+    \index{programa!optimizacion de codigo@optimización de código}
+  (en realidad, solo intentan mejorar características de ejecución):
+  Dependiendo de restricciones deducidas sobre los valores,
+  el código puede especializarse o incluso omitirse
+  sin cambiar los resultados.
+  Refinamientos del análisis son técnicas de ejecución simbólica,%
+    \index{programa!ejecucion simbolica@ejecución simbólica}
+  que pueden hallar errores
+  o al menos generar automáticamente casos de prueba%
+    \index{programa!casos de prueba}
+  para la mayoría del código,
+  un ejemplo es KLEE~%
+    \cite{cadar08:_klee}.%
+    \index{KLEE}
+  También hay herramientas que ayudan a construir y verificar
+  demostraciones de correctitud,
+  como Frama-C~%
+    \cite{cuoq12:_frama_c_softw_analy_persp}.%
+    \index{Frama-C}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

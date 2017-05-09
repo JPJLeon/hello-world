@@ -1,0 +1,3397 @@
+% demostraciones.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Demostraciones}
+\label{cha:demostraciones}
+\index{demostracion@demostración|textbfhy}
+
+  La forma general de funcionar de las matemáticas
+  es deducir nuevos resultados partiendo de cosas ya demostradas.
+  Se busca tener una cadena sólida de deducciones,
+  no se aceptan ``cosas obvias'' ni razonamientos por analogía.
+  Lo que se entiende como prueba
+  es mucho más riguroso que lo aceptado en otras áreas,
+  lo que se busca es que no quede ningún espacio posible de duda.
+  En este capítulo comentaremos del razonamiento matemático
+  y discutiremos técnicas de demostración comunes,
+  mostrando algunas aplicaciones interesantes de las mismas.
+
+\section{Razonamiento matemático}
+\label{sec:razonamiento-matematico}
+\index{razonamiento matematico@razonamiento matemático}
+
+  Aun insistiendo sobre demostraciones rigurosas que no dejan espacio a dudas,
+  las matemáticas son una actividad humana,
+  repleta de errores y paradojas,
+  como relatan Kleiner y Movshovitz-Hadar~%
+    \cite{kleiner94:_role_paradox_evol_math}.
+  Incluso Barbeau~\cite{barbeau00:_math_fallacies_flaws_flimflam}
+  se dedicó durante más de una década a recopilar errores,
+  desde desarrollos completamente incorrectos
+  que llevan a la solución correcta
+  a razonamientos cuyo rango de validez no es simple de determinar,
+  y los discute en detalle.
+
+  Entre otros,
+  Wigner ha dicho que la efectividad de las matemáticas
+  en las ciencias naturales
+  no es para nada razonable~%
+    \cite{wigner60:_unreas_effec_math_nat_sci}.
+  Hamming considera que simplicidad de las matemáticas
+  y la aplicabilidad de los mismos conceptos
+  en áreas totalmente diferentes
+  no tiene explicación racional~%
+    \cite{hamming80:_unreas_effectiveness_math}.
+  Renz expone que el papel de una demostración en las matemáticas
+  ha ido cambiando,
+  junto con lo que se considera una demostración válida~%
+    \cite{renz81:_math_proof}.
+  Thurston~\cite{thurston94:_proof_progr_math}
+  da su visión como matemático profesional.
+  Precisamente el siglo~XX vio profundas controversias
+  sobre el significado de las matemáticas
+  y las demostraciones en particular
+  (ver Kleiner~%
+     \cite{kleiner91:_rigor_proof_math}
+   para una perspectiva histórica;
+   de~Millo~%
+     \cite{demillo79:_social_proces_proof_theor_progr}
+   arguye que debe considerarse como una actividad social,
+   en las líneas de la definición de ``ciencia'' de Kuhn~%
+     \cite{kuhn70:_structure_science_revolutions}).
+
+  Para construir una cadena sólida de conclusiones
+  debemos comenzar con alguna base,
+  que asumimos verdadera sin demostración.
+  Esto
+  (que fue el aporte más importante de Euclides)%
+    \index{Euclides}
+  es lo que se conoce como el \emph{método axiomático},%
+    \index{metodo axiomatico@método axiomático|see{axioma}}%
+    \index{axioma}%
+    \glossary{Axioma}
+	     {Aseveración que se asume cierta.
+	      Punto de partida del razonamiento matemático.}
+  y los puntos de partida son los \emph{axiomas}.
+  Claro que Euclides%
+    \index{Euclides}
+  y sus sucesores hasta la época de Gauß
+  (1777--1855)%
+    \index{Gauss, Carl Friedrich@Gauß, Carl Friedrich}
+  consideraban un axioma como una verdad simple,
+  indiscutible.
+  La visión actual
+  (desde alrededor de 1900,
+   de manos particularmente de Hilbert)%
+     \index{Hilbert, David}
+  es que un axioma
+  simplemente describe la relación entre los términos no definidos
+  de la teoría entre manos,
+  y se usan como punto de partida para deducir nuevas relaciones.
+  Cuando los axiomas se cumplen,
+  estamos resolviendo problemas en áreas diversas de una sola vez.
+
+  Nótese que en matemática
+  (como en las demás ciencias)
+  ``teoría'' es un cuerpo organizado de conocimiento%
+    \index{teoria@teoría}%
+    \glossary{Teoría}
+	     {En ciencias, cuerpo organizado de conocimiento
+	      con técnicas y reglas asociadas.}
+  aplicable a un rango relativamente amplio de situaciones.
+  No se refiere,
+  como suele usarse el término coloquialmente,
+  a una sospecha que puede o no ser cierta.
+  Por ejemplo,
+  al hablar de grupos%
+    \index{grupo}
+  (cosa que haremos en mayor detalle
+   en la sección~\ref{sec:aritmetica-Zm})
+  partimos con un conjunto de elementos y una operación
+  que cumplen ciertos axiomas.
+  Estas propiedades simples se cumplen
+  en una gran variedad de situaciones,
+  y la teoría es de amplia aplicación.
+
+  Algunos términos para indicar el papel que una proposición
+  tiene en un cuerpo mayor son los siguientes:
+  \begin{itemize}
+  \item
+    \index{teorema|textbfhy}
+    Un \emph{teorema} es una proposición importante,
+    un resultado central.
+    \glossary{Teorema}{Resultado importante, independiente.}
+  \item
+    \index{corolario|textbfhy}
+    Un \emph{corolario} es un resultado
+    (teorema)
+    que se obtiene casi inmediatamente
+    de alguna proposición anterior.
+    \glossary{Corolario}{Resultado casi inmediato de una proposición anterior.}
+  \item
+    \index{lema|textbfhy}
+    Un \emph{lema} es un resultado preliminar,
+    un paso para demostrar proposiciones más adelante.
+    \glossary{Lema}{Resultado auxiliar, usado para demostrar un teorema.}
+  \end{itemize}
+  Esto no es para nada una división precisa,
+  hay lemas que resultaron mucho más importantes que los teoremas
+  que se demostraron usándolos.
+  Un poco en broma se dice que el sueño de todo matemático
+  no es ser conocido por algún teorema,
+  sino por un lema.
+  No es uniforme el uso de esta nomenclatura,
+  hay autores que llaman ``proposición''
+  a todos los resultados que demuestran,%
+    \index{proposicion@proposición}%
+    \glossary{Proposición}
+	     {Hay quienes llaman ``proposición'' a todos sus resultados.
+	      Reservamos el término para resultados sin mayor importancia
+	      en sí mismos.}
+  independiente de su importancia
+  o de cuán fácil resultan de demostrar
+  de proposiciones anteriores.
+  Usaremos la división tradicional,
+  y nombraremos simplemente ``proposición''
+  a un resultado independiente,
+  sin mayor relevancia posterior.
+
+  Los teoremas y lemas suelen nombrarse
+  por quienes los demostraron por primera vez,
+  aunque hay bastantes excepciones a esta regla.
+  Por ejemplo,
+  el importante resultado conocido como \emph{lema de Burnside}%
+    \index{Burnside, lema de}%
+    \index{Burnside, William}
+  el mismo Burnside se lo atribuye a Frobenius,%
+    \index{Frobenius, Ferdinand Georg}
+  aunque mucho antes lo había demostrado Cauchy.%
+    \index{Cauchy, Augustin-Louis}
+  Burnside demostró su utilidad en una influyente publicación~%
+    \cite{burnside97:_theor_group_finit_order}.
+  Algunos lo llaman ``el lema que no es de Burnside''
+  por esta enrevesada historia.
+  El \emph{teorema de Borges}%
+    \index{Borges, teorema de}
+  es llamado así en honor al cuento \emph{La biblioteca de Babel}~%
+    \cite{borges41:_biblioteca_babel},
+  del ilustre escritor argentino%
+    \index{Borges, Jorge Luis}
+  por Flajolet y Sedgewick~\cite{flajolet09:_analy_combin}.
+
+  La conocida \emph{regla de l'Hôpital} para calcular límites%
+    \index{Hopital, regla de@l'Hôpital, regla de}
+  en realidad se debe a Johann Bernoulli,%
+    \index{Bernoulli, Johann}
+  a quien el marqués de l'Hôpital%
+    \index{Hopital, Guillaume Marquis@l'Hôpital, Guillaume Marquis de}
+  había contratado como tutor en matemáticas,
+  con un contrato que decía en parte
+  \emph{``darle sus resultados,
+  para usarlos a gusto''.}
+  El marqués publicó el primer texto impreso
+  de cálculo diferencial~%
+    \cite{lHopital96:_analy_infin_petit_lignes_courb},
+  basado en gran medida en el trabajo de Bernoulli.
+  En el prefacio de su libro l'Hôpital indica
+  que usó libremente resultados de otros
+  y que felizmente daría el crédito
+  a quienes los reclamaran como suyos.
+  Igual Bernoulli se quejó amargamente
+  que sus aportes no eran reconocidos como debían.
+  Y la regla quedó con el nombre del marqués.
+
+  Otro caso interesante lo provee el \emph{postulado de Bertrand},%
+    \index{Bertrand, postulado de}%
+    \index{Bertrand, Joseph Louis Francois@Bertrand, Joseph Louis François}
+  que dice que entre los naturales \(n\) y \(2 n\)
+  siempre hay un número primo,
+  cosa que notó Bertrand en~1845
+  y verificó hasta \(3\,000\,000\)~%
+    \cite{bertrand45:_memoir};
+  pero fue demostrado por primera vez por Chebyshev~%
+    \cite{chebyshev54:_Bertrand}.%
+    \index{Chebyshev, Pafnuty Lvovich}
+  Luego Ramanujan~%
+    \cite{ramanujan19:_proof_postul}%
+    \index{Ramanujan, Srinivasa}
+  dio una demostración mucho más sencilla,
+  que a su vez fue mejorada por Erdős~%
+    \cite{erdos30:_beweis_satz_tschebyschef}%
+    \index{Erdos, Paul@Erdős, Paul}
+  en su primera publicación
+  (tenía 19~años).
+  Y este resultado se conoce como ``postulado'',
+  no como teorema.
+  También se conoce
+  por los nombres de \emph{teorema de Bertrand-Chebyshev}%
+    \index{Bertrand-Chebyshev, teorema de|see{Bertrand, postulado de}}
+  o \emph{teorema de Chebyshev}.%
+    \index{Chebyshev, teorema de|see{Bertrand, postulado de}}
+
+  Tal vez el caso más famoso
+  es el del \emph{último} (o gran) \emph{teorema de Fermat},%
+    \index{Fermat, ultimo teorema@Fermat, último teorema}%
+    \index{Fermat, Pierre de}
+  quien en 1637 anotó en el margen de un libro
+  que tenía una maravillosa demostración de que \(x^n + y^n = z^n\)
+  no tiene soluciones
+  en números naturales \(x\), \(y\), \(z\) si \(n > 2\),
+  pero que la demostración no cabía en ese margen.
+  Este resultado se demostró recién en 1995~%
+    \cite{wiles95:_modul_ellip_curves_Fermat},
+  usando técnicas muy nuevas.
+  Se le llamó ``último teorema''
+  porque de muchos resultados anunciados sin demostración por Fermat
+  fue el último en ser resuelto.
+
+  Es común que resultados importantes
+  tengan muchas demostraciones diferentes.
+  Se ha dicho que el teorema de Pitágoras%
+    \index{Pitagoras, teorema de@Pitágoras, teorema de}%
+    \index{Pitagoras@Pitágoras}
+  es el que más demostraciones tiene,
+  Loomis~\cite{loomis68:_pythag_propos}
+  lista 367~demostraciones distintas.
+  Hay que considerar que un teorema (u otro resultado)
+  tiene interés como herramienta a ser aplicada,
+  pero su demostración
+  también sirve para iluminar relaciones entre distintos resultados.
+  Seleccionar la demostración más simple de entender
+  es vital a la hora de elegir cómo enseñar a nuevas generaciones,
+  muchas de las demostraciones que veremos
+  son radicalmente diferentes
+  a las demostraciones originales de los mismos resultados
+  (a veces incluso cubren el tema en forma mucho más amplia).
+  Contar con varias demostraciones independientes
+  de resultados importantes
+  además ayuda a aumentar la confianza en ellos.
+
+  Hay varios esquemas de demostración
+  con las que uno debe familiarizarse.
+  En el resto del texto usaremos estos esquemas con frecuencia.
+  Algunas pistas adicionales sobre cómo estructurar una demostración
+  da Cusick~%
+    \cite{cusick:_how_write_proofs}.
+  Una discusión mucho más detallada de técnicas de demostración
+  que la que puede darse en este exiguo espacio ofrece Hammack~%
+    \cite{hammack13:_book_proof},
+  incluyendo un amplio rango de ejercicios.
+  Zeitz~\cite{zeitz07:_art_craft_probl_solving}
+  distingue entre \emph{ejercicios},
+  en los cuales el plan de ataque está claro
+  (aunque llevarlo adelante puede incluir desarrollos complejos)
+  y \emph{problemas},
+  en los cuales no está claro de antemano cuál es el camino más adecuado,
+  y tal vez siquiera si hay una solución.
+  Nos interesa entrenar en resolución de problemas
+  más que en solución de ejercicios.
+  Taylor~\cite{taylor07:_introd_proof}
+  da las siguientes recomendaciones:
+  \begin{itemize}
+  \item \textbf{Conozca y entienda las definiciones} --
+    Razonamiento preciso requiere saber sobre qué estamos razonando.
+    Si un término no es familiar,
+    busque su definición.
+  \item \textbf{Desarrolle ejemplos} --
+    Asegúrese que lo que intenta demostrar
+    tiene alguna posibilidad de ser cierto.
+    Son pocas las instancias en que exhibir un ejemplo
+    es demostración suficiente
+    (salvo que queramos demostrar que algo existe).
+    Igualmente,
+    un par de ejemplos ayudan a familiarizarse con el terreno.
+    Es un buen momento para verificar
+    que aplica correctamente las definiciones.
+    Por lo demás,
+    en el desarrollo de ejemplos puede tropezar con una idea
+    o relación útil
+    para demostrar el caso general.
+    La inspiración nace en los lugares más extraños.
+  \item \textbf{Busque contraejemplos} --
+    Si sospecha que lo que intenta demostrar es falso,
+    busque un contraejemplo.
+    Incluso si es cierto,
+    buscar contraejemplos y analizar porqué la búsqueda falla
+    puede indicar métodos de ataque.
+  \item \textbf{Intente usar las técnicas estándar de demostración} --
+    Las técnicas que discutiremos más abajo
+    han sido probadas y refinadas
+    por generaciones.
+    Hay situaciones en que ninguna de ellas es aplicable,
+    pero son muy raras.
+    No se encasille en una técnica,
+    intente variantes.
+  \item \textbf{Parta con un esqueleto} --
+    Escriba lo que quiere demostrar,
+    y un esbozo a llenar para la demostración.
+    Vaya completando detalles.
+    Puede ser útil trabajar desde ambos extremos
+    (desde las hipótesis hacia la conclusión,
+     y desde la conclusión hacia las hipótesis),
+    en la esperanza que se encuentren al medio.
+  \item \textbf{Sea persistente} --
+    No se desanime si el primer intento no funciona,
+    pruebe otro camino.
+  \item \textbf{Navaja de Ockham} --
+    Si todo lo demás es igual,
+    la solución más simple es mejor.
+  \end{itemize}
+
+\section{Desenrollar definiciones}
+\label{sec:desenrollar-definciones}
+
+  Una estrategia básica,
+  aplicable siempre que no se conozcan relaciones directas
+  que ayuden,
+  es reducir términos a sus definiciones.
+
+  \begin{definition}
+    Un número se dice \emph{algebraico}%
+      \index{numero@número!algebraico|textbfhy}
+    si es un cero de un polinomio con coeficientes enteros.
+  \end{definition}
+
+  \begin{proposition}
+    \label{prop:racional+algebraico}
+    La suma de un número racional y uno algebraico
+    es algebraico.
+  \end{proposition}
+  No tenemos nada que relacione números racionales y algebraicos,
+  así que partimos de las definiciones.
+  \begin{proof}
+    Sea \(\alpha\) un número algebraico,
+    y \(\rho\) un número racional.
+    Por definición de número algebraico,
+    hay un polinomio
+      \(p(x) = a_n x^n + a_{n - 1} x^{n - 1} + \dotsb + a_0\)
+    tal que \(p(\alpha) = 0\).
+    Por la definición de número racional,%
+      \index{numero@número!racional}
+    \(\rho = a / b\),
+    con \(a\) y \(b\) enteros
+    y \(b \ne 0\).
+    Vemos que \(b^n (x - \rho)^k = b^{n - k} (b x - a)^k\),
+    si \(k \le n\)
+    esto último es un polinomio con coeficientes enteros.
+    Así \(q(x) = b^n \cdot p(x - \rho)\) es un polinomio
+    de coeficientes enteros.
+    Pero \(q(\alpha + \rho) = b^n \cdot p(\alpha) = 0\),
+    con lo que \(\alpha + \rho\) es un cero de un polinomio
+    de coeficientes enteros,
+    y \(\alpha + \rho\) es algebraico.
+  \end{proof}
+  Esta técnica la usaremos con mucha frecuencia en lo que sigue.
+
+  Se suele marcar el comienzo de la demostración
+  mediante algo como la palabra ``Demostración'',
+  y el fin de la misma mediante algo como \(\Box\)
+  o Q.E.D.\
+  (abreviatura del latín
+   \emph{``\foreignlanguage{latin}{quod erat demostrandum}'',}
+   que es decir ``lo que se quería demostrar'').
+
+\section{Implicancias}
+\label{sec:implicancias}
+\index{demostracion@demostración!implicancia}
+\index{implicancia (logica)@implicancia (lógica)}
+
+  Interesan proposiciones de la forma ``Si \(P\), entonces \(Q\)''.
+  También se expresan como ``\(P\) implica \(Q\)'',
+  diciendo ``\(Q\) es necesario para \(P\)'',%
+    \index{necesario|see{implicancia (lógica)}}
+  mediante ``\(P\) solo si \(Q\)''
+  o también ``\(P\) es suficiente para \(Q\)''.%
+    \index{suficiente (logica)@suficiente (lógica)|see{implicancia (lógica)}}
+  Esta nomenclatura se aclara si se revisa la tabla de verdad
+  de nuestra relación ``implica''.
+  Si \(P \implies Q\) es verdadero,
+  y \(Q\) es falso,
+  definitivamente es falso \(P\);
+  por lo que \(P\) verdadero es posible solo si \(Q\) es verdadero.
+  Por otro lado,
+  si \(P\) es verdadero,
+  siempre es verdadero \(Q\);
+  pero \(Q\) puede ser verdadero siendo \(P\) falso.
+
+  Proposiciones relacionadas a \(P \implies Q\)
+  son su \emph{recíproco} \(Q \implies P\),%
+    \index{reciproco@recíproco}
+  su \emph{inverso} \(\neg P \implies \neg Q\)%
+    \index{inverso}
+  y su \emph{contrapositivo} \(\neg Q \implies \neg P\).%
+    \index{contrapositivo}
+  Es importante distinguirlas;
+  la implicancia y su contrapositivo son equivalentes,
+  y el recíproco y el inverso son equivalentes
+  (el inverso es el contrapositivo del recíproco).
+  Note que en inglés el recíproco
+  se llama \emph{\foreignlanguage{english}{converse}}.
+
+  El recíproco no siempre se cumple.
+  Por ejemplo,
+  los primos de la forma \(a^n - 1\)
+  deben tener \(n = 1\) o \(a = 2\)
+  (por la factorización
+     \(a^n - 1 = (a - 1) (a^{n - 1} + \dotsc + 1)\)).
+  Además,
+  con \(a = 2\) debe ser primo \(n\),
+  porque si fuera \(n = u v\) entonces:
+  \begin{equation*}
+    2^{u v} - 1
+      = (2^u - 1) (2^{(v - 1) u} + 2^{(v - 2) u} + \dotsc + 1)
+  \end{equation*}
+  A estos primos se les llama \emph{primos de Mersenne},
+    \index{Mersenne, primo de}%
+    \index{Mersenne, Marin}
+  en honor a quien los estudió por primera vez.
+  Sin embargo,
+  el recíproco
+  (\(2^p - 1\) es primo si \(p\) es primo)
+  no se cumple,
+  el primer contraejemplo es \(2^{11} - 1 = 2047 = 23 \cdot 89\).
+
+\subsection{Primer método -- Demostración directa}
+\label{sec:implicancias-1}
+
+  Para demostrar que \(P\) implica \(Q\):
+  \begin{enumerate}
+  \item
+    Escriba ``Supongamos \(P\)''
+  \item
+    Demuestre que \(Q\) es una consecuencia lógica.
+  \end{enumerate}
+
+  Por ejemplo:
+  \begin{proposition}
+    Si \(0 \le x \le 2\),
+    entonces \(-x^3 + 4 x + 1 > 0\)
+  \end{proposition}
+  Antes de demostrar esto,
+  haremos algún trabajo de borrador para ver porqué es cierto.
+  La desigualdad es cierta si \(x = 0\),
+  el lado izquierdo es 1 y \(1 > 0\).
+  Al aumentar \(x\),
+  el término \(4 x\)
+  (que es positivo)
+  inicialmente es de mayor magnitud que \(-x^3\)
+  (que es negativo).
+  Por ejemplo,
+  para \(x = 1\) tenemos \(4 x = 4\),
+  mientras \(-x^3 = -1\).
+  Considerando estos dos términos,
+  da la impresión que \(-x^3\)
+  recién comienza a dominar cuando \(x > 2\).
+  O sea,
+  \(-x^3 + 4 x\) no será negativo para todo \(x\) entre 0 y 2,
+  lo que significaría que \(-x^3 + 4 x + 1\) es positivo.
+
+  Hasta acá vamos bien.
+  Necesitamos reemplazar los ``da la impresión'' y ``parece''
+  en lo anterior por pasos lógicos sólidos.
+  Una manera de enfrentar el término \(-x^3 + 4 x\) es factorizando:
+  \begin{equation}
+    \label{eq:ejemplo-demostracion-implica}
+    -x^3 + 4 x = x (2 - x) (2 + x)
+  \end{equation}
+  ¡Bien!
+  Para \(0 \le x \le 2\),
+  ninguno de los factores
+  del lado izquierdo de~\eqref{eq:ejemplo-demostracion-implica}
+  es negativo,
+  y por tanto el producto no es negativo.
+
+  Formalmente,
+  esto queda expresado en la siguiente demostración.
+  Probablemente alguien que se encuentre con ella quedará convencido
+  que el resultado es correcto,
+  pero igual se preguntará de dónde salió este razonamiento.
+
+  \begin{proof}
+    Por hipótesis \(0 \le x \le 2\).
+    Entonces ninguno de \(x\), \(2 - x\) o \(2 + x\) es negativo,
+    y su producto no es negativo.
+    Sumando 1 al producto de estos tres factores
+    da un resultado positivo:
+    \begin{equation*}
+      x (2 - x) (2 + x) + 1 = -x^3 + 4 x + 1 > 0
+      \qedhere
+    \end{equation*}
+  \end{proof}
+
+  Un par de puntos acá que son aplicables a toda demostración.
+  \begin{itemize}
+  \item
+    Frecuentemente habrá que hacer trabajo en borrador
+    mientras se construye la demostración.
+    El trabajo en borrador
+    puede ser todo lo desorganizado que se quiera,
+    lleno de ideas que no resultaron,
+    diagramas extraños,
+    palabrotas,
+    lo que sea.
+  \item
+    La versión definitiva
+    de la demostración debe ser concisa y clara.
+    Las matemáticas tienen sus propias reglas de estética,
+    y una demostración elegante es altamente apreciada.
+    Un ejemplo es la colección de demostraciones hermosas
+    dadas por Aigner y Ziegler~%
+      \cite{aigner14:_proof_the_book}.
+    Dunham ha comparado
+    algunos de los grandes teoremas de las matemáticas
+    con las máximas obras de arte~%
+      \cite{dunham90:_journey_genius,dunham97:_mathem_univer},
+    que debieran apreciarse como tales.
+  \item
+    Organizar una demostración compleja tiene mucho en común
+    con escribir un programa:
+    Hay que dividirla en trozos digeribles,
+    particularmente en lemas fáciles de usar%
+      \index{lema}
+    (y reusables).
+    Si alguna parte de la demostración es repetitiva,
+    tal vez vale la pena abstraerla,
+    y explicarla una vez solamente.
+  \end{itemize}
+
+\subsection{Segundo método -- Demostrar el contrapositivo}
+\label{sec:implicancias-2}
+\index{contrapositivo}
+
+  Una implicación ``\(P\) implica \(Q\)'',
+  es lógicamente equivalente a su contrapositiva,
+  ``No \(Q\) implica no \(P\)'',
+  como puede verse de las tablas de verdad correspondientes.
+  Demostrar una es tan bueno como demostrar la otra,
+  y puede ser mucho más fácil demostrar el contrapositivo.
+  De ser así,
+  el esquema es:
+  \begin{enumerate}
+  \item
+    Escriba ``Demostraremos el contrapositivo'',
+    luego enuncie éste.
+  \item
+    Aplique alguna de las otras técnicas.
+  \end{enumerate}
+
+  \begin{proposition}
+    Si \(r\) es irracional,
+    entonces \(\sqrt{r}\) también es irracional.
+  \end{proposition}
+
+  Recuerde que un número es racional%
+    \index{numero@número!racional}
+  si es la razón entre números enteros,
+  e irracional en caso contrario.%
+    \index{numero@número!irracional}
+  \begin{proof}
+    Demostraremos el contrapositivo:
+    Si \(\sqrt{r}\) es racional,
+    entonces \(r\) es racional.
+
+    Supongamos que \(\sqrt{r}\) es racional.
+    Esto significa que existen enteros \(a\) y \(b\) tales que:
+    \begin{equation}
+      \label{eq:sqrt(r)-racional}
+      \sqrt{r} = \frac{a}{b}
+    \end{equation}
+    Entonces,
+    elevando~\eqref{eq:sqrt(r)-racional} al cuadrado:
+    \begin{equation}
+      \label{eq:r-racional}
+      r = \frac{a^2}{b^2}
+    \end{equation}
+    Como en~\eqref{eq:r-racional} \(a^2\) y \(b^2\) son enteros,
+    \(r\) es racional.
+  \end{proof}
+
+\section{Demostrando un ``Si y solo si''}
+\label{sec:ssi}
+\index{si y solo si (logica)@si y solo si (lógica)}
+\index{demostracion@demostración!si y solo si}
+
+  Muchos teoremas aseguran
+  que dos proposiciones son lógicamente equivalentes;
+  vale decir,
+  una vale si y solo si vale la otra.
+  A esto también se le llama ``necesario y suficiente'',
+    \index{necesario y suficiente (logica)@necesario y suficiente (lógica)|see{si y solo si}}
+  como habíamos indicado antes;
+  a veces lo expresaremos mediante ``exactamente cuando''.
+  También se dice que ``\(P\) implica \(Q\) y a la inversa''.
+  La frase ``si y solo si'' aparece tan comúnmente
+  que se suele abreviar \emph{ssi}
+    \index{ssi (si y solo si)|see{si y solo si}}
+  (en inglés,
+   ``\emph{\foreignlanguage{english}{if and only if}}''
+  se abrevia \emph{\foreignlanguage{english}{iff}}).%
+    \index{iff@\emph{\foreignlanguage{english}{iff}}|see{si y solo si}}
+  Nos abstendremos de usar estas abreviaturas,
+  es demasiado fácil omitir una letra
+  (o no verla al leer).
+
+\subsection{Primer método -- Cada una implica la otra}
+\label{sec:equivalencias-1}
+
+  La proposición ``\(P\) si y solo si \(Q\)''
+  equivale a la conjunción de las dos proposiciones
+  ``\(P\) implica \(Q\)''
+  y ``\(Q\) implica \(P\)''.
+  Así demostramos dos implicancias:
+  \begin{enumerate}
+  \item
+    Escriba ``Demostraremos que \(P\) implica \(Q\), y viceversa''.
+  \item
+    Escriba ``Primero demostraremos \(P\) implica \(Q\)''.
+    Hágalo usando alguna de las técnicas
+    para demostrar implicancias.
+  \item
+    Escriba ``Ahora demostraremos que \(Q\) implica \(P\)''.
+    Nuevamente,
+    aplique una de las técnicas para demostrar implicancias.
+  \end{enumerate}
+
+  Una variante de esto se da
+  cuando se quiere demostrar
+  que una colección de proposiciones son equivalentes entre sí.
+  Por ejemplo,
+  para demostrar que \(P\), \(Q\) y \(R\) son equivalentes,
+  podemos demostrar que \(P\) implica \(Q\),
+  que \(Q\) implica \(R\),
+  y finalmente que \(R\) implica \(P\).
+
+  Una situación a primera vista sorprendente
+  se da cuando se demuestra el contrapositivo de la conversa.
+  O sea,
+  demostramos \(P \implies Q\)
+  y \(\neg P \implies \neg Q\).
+
+\subsection{Segundo método -- Cadena de equivalencias}
+\label{sec:equivalencias-2}
+
+  Otra alternativa es demostrar una cadena de equivalencias.
+  Para demostrar que \(P\) si y solo si \(Q\):
+  \begin{enumerate}
+  \item
+    Escriba ``Construimos una cadena de si y solo si''.
+  \item
+    Demuestre que \(P\) es equivalente a una segunda proposición,
+    que es equivalente a una tercera,
+    y así sucesivamente hasta llegar a \(Q\).
+  \end{enumerate}
+  Esto muchas veces requiere más ingenio que el primer método,
+  pero suele dar una demostración simple y clara.
+
+  La desviación estándar \(\sigma\) de un conjunto de valores reales
+  \(x_1, x_2, \dotsc, x_n\) se define como:
+  \begin{equation}
+    \label{eq:def-sigma}
+    \index{desviacion estandar@desviación estándar|textbfhy}
+    \sigma =
+      \sqrt{\frac{(x_1 - \mu)^2
+		    + (x_2 - \mu)^2
+		    + \dotsb
+		    + (x_n - \mu)^2}
+		 {n}}
+  \end{equation}
+  donde la media \(\mu\) está dada por:
+  \begin{equation}
+    \label{eq:def-mu}
+    \index{media|textbfhy}
+    \mu = \frac{x_1 + x_2 + \dotsb + x_n}{n}
+  \end{equation}
+
+  \begin{proposition}
+    La desviación estándar
+    de un conjunto de valores \(x_1, x_2, \dotsc, x_n\)
+    es cero si y solo si todos los valores son iguales.
+  \end{proposition}
+  \begin{proof}
+    Construiremos una cadena de ``si y solo si'',
+    comenzando con la proposición
+    de que la desviación estándar es cero:
+    \begin{equation}
+      \label{eq:sigma=0}
+      \sqrt{\frac{(x_1 - \mu)^2
+		    + (x_2 - \mu)^2
+		    + \dotsb
+		    + (x_n - \mu)^2}
+		 {n}}
+	  = 0
+    \end{equation}
+    Como el único número cuya raíz cuadrada es cero es cero,
+    la ecuación~(\ref{eq:sigma=0}) vale si y solo si:
+    \begin{equation}
+      \label{eq:sigma2=0}
+      (x_1 - \mu)^2 + (x_2 - \mu)^2 + \dotsb + (x_n - \mu)^2
+	  = 0
+    \end{equation}
+    Como el cuadrado de un número real
+    nunca es negativo,
+    cada término del lado izquierdo
+    de~(\ref{eq:sigma2=0}) es no\nobreakdash-negativo.
+    Luego,
+    el lado izquierdo de~(\ref{eq:sigma2=0}) es cero si y solo si
+    cada término es cero.
+    Pero el término \((x_i - \mu)^2\) es cero si y solo si
+    \(x_i = \mu\),
+    o sea,
+    todos son iguales a la media.
+  \end{proof}
+
+  Requeriremos lo que viene,
+  que es un resultado sin particular importancia por sí mismo,
+  en la demostración de la proposición siguiente.
+  Excusa perfecta para un lema.%
+    \index{lema}
+  Usaremos demostración por inducción,
+  que se discute
+  en mayor detalle en la sección~\ref{sec:induccion}.%
+    \index{demostracion@demostración!induccion@inducción}
+  \begin{lemma}
+    \label{lem:9|10^k-1}
+    El entero \(10^k - 1\)
+    es divisible por \(9\) para todo \(k \ge 0\).
+  \end{lemma}
+  \begin{proof}
+    Por inducción sobre \(k\).
+    \begin{description}
+    \item[Base:]
+      Para \(k = 0\),
+      dice que \(0\) es divisible por \(9\),
+      lo que es cierto.
+    \item[Inducción:]
+      Suponemos que \(10^k - 1 = 9 c\) para \(c \in \mathbb{N}_0\).
+      Entonces:
+      \begin{align*}
+	10^{k + 1} - 1
+	  &= ((10^k - 1) + 1) \cdot 10 - 1 \\
+	  &= (9 c + 1) \cdot 10 - 1 \\
+	  &= 90 c + 9
+      \end{align*}
+      Como ambos términos son divisibles por \(9\),
+      lo es la suma.
+    \end{description}
+    Por inducción,
+    vale para \(k \in \mathbb{N}_0\).
+  \end{proof}
+  \begin{proposition}
+    \index{proposicion@proposición}
+    El entero \(m\) es divisible por \(9\) si y solo si
+    la suma de sus dígitos es divisible por \(9\).
+  \end{proposition}
+  \begin{proof}
+    Sea \(s\)
+    la suma de los dígitos de \(m\),
+    o sea si \(\left\langle d_k \right\rangle_{k \ge 0}\)
+    son los dígitos de \(m\),
+    con lo que \(0 \le d_k < 10\),
+    tenemos:
+    \begin{align}
+      m
+	&= d_n \cdot 10^n + d_{n - 1} \cdot 10^{n - 1}
+	    + \dotsb + d_1 \cdot 10 + d_0
+	\label{eq:valor-m-digitos-decimales} \\
+      s
+	&= d_n + d_{n - 1} + \dotsb + d_1 + d_0
+	\label{eq:valor-suma-digitos-decimales} \\
+      m - s
+	&= d_n \cdot \left(10^n - 1\right)
+	   + d_{n - 1} \cdot \left(10^{n - 1} - 1\right)
+	   + \dotsb
+	   + d_1 \cdot \left(10 - 1\right) + d_0 \cdot (1 - 1)
+	\label{eq:valor-m-menos-suma-digitos}
+    \end{align}
+    Cada uno de los factores \(10^k - 1\)
+    en~\eqref{eq:valor-m-menos-suma-digitos} es divisible por \(9\)
+    por el lema~\ref{lem:9|10^k-1},
+    con lo que \(m - s\) es siempre divisible por \(9\);
+    y \(m\) es divisible por \(9\) si y solo si \(s\) lo es.
+  \end{proof}
+
+\section{Demostración por casos}
+\label{sec:casos}
+\index{demostracion@demostración!por casos}
+
+  Acá la idea es dividir una demostración complicada
+  en casos más simples,
+  y luego demostrar cada caso en turno.
+  Es importante asegurarse que los casos resulten exhaustivos,
+  vale decir,
+  que no queden cabos sueltos.
+
+  Muchas veces los casos aparecen en el problema mismo,
+  típicamente en forma de una disyunción.
+  Si alguno de los conceptos involucrados está definido por casos
+  puede ser necesario considerarlos por separado.
+  \begin{proposition}
+    Para \(x \in \mathbb{R}\),
+    se cumple \(x \le \lvert x \rvert\).
+  \end{proposition}
+  Simplemente seguimos la definición:
+  \begin{equation*}
+    \lvert x \rvert
+      = \begin{cases}
+	   x & \text{si \(x \ge 0\)} \\
+	  -x & \text{si \(x < 0\)}
+	\end{cases}
+  \end{equation*}
+  \begin{proof}
+    Consideramos por separado los casos \(x \ge 0\)
+    y \(x < 0\).
+    \begin{description}
+    \item[\boldmath\(x \ge 0\)\unboldmath:]
+      En este caso es \(\lvert x \rvert = x\),
+      y lo anunciado se cumple.
+    \item[\boldmath\(x < 0\)\unboldmath:]
+      En este caso \(\lvert x \rvert = - x > 0\),
+      y \(x < 0 < -x = \lvert x \rvert\).
+      También se cumple.
+    \end{description}
+    Estas son todas las posibilidades.
+  \end{proof}
+  En otras ocasiones conviene introducir casos
+  de manera de tener más con qué trabajar.
+  \begin{proposition}
+    Si \(n\) es un entero,
+    entonces \(n^2 + n\) es par.
+  \end{proposition}
+  \begin{proof}
+    Conviene separar la demostración en dos casos:
+    \begin{description}
+    \item[\boldmath\(n\)\unboldmath\ es par:]
+      En este caso,
+      \(n^2\) y \(n\) son ambos pares,
+      y su suma es par.
+    \item[\boldmath\(n\)\unboldmath\ es impar:]
+      Acá
+      \(n^2\) y \(n\) son ambos impares,
+      y su suma es par.
+    \end{description}
+    Como estos casos cubren todas las posibilidades de \(n\),
+    vale para todo entero.
+  \end{proof}
+  Como en este ejemplo,
+  suele ser útil considerar casos de enteros pares e impares.
+  También es común separar en menor, igual o mayor a cero.
+
+  Dadas dos personas,
+  estas se han encontrado o no.
+  A un conjunto de personas en el que cada par de personas
+  se han encontrado lo llamaremos \emph{club},
+  a un conjunto de personas en el que ningún par se ha encontrado
+  lo llamaremos \emph{extraños}.
+  \begin{theorem}
+    Toda colección de \(6\) personas
+    incluye un club de \(3\) personas
+    o un grupo de \(3\) extraños.
+  \end{theorem}
+  Claramente si esto se cumple con \(6\) personas,
+  se cumplirá con todo grupo mayor también.
+  Al decir que hay un club de \(3\) personas,
+  estamos indicando
+  que hay un club de \emph{al menos} tres personas
+  (podemos tomar tres cualquiera de ellas como un club de tres).
+  \begin{proof}
+    La demostración es por casos.
+    Sea \(x\) una de las \(6\) personas.
+    Hay dos posibilidades:
+    \begin{enumerate}
+    \item
+      Entre las \(5\) personas restantes,
+      al menos \(3\) se han encontrado con \(x\).
+    \item
+      Entre las \(5\) personas restantes,
+      al menos \(3\) no se han encontrado con \(x\).
+    \end{enumerate}
+    Tenemos que asegurarnos que debe darse uno de los dos casos.
+    Pero esto es fácil:
+    Hemos dividido el grupo de \(5\) en dos,
+    los que se han encontrado con \(x\) y los que no;
+    uno de los dos grupos debe tener al menos \(3\) miembros.
+    Ahora consideraremos cada caso por turno:
+    \begin{enumerate}
+    \item
+      Consideremos el caso en que hay al menos \(3\) personas
+      se han encontrado con \(x\),
+      y tomemos \(3\) de ellas.
+      Tenemos dos casos,
+      que nuevamente son exhaustivos:
+      \begin{enumerate}
+      \item
+	Ningún par de estas \(3\) personas se han encontrado.
+	Tenemos un grupo de \(3\) extraños,
+	con lo que el teorema vale en este caso.
+      \item
+	Algún par de estas \(3\) personas se han encontrado,
+	con lo que este par con \(x\) forman un club,
+	y el teorema vale en este caso.
+      \end{enumerate}
+      O sea,
+      el teorema vale
+      si hay \(3\) personas que se han encontrado con \(x\).
+    \item
+      Supongamos que a lo menos \(3\) personas
+      nunca se han encontrado con \(x\),
+      y consideremos \(3\) de ellas.
+      Este caso también se divide en dos:
+      \begin{enumerate}
+      \item
+	Cada par de estas personas se han encontrado entre sí.
+	Entonces forman un club,
+	y el teorema vale en este caso.
+      \item
+	Algún par de estas \(3\) personas
+	no se han encontrado nunca,
+	con lo que forman un grupo de \(3\) extraños con \(x\),
+	y en este caso el teorema vale.
+      \end{enumerate}
+      Así el teorema también vale
+      en caso que hayan \(3\) que no se han encontrado con \(x\).
+    \end{enumerate}
+    Hemos cubierto todas las distintas alternativas,
+    y en todas ellas hemos demostrado que el teorema se cumple.
+  \end{proof}
+  En general no seremos tan detallistas en nuestras demostraciones.
+  En particular,
+  se ve que los distintos casos son todos muy similares,
+  y en la práctica bastaría detallar uno
+  e indicar que los demás se manejan de forma afín.
+  De todas maneras nuestras demostraciones
+  serán más detalladas
+  que las usuales entre matemáticos profesionales.
+  Es común usar la frase ``sin pérdida de generalidad''%
+    \index{sin perdida de generalidad@sin pérdida de generalidad}
+  (en inglés
+     \emph{\foreignlanguage{english}{without loss of generality}},
+   comúnmente abreviado \emph{wlog})
+  para indicar
+  que solo se tratará uno de varios casos muy similares.
+  \begin{proposition}
+    Si dos enteros son de paridad opuesta,
+    su suma es impar.
+  \end{proposition}
+  \begin{proof}
+    Sean \(m\) y \(n\) enteros de paridad opuesta.
+    Sin pérdida de generalidad,
+    sea \(m\) par y \(n\) impar.
+    Vale decir \(m = 2 a\) y \(n = 2 b + 1\)
+    con \(a\) y \(b\) enteros.
+    Entonces \(m + n = 2 a + 2 b + 1 = 2 (a + b) + 1\),
+    que es impar.
+  \end{proof}
+
+  Las demostraciones por casos se consideran poco elegantes,
+  particularmente si los casos a considerar son muchos.
+  Pero por ejemplo para el famoso problema de los cuatro colores%
+    \index{cuatro colores, teorema de}
+  (bastan cuatro colores para colorear un mapa
+   de manera que no hayan áreas vecinas del mismo color)
+  la demostración más simple a la fecha~%
+    \cite{robertson97:_four_color_theor}
+  involucra analizar alrededor de \(630\)~casos.
+  Para este famoso problema
+  hay una demostración completamente formal
+  escrita en Coq~\cite{coq8.4:_coq_proof_assis}
+  por Gonthier~\cite{gonthier08:_formal_proof}.
+  Lo interesante es que un problema tan simple
+  requiera una solución tan compleja.
+
+\section{Demostración por contradicción}
+\label{sec:contradiccion}
+\index{demostracion@demostración!contradiccion@contradicción}
+\index{reduccion al absurdo@reducción al absurdo|see{demostración!contradicción}}
+\index{indirecta!demostracion@demostración|see{demostración!contradicción}}
+
+  A veces una demostración toma la forma
+  a la que alude la famosa cita de Sherlock Holmes:%
+    \index{Holmes, Sherlock}
+  \hybridblockquote{english}
+      [Conan Doyle~\cite{conan90:_sign_four}]{%
+    How often have I said to you
+    that when you have eliminated the impossible,
+    whatever remains,
+    however improbable,
+    must be the truth?%
+  }.%
+    \index{Conan Doyle, Sir Arthur}
+  A esta importante técnica
+  también se le llama ``demostración indirecta''
+  o ``por reducción al absurdo''
+  (en inglés se suele usar
+   la frase del latín
+     \emph{\foreignlanguage{latin}{reductio ad absurdum}}).
+  La idea básica
+  es partir con lo contrario de lo que se quiere demostrar,
+  y llegar a una contradicción.
+  Suele ser una manera fácil de demostrar algo;
+  pero la descripción como ``indirecta'' es bastante adecuada,
+  puede llevar a demostraciones complejas,
+  difíciles de entender.
+  Por esta razón Knuth, Larrabee y Roberts~%
+     \cite{knuth89:_math_writing}
+  recomiendan evitarla en lo posible.
+
+  Partimos de la negación de lo que se quiere demostrar,
+  y deducimos algo que se sabe es falso
+  (una contradicción).%
+    \index{contradiccion@contradicción}
+  Sabemos que si \(P\) implica falso,
+  la única manera en que esta proposición puede ser verdadera
+  es que \(P\) sea falso.
+  Debe tenerse cuidado de no usar los resultados intermedios
+  de tales demostraciones fuera de ellas,
+  como de ellos se deduce algo falso son falsos.
+
+  La forma de construir una demostración según este esquema
+  es como sigue:
+  \begin{enumerate}
+  \item
+    Escriba ``La demostración es por contradicción''.
+    Enuncie la negación de lo que se desea demostrar,
+    indicando que se supone que esto es cierto.
+  \item
+    Deduzca de lo anterior algo que se sabe es falso.
+    Concluya ``Esta contradicción demuestra el teorema''.
+  \end{enumerate}
+
+  Ya vimos un ejemplo de esta técnica
+  al demostrar el principio extendido del palomar,
+  teorema~\ref{theo:pigeonhole}.
+  El ejemplo clásico es la demostración
+  de que \(\sqrt{2}\) es irracional.
+  Dice la leyenda que Pitágoras%
+    \index{Pitagoras@Pitágoras}
+  se enojó tanto
+  con la demostración de la existencia de irracionales
+  (que echaba por tierra su filosofía
+   de ``todo se expresa en números'',
+   donde ``números'' hay que entenderlo
+   como números naturales y sus razones)
+  que hizo ahogar a quien descubrió esto.
+  En realidad,
+  este resultado produjo un escándalo mayúsculo en la matemática:
+  Gran parte de la teoría de semejanza de figuras
+  se basaba
+  en que ``obviamente'' todas las proporciones podían expresarse
+  como razones entre enteros.
+  Fue el genio de Eudoxo de Cnido%
+    \index{Eudoxo de Cnido}
+  quien resolvió el tema mediante su teoría de proporciones,
+    \index{proporciones, teoria de@proporciones, teoría de}
+  precursor de la actual definición de límite.
+
+  \begin{theorem}[Hipasso de Metaponto]
+    \index{Hipasso de Metaponto}
+    \index{numero@número!irracional!\(\sqrt{2}\)}
+    \label{theo:sqrt2-irracional}
+    \(\sqrt{2}\) es irracional
+  \end{theorem}
+  La demostración original se perdió,
+  pero todo indica
+  que debe haber sido a lo largo de las líneas de esta.
+  \begin{proof}
+    La demostración es por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Consideremos el triángulo \(A B C\)
+    (véase la figura~\ref{fig:sqrt2}),
+    \begin{figure}[htbp]
+      \centering
+      \pgfimage{images/sqrt2}
+      \caption{Diagrama para demostrar que $\sqrt{2}$ es irracional}
+      \label{fig:sqrt2}
+    \end{figure}
+    tal que \(A C = a\) y \(A B = B C = b\),
+    con el ángulo \(A B C\) recto.
+    Por el teorema de Pitágoras,
+    \(a^2 = 2 b^2\),
+    o sea \(\sqrt{2} = a / b\).
+    Claramente \(b < a < 2 b\)
+    (la desigualdad triangular).%
+      \index{desigualdad triangular}
+    Supongamos ahora que \(a\) y \(b\) son múltiplos enteros
+    de una unidad,
+    elegida tal que \(b\)
+    es el mínimo de los enteros que dan la relación dada.
+    Extendemos la recta \(A B\),
+    y con centro en \(A\) dibujamos los arcos \(B D\) y \(C E\),
+    y dibujamos la recta \(E D\) que corta \(B C\) en \(F\).
+    Por construcción
+    los triángulos \(A B C\) y \(A D E\) son congruentes
+    (tienen el ángulo \(A B C\) en común,
+     y respectivamente iguales
+     los lados \(A D = A B\) y \(A C = A E\)).
+    En particular,
+    el ángulo \(A D E\) es recto,
+    con lo que es recto \(C D E\).
+    El triángulo \(C D F\) es semejante a \(A B C\)%
+      \index{triangulo@triángulo!semejanza}
+    (comparten el ángulo \(A C B\),
+     y ambos son triángulos rectos),
+    así que \(D C = D F\).
+    De la misma forma,
+    \(E B F\) es semejante a \(A B C\),
+    y como \(B E = D C\),
+    \(C D F\) es congruente a \(E B F\).%
+      \index{triangulo@triángulo!congruencia}
+    Ahora bien,
+    \(B F = B E = a - b\),
+    y \(C F = B C - B F = b - (a - b) = 2 b - a\).
+    Si \(a\) y \(b\) son enteros,
+    también lo son \(a - b\) y \(2 b - a\),
+    que son menores que \(a\) y \(b\)
+    y están en la misma relación por similitud.
+    Esto es absurdo,
+    habíamos supuesto que \(b\) era el mínimo entero
+    que sirve de denominador en esta razón.
+  \end{proof}
+
+  Las demostraciones corrientes actualmente son algebraicas,
+  hay que recordar que en tiempos de Pitágoras%
+    \index{Pitagoras@Pitágoras}
+  no había nada parecido a nuestra álgebra.
+  Precisamente el problema que planteaban los irracionales
+  hizo que desde los griegos se usara casi exclusivamente
+  la geometría como lenguaje matemático
+  para expresar cantidades continuas,
+  recién por la época de Newton%
+    \index{Newton, Isaac}
+  se retomó la idea de expresiones numéricas.
+  \begin{proof}
+    La demostración es por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Supongamos que \(\sqrt{2}\) fuera racional.
+    Entonces existen números naturales \(a\) y \(b\) tales que:
+    \begin{equation}
+      \label{eq:sqrt2=racional}
+      \sqrt{2} = \frac{a}{b}
+    \end{equation}
+    En~\eqref{eq:sqrt2=racional} podemos suponer
+    que la fracción está expresada en mínimos términos,
+    vale decir,
+    \(a\) y \(b\) no tienen factores en común.
+    En particular,
+    a lo más uno de los dos es par.
+    Ahora bien,
+    elevando~\eqref{eq:sqrt2=racional} al cuadrado tenemos:
+    \begin{equation}
+      \label{eq:2=a2/b2}
+      a^2 = 2 b^2
+    \end{equation}
+    De~\eqref{eq:2=a2/b2} sabemos que \(a^2\) es par,
+    por lo que \(a\) debe ser par,
+    digamos \(a = 2 c\).
+    Pero esto lleva a:
+    \begin{align*}
+      4 c^2
+	&= 2 b^2 \\
+      2 c^2
+	&= b^2
+    \end{align*}
+    con lo que también \(b\) es par.
+    Esta contradicción
+    de números de los cuales a lo más uno puede ser par
+    pero que resultan ser ambos pares
+    demuestra que tales \(a\) y \(b\) no pueden existir,
+    y \(\sqrt{2}\) es irracional.
+  \end{proof}
+
+  Una demostración alternativa es la siguiente:
+
+  \begin{proof}
+    La demostración es por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Supongamos que \(\sqrt{2}\) es racional,
+    y sea \(q\) el menor natural
+    tal que \(q' = (\sqrt{2} - 1) q\) es entero.
+    Entonces \(0 < q' < q\),
+    pero \((\sqrt{2} - 1) q' = q - 2 q' > 0\) es entero.
+    Esto contradice la anterior elección de \(q\).
+  \end{proof}
+
+  Una demostración
+  que no hace uso de divisibilidad se debe a Leo Moser~%
+    \cite{moser04:_introd_theor_number}.%
+    \index{Moser, Leo}
+  \begin{proof}
+    Suponga \(\sqrt{2} = a / b\),
+    con \(b\) lo más pequeño posible,
+    con lo que \(0 < b < a\) ya que \(\sqrt{2} > 1\).
+    Entonces:
+    \begin{align}
+      \frac{2 a b}{a b}
+	&= 2 \label{eq:sqrt(2)-Moser-1} \\
+      \frac{a^2}{b^2}
+	&= 2 \label{eq:sqrt(2)-Moser-2}
+    \end{align}
+    De~\eqref{eq:sqrt(2)-Moser-1} y~\eqref{eq:sqrt(2)-Moser-2}
+    por propiedades de las proporciones,%
+      \index{proporcion, propiedades@proporción, propiedades}
+    como \(b < a < 2 b\):
+    \begin{equation}
+      \label{eq:sqrt(2)-Moser-3}
+      2
+	= \frac{2 a b - a^2}{a b - b^2}
+	= \frac{a (2 b - a)}{b (a - b)}
+    \end{equation}
+    Simplificando~\eqref{eq:sqrt(2)-Moser-3}
+    usando la definición de \(a\) y \(b\) resulta:
+    \begin{equation*}
+      \sqrt{2}
+	= \frac{2 b - a}{a - b}
+    \end{equation*}
+    Como \(b < a < 2 b\) tenemos \(0 < a - b < b\),
+    obtenemos una fracción con un denominador menor que el mínimo,
+    lo que es imposible.
+  \end{proof}
+
+  Vimos en la sección~\ref{sec:cuantificadores}
+  el polinomio de Euler,%
+    \index{Euler, polinomio de}%
+    \index{Euler, Leonhard}
+  que da números primos como valores para \(0 \le n \le 39\).
+  \begin{proposition}
+    Ningún polinomio no constante con coeficientes enteros
+    da sólo números primos en los enteros no negativos.
+  \end{proposition}
+  \begin{proof}
+    La demostración es por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Sea \(p(x)\) un polinomio no constante
+    cuyo valor es primo para todo \(n \ge 0\).
+    En particular,
+    \(q = p(0)\) es primo.
+    Si consideramos \(p(a q)\) para \(a \in \mathbb{N}\),
+    vemos que todos sus términos,
+    incluyendo el término constante,
+    son divisibles por \(q\).
+    Como el primo \(q\) divide al primo \(p(a q)\),
+    es \(p(a q) = q\).
+    Pero entonces \(p(x) = q\) para infinitos valores de \(x\),
+    y \(p\) es constante,
+    contradiciendo la hipótesis.
+  \end{proof}
+
+  Muchas veces la forma más cómoda de demostrar una desigualdad%
+    \index{demostracion@demostración!desigualdad}
+  es por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+  \begin{proposition}
+    Sean \(x\), \(y\) reales mayores a cero.
+    Si \(y (y + 1) \le (x + 1)^2\)
+    entonces \(y (y - 1) \le x^2\).
+  \end{proposition}
+  \begin{proof}
+    La demostración es por contradicción.
+    Sean \(y (y + 1) \le (x + 1)^2\) y \(y (y - 1)> x^2\).
+    En tal caso claramente \(y > 1\).
+
+    La primera condición se traduce en:
+    \begin{align*}
+      y^2 + y
+	&\le x^2 + 2 x + 1 \\
+    \intertext{Con la suposición \(x^2 < y (y - 1)\):}
+      y^2 + y
+	&< y^2 - y + (2 x + 1) \\
+      y &< x + \frac{1}{2} \\
+      y - 1
+	&< x - \frac{1}{2} \\
+    \intertext{Como \(y > 1\),
+	       el lado izquierdo es positivo,
+	       y podemos multiplicar las últimas dos desigualdades:}
+      y (y - 1)
+	&< x^2 - \frac{1}{4}
+    \end{align*}
+    Esto último contradice a \(x^2 < y (y - 1)\).
+  \end{proof}
+
+  Otro buen ejemplo de demostración por contradicción
+  es debido a Fourier%
+    \index{Fourier, Joseph}
+  de un resultado que
+  Euler originalmente demostró en~1737.%
+    \index{Euler, Leonhard}
+  \begin{theorem}
+    \label{theo:e-irrational}
+    \index{numero@número!irracional!e@\(\mathrm{e}\)}
+    El número \(\mathrm{e}\) es irracional.
+  \end{theorem}
+  \begin{proof}
+    La demostración es por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Supongamos que \(\mathrm{e}\) es racional.
+    Entonces existen enteros \(a\) y \(b\)
+    tales que:
+    \begin{equation}
+      \label{eq:e-rational}
+      \mathrm{e} = \frac{a}{b}
+    \end{equation}
+    También sabemos:
+    \begin{equation}
+      \label{eq:e-valor}
+      \mathrm{e} = \sum_{k \ge 0} \frac{1}{k!}
+    \end{equation}
+    Consideremos la siguiente expresión,
+    que debiera ser entera bajo nuestra suposición:
+    \begin{align}
+      b! \mathrm{e}
+	&= \sum_{k \ge 0} \frac{b!}{k!} \notag \\
+	&= \sum_{0 \le k \le b} \frac{b!}{k!}
+	     + \sum_{k > b} \frac{b!}{k!}
+	\label{eq:b!e}
+    \end{align}
+    La primera suma en~\eqref{eq:b!e} es un entero,
+    nos concentraremos en acotar la segunda,
+    a la que llamaremos \(S\),
+    para demostrar que no es un entero.
+    Más precisamente,
+    mostraremos que \(0 < S < 1\):
+    \begin{align}
+      S &= \sum_{k > b} \frac{b!}{k!} \notag \\
+	&= \sum_{k > b} \frac{1}{(b + 1) (b + 2) \dotsm k} \notag \\
+	&= \sum_{r \ge 1} \frac{1}{(b + 1) (b + 2) \dotsm (b + r)}
+	\label{eq:e-S-simplificado}
+    \end{align}
+    Cada término de la suma~\eqref{eq:e-S-simplificado} es positivo,
+    y es una fracción
+    cuyo denominador son \(r\) factores,
+    cada uno mayor o igual a \(b + 1\),
+    con lo que:
+    \begin{equation}
+      \label{eq:e-S-cota-termino}
+      \frac{1}{(b + 1) (b + 2) \dotsm (b + r)}
+	\le \frac{1}{(b + 1)^r}
+    \end{equation}
+    En consecuencia,
+    como los términos después del primero
+    son menores que \((b + 1)^{-r}\):
+    \begin{align}
+      0 < S &<	 \sum_{r \ge 1} (b + 1)^{-r} \notag \\
+	    &=	 (b + 1)^{-1} \sum_{r \ge 0} (b + 1)^{-r} \notag \\
+	    &=	 \frac{1}{b + 1}
+		   \cdot \frac{1}{1 - 1/(b + 1)} \notag \\
+	    &=	 \frac{1}{b} \notag \\
+	    &\le 1
+	    \label{eq:e-S-acotado}
+    \end{align}
+    Resulta por~\eqref{eq:e-S-acotado}
+    que \(b! \mathrm{e}\) no es entero,
+    cuando por nuestra suposición debiera serlo.
+    Esta contradicción completa la demostración
+    que \(\mathrm{e}\) es irracional.
+  \end{proof}
+  Una interesante demostración alternativa es la siguiente:
+  \begin{proof}
+    Si \(\mathrm{e}^{-1}\) es irracional,
+    también lo es \(\mathrm{e}\).
+    Demostraremos por contradicción
+    que \(\mathrm{e}^{-1}\) es irracional.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+
+    Sabemos que:
+    \begin{equation}
+      \label{eq:e-1-valor}
+      \mathrm{e}^{-1}
+	= \sum_{n \ge 0} \frac{(-1)^n}{n!}
+    \end{equation}
+    Al ser~\eqref{eq:e-1-valor} una serie de términos no nulos,
+    que disminuyen en valor absoluto con signos alternantes,
+    las sumas parciales
+    son alternativamente mayores y menores que el límite.
+    O sea,
+    para \(m\) cualquiera es:
+    \begin{equation}
+      \label{eq:e-1-cotas}
+      \sum_{0 \le n \le {2 m - 1}} \frac{(-1)^n}{n!}
+	< \mathrm{e}^{-1}
+	< \sum_{0 \le n \le {2 m}} \frac{(-1)^n}{n!}
+    \end{equation}
+    Pero la diferencia entre las dos sumas de~\eqref{eq:e-1-cotas}
+    es el último término,
+    que es \(1 / (2 m)!\),
+    y así \(\mathrm{e}^{-1}\)
+    no puede ser expresado como una fracción
+    con \((2 m)!\) de denominador,
+    con lo que su denominador no puede ser divisor de esto.
+    Pero al ser \(m\) arbitrariamente grande,
+    \(\mathrm{e}^{-1}\) no puede ser expresado como fracción,
+    y \(\mathrm{e}\) debe ser irracional.
+  \end{proof}
+
+  Otro bonito ejemplo es la demostración de Niven~%
+    \cite{niven47:_simple_proof_pi_irrat}:
+  \begin{theorem}
+    \index{numero@número!irracional!\(\pi\)}
+    \label{theo:pi-irrational}
+    El número \(\pi\) es irracional.
+  \end{theorem}
+  \begin{proof}
+    Por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Supongamos \(\pi = a / b\),
+    con \(a\) y \(b\) enteros positivos.
+    Definamos los polinomios:
+    \begin{align*}
+      f(x)
+	&= \frac{x^n (a - b x)^n}{n!} \\
+      F(x)
+	&= f(x)
+	     - f^{(2)}(x)
+	     + f^{(4)}(x)
+	     - \dotsb
+	     + (-1)^n f^{(2 n)} (x)
+    \end{align*}
+    El entero \(n\) lo fijaremos más adelante.
+
+    El coeficiente de \(x^k\) en \(f(x)\) es \(f^{(k)}(0) / k!\)
+    (teorema de Maclaurin).%
+      \index{Maclaurin, teorema de}
+    Por otro lado,
+    como \(f(x) = x^n (a - b x)^n / n!\)
+    el coeficiente de \(x^k\)
+    puede escribirse \(c_k / n!\) para un entero \(c_k\).
+    O sea:
+    \begin{equation*}
+      f^{(k)}(0)
+	= \frac{k!}{n!} c_k
+    \end{equation*}
+    Para \(0 \le k < n\),
+    el coeficiente \(c_k = 0\);
+    para \(k \ge n\) es entero \(k! / n!\).
+    En resumen,
+    las derivadas \(f^{(k)}(0)\) son todas enteras.
+    Como \(f(a / b - x) = f(x)\),
+    lo mismo vale para \(x = \pi = a / b\).
+
+    Por cálculo elemental:
+    \begin{align*}
+      \frac{\mathrm{d}}{\mathrm{d} x} \,
+	\left( F'(x) \sin x - F(x) \cos x \right)
+	= F''(x) \sin x + F(x) \sin x
+	= f(x) \sin x
+    \end{align*}
+    por lo que:
+    \begin{equation}
+      \label{eq:pi-irrational-integral}
+      \int_0^\pi f(x) \sin x \, \mathrm{d} x
+	= \left( F'(x) \sin x - F(x) \cos x \right)
+	    \big\rvert_0^\pi
+	= F(\pi) + F(0)
+    \end{equation}
+    Ahora \(F(\pi) + F(0)\) es un \emph{entero},
+    dado que las derivadas de \(f\) en \(0\) y \(\pi\) lo son.
+    Pero para \(0 < x < \pi\)
+    claramente ambos factores son positivos,
+    y tenemos la cruda cota superior
+    resultante de tomar el valor máximo de cada factor de \(f(x)\):
+    \begin{equation*}
+      0 < f(x) \sin x < \frac{\pi^n a^n}{n!}
+    \end{equation*}
+    con lo que la integral de~\eqref{eq:pi-irrational-integral}
+    es positiva,
+    pero arbitrariamente pequeña para \(n\) suficientemente grande.
+    Esto es absurdo,
+    no hay enteros positivos arbitrariamente pequeños.
+  \end{proof}
+
+\section{Inducción}
+\label{sec:induccion}
+\index{induccion@inducción|see{demostración!inducción}}
+\index{demostracion@demostración!induccion@inducción}
+
+  Una técnica importante para demostrar un número infinito de casos
+  es \emph{inducción}.
+  Algunos puntos de lo que sigue se tomaron del resumen de Tuffley~%
+    \cite{tuffley09:_induction}.
+  Esta importante técnica de demostración se ha usado implícitamente
+  desde épocas antiguas.
+  Lambrou~%
+   \cite{lambrou05:_math_induction_i, lambrou06:_math_induction_ii}
+  da una breve reseña de su historia,
+  y plantea muchos ejemplos.
+
+  Supongamos que queremos demostrar
+  que una proposición es válida para todo \(n \in \mathbb{N}\).
+  La manera de hacer esto es:
+  \begin{enumerate}
+  \item
+    Escribir ``Usamos inducción''.
+  \item
+    Escribir: ``Caso base:''
+    Plantear la proposición para \(n = 1\),
+    y demostrarla.
+  \item
+    Escribir ``Inducción:''
+    Asumiendo que la proposición es verdadera para \(n = k\),
+    demostrar que vale para \(n = k + 1\).
+  \end{enumerate}
+  La validez de esto se deduce
+  de los axiomas de los números naturales,
+  tema sobre el que volveremos
+  en el capítulo~\ref{cha:numeros-reales}\@.
+  Hay algunas variantes que vale la pena distinguir.
+
+\subsection{El caso más común}
+\label{sec:induccion-comun}
+
+  A una secuencia \(\left\langle r^n \right\rangle_{r \ge 0}\)
+  se le llama \emph{geométrica}
+    \index{secuencia!geometrica@geométrica}
+  (con razón \(r\)),
+  nuestro resultado es la suma de la serie geométrica.
+  \begin{theorem}
+    \index{suma!geometrica@geométrica}
+    \label{theo:suma-geometrica}
+    \begin{equation*}
+      \sum_{0 \le k \le n} r^k
+	= 1 + r + r^2 + \dotsb + r^n
+	= \frac{1 - r^{n + 1}}{1 - r}
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Usamos inducción.
+    \begin{description}
+    \item[Caso base:]
+      Cuando \(n = 1\),
+      tenemos:
+      \begin{equation*}
+	\sum_{0 \le k \le n} r^k
+	= 1 + r
+	= \frac{(1 - r) (1 + r)}{1 - r}
+	= \frac{1 - r^2}{1 - r}
+      \end{equation*}
+      Esto demuestra el caso base.
+    \item[Inducción:]
+      Suponemos que para \(n = m\) vale:
+      \begin{equation*}
+	\sum_{0 \le k \le m} r^k
+	  = \frac{1 - r^{m + 1}}{1 - r}
+      \end{equation*}
+      Entonces:
+      \begin{align*}
+	\sum_{0 \le k \le m + 1} r^k
+	  &= \sum_{0 \le k \le m} r^k + r^{m + 1} \\
+	  &= \frac{1 - r^{m + 1}}{1 - r} + r^{m + 1} \\
+	  &= \frac{1 - r^{m + 1} + r^{m + 1} - r^{m + 2}}{1 - r} \\
+	  &= \frac{1 - r^{m + 2}}{1 - r}
+      \end{align*}
+      que es precisamente la proposición para \(n = m + 1\).
+    \end{description}
+    Por inducción,
+    lo aseverado es verdadero para todo \(n\) natural.
+
+    En realidad,
+    el resultado también se cumple para \(n = 0\),
+    y por tanto vale para todo \(n \in \mathbb{N}_0\).
+  \end{proof}
+
+  Hay que tener cuidado en la demostración del paso de inducción.
+  La tentación de trabajar ``a ambos lados'' suele ser fuerte,
+  pero conlleva el riesgo de terminar en una identidad
+  que no demuestra lo que se desea obtener.
+  La forma más simple de evitar problemas
+  es partir del lado izquierdo y derivar el lado derecho.
+  El desarrollo debe ser estrictamente ``hacia adelante'',
+  lo que debemos demostrar
+  es la implicancia \(P(n) \implies P(n + 1)\).
+
+  Del teorema~\ref{theo:suma-geometrica}
+  sigue que si \(\lvert r \rvert < 1\) entonces:
+  \begin{equation}
+    \index{suma!geometrica@geométrica!infinita|textbfhy}
+    \label{eq:limite-suma-geometrica}
+    \lim_{n \rightarrow \infty} \sum_{0 \le k \le n} r^k
+      = \lim_{n \rightarrow \infty} \frac{1 - r^{n + 1}}{1 - r}
+      = \frac{1}{1 - r}
+  \end{equation}
+  Esto lo usamos antes
+  en nuestra primera demostración que \(e\) es irracional
+  (teorema~\ref{theo:e-irrational}).
+
+  Otro caso importante es el siguiente:
+  \begin{theorem}
+    \label{theo:sum-factorial-powers}
+    Para \(m \in \mathbb{N}_0\) tenemos:
+    \begin{equation*}
+      \sum_{1 \le k \le n} k^{\overline{m}}
+	= \frac{n^{\overline{m + 1}}}{m + 1}
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    La demostración es por inducción sobre \(n\).
+    \begin{description}
+    \item[Base:]
+      Cuando \(n = 1\)
+      el lado izquierdo de lo planteado se reduce a:
+      \begin{equation*}
+	1^{\overline{m}}
+	 = m!
+      \end{equation*}
+      mientras el lado derecho da:
+      \begin{equation*}
+	\frac{1^{\overline{m + 1}}}{m + 1}
+	  = \frac{(m + 1)!}{m + 1}
+	  = m!
+      \end{equation*}
+      Esto coincide,
+      incluso en el caso \(m = 0\).
+    \item[Inducción:]
+      Suponiendo que vale para \(n\),
+      demostramos que vale para \(n + 1\).
+      Tenemos:
+      \begin{align*}
+	\sum_{1 \le k \le n + 1} k^{\overline{m}}
+	  &= \sum_{1 \le k \le n}
+	       k^{\overline{m}} + (n + 1)^{\overline{m}} \\
+      \intertext{Por la hipótesis:}
+	\sum_{1 \le k \le n + 1} k^{\overline{m}}
+	  &= \frac{n^{\overline{m + 1}}}{m + 1}
+	       + (n + 1)^{\overline{m}} \\
+	  &= \frac{n \cdot (n + 1)^{\overline{m}}
+		     + (m + 1) \cdot (n + 1)^{\overline{m}}}
+		  {m + 1} \\
+	  &= \frac{(n + m + 1) \cdot (n + 1)^{\overline{m}}}
+		  {m + 1} \\
+	  &= \frac{(n + 1)^{\overline{m + 1}}}{m + 1}
+      \end{align*}
+    \end{description}
+    Por inducción vale para todo \(n \in \mathbb{N}\).
+    Pero vale también para \(n = 0\),
+    como es simple verificar.
+  \end{proof}
+  Una relación similar
+  se cumple para potencias factoriales en bajada,
+  cuya demostración quedará de ejercicio.
+  Es interesante el paralelo
+  entre el teorema~\ref{theo:sum-factorial-powers}
+  y la integral de \(x^m\).
+
+\subsection{Otro punto de partida}
+\label{sec:induccion-partida-diferente}
+
+  Es común querer demostrar que un predicado vale no desde \(1\),
+  sino desde algún otro valor \(m\).
+  En tal caso formalmente tenemos dos maneras de proceder:
+  \begin{itemize}
+  \item
+    Definir un nuevo predicado:
+    \begin{equation*}
+      P'(n)
+	=
+	\begin{cases}
+	  \text{Verdadero} & \text{\ si\ \(n < m\)} \\
+	  P(n)		   & \text{\ caso contrario}
+	\end{cases}
+    \end{equation*}
+  \item
+    Definir un nuevo predicado:
+    \begin{equation*}
+      P''(n)
+	= P(n - m + 1)
+    \end{equation*}
+  \end{itemize}
+  y aplicar inducción a \(P'(n)\) o \(P''(n)\),
+  según corresponda.
+  En la práctica,
+  esto se reduce a indicar que la inducción comienza con otra base.
+  Podemos también trabajar en \(\mathbb{N}_0\),
+  iniciando la inducción con \(0\).
+  Incluso puede comenzar la inducción en un valor negativo.
+
+\subsection{Paso diferente}
+\label{sec:induccion-paso-diferente}
+
+  Otra variante se da cuando no es claro obtener el caso \(n + 1\)
+  directamente del caso \(n\),
+  pero sí podemos obtener el caso \(n + 2\) de \(n\)
+  (y \(n + 3\) de \(n + 1\)).
+  Más en general,
+  hay algún \(k\) tal que \(P(n)\) permite concluir \(P(n + k)\).
+  En tal caso debemos tener \(k\) puntos de partida,
+  y razonar las distintas secuencias entrelazadas.
+
+  Un ejemplo es el siguiente:
+  \begin{proposition}
+    Para ningún \(n\) natural es \(n^2 + n + 1\)
+    divisible por \(5\).
+  \end{proposition}
+  \begin{proof}
+    La demostración es por inducción.
+    \begin{description}
+    \item[Casos base:]
+      Para los casos base:
+      \begin{align*}
+	0^2 + 0 + 1 &= \phantom{0}1 \\
+	1^2 + 1 + 1 &= \phantom{0}3 \\
+	2^2 + 2 + 1 &= \phantom{0}7 \\
+	3^2 + 3 + 1 &=		 13 \\
+	4^2 + 4 + 1 &=		 21
+      \end{align*}
+      Ninguno es divisible por \(5\).
+    \item[Inducción:]
+      Demostramos que si \(n^2 + n + 1\) no es divisible por \(5\),
+      tampoco lo es \((n + 5)^2 + (n + 5) + 1\).
+      Vemos que:
+      \begin{align}
+	(n + 5)^2 + (n + 5) + 1
+	  &= n^2 + 10 n + 25 + n + 5 + 1 \notag \\
+	  &= (n^2 + n + 1) + (10 n + 30)
+	       \label{eq:polinomio-modulo-5}
+      \end{align}
+      En~\eqref{eq:polinomio-modulo-5}
+      el segundo término es divisible por~\(5\);
+      como el primer término no lo es,
+      la suma no es divisible por~\(5\).
+    \qedhere
+    \end{description}
+  \end{proof}
+  El lector podrá entretenerse demostrando
+  que si contamos con estampillas de \(5\) y \(8\) centavos
+  podemos franquear cualquier cantidad mayor a \(27\) centavos.
+
+\subsection{Ida y vuelta}
+\label{sec:induccion-ida-y-vuelta}
+
+  La \emph{media aritmética} de \(a_1, a_2, \dotsc, a_n\)%
+    \index{media!aritmetica@aritmética}
+  (suponemos todos positivos)
+  es:
+  \begin{equation*}
+    \frac{a_1 + a_2 + \dotsb + a_n}{n}
+  \end{equation*}
+  La \emph{media geométrica} de estos mismos valores%
+    \index{media!geometrica@geométrica}
+  es:
+  \begin{equation*}
+    \sqrt[n]{a_1 a_2 \dotsb a_n}
+  \end{equation*}
+
+  Un caso especial de inducción
+  se da en la demostración de  Cauchy~%
+    \cite{cauchy21:_cours_analyse-1}%
+    \index{Cauchy, Augustin-Louis}
+  de la relación entre las medias aritmética y geométrica.%
+    \index{media!aritmetica y geometrica@aritmética y geométrica}
+    \index{AGM@\emph{AGM}|see{media!aritmética y geométrica}}
+  Resulta simple demostrar
+  el caso \(2^{k + 1}\) a partir del caso \(2^k\),
+  y usamos inducción en reversa
+  (de \(n\) concluimos \(n - 1\))
+  para rellenar los espacios.
+  \begin{theorem}[Desigualdad entre las medias geométrica
+		  y aritmética]
+    \label{theo:AM-GM-inequality}
+    Para números reales no negativos
+    \(a_1, a_2, \dotsc, a_n\)
+    se cumple:
+    \begin{equation*}
+      (a_1 a_2 \dotsm a_n)^{1/n}
+	\le \frac{a_1 + a_2 + \dotsb + a_n}{n}
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Usamos una forma especial de inducción.
+    Primeramente demostramos por inducción sobre \(k\)
+    que si la desigualdad se cumple para \(2^k\)
+    vale para \(2^{k + 1}\);
+    y luego completamos los casos faltantes
+    a través de demostrar que si vale para \(n\)
+    también vale para \(n - 1\).
+
+    Primero para potencias de dos.
+    Es claro que la desigualdad se cumple para \(2^0\).
+    \begin{description}
+    \item[Base:]
+      Para el caso \(2^1 = 2\),
+      consideremos \(a\) y \(b\) positivos:
+      \begin{align*}
+	(a - b)^2
+	  &\ge 0 \\
+	a^2 + b^2
+	  &\ge 2 a b
+      \end{align*}
+      Si substituimos \(a \mapsto \sqrt{a_1}\),
+      \(b \mapsto \sqrt{a_2}\),
+      resulta:
+      \begin{equation*}
+	\frac{a_1 + a_2}{2}
+	  \ge \sqrt{a_1 a_2}
+      \end{equation*}
+      que es el caso \(n = 2\).
+    \item[Inducción:]
+      Del caso \(2^k\) concluimos el caso \(2^{k + 1}\).
+      Para ello dividimos los \(2^{k + 1}\) valores
+      en dos grupos de \(2^k\),
+      y combinamos.
+      De la hipótesis de inducción:
+      \begin{align*}
+	\frac{a_1 + \dotsb + a_{2^k}}{2^k}
+	  &\ge (a_1 \dotsm a_{2^k})^{1 / 2^k} \\
+	\frac{a_{2^k + 1} + \dotsb + a_{2^{k + 1}}}{2^k}
+	  &\ge (a_{2^k + 1} \dotsm a_{2^{k + 1}})^{1 / 2^k}
+      \end{align*}
+      Aplicando el caso \(n = 2\) a las anteriores:
+      \begin{align*}
+	\frac{\frac{a_1 + \dotsb + a_{2^k}}{2^k}
+		+ \frac{a_{2^k + 1} + \dotsb + a_{2^{k + 1}}}{2^k}}
+	     {2}
+	  &\ge \left(
+		 \frac{a_1 + \dotsb + a_{2^k}}{2^k}
+		   \cdot \frac{a_{2^k + 1} + \dotsb + a_{2^{k + 1}}}
+			      {2^k}
+	       \right)^{1 / 2} \\
+	\frac{a_1 + \dotsb + a_{2^{k + 1}}}{2^{k + 1}}
+	  &\ge \left(
+		 \left(
+		   a_1 \dotsm a_{2^k}
+		 \right)^{1 / {2^k}}
+		   \cdot \left(
+			   a_{2^k + 1} \dotsm a_{2^{k + 1}}
+			 \right)^{1 / {2^k}}
+	       \right)^{1 / 2} \\
+	  &=   \left(
+		   a_1 \dotsm a_{2^{k + 1}}
+	       \right)^{1 / 2^{k + 1}}
+      \end{align*}
+    \end{description}
+    Por inducción
+    vale para todo \(n = 2^k\) con \(k \in \mathbb{N}_0\).
+
+    Resta demostrar que si vale para \(n\),
+    vale para \(n - 1\),
+    inducción en reversa.
+    Supongamos que vale para \(n\):
+    \begin{equation*}
+      \frac{a_1 + a_2 + \dotsb +a_n}{n}
+	\ge (a_1 a_2 \dotsm a_n)^{1 / n}
+    \end{equation*}
+    y consideremos:
+    \begin{equation*}
+      \alpha
+	= \frac{a_1 + a_2 + \dotsb + a_{n - 1}}{n - 1}
+    \end{equation*}
+    Entonces:
+    \begin{equation*}
+      \frac{a_1 + a_2 + \dotsb + a_{n - 1} + \alpha}{n}
+	= \frac{(n - 1) \alpha + \alpha}{n}
+	= \alpha
+    \end{equation*}
+    Por el otro lado,
+    usando la hipótesis de inducción:
+    \begin{align*}
+      \frac{a_1 + a_2 + \dotsb + a_{n - 1} + \alpha}{n}
+	&\ge (a_1 a_2 \dotsm a_{n - 1} \alpha)^{1 / n} \\
+      \intertext{con lo que}
+      \alpha^n
+	&\ge a_1 a_2 \dotsm a_{n - 1} \alpha \\
+      \alpha^{n - 1}
+	&\ge a_1 a_2 \dotsm a_{n - 1}
+    \end{align*}
+    esto último equivale a lo anunciado.
+
+    Uniendo ambos casos,
+    tenemos que la desigualdad vale para todo \(n \in \mathbb{N}\).
+  \end{proof}
+  La tercera media que reconocía Pitágoras%
+    \index{Pitagoras@Pitágoras}
+  es la \emph{media harmónica}:%
+    \index{media!harmonica@harmónica}
+  \begin{equation}
+    \label{eq:harmonic-mean}
+    \frac{n}{\frac{1}{a_1} + \frac{1}{a_2} + \dotsb + \frac{1}{a_n}}
+  \end{equation}
+  Tenemos:
+  \begin{theorem}[Desigualdad entre las medias geométrica
+		  y harmónica]
+    \label{theo:GM-HM-inequality}
+    Para números reales positivos
+    \(a_1, a_2, \dotsc, a_n\)
+    se cumple:
+    \begin{equation*}
+      \frac{n}{\frac{1}{a_1}
+	  + \frac{1}{a_2} + \dotsb + \frac{1}{a_n}}
+	\le (a_1 a_2 \dotsm a_n)^{1/n}
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Usemos el teorema~\ref{theo:AM-GM-inequality}
+    con los recíprocos:
+    \begin{align*}
+      \frac{\frac{1}{a_1}
+	  + \frac{1}{a_2} + \dotsb + \frac{1}{a_n}}{n}
+	&\ge \left(
+		\frac{1}{a_1} \cdot \frac{1}{a_2}
+		  \cdot \dotsb \cdot \frac{1}{a_n}
+	     \right)^{1/n} \\
+	&= (a_1 a_2 \dotsb a_n)^{-1/n} \\
+      \frac{n}{\frac{1}{a_1}
+		 + \frac{1}{a_2}
+		 + \dotsb
+		 + \frac{1}{a_n}}
+	&\le (a_1 a_2 \dotsb a_n)^{1/n}
+    \end{align*}
+    Hay igualdad si y solo si los \(a_i\) son todos iguales.
+  \end{proof}
+
+\subsection{Múltiples variables}
+\label{sec:induccion-multiple}
+\index{demostracion@demostración!induccion@inducción!multivariable|textbfhy}
+
+  Se da la situación en la cual hay varias variables involucradas.
+  La mayoría de las veces
+  puede resolverse vía fijar algunas de las variables
+  y aplicar inducción sobre otra,
+  pero en raras ocasiones
+  realmente se requiere inducción sobre más de una variable.
+  Suponiendo variables \(m\) y \(n\),
+  una opción es intentar inducción sobre alguna combinación
+  como \(m + n\).
+  Sin embargo,
+  hay situaciones en las que esto no funciona.
+
+  Un ejemplo de inducción sobre múltiples variables
+  es demostrar que:
+  \begin{equation}
+    \label{eq:def-Cmn}
+    C(m, n)
+      = \frac{(2 m)! (2 n)!}{n! m! (m + n)!}
+  \end{equation}
+  siempre es un entero para \(m, n \ge 0\).
+  Nuestra estrategia es demostrar
+  (por inducción)
+  que \(C(m, 0)\) es siempre un entero,
+  y luego derivar una relación entre \(C(m, n)\), \(C(m + 1, n)\)
+  y \(C(m, n + 1)\) que demuestra
+  que si los primeros dos son enteros
+  lo es el tercero.
+  Esto lo usamos para demostrar por inducción
+  que \(C(m, n)\) es siempre entero.
+
+  El siguiente resultado es más general que lo que necesitamos,
+  pero resulta más simple de demostrar.
+  \begin{theorem}
+    Un producto de \(n\) enteros consecutivos
+    siempre es divisible por \(n!\).
+  \end{theorem}
+  \begin{proof}
+    Podemos escribir el producto de \(n\) enteros consecutivos
+    como \(m^{\underline{n}}\),
+    con lo que queremos demostrar que \(n! \mid m^{\underline{n}}\)
+    para todo \(m\) y \(n\).
+    Esto lo hacemos por inducción sobre \(n\).
+    \begin{description}
+    \item[Base:]
+      El caso \(n = 0\)
+      se reduce a \(0! \mid m^{\underline{0}}\),
+      que es \(1 \mid 1\),
+      independiente del valor de \(m\).
+    \item[Inducción:]
+      Suponiendo que \(n! \mid k^{\underline{n}}\) para todo \(k\),
+      demostramos que \((n + 1)! \mid m^{\underline{n + 1}}\)
+      para todo \(m\).
+      Sabemos de~\eqref{eq:Sigma-falling-factorial} que:
+      \begin{equation}
+	\label{eq:sum_k_falling}
+	m^{\underline{n + 1}}
+	  = (n + 1) \sum_{1 \le k \le m} k^{\underline{n}}
+      \end{equation}
+      Como (por inducción) cada término de la suma del lado derecho
+      de~\eqref{eq:sum_k_falling} es divisible por \(n!\),
+      su lado izquierdo es divisible por \((n + 1) n! = (n + 1)!\).
+    \end{description}
+    Por inducción,
+    vale para \(n \in \mathbb{N}_0\).
+  \end{proof}
+
+  Vamos ahora a nuestro interés original.
+  \begin{proposition}
+    El valor \(C(m, n)\) definido por~\eqref{eq:def-Cmn}
+    es un entero.
+  \end{proposition}
+  Calculamos la suma dada en el paso de inducción
+  en esperanza de factores comunes
+  que resulten en una expresión simple.
+  \begin{proof}
+    Por inducción sobre \(n\).
+    \begin{description}
+    \item[Bases:]
+      Primeramente,
+      si \(n = 0\),
+      se reduce a:
+      \begin{equation}
+	\label{eq:Cm0}
+	C(m, 0)
+	  = \frac{(2 m)!}{m! m!}
+	  = \frac{(2 m)^{\underline{m}}}{m!}
+      \end{equation}
+      que por~\eqref{eq:sum_k_falling} es un entero
+      para todo \(m \in \mathbb{N}_0\).
+    \item[Inducción:]
+      Suponemos \(C(m, n)\) entero para todo \(m \in \mathbb{N}_0\)
+      Consideremos:
+      \begin{align}
+	C(m + 1, n) + C(m, n + 1)
+	  &= \frac{(2 m + 2)! (2 n)!}{(m + 1)! n! (m + n + 1)!}
+	       + \frac{(2 m)! (2 n + 2)!}{m! (n + 1)! (m + n + 1)!}
+		\notag \\
+	  &= \frac{(2 m)! (2 n)!}{m! n! (m + n + 1)!}
+	       \cdot \left(
+		       \frac{(2 m + 1) (2 m + 2)}{m + 1}
+			 + \frac{(2 n + 1) (2 n + 2)}{n + 1}
+		     \right) \notag \\
+	  &= \frac{(2 m)! (2 n)!}{m! n! (m + n + 1)!}
+	       \cdot 4 \cdot (m + n + 1) \notag \\
+	  &= 4 C(m, n) \label{eq:4Cmn}
+      \end{align}
+      Por inducción
+      sabemos que son enteros \(C(m + 1, n)\) y \(C(m, n)\).
+      Por lo tanto
+      también es entero
+      \(C(m, n + 1) = 4 C(m, n) - C(m + 1, n)\).
+    \end{description}
+    Por inducción es entero \(C(m, n)\)
+    para \(m, n \in \mathbb{N}_0\).
+  \end{proof}
+  A pesar de ser oficialmente inducción sobre \(n\),
+  también estamos usando el resultado para varios valores de \(m\).
+
+  Otro ejemplo involucra los \emph{números de Fibonacci},%
+      \index{Fibonacci, numeros de@Fibonacci, números de}%
+      \index{Fibonacci, Leonardo (Leonardo Pisani Bigollo)}%
+  definidos mediante la recurrencia:
+  \begin{equation}
+    \label{eq:Fibonacci-recurrence}
+    F_0
+      = 0,
+    F_1
+      = 1,
+    F_{n + 2}
+      = F_{n + 1} + F_n
+  \end{equation}
+  y los relacionados \emph{números de Lucas}:%
+    \index{Lucas, numeros de@Lucas, números de}%
+    \index{Lucas, Edouard@Lucas, Édouard}
+  \begin{equation}
+    \label{eq:Lucas-recurrence}
+    L_0
+      = 2,
+    L_1
+      = 1,
+    L_{n + 2}
+      = L_{n + 1} + L_n
+  \end{equation}
+  Nuestro interés es la sorprendente identidad:
+  \begin{proposition}
+    Para todos \(m, n \ge 0\) se cumple:
+    \begin{equation}
+      \label{eq:Fibonacci-Lucas}
+      2 F_{m + n}
+	= L_m F_n + L_n F_m
+    \end{equation}
+  \end{proposition}
+  Quien descubrió esta relación o era brujo o muy ocioso\ldots
+  \begin{proof}
+    La demostración es por inducción simultánea sobre \(m\) y \(n\);
+    si se cumple para \(m + n\)
+    y para \(m + n + 1\) deducimos que se cumple con \(m + n + 2\).
+    \begin{description}
+    \item[Bases:]
+      Para \(m + n = 0\) la única posibilidad es \(m = n = 0\),
+      para \(m + n = 1\)
+      están las combinaciones \(m = 0\) con \(n = 1\)
+      y \(m = 1\) con \(n = 0\).
+      Por simetría,
+      los últimos dos casos se reducen a uno solo:
+      \begin{align*}
+	2 F_0
+	  &= L_0 F_0 + L_0 F_0
+	   = 2 \cdot 0 + 1 \cdot 0
+	   = 0 \\
+	2 F_1
+	  &= L_1 F_0 + L_0 F_1
+	   = 1 \cdot 0 + 2 \cdot 1
+	   = 2
+      \end{align*}
+      Las dos se cumplen.
+    \item[Inducción:]
+      Supongamos que vale para \(m\) y \(n\),
+      para \(m\) y \(n + 1\),
+      y para \(m + 1\) y \(n\):
+      \begin{align}
+	2 F_{m + n}
+	  &= L_m F_n + L_n F_m
+	      \label{eq:Fibonacci-Lucas+00} \\
+	2 F_{m + n + 1}
+	  &= L_m F_{n + 1} + L_{n + 1} F_m
+	      \label{eq:Fibonacci-Lucas+01} \\
+	  &= L_{m + 1} F_n + L_n F_{m + 1}
+	      \label{eq:Fibonacci-Lucas+10}
+      \end{align}
+      Al sumar~\eqref{eq:Fibonacci-Lucas+00}
+      con~\eqref{eq:Fibonacci-Lucas+01} obtenemos
+      para el lado derecho:
+      \begin{equation*}
+	2 F_{m + n} + 2 F_{m + n + 1}
+	  = 2 F_{m + n + 2}
+      \end{equation*}
+      Al lado izquierdo resulta:
+      \begin{equation*}
+	L_m (F_n + F_{n + 1}) + (L_n + L_{n + 1}) F_m
+	  = L_m F_{n + 2} + L_{n + 2} F_m
+      \end{equation*}
+      O sea,
+      para esta combinación de valores se cumple.
+
+      Para la otra combinación,
+      sumar~\eqref{eq:Fibonacci-Lucas+00}
+      con~\eqref{eq:Fibonacci-Lucas+10} resulta en:
+      \begin{equation*}
+	(L_m + L_{m + 1}) F_n + L_n (F_m + F_{m + 1})
+	  = L_{m + 2} F_n + L_n F_{m + 2}
+      \end{equation*}
+      Nuevamente se cumple.
+    \end{description}
+    Por inducción simultánea sobre \(m\) y \(n\),
+    lo anunciado se cumple para todo \(m\) y \(n\).
+  \end{proof}
+
+\subsection{Inducción fuerte}
+\label{sec:induccion-fuerte}
+\index{induccion fuerte@inducción fuerte|see{demostración!inducción!fuerte}}
+\index{demostracion@demostración!induccion@inducción!fuerte|textbfhy}
+
+  Una variante de la técnica de inducción
+  es lo que se conoce como \emph{inducción fuerte},
+  donde suponemos no solo la validez para \(n = k\)
+  al demostrar el caso \(n = k + 1\),
+  sino la validez en todos los casos \(1 \le k \le n\).
+  Nótese que no se requiere usar todos los casos anteriores,
+  es común que solo se necesiten algunos de ellos.
+  En todo caso,
+  es raro que se haga la distinción
+  entre inducción fuerte y su variante tradicional
+  en la literatura profesional.
+
+  Para justificar esto,
+  recurrimos a definir un nuevo predicado \(\widetilde{P}(n)\)
+  que es cierto si \(P(k)\) es verdadero para \(1, 2, \dotsc, n\).
+  Una definición recursiva
+  de \(\widetilde{P}(n)\) en términos de \(P(n)\) es:
+  \begin{equation}
+    \label{eq:P-tilde-definicion}
+    \widetilde{P}(n)
+     =
+     \begin{cases}
+       P(1)		     & \text{si \(n = 1\)} \\
+       \widetilde{P}(n - 1) \wedge P(n) & \text{si \(n > 1\)} \\
+     \end{cases}
+  \end{equation}
+  Aplicando la equivalencia
+    \(A \implies B \equiv A \implies A \wedge B\),
+  a definición~\eqref{eq:P-tilde-definicion} de \(\widetilde{P}(n)\)
+  podemos escribir:
+  \begin{align}
+    (\widetilde{P}(n) \implies P(n + 1))
+      &\implies
+	 (\widetilde{P}(n)
+	    \implies \widetilde{P}(n) \wedge P(n + 1))
+      \notag \\
+      &\implies
+	 (\widetilde{P}(n) \wedge \widetilde{P}(n + 1))
+      \label{eq:P-tilde-implica-P-tilde+1}
+  \end{align}
+  y con~\eqref{eq:P-tilde-implica-P-tilde+1}
+  la inducción fuerte sobre \(P(n)\)
+  no es más que inducción tradicional sobre \(\widetilde{P}(n)\).
+
+  Un ejemplo simple ofrece la proposición siguiente.
+  \begin{proposition}
+    \begin{equation*}
+      T(n)
+	=
+	\begin{cases}
+	  0				      & \text{si\ } n = 0 \\
+	  n + T(0) + T(1) + \dotsb + T(n - 1) & \text{si\ } n > 0
+	\end{cases}
+    \end{equation*}
+    Entonces:
+    \begin{equation*}
+      T(n)
+	= 2^n - 1
+    \end{equation*}
+  \end{proposition}
+  \begin{proof}
+    Usamos inducción fuerte sobre \(n\).
+    \begin{description}
+    \item[Caso base:]
+      Para \(n = 0\),
+      tenemos \(T(0) = 0 = 2^0 - 1\),
+      que sigue de la definición de \(T\).
+    \item[Inducción:]
+      Suponemos cierto el resultado para \(0 \le k < n\),
+      y tenemos:
+      \begin{align*}
+	T(n)
+	  &= n + \sum_{0 \le k < n} T(k) \\
+	  &= n + \sum_{0 \le k < n} (2^k - 1) \\
+	  &= \sum_{0 \le k < n} 2^k \\
+	  &= \frac{2^n - 1}{2 - 1} \\
+	  &= 2^n - 1
+      \end{align*}
+      En esto hemos usado la suma de una serie geométrica
+      (teorema~\ref{theo:suma-geometrica}).
+    \end{description}
+    Por inducción,
+    vale para todo \(n \in \mathbb{N}\).
+  \end{proof}
+  Acá tuvimos que usar todos los casos anteriores.
+
+  Otro ejemplo lo pone el juego de Nim,%
+    \index{Nim, juego de}
+  en el cual dos jugadores se enfrentan con dos pilas de fósforos.
+  Por turno cada jugador
+  saca un número de fósforos de una de las pilas.
+  Gana quien toma el último fósforo.
+  \begin{proposition}
+    \label{prop:Nim}
+    En el juego de Nim,
+    si a la partida ambas pilas tienen el mismo número de fósforos,
+    el segundo jugador gana.
+  \end{proposition}
+  La estrategia para el segundo jugador
+  es crear y luego mantener esta situación,
+  vale decir si el primer jugador saca \(m\) fósforos de una pila,
+  el segundo saca el número adecuado de fósforos de la otra
+  para que resulten iguales.
+  Esto demuestra que el segundo jugador siempre puede ganar.
+  \begin{proof}
+    Usamos inducción fuerte
+    sobre el número \(n\) de fósforos en las pilas.
+    \begin{description}
+    \item[Base:]
+      Cuando \(n = 1\),
+      la única movida posible
+      para el primer jugador es sacar un fósforo
+      de una pila,
+      y el segundo jugador se queda con el último.
+    \item[Inducción:]
+      Supongamos que esto es válido
+      para todos los números de fósforos
+      en las pilas entre \(1\) y \(n\),
+      demostraremos que vale para pilas con \(n + 1\) fósforos.
+      Consideremos el caso de dos pilas de \(n + 1\) fósforos,
+      con el turno del primer jugador.
+      Si este saca \(m\) fósforos de una de las pilas,
+      el segundo puede sacar \(m\) de la otra,
+      y quedamos en la situación
+      con dos pilas de \(n + 1 - m \le n\)
+      fósforos cada una.
+      Por hipótesis,
+      el segundo jugador gana desde esta posición.
+    \end{description}
+    Por inducción,
+    si al comienzo las dos pilas tienen el mismo número de fósforos,
+    gana el segundo jugador.
+  \end{proof}
+  Recurrimos solo a uno de los casos anteriores
+  en esta demostración,
+  pero al no estar determinado cuál
+  necesitamos debemos suponerlos todos.
+
+  Un ejemplo más tentador es el siguiente:
+  Se tiene una barra de chocolate
+  que se divide en \(n\) cuadraditos.
+  Se pide determinar cuántas veces como mínimo
+  se debe partir la barra
+  para dividirla en sus cuadraditos individuales.
+  \begin{proposition}
+    \label{prop:cortar-chocolate}
+    Para dividir una barra de chocolate de \(n\) cuadraditos
+    en sus cuadraditos individuales
+    se requieren exactamente \(n - 1\) cortes.
+  \end{proposition}
+  \begin{proof}
+    Usamos inducción fuerte.
+    \begin{description}
+    \item[Base:]
+      Cuando \(n = 1\),
+      claramente se requieren \(n - 1 = 0\) cortes.
+    \item[Inducción:]
+      Suponiendo que la aseveración es cierta
+      para \(1 \le k \le n\),
+      demostramos que es cierta para \(n + 1\).
+      En el primer paso dividimos la barra en dos partes,
+      de \(n_1\) y \(n_2\) cuadraditos respectivamente,
+      donde \(n_1 + n_2 = n + 1\).
+      Por hipótesis de inducción,
+      requeriremos \(n_1 - 1\) y \(n_2 - 1\) cortes para las partes,
+      respectivamente;
+      en total se requieren
+	\((n_1 - 1) + (n_2 - 1) + 1 = (n_1 + n_2) - 1 = n\) cortes.
+    \end{description}
+    Por inducción queda demostrado que se requieren \(n - 1\) cortes
+    para todo \(n \in \mathbb{N}\).
+  \end{proof}
+  Nótese que esta demostración
+  es aplicable a cualquier forma de la barra original,
+  no solo a las tradicionales barras rectangulares
+  que se dividen en cuadraditos.
+  La única restricción
+  es que cada corte divida una barra en dos partes.
+
+  En esta demostración usamos dos casos anteriores,
+  y
+  (como en el ejemplo precedente)
+  no podemos determinar de antemano cuáles serían,
+  por lo que fue necesario suponerlos todos.
+
+  Es común que no resulte posible demostrar el paso inductivo.
+  Nuestro instinto nos dice
+  que en tal caso lo que debe hacerse es hacer más débil
+  lo que deseamos demostrar;
+  pero eso no sirve,
+  ya que (de resultar) terminamos demostrando menos de lo pedido.
+  La solución es demostrar una proposición más fuerte
+  (lo que también da más con que trabajar).
+
+  Un mecenas
+  (llamémosle \foreignlanguage{english}{August})
+  dona un pavimento para el patio de la Universidad de Miskatonic,%
+    \index{pavimentacion@pavimentación}
+  que casualmente tiene tamaño \mbox{\(2^n \times 2^n\)}.
+  Pone como condición que debe instalarse una estatua suya
+  adyacente al centro del patio.
+  Archer Harris
+  (el arquitecto de la Universidad)
+  tiene sus propias ideas,
+  todo debe pavimentarse con losas de forma en L
+  (ver la figura~\ref{fig:tile}).
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/tile}
+    \caption{Forma de una losa}
+    \label{fig:tile}
+  \end{figure}
+  La base de la estatua de \foreignlanguage{english}{August}
+  tiene exactamente el tamaño
+  de uno de los tres cuadrados que forman la losa.
+
+  Lo que buscamos entonces es demostrar:
+  \begin{proposition}
+    \label{prop:pavimentar}
+    Dadas las condiciones enunciadas,
+    es posible pavimentar
+    un patio de tamaño \mbox{\(2^n \times 2^n\)}
+    dejando un espacio adyacente al centro
+    para la estatua de \foreignlanguage{english}{August}.
+  \end{proposition}
+
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/tiling-fail}
+    \caption{Intento fallido de inducción}
+    \label{fig:tiling-fail}
+  \end{figure}
+  \begin{proof}[Demostración (Intento fallido)]
+    \renewcommand{\qedsymbol}{\textthing}
+    Usamos inducción.
+    \begin{description}
+    \item[Caso base:]
+      Claramente se puede lograr lo pedido cuando \(n = 1\),
+      con una losa y la estatua ocupando la esquina faltante
+      (queda ``lo más cerca del centro posible'' de esta forma).
+    \item[Inducción:]
+      Suponiendo que se puede ubicar a
+      \foreignlanguage{english}{August}
+      adyacente al centro para tamaño \(2^n\),
+      intentamos ahora demostrar
+      que se puede hacer para \(2^{n + 1}\).
+      Pero esto lleva a la situación
+      de la figura~\ref{fig:tiling-fail},
+      que no ayuda en nada.
+      \qedhere
+    \end{description}
+  \end{proof}
+
+  La solución es demostrar una cosa más fuerte,
+  debemos buscar la condición que nos permita cerrar el ciclo.
+  Es claro que \mbox{\(2^{n + 1} \times 2^{n + 1}\)} es el cuadrado
+  en el cual la estatua de \foreignlanguage{english}{August}
+  está en la esquina adyacente al centro
+  rodeado por tres otros cuadrados similares llenos,
+  como en la figura~\ref{fig:tiling-around}.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/tiling-around}
+    \caption{División del patio de $2^{n + 1} \times 2^{n + 1}$
+	     en cuatro de $2^n \times 2^n$}
+    \label{fig:tiling-around}
+  \end{figure}
+  Algunos dibujos para el caso \mbox{\(4 \times 4\)}
+  muestran que la manera de cubrir
+  excluyendo el cuadrado \mbox{\(2 \times 2\)}
+  en la esquina inferior izquierda
+  es la que da la figura~\ref{subfig:tiling-around-sol}.
+  \begin{figure}[htbp]
+    \centering
+    \subfloat[Alrededores]{
+      \pgfimage{images/tiling-around-sol}
+      \label{subfig:tiling-around-sol}
+    }
+    \qquad
+    \subfloat[Otra vista]{
+      \pgfimage{images/tiling-around-sol-square}
+      \label{subfig:tiling-around-sol-square}
+    }
+    \qquad
+    \subfloat[Solución]{
+      \pgfimage{images/tiling-sol}
+      \label{subfig:tiling-sol}
+    }
+    \caption{Análisis del patio de $4 \times 4$}
+    \label{fig:tiling-around-sol}
+  \end{figure}
+  Esto puede considerarse
+  como tres cuadrados de \mbox{\(2 \times 2\)}
+  con cuadraditos faltantes en esquinas que se unen al centro,
+  como la figura~\ref{subfig:tiling-around-sol-square}.
+  La solución completa de \mbox{\(4 \times 4\)}
+  la muestra la figura~\ref{subfig:tiling-sol}.
+
+  Ahora tenemos dos caminos posibles:
+  \begin{itemize}
+  \item
+    Notando que nuestro patio de \mbox{\(4 \times 4\)}
+    lo hemos dividido
+    como en la figura~\ref{fig:tiling-around}
+    en un área de la forma de una losa
+    y un cuadrado del doble tamaño,
+    podemos construir
+    cuatro cuadrados de \mbox{\(2^{n - 1} \times 2^{n - 1}\)}
+    con un cuadradito faltante en una esquina cada uno,
+    unir tres de las esquinas al centro y cubrirlas con una losa,
+    dejando la cuarta adyacente al centro
+    como en la figura~\ref{subfig:tiling-sol}.
+  \item
+    El espacio libre de la figura~\ref{subfig:tiling-around-sol}
+    en un cuadrado de \mbox{\(4 \times 4\)}
+    podemos cubrirlo de forma de de dejar el espacio
+    para la estatua de \foreignlanguage{english}{August}
+    en cualquiera de las posiciones en la esquina inferior,
+    y por simetría
+    en cualquiera de las posiciones en el patio completo.
+    Esto hace sospechar
+    que se puede ubicar a \foreignlanguage{english}{August}
+    en cualquier posición en el patio.
+  \end{itemize}
+  La segunda estrategia lleva a la siguiente demostración,
+  dejamos el detalle de la primera como entretención al lector.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/tiling-any}
+    \caption{Inducción dejando libre cualquier cuadradito}
+    \label{fig:tiling-any}
+  \end{figure}
+  \begin{proof}
+    Usamos inducción
+    para demostrar
+    que la estatua de \foreignlanguage{english}{August}
+    puede ubicarse en cualquier posición
+    en un patio de \mbox{\(2^n \times 2^n\)}.
+    \begin{description}
+    \item[Caso base:]
+      Para \(n = 1\) es simplemente que la losa
+      se puede ubicar en cualquier orientación.
+    \item[Inducción:]
+      Suponiendo que es posible
+      ubicar a \foreignlanguage{english}{August}
+      en cualquier lugar en un patio de \mbox{\(2^n \times 2^n\)},
+      podemos dividir
+      nuestro patio de \mbox{\(2^{n + 1} \times 2^{n + 1}\)}
+      en cuatro cuadrados de \mbox{\(2^n \times 2^n\)}.
+      La posición designada de \foreignlanguage{english}{August}
+      estará en uno de los cuadrantes,
+      y por hipótesis podemos cubrir el resto de éste.
+      En los otros tres cuadrantes
+      ubicamos el espacio
+      que \foreignlanguage{english}{August} ocuparía
+      en una de las esquinas,
+      ver la figura~\ref{fig:tiling-any}.
+      También estos pavimentos son posibles,
+      por hipótesis.
+      Pero entonces podemos cubrir
+      las tres esquinas adyacentes al centro
+      con una losa,
+      y es posible ubicar a \foreignlanguage{english}{August}
+      en cualquier posición
+      en un patio de \mbox{\(2^{n + 1} \times 2^{n + 1}\)}.
+    \end{description}
+    Por inducción,
+    es posible ubicar a August en cualquier posición
+    en un patio de \mbox{\(2^n \times 2^n\)}
+    para todo \(n \in \mathbb{N}\).
+    En particular,
+    es posible ubicarlo adyacente al centro.
+  \end{proof}
+
+  El que resulte más fácil demostrar algo más general
+  que lo que se busca directamente
+  se conoce como la \emph{paradoja del inventor}.%
+    \index{inventor, paradoja del|see{paradoja del inventor}}%
+    \index{paradoja del inventor}
+  Otro ejemplo de este fenómeno es el siguiente:%
+    \index{Basilea, problema de}
+  \begin{theorem}
+    \label{theo:Basilea-converge}
+    \begin{equation*}
+      1 + \frac{1}{4} + \frac{1}{9} + \dotsb + \frac{1}{n^2}
+	< 2
+    \end{equation*}
+  \end{theorem}
+  Esto no se puede demostrar por inducción directamente,
+  ya que al sumar algo al lado derecho
+  se echa a perder la condición.
+  Para poder cerrar el ciclo con un valor menor a \(2\)
+  buscamos alguna diferencia \(d_n\),
+  lo más simple posible,
+  que dé:
+  \begin{equation}
+    \label{eq:Basilea-dn-condicion}
+    2 - d_n + \frac{1}{(n + 1)^2}
+     \le 2 - d_{n + 1}
+  \end{equation}
+  o,
+  lo que es lo mismo:
+  \begin{equation}
+    \label{eq:Basilea-dn-condicion-2}
+    d_n - d_{n + 1}
+      \ge \frac{1}{(n + 1)^2}
+  \end{equation}
+  Debe ser \(0 < d_n \le 1\) para no meternos en problemas.
+  Sumando~\eqref{eq:Basilea-dn-condicion-2}
+  de \(n + 1\) en adelante
+  vemos que en realidad queremos que:
+  \begin{equation}
+    \label{eq:Basilea-dn-condicion-3}
+    d_n
+      > \sum_{k \ge n + 1} \frac{1}{k^2}
+  \end{equation}
+  Podemos estimar crudamente la suma mediante una integral:
+  \begin{equation}
+    \label{eq:Basilea-condicion-aproximacion}
+    \sum_{k \ge n + 1} \frac{1}{k^2}
+      \approx \int_{n + 1}^\infty \frac{\mathrm{d} x}{x^2}
+      = \frac{1}{n + 1}
+  \end{equation}
+  La relación~\eqref{eq:Basilea-condicion-aproximacion}
+  hace sospechar que algo como \(d_n = 1 / n\)
+  (la expresión \(1 / n\) es más simple que \(1 / (n + 1)\),
+   además que siendo mayor da mayor holgura)
+  pueda funcionar,
+  lo que lleva a la demostración siguiente.
+  \begin{proof}
+    Por inducción demostramos un resultado más fuerte:
+    \begin{equation}
+      \label{eq:Basilea-converge-hipotesis}
+      1 + \frac{1}{4} + \frac{1}{9} + \dotsb + \frac{1}{n^2}
+	\le 2 - \frac{1}{n}
+    \end{equation}
+    \begin{description}
+    \item[Caso base:]
+      Para \(n = 1\) la ecuación~\eqref{eq:Basilea-converge-hipotesis}
+      se reduce a \(1 \le 1\),
+      que ciertamente es verdad.
+    \item[Inducción:]
+      Suponiendo que~\eqref{eq:Basilea-converge-hipotesis}
+      vale para \(n\),
+      demostramos que vale para \mbox{\(n + 1\)}.
+      Partiendo de nuestra hipótesis:
+      \begin{align}
+	1 + \frac{1}{4} + \frac{1}{9} + \dotsb + \frac{1}{n^2}
+	  &\le 2 - \frac{1}{n} \notag \\
+	1 + \frac{1}{4}
+	  + \dotsb + \frac{1}{n^2} + \frac{1}{(n + 1)^2}
+	  &\le 2 - \frac{1}{n} + \frac{1}{(n + 1)^2}
+	  \label{eq:Basilea-converge-induccion}
+      \end{align}
+      Consideremos los últimos dos términos
+      de~\eqref{eq:Basilea-converge-induccion},
+      donde como \(n \ge 1\):
+      \begin{align}
+	\frac{1}{n} - \frac{1}{(n + 1)^2}
+	  &= \frac{n^2 + n + 1}{n (n + 1)^2} \notag \\
+	  &> \frac{n^2 + n}{n (n + 1)^2} \notag \\
+	  &= \frac{1}{n + 1}
+	  \label{eq:Basilea-converge-induccion-cota}
+      \end{align}
+      Con~\eqref{eq:Basilea-converge-induccion-cota}
+      en~\eqref{eq:Basilea-converge-induccion}
+      tenemos:
+      \begin{align*}
+	1 + \frac{1}{4}
+	  + \dotsb + \frac{1}{n^2} + \frac{1}{(n + 1)^2}
+	  &\le 2 - \frac{1}{n} + \frac{1}{(n + 1)^2} \\
+	  &\le 2 - \frac{1}{n + 1}
+      \end{align*}
+      como se prometió.
+    \end{description}
+    Por inducción~\eqref{eq:Basilea-converge-hipotesis}
+    vale para todo \(n \in \mathbb{N}\).
+    Pero:
+    \begin{equation*}
+      1 + \frac{1}{4} + \frac{1}{9} + \dotsb + \frac{1}{n^2}
+	\le 2 - \frac{1}{n} < 2
+    \end{equation*}
+    que es lo que se quería probar.
+  \end{proof}
+
+\subsection{Inducción estructural}
+\label{sec:induccion-estructural}
+\index{induccion estructural@inducción estructural|see{demostración!inducción!estructural}}
+\index{demostracion@demostración!induccion@inducción!estructural|textbfhy}
+
+  Esta es una generalización
+  del método de demostración por inducción.
+  La idea es aplicable a estructuras definidas recursivamente,
+  como árboles binarios,
+    \index{arbol binario@árbol binario}
+  expresiones aritméticas
+  o listas.
+
+  Supongamos un orden parcial bien fundado%
+    \index{relacion@relación!bien fundada}
+  (una relación \(R\) es \emph{bien fundada}
+   si todo subconjunto de \(\mathcal{X}\)
+   tiene un \emph{mínimo} respecto de \(R\),
+   o sea,
+   si todo subconjunto no vacío \(\mathcal{S}\) de \(\mathcal{X}\)
+   contiene al menos un elemento \(m\)
+   tal que para todo \(s \in \mathcal{S}\)
+   es \(s \not\mathrel{R} m\).
+  Dicho de otra forma,
+  toda secuencia \(x_1 > x_2 > x_3 \dotso\)
+  en \(\mathcal{X}\) termina,
+  si anotamos \(>\)
+  para la transpuesta
+  de \(R\).
+
+  Para demostrar que \(P(x)\) es cierto
+  para todo \(x \in \mathcal{X}\),
+  demostramos (base) que vale para las elementos mínimos,
+  y que (inducción) si vale para todo \(y\)
+  tal que \(y \mathrel{R} x\),
+  entonces vale para \(x\).
+  Esto se justifica
+  suponiendo que algún elemento \(x \in	 \mathcal{X}\)
+  es el mínimo contraejemplo.
+  Entonces no puede ser un elemento mínimo de \(\mathcal{X}\),
+  ya que por la base para todos ellos se cumple \(P()\);
+  y como vale para todos los \(y\) con \(y \mathrel{R} x\)
+  ya que \(x\) es el mínimo contraejemplo,
+  vale para \(x\),
+  una clara contradicción.
+
+  Por ejemplo,
+  consideremos listas,
+  definidas mediante:
+  \begin{itemize}
+  \item
+    \([]\) es una lista
+    (la \emph{lista vacía})
+   \item
+     Si \(H\) es un elemento
+     y \(T\) es una lista,
+     \(H : T\) es una lista.
+     Llamaremos \emph{cabeza} a \(H\),
+     y \emph{cola} a \(T\).
+  \end{itemize}
+  Esto define un orden parcial entre listas,
+  en que \(T \le L\)
+  si \(L = H : T\) o \(L = T\).
+
+  Para listas definimos una operación \(\operatorname{length}\)
+  mediante:
+  \begin{description}
+  \item[LEN1]
+    \(\operatorname{length}([]) = 0\)
+  \item[LEN2]
+    \(\operatorname{length}(H : T) = 1 + \operatorname{length}(T)\)
+  \end{description}
+  Definimos la operación de concatenación de listas,
+  anotada \(L_1 \cdot L_2\),
+  por:
+  \begin{description}
+  \item[CAT1]
+    \([] \cdot L = L\)
+  \item[CAT2]
+    \((H : T) \cdot L = H : (T \cdot L)\)
+  \end{description}
+  Interesa demostrar:
+  \begin{theorem}
+    \label{theo:largo-concatenacion-listas}
+    \begin{equation}
+      \label{eq:largo-concatenado}
+      \operatorname{length}(L \cdot M)
+      = \operatorname{length}(L) + \operatorname{length}(M)
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    Esto lo demostramos por inducción estructural sobre listas.
+    \(P(L)\) asevera que~\eqref{eq:largo-concatenado}
+    vale para toda lista \(L\).
+    \begin{description}
+    \item[Base:]
+      Primero demostramos que \(P([])\) es verdadero:
+      \begin{align*}
+	\operatorname{length}([] \cdot M)
+	&= \operatorname{length}(M)
+	   && \text{por CAT1} \\
+	&= 0 + \operatorname{length}(M) \\
+	&= \operatorname{length}([]) + \operatorname{length}(M)
+	   && \text{por LEN1}
+      \end{align*}
+    \item[Inducción:]
+      Si \(L\) no es vacía,
+      consta de cabeza y cola,
+      o sea \(L = H : T\).
+      Nuestra hipótesis de inducción
+      es que si \(P(T)\) vale para la cola \(T\) de la lista,
+      entonces vale para la lista.
+      En detalle,
+      nuestra hipótesis es:
+      \begin{equation*}
+	\operatorname{length}(T \cdot M)
+	  = \operatorname{length}(T) + \operatorname{length}(M)
+      \end{equation*}
+      y tenemos:
+      \begin{align*}
+	\operatorname{length}(L \cdot M)
+	  &= \operatorname{length}((H : T) \cdot M) \\
+	  &= \operatorname{length}(H : (T \cdot M))
+	     && \text{por CAT2} \\
+	  &= 1 + \operatorname{length}(T \cdot M)
+	     && \text{por LEN2} \\
+	  &= 1 + \operatorname{length}(T) + \operatorname{length}(M)
+	     && \text{por hipótesis} \\
+	  &= \operatorname{length}(H : T) + \operatorname{length}(M)
+	     && \text{por LEN2} \\
+	  &= \operatorname{length}(L) + \operatorname{length}(M)
+      \end{align*}
+    \end{description}
+    Por inducción estructural,
+    vale para todas las listas.
+  \end{proof}
+
+  Si definimos expresiones algebraicas como:
+  \begin{itemize}
+  \item
+    Un \emph{átomo}
+    (una variable o constante)
+  \item
+    Una expresión entre paréntesis
+  \item
+    Dos expresiones unidas por un \emph{operador},
+    uno de \(\{+, -, \cdot, /\}\)%
+      \index{operador}
+  \end{itemize}
+  Esto define una relación,
+  en la cual todas las cadenas terminan en átomos;
+  por tanto es bien fundada.
+
+  \begin{theorem}
+    \label{theo:operandos-operadores}
+    En toda expresión con \(n\) átomos hay \(n - 1\) operadores.
+  \end{theorem}
+  \begin{proof}
+    Por inducción estructural.
+    \begin{description}
+    \item[Base:]
+      Si la expresión es un único átomo,
+      tiene \(1\) átomo y \(0\) operadores.
+    \item[Inducción:]
+      Si la expresión es una expresión entre paréntesis,
+      tiene el mismo número de átomos y operadores que esta última.
+
+      Si la expresión consta de dos expresiones \(E_1\) y \(E_2\)
+      unidas por un operador,
+      por inducción si \(E_1\) tiene \(n_1\) átomos
+      tiene \(n_1 - 1\) operadores,
+      y si \(E_2\) tiene \(n_2\) átomos
+      tiene \(n_2 - 1\) operadores.
+      La expresión completa tiene \(n = n_1 + n_2\) átomos
+      y \(n_1 - 1 + n_2 - 1 + 1 = n - 1\) operadores.
+    \end{description}
+    Por inducción estructural,
+    vale para todas las expresiones.
+  \end{proof}
+
+  A esta técnica se le conoce como \emph{inducción estructural}
+  porque
+  (como muestran los ejemplos)
+  la aplicación típica es a estructuras definidas recursivamente,
+  partiendo de estructuras mínimas y reglas para combinarlas
+  creando estructuras más complejas.
+  La demostración por inducción estructural en tal caso
+  corresponde a demostrar
+  que la propiedad vale para las estructuras mínimas,
+  y que si la propiedad vale para las estructuras componentes
+  también vale para la estructura que las incluye.
+
+  Las demostraciones por inducción
+  vistas en la sección~\ref{sec:induccion}
+  corresponden a considerar el conjunto \(\mathbb{N}\)
+  con la relación sucesor
+  que relaciona a \(n\) con \(n + 1\);
+  la inducción fuerte
+  corresponde a \(\mathbb{N}\) con la relación menor que.
+
+\section{Demostrar existencia}
+\label{sec:existencia}
+\index{demostracion@demostración!existencia}
+
+  Muchas veces interesa demostrar que algún objeto
+  que cumple ciertas condiciones existe.
+  La forma más simple de hacer esto es exhibir el objeto del caso
+  (para demostrar que hay primos pares,
+   basta exhibir el primo \(2\))
+  o dar un mecanismo claro que permite construirlo.
+  Sin embargo,
+  se da también la situación
+  que podemos demostrar la existencia del objeto,
+  sin poder asirlo de forma más concreta.
+  Esto definitivamente es bastante poco satisfactorio,
+  pero válido de todas formas.
+  Un ejemplo es lo siguiente:
+  \begin{proposition}
+    Hay números irracionales \(\alpha\) y \(\beta\)%
+      \index{numero@número!irracional}
+    tales que \(\alpha^\beta\) es racional.
+  \end{proposition}
+  \begin{proof}
+    Sabemos que \(\sqrt{2}\) es irracional.
+    Entonces:
+    \begin{equation*}
+      \left( \sqrt{2}^{\sqrt{2}} \right)^{\sqrt{2}}
+	= \sqrt{2}^2
+	= 2
+    \end{equation*}
+    Ahora bien,
+    hay dos opciones para \(\sqrt{2}^{\sqrt{2}}\):
+    Si es racional,
+    entonces podemos tomar \(\alpha = \beta = \sqrt{2}\)
+    como ejemplo.
+    Si es irracional,
+    tomamos \(\alpha = \sqrt{2}^{\sqrt{2}}\) y \(\beta = \sqrt{2}\)
+    como ejemplo.
+  \end{proof}
+  Bonito,
+  pero es frustrante en que no da un ejemplo concreto.
+  Otro ejemplo clásico es la demostración de Cantor%
+    \index{Cantor, Georg}
+  (que discutiremos en el capítulo~\ref{cha:numerabilidad})
+  que hay infinitos números trascendentes%
+    \index{numero@número!trascendente}
+  (números irracionales
+   que no son ceros de un polinomio con coeficientes enteros)
+  sin dar luces de cómo obtener alguno.
+
+  Una demostración alternativa,
+  que da ejemplos concretos,
+  es:
+  \begin{proof}
+    Sea \(\alpha = \sqrt{2}\),
+    \(\beta = \log_2 9\),
+    con lo que \(\alpha^\beta = 3\).
+
+    Sabemos que \(\alpha\) es irracional
+    por el teorema~\ref{theo:sqrt2-irracional}.
+    Demostramos que \(\beta\) es irracional por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Supongamos que \(\beta\) fuera racional,
+    digamos que para naturales \(m\) y \(n\)
+    tenemos \(\beta = m / n\).
+    Claramente es \(\beta = \log_2 9 > 0\),
+    con lo que \(m > 0\).
+    Entonces sería \(9^n = 2^m\),
+    pero \(9^n\) es impar,
+    mientras \(2^m\) es par.
+    Esto es imposible.
+  \end{proof}
+
+  Se ha demostrado
+  que el número de Hilbert%
+    \index{Hilbert, numero de@Hilbert, número de}%
+    \index{Hilbert, David}
+  (también conocido como constante de Gelfond-Schneider)%
+    \index{Gelfond-Schneider, constante de|see{Hilbert, número de}}
+  \(2^{\sqrt{2}}\) es irracional
+  (incluso es trascendente),
+    \index{numero@número!trascendente}
+  y da otro ejemplo concreto al elevar a \(\sqrt{2}\).
+  Por lo demás,
+  siendo trascendente \(2^{\sqrt{2}}\),
+  su raíz
+  (el número que consideramos arriba)
+  también es trascendente.
+  Claro que para discutir estos temas habría que profundizar mucho más\ldots
+
+\section{Refutaciones}
+\label{sec:refutaciones}
+\index{refutacion@refutación}
+
+  Nos hemos concentrado hasta acá
+  en demostrar cosas que sabemos ciertas.
+  En la cruda realidad
+  de las matemáticas nos encontramos con mayor frecuencia
+  con aseveraciones que no sabemos si son ciertas o falsas
+  (\emph{conjeturas}).%
+    \index{conjetura}
+  La tarea se compone,
+  entonces,
+  de determinar si la conjetura es verdadera o no,
+  y luego demostrar que es verdadera
+  o que no se cumple.
+  Si no somos capaces de demostrar que la conjetura es cierta,
+  esto no demuestra que sea falsa:
+  Puede ser cierta,
+  simplemente no hemos sido capaces de demostrarlo.
+
+  Igual que para demostrar que una aseveración es cierta,
+  hay ciertas técnicas para demostrar que es falsa.
+  La forma más simple de refutar la aseveración \(P\)
+  es demostrar \(\neg P\).
+  Esta última a su vez es susceptible
+  de cualquiera de las técnicas ya discutidas.
+  Igual hay una variedad de situaciones especiales
+  que merecen atención,
+  como explica Hammack en su texto~%
+    \cite{hammack13:_book_proof}.
+
+\subsection{Refutar aseveraciones universales: Contraejemplo}
+\label{sec:refutar-universal}
+\index{contraejemplo}
+
+  Si debemos demostrar
+  que la aseveración \(\forall x \in S. P(x)\) es falsa,
+  nuestra indicación general es demostrar su negación:
+  \begin{equation*}
+    \neg (\forall x \in S. P(x))
+      \equiv \exists x \in S. \neg P(x)
+  \end{equation*}
+  O sea,
+  debemos hallar \(x\) tal que \(P(x)\) sea falso.
+  Basta exhibir un solo contraejemplo
+  para que no valga para todo \(x\).
+  Por ejemplo:
+  \begin{conjecture}
+    Si \(n^2 - n\) es par,
+    entonces \(n\) es par.
+  \end{conjecture}
+  \begin{proof}[Refutación]
+    Exhibimos un contraejemplo:
+    Para \(n = 1\) tenemos \(n^2 - n = 0\),
+    que es par.
+    Pero \(n\) es impar.
+  \end{proof}
+
+\subsection{Refutar existencia}
+\label{sec:refutar-existencia}
+
+  Si queremos demostrar que es falso \(\exists x \in S. P(x)\),
+  nuevamente es demostrar la negación:
+  \begin{equation*}
+    \neg (\exists x \in S. P(x))
+      \equiv \forall x \in S. \neg P(x)
+  \end{equation*}
+  Como esto es una aseveración universal,
+  un ejemplo no es suficiente.
+  \begin{conjecture}
+    Hay números primos \(p\) y \(q\)
+    tales que \(p - q = 97\).
+  \end{conjecture}
+  \begin{proof}[Refutación]
+    Demostramos que si \(q\) es primo,
+    entonces \(p = q + 97\) no es primo.
+    Dividimos la demostración en dos casos:
+    \begin{description}
+    \item[\boldmath\(q = 2\)\unboldmath:]
+      En este caso,
+      \(q + 97 = 99 = 3 \cdot 3 \cdot 11\),
+      que no es primo.
+    \item[\boldmath\(q\)\unboldmath\ es un primo impar:]
+      Si \(q\) es impar,
+      entonces \(q + 97\) es un par mayor a \(2\),
+      y por tanto no es primo.
+    \end{description}
+  \end{proof}
+
+\subsection{Refutar por contradicción}
+\label{sec:refutar-contradiccion}
+\index{demostracion@demostración!contradiccion@contradicción}
+
+  Ciertamente es posible aplicar la técnica de reducción al absurdo
+  a la tarea de refutar.
+  Sólo que en este caso lo que buscamos es obtener una contradicción
+  de la aseveración misma,
+  no de su negación.
+  \begin{conjecture}
+    Hay un real \(x\) para el cual \(x^4 < x < x^2\).
+  \end{conjecture}
+  \begin{proof}[Refutación]
+    Por contradicción.%
+      \index{refutacion@refutación!contradiccion@contradicción}
+    Supongamos que la conjetura es cierta.
+    Sea \(x\) un número real para el cual \(x^4 < x < x^2\).
+    Como \(x > x^4\),
+    \(x\) es positivo.
+    Partimos con:
+    \begin{equation*}
+      x^4 < x < x^2
+    \end{equation*}
+    Dividiendo por \(x\):
+    \begin{align*}
+      x^3     &< 1 < x \\
+      x^3 - 1 &< 0 < x - 1
+    \end{align*}
+    Factorizamos \(x^3 - 1\):
+    \begin{equation*}
+      (x - 1) (x^2 + x + 1)
+	< 0
+    \end{equation*}
+    Como \(x - 1 > 0\), podemos dividir:
+    \begin{equation*}
+      x^2 + x + 1
+	< 0
+    \end{equation*}
+    Pero esto último es imposible,
+    ya que \(x > 0\).
+  \end{proof}
+
+\section{Conjetura a teorema}
+\label{sec:conjetura->teorema}
+
+  Una pregunta abierta luego de lo anterior
+  es cómo se transforma una buena sospecha en un teorema
+  (una solución al problema).
+  Daremos un ejemplo simple,
+  que más adelante servirá
+  para ilustrar algunas de las técnicas más poderosas
+  que presenta este texto.
+  Ejemplos mucho más acabados
+  muestran Bruckner, Thomson y Bruckner~%
+    \cite{bruckner11:_mathem_discovery}.
+
+  \begin{example}
+    En la Competencia de Ensayos de la Universidad de Miskatonic
+    los ensayos deben entregarse anónimamente,
+    cada uno acompañado por una tarjeta que identifica al autor.
+    Las tarjetas codificadas son tarjetas cuadradas idénticas
+    de \(n \times n\)\,[mm]
+    (\(n\) es un número impar)
+    divididas por ambos lados en cuadrados de \(1\)\,[mm].
+    En uno de estos cuadrados se perfora un agujero redondo.
+
+    Sea \(b_n\) el número de tarjetas diferentes
+    que se pueden producir de esta forma,
+    bajo el supuesto que las tarjetas se pueden rotar e invertir.
+    Se pide encontrar una fórmula para \(b_n\) en términos de \(n\),
+    y usarla para determinar cuánto debe ser \(n\)
+    si se esperan \(100\)~participantes en el concurso.
+  \end{example}
+
+% Note: El caso par no se divide "decentemente" en uno más chico
+%	del mismo tipo
+
+  \begin{solution}
+    Atacaremos el problema en etapas.
+
+    \begin{description}
+    \item[Paso 1: Experimentar.]
+      Como nos dijeron que \(n\) es impar,
+      analizaremos los casos \(n = 1, 3, 5\) para comenzar.
+      En el caso \(n = 1\),
+      hay un único cuadradito,
+      y por tanto es posible una única chapa.
+      \(b_1 = 1\).
+
+      En el caso \(n = 3\),
+      un par de intentos
+      muestran que solo hay \(3\) posibilidades diferentes,
+      como indica la figura~\ref{fig:chapas-3}.
+      \begin{figure}[htbp]
+	\centering
+	\subfloat{\pgfimage{images/badge-3a}}%
+	  \hspace*{2em}%
+	\subfloat{\pgfimage{images/badge-3b}}%
+	  \hspace*{2em}%
+	\subfloat{\pgfimage{images/badge-3c}}
+	\caption{Chapas posibles con $n = 3$}
+	\label{fig:chapas-3}
+      \end{figure}
+      Cualquier otra alternativa puede rotarse
+      de forma de obtener una de estas.
+      O sea,
+      \(b_3 = 3\).
+
+      Algo de trabajo adicional lleva a concluir que \(b_5 = 6\),
+      véase la figura~\ref{fig:chapas-5}.
+      \begin{figure}[htbp]
+	\centering
+	\subfloat{\pgfimage[width=0.275\textwidth]{images/badge-5a}}%
+	  \hspace*{1em}%
+	\subfloat{\pgfimage[width=0.275\textwidth]{images/badge-5b}}%
+	  \hspace*{1em}%
+	\subfloat{\pgfimage[width=0.275\textwidth]{images/badge-5c}}
+	  \vspace*{1em}
+	\subfloat{\pgfimage[width=0.275\textwidth]{images/badge-5d}}%
+	  \hspace*{1em}%
+	\subfloat{\pgfimage[width=0.275\textwidth]{images/badge-5e}}%
+	  \hspace*{1em}%
+	\subfloat{\pgfimage[width=0.275\textwidth]{images/badge-5f}}
+	\caption{Chapas posibles con $n = 5$}
+	\label{fig:chapas-5}
+      \end{figure}
+    \item[Paso 2: Adivinar.]
+      Hay dos estrategias posibles para adivinar la solución.
+      La ``heroica''
+      es adivinar una fórmula para \(b_n\) directamente,
+      en base a la información obtenida hasta acá
+      (posiblemente complementada con valores adicionales).
+      De ser así,
+      se puede proceder directamente al paso 5.
+
+      La otra es usar la estrategia ``segura'',
+      que pasa por encontrar una relación recursiva
+      entre los valores buscados.
+      Acá la pregunta es cómo pasar de \(n = 1\) a \(n = 3\),
+      y de \(n = 3\) a \(n = 5\),
+      y así sucesivamente.
+      Tenemos hasta acá:
+      \begin{align}
+	b_1
+	  &= 1
+	  \label{eq:ensayos-1} \\
+	b_3
+	  &= b_1 + 2
+	  \label{eq:ensayos-3} \\
+	b_5
+	  &= b_3 + 3
+	  \label{eq:ensayos-5}
+      \end{align}
+      Tal vez \(b_7 = b_5 + 4 = 10\),
+      y en general se cumple:
+      \begin{equation}
+	\label{eq:ensayos-conjetura}
+	b_{2 r + 1} = b_{2 r - 1} + r + 1
+      \end{equation}
+      Con esto tenemos una \emph{conjetura}.
+    \item[Paso 3: Entender.]
+      Debemos corroborar
+      nuestra conjetura~\eqref{eq:ensayos-conjetura},
+      con el caso siguiente \(n = 7\).
+      Esto puede hacerse verificando \(b_7 = 10\) directamente,
+      pero es mucho mejor analizar cómo se relacionan
+      \(b_3\) con \(b_5\)
+      (deben analizarse
+       las figuras~\ref{fig:chapas-3} y~\ref{fig:chapas-5})
+      y \(b_7\) con \(b_5\).
+      Esto último lo ilustra la figura~\ref{fig:badge-7}.
+      \begin{figure}[htbp]
+	\centering
+	\pgfimage[height=5cm]{images/badge-7}
+	\caption{Chapa de $7 \times 7$
+		 como chapa de $5 \times 5$ con borde}
+	\label{fig:badge-7}
+      \end{figure}
+      Puede verse que la chapa de \(7 \times 7\) puede considerarse
+      como una de \(5 \times 5\) con un borde.
+      Si se perfora alguno de los cuadraditos del centro,
+      se obtienen \(b_5\) posibilidades.
+      Las otras opciones resultan de perforar el borde.
+      Un momento de reflexión,
+      también comparando el caso \(n = 3\) con el \(n = 5\),
+      muestra que solo la mitad del borde superior
+      aporta alternativas esencialmente diferentes,
+      o sea,
+      aporta \(4\)~más.
+      Hemos demostrado que \(b_7 = b_5 + 4\).
+
+      Con esto se completa el trabajo pesado.
+      El mismo razonamiento confirma
+      la conjetura~\eqref{eq:ensayos-conjetura}
+      para el caso general.
+    \item[Paso 4: La fórmula.]
+      Nos piden una fórmula para los \(b_n\),
+      y ahora sabemos que quedan descritos
+      por la secuencia definida recursivamente por:
+      \begin{equation}
+	\label{eq:ensayos-recurrencia}
+	b_{2 r + 1}
+	  =
+	  \begin{cases}
+	    1			& \text{si \(r = 0\)} \\
+	    b_{2 r - 1} + r + 1	& \text{si \(r \ge 1\)}
+	  \end{cases}
+      \end{equation}
+      Ya conocemos los valores
+      \(b_1 = 1\), \(b_3 = 3\), \(b_5 = 6\), \(b_7 = 10\),
+      y podemos calcular valores adicionales según se requieran.
+      Posiblemente ya hayamos dado en cuenta que:
+      \begin{equation}
+	\label{eq:ensayos-valores}
+	 1 = (1 \cdot 2) / 2,\hspace{1ex}
+	 3 = (2 \cdot 3) / 2,\hspace{1ex}
+	 6 = (3 \cdot 4) / 2,\hspace{1ex}
+	10 = (4 \cdot 5) / 2
+      \end{equation}
+      lo que lleva a sospechar:
+      \begin{equation}
+	\label{eq:ensayos-valor-explicito}
+	b_{2 r + 1}
+	  = \frac{1}{2} \, (r + 2) (r + 1)
+	       \quad\text{para todo \(r \in \mathbb{N}\)}
+      \end{equation}
+    \item[Paso 5: Demostración.]
+      Resta demostrar
+      que la fórmula~\eqref{eq:ensayos-valor-explicito}
+      es correcta.
+      \begin{proposition}
+	\label{prop:Miskatonic-essay-competition}
+	Para todo \(r \in \mathbb{N}_0\),
+	\(b_{2 r + 1} = \frac{1}{2} \, (r + 2) (r + 1)\)
+      \end{proposition}
+      \begin{proof}
+	\index{demostracion@demostración!induccion@inducción}
+	Por inducción sobre \(r\).
+	\begin{description}
+	\item[Base:]
+	  La fórmula~\eqref{eq:ensayos-valor-explicito}
+	  vale cuando \(r = 0\),
+	  ya que \(b_1 = 1\)
+	  y \((0 + 2) (0 + 1) / 2 = 1\).
+	\item[Inducción:]
+	  Supongamos que~\eqref{eq:ensayos-valor-explicito}
+	  se cumple para \(r = k\),
+	  vale decir,
+	  \(b_{2 k + 1} = \frac{1}{2} \, (k + 2) (k + 1)\).
+	  Usando la relación~\eqref{eq:ensayos-conjetura}
+	  descubierta en el paso~3:
+	  \begin{align*}
+	    b_{2 (k + 1) + 1}
+	      &= b_{2 k + 1} + k + 2 \\
+	      &= \frac{1}{2} \, (k + 2) (k + 1) + k + 2 \\
+	      &= \frac{1}{2} \, (k + 2) (k + 3) \\
+	      &= \frac{1}{2} \, ((k + 1) + 2) ((k + 1) + 1)
+	  \end{align*}
+	\end{description}
+	La fórmula vale
+	para todo \(r \in \mathbb{N}_0\) por inducción.
+      \end{proof}
+    \item[Paso 6: La respuesta.]
+      El duro trabajo de los matemáticos
+      se aprecia solo cuando entrega una respuesta definitiva
+      a un problema práctico.
+      En este caso,
+      la ``respuesta definitiva'' es el tamaño de la tarjeta
+      necesaria para \(100\)~participantes,
+      o sea,
+      el valor \(r^*\)
+      tal que \(b_{2 r^* + 1} \le 100 < b_{2 r^* + 3}\).
+      Planteamos:
+      \begin{equation}
+	\label{eq:ensayos-desigualdad}
+	\frac{1}{2} \, (r + 2) (r + 1)
+	  \ge 100
+      \end{equation}
+      Los ceros del polinomio que corresponde
+      a~\eqref{eq:ensayos-desigualdad}
+      son \(r = -3,217\) y \(r = 12,65\).
+      Como para \(r \ge 0\)
+      la expresión
+      del lado izquierdo
+      de la desigualdad~\eqref{eq:ensayos-desigualdad}
+      es creciente,
+      aproximamos al entero superior y tenemos \(r^* = 13\).
+      Las chapas son de \(27 \times 27\)\,[mm],
+      lo que da para \(105\)~participantes.
+    \end{description}
+  \end{solution}
+
+  Para mayor detalle sobre cómo resolver problemas,
+  particularmente en el ámbito matemático,
+  dirigimos al lector al clásico de Pólya~%
+    \cite{polya45:_how_to_solve_it},%
+    \index{Polya, George@Pólya, George}
+  quien plantea cuatro pasos esenciales:
+  \begin{enumerate}
+  \item
+    \textbf{Entender el problema.}
+    Muchas veces este paso se omite como obvio,
+    pero es frecuente empantanarse
+    por no entender completamente el problema.
+    Como remedio se sugieren preguntas como:
+    \begin{itemize}
+    \item
+      ¿Que se busca encontrar?
+    \item
+      Plantee el problema en sus propias palabras.
+    \item
+      ¿Se le ocurre un dibujo o diagrama
+      que ayude a entender el problema?
+    \item
+      ¿Hay suficiente información para resolver el problema?
+    \end{itemize}
+  \item
+    \textbf{Idear un plan.}
+    Hay muchas maneras razonables de resolver problemas.
+    La habilidad de elegir la estrategia apropiada
+    se adquiere resolviendo sistemática y ordenadamente
+    problemas diversos.
+    Una lista parcial de estrategias a considerar es:
+    \begin{itemize}
+    \item
+      Adivine y verifique.
+    \item
+      Elabore una lista ordenada.
+    \item
+      Elimine posibilidades.
+    \item
+      Use simetría.
+    \item
+      Considere casos especiales.
+    \item
+      Razonamiento directo.
+    \item
+      Busque patrones.
+    \item
+      Resuelva un problema más simple.
+    \item
+      Trabaje en reversa.
+    \end{itemize}
+  \item
+    \textbf{Lleve a cabo el plan.}
+    Esto suele ser más fácil que idear el plan.
+    Generalmente solo requiere cuidado y paciencia,
+    si tiene las habilidades requeridas.
+    Persista.
+    Si no funciona,
+    descártelo e intente otro.
+  \item
+    \textbf{Revise/extienda.}
+    Puede ganar mucho tomándose el tiempo de reflexionar,
+    mirando atrás para ver qué funcionó y qué no.
+    Esto ayuda a elegir la estrategia adecuada en casos futuros
+    relacionados con este.
+  \end{enumerate}
+  Pero tal vez más importante que la habilidad de resolver problemas
+  es hallar preguntas interesantes a resolver.
+  Brown y Walter~\cite{brown05:_art_problem_posing}
+  animan a cultivar el arte de plantear problemas.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

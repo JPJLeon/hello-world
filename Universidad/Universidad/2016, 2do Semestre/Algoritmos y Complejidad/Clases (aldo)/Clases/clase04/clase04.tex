@@ -1,0 +1,272 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{relsize}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#4\quad Interpolación}}
+
+
+\author{Aldo Berrios Valenzuela}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#4\\\textit{Interpolación}}
+\date{Miércoles 10 de Agosto de 2016}
+
+\usepackage{tikz,ifthen}
+\usepackage{pgfplots}
+\usepackage{tikz,ifthen}
+\usetikzlibrary{automata,positioning, babel}
+\usetikzlibrary{calc}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\begin{document}
+\maketitle
+\section{Interpolación}
+\paragraph{Idea:} Nos dan los valores exactos de una función desconocida en $n+1$ puntos $f\nparentesis{x_0}, \ldots, f\nparentesis{x_n}$, queremos hallar una función que tome esos valores (para calcular valores intermedios). El caso más común es utilizar \textit{polinomios}. Para esta ocasión sabemos que hay exactamente \underline{un} polinomio de grado $\leq n$ que pasa por $n+1$ puntos.
+
+Supongamos que hay dos polinomios distintos, $p\nparentesis{x}$ y $q\nparentesis{x}$, de grado $\leq n$ que pasan los $n+1$ puntos (véase la Figura \ref{04::EjemploIdeaInterpolacion}). 
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=3,
+	ymin=-0.6,
+	ymax=2.3,
+	xtick={0.257, 0.72, 1.315, 1.85},
+	xticklabels = {$x_0$, $x_1$, $x_2$, $x_3$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	
+	\addplot [black!30!blue!90, samples = 100, domain = 0.15:2.4] {ln(2*x+0.8)+0.2} node [xshift = 10] (f) {$q\nparentesis{x}$};
+	\addplot [black!10!red!90, smooth, tension = 0.8] coordinates {(0.2, 0.2) (0.55, 1.3) (0.9, 0.6) (1.2, 1.7) (1.5, 0.8) (1.9, 1.9)} node [yshift = 5pt, xshift = 4pt] (p) {$p\nparentesis{x}$};
+	
+	\draw [dashed, blue] (axis cs:0.257, 0) -- (axis cs:0.257, 0.5);
+	\draw [dashed, blue] (axis cs:0.72, 0) -- (axis cs:0.72, 1);
+	\draw [dashed, blue] (axis cs:1.315, 0) -- (axis cs:1.315, 1.43);
+	\draw [dashed, blue] (axis cs:1.85, 0) -- (axis cs:1.85, 1.7);
+	\draw [fill = black!30] (axis cs:0.257, 0.47) circle (0.7mm);
+	\draw [fill = black!30] (axis cs:0.72, 1) circle (0.7mm);
+	\draw [fill = black!30] (axis cs:1.315, 1.43) circle (0.7mm);
+	\draw [fill = black!30] (axis cs:1.85, 1.7) circle (0.7mm);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Sabemos que $p\nparentesis{x}$ y $q\nparentesis{x}$ se interceptan en los puntos $x_0$, $x_1$, $x_2$ y $x_3$. Las formas que tengan estos polinomios no importa.}
+	\label{04::EjemploIdeaInterpolacion}
+\end{figure}
+Entonces $p\nparentesis{x}-q\nparentesis{x}$ es un polinomio de grado $\leq n$ que tiene $n+1$ ceros $x_0, \ldots, x_n$, implicando que $p\nparentesis{x}-q\nparentesis{x}$ es exactamente igual a cero. 
+
+Entre las cosas que podemos hacer para hallar la interpolación de $f\nparentesis{x}$ tenemos:
+\begin{itemize}
+	\item De forma implícita.
+	\item Con un sistema de ecuaciones.
+\end{itemize}
+
+\subsection{De forma implícita}
+Para encontrar la interpolación de $f$ de manera implícita simplemente inventamos un polinomio que pase por los puntos. Para ello podemos usar dos métodos:
+\begin{itemize}
+	\item Lagrange.
+	\item Newton.
+\end{itemize}
+
+\subsubsection{Por Lagrange}
+Consiste en usar el polinomio:
+\begin{align*}
+p\nparentesis{x}=&f\nparentesis{x_0}\dfrac{\nparentesis{x-x_1}\nparentesis{x-x_2}\cdots\nparentesis{x-x_n}}{\nparentesis{x_0-x_1}\nparentesis{x_0-x_2}\ldots \nparentesis{x_0-x_n}} + f\nparentesis{x_1}\dfrac{\nparentesis{x-x_0}\nparentesis{x-x_2}\ldots \nparentesis{x-x_n}}{\nparentesis{x_1-x_0}\nparentesis{x_1-x_2}\ldots \nparentesis{x_1-x_n}}+\cdots+\\
+& f\nparentesis{x_n}\dfrac{\nparentesis{x-x_0}\ldots\nparentesis{x-x_{n+1}}}{\nparentesis{x_n-x_0}\ldots\nparentesis{x_n-x_{n+1}}}\numberthis\label{04::Lagrange:1}\\
+=&\sum_{k\leq n}f\nparentesis{x_k}\prod_{\substack{j\leq n\\j\ne k}}\dfrac{x-x_j}{x_k-x_j}\numberthis\label{04::Lagrange:2}
+\end{align*}
+como interpolación de $f$. Es claro que si evalúa $p$ en alguno de los $x_k$ con $k\in\llaves{1, 2, \ldots, n}$ que nos entregan, se tiene que $p\nparentesis{x_k}=f\nparentesis{x_k}$.
+
+Si los puntos están casi igualmente espaciados, las ecuaciones \eqref{04::Lagrange:1} y \eqref{04::Lagrange:2} resultan bastante agradables.
+
+\subsubsection{Por Newton}
+Podemos escribir:
+\begin{align*}
+Q_0\nparentesis{x}&=f\nparentesis{x_0}=a_0\\
+Q_1\nparentesis{x}&=f\nparentesis{x_0}+\nparentesis{x_1-x_0}\underbrace{\dfrac{f\nparentesis{x_1}-f\nparentesis{x_0}}{x_1-x_0}}_{Q_0\nparentesis{x_1}}\\
+Q_2\nparentesis{x}&=f\nparentesis{x_0}+\nparentesis{x-x_0}\dfrac{f\nparentesis{x_1}-f\nparentesis{x_0}}{x_1-x_0}+\nparentesis{x-x_0}\nparentesis{x-x_1}\dfrac{f\nparentesis{x_2}-Q_1\nparentesis{x_2}}{\nparentesis{x_2-x_0}\nparentesis{x_2-x_1}}\\
+&\vdots\\
+a_k&=\dfrac{f\nparentesis{x_k}-Q_{k-1}\nparentesis{x_k}}{\mathlarger\prod_{0\leq i\leq k-1}\nparentesis{x_k-x_i}}, \qquad Q_k\nparentesis{x}=Q_{k-1}\nparentesis{x}+\nparentesis{x-x_0}\ldots\nparentesis{x-x_{k-1}}a_k
+\end{align*}
+donde $Q_k$ corresponde a la interpolación de grado $k$.
+
+
+Como comentario al margen, la fórmula prohibida que vimos en la primera clase (ecuación \eqref{04::formula:prohibida}) que asegura VTR 2 hace que la precisión se vaya a las pailas.
+\begin{equation}\label{04::formula:prohibida}
+x_2=\dfrac{f\nparentesis{x_1}\cdot x_0-f\nparentesis{x_0}\cdot x_1}{f\nparentesis{x_1}-f\nparentesis{x_0}}
+\end{equation}
+
+\subsection{Por sistema de ecuaciones}
+Suponiendo $p\nparentesis{x}=a_0 + a_1 x + \cdots + a_n x^n$, creamos un sistema de ecuaciones de la forma:
+\begin{equation*}
+\begin{cases}
+p\nparentesis{x_0}=f\nparentesis{x_0}=a_0+a_1x_0+a_2x_0^2+\cdots a_nx_0^n\\
+p\nparentesis{x_1}=f\nparentesis{x_1}=a_0+a_1x_1+a_2x_1^2+\cdots a_nx_1^n\\
+\hspace{9.5mm}\vdots\\
+p\nparentesis{x_n}=f\nparentesis{x_n}=a_0+a_1x_n+a_2x_n^2+\cdots a_nx_n^n
+\end{cases}
+\end{equation*}
+que matricialmente puede ser escrito como:
+\begin{equation}\label{04::Sistema:de:ecuaciones:1}
+	\begin{pmatrix}
+	1 & x_0 & x_0^2 & \cdots & x_0^n\\
+	1 & x_1 & x_1^2 & \cdots & x_1^n\\
+	\vdots &\vdots &\vdots &\ddots&\vdots &\\
+	1 & x_n & x_n^2 & \cdots & x_n^n
+	\end{pmatrix}
+	\begin{pmatrix}
+	a_0\\
+	a_1\\
+	\vdots\\
+	a_n
+	\end{pmatrix}=
+	\begin{pmatrix}
+	f\nparentesis{x_0}\\
+	f\nparentesis{x_1}\\
+	\vdots\\
+	f\nparentesis{x_n}
+	\end{pmatrix}
+\end{equation}
+Con igual cantidad de ecuaciones e incógnitas, el sistema de ecuaciones \eqref{04::Sistema:de:ecuaciones:1} tiene solución si el determinante es distinto de cero 0:
+\begin{equation}\label{04::Determinante:de:Vandermonde=0}
+\nabsoluto{
+	\begin{matrix}
+	1 & \cdots & x_0^n\\
+	\vdots & \ddots & \vdots \\
+	1 & \cdots & x_n^n
+	\end{matrix}}\ne 0
+\end{equation}
+
+La determinante que se muestra en la ecuación \eqref{04::Determinante:de:Vandermonde=0} resulta ser la \textit{determinante de Vandermonde}, la que resulta ser:
+\begin{equation}\label{04::Definicion:Vandermonde:Matrix}
+\nabsoluto{\begin{matrix}
+	1 & x_0 & \cdots & x_0^n\\
+	\vdots & \vdots  & \ddots & \vdots \\
+	1 & x_n & \cdots & x_n^n
+	\end{matrix}}=\prod_{i>j}\nparentesis{x_i-x_j}
+\end{equation}
+donde $x_i\ne x_j$ para $i\ne j$. Por lo tanto, si reemplazamos \eqref{04::Definicion:Vandermonde:Matrix} en \eqref{04::Determinante:de:Vandermonde=0}, observamos que el sistema de ecuaciones \eqref{04::Sistema:de:ecuaciones:1} tiene solución si:
+\begin{equation}
+\prod_{i>j}\nparentesis{x_i-x_j}\ne 0
+\end{equation}
+
+Para demostrar la igualdad \eqref{04::Definicion:Vandermonde:Matrix} podemos usar inducción.
+
+
+
+
+
+
+
+
+\end{document}

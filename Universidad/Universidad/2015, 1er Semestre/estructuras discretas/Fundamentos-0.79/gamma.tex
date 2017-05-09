@@ -1,0 +1,273 @@
+% gamma.tex
+%
+% Copyright (c) 2013-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section[La función \texorpdfstring{$\Gamma$}{gamma}]
+	{\protect\boldmath
+	    La función $\Gamma$
+	 \protect\unboldmath}
+\label{sec:gamma-function}
+\index{\(\Gamma\)|textbfhy}
+
+  Tendremos ocasión de usar la función \(\Gamma\)
+  (gamma mayúscula),
+  interesa deducir sus propiedades elementales.
+  Para \(z\) complejo,
+  se define:
+  \begin{equation}
+    \label{eq:Gamma-definition}
+    \Gamma(z)
+      = \int_0^\infty t^{z - 1} \mathrm{e}^{-t} \, \mathrm{d} t
+  \end{equation}
+  Para \(t > 0\) fijo el integrando de~\eqref{eq:Gamma-definition}
+  es holomorfo en \(z\),
+  con lo que esto define una función holomorfa en el semiplano
+  \(\Re z > 1\).%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!funcion holomorfa@función holomorfa}
+% Fixme: Completar
+  Integrando por partes:
+  \begin{equation*}
+    \Gamma(z)
+      = \int_0^\infty t^{z - 1} \mathrm{e}^{-t} \, \mathrm{d} t
+      = \frac{1}{z}
+	  \, \int_0^\infty \mathrm{e}^{-t} \, \mathrm{d} t^z
+      = \left. \frac{1}{z} \, t^z \mathrm{e}^{-t} \right|_0^\infty
+	  + \frac{1}{z}
+	      \, \int_0^\infty t^z \mathrm{e}^{-t} \, \mathrm{d} t
+      = \frac{1}{z} \, \Gamma(z + 1)
+  \end{equation*}
+  Tenemos así la \emph{fórmula de reducción}:
+  \begin{equation}
+    \label{eq:Gamma-reduction}
+    \index{\(\Gamma\)!formula de reduccion@fórmula de reducción}
+    \Gamma(z + 1)
+      = z \, \Gamma(z)
+  \end{equation}
+  También tenemos \(\Gamma(1) = 1\),
+  lo que para \(n \in \mathbb{N}\) por la fórmula de reducción da:
+  \begin{equation}
+    \label{eq:Gamma-factorial}
+    \index{\(\Gamma\)!factorial}
+    \Gamma(n)
+      = (n - 1)!
+  \end{equation}
+  Incidentalmente,
+  como para \(z \in - \mathbb{N}_0\)
+  resulta \(1 / \Gamma(z) = 0\)
+  es consistente nuestra convención~\eqref{eq:1/k!-convention}
+  que \(1 / n! = 0\) si \(n\) es un entero negativo.
+
+  Si \(\Re z > 1\),
+  tenemos el valor de~\eqref{eq:Gamma-definition}.
+  Fijemos entonces \(z\) con \(\Re z \le 1\),
+  y sea \(n\) tal que \(\Re (z + n) > 0\).
+  En un entorno de \(z + n\) la función \(\Gamma\) es holomorfa,
+  y por~\eqref{eq:Gamma-reduction} tenemos:
+  \begin{equation*}
+    \Gamma(z + n)
+      = z^{\underline{n + 1}} \, \Gamma(z)
+  \end{equation*}
+  Vale decir,
+  si \(\Re z < 0\),
+  tiene sentido definir con \(n = \lceil - \Re z \rceil\):%
+    \index{potencia!factorial}
+  \begin{equation}
+    \label{eq:Gamma-reduction-n}
+    \Gamma(z)
+      = \frac{\Gamma(z + n)}{z^{\underline{n + 1}}}
+  \end{equation}
+  Es claro
+  que esto nos mete en problemas solo si \(z \in -\mathbb{N}_0\).
+  En el entorno de \(-n\),
+  para \(\lvert w \rvert\) chico,
+  la función queda representada por:
+  \begin{equation*}
+    \Gamma(- n + w)
+      = \frac{\Gamma(1 + w)}{(-n + w)^{\underline{n + 1}}}
+  \end{equation*}
+  Como \(z^{\underline{n + 1}}\) tiene un cero simple en \(-n\),
+  vemos que \(\Gamma(z)\)
+  tiene polos simples en los enteros negativos.
+  Es fácil calcular sus residuos:%
+    \index{\(\Gamma\)!residuo}
+  \begin{equation}
+    \label{eq:Gamma-residues}
+    \begin{split}
+      \res(\Gamma, 0)
+	&= \lim_{z \rightarrow 0} z \frac{\Gamma(z + 1)}{z}
+	 = 1 \\
+      \res(\Gamma, -n)
+	&= \lim_{z \rightarrow -n} (z + n)
+	     \frac{\Gamma(z + n + 1)}{z^{\underline{n + 1}}}
+	 = \frac{1}{(-n)^{\underline{n}}}
+	 = \frac{(-1)^n}{n!}
+    \end{split}
+  \end{equation}
+
+  La función \(\Gamma\) satisface muchas identidades notables.
+  Por ejemplo,
+  tenemos:
+  \begin{theorem}[Fórmula de reflexión de Euler]
+    \index{Euler, formula de reflexion para \(\Gamma\)@Euler, fórmula de reflexión para \(\Gamma\)|see{\(\Gamma\)!fórmula de reflexión}}
+    \index{\(\Gamma\)!formula de reflexion@fórmula de reflexión}
+    Se cumple:
+    \begin{equation}
+      \label{eq:Gamma-reflection}
+      \Gamma(z) \, \Gamma(1 - z)
+	= \frac{\pi}{\sin \pi z}
+      \end{equation}
+  \end{theorem}
+  Seguimos la demostración de Stein y~Shakarchi~%
+    \cite{stein10:_compl_analy}.
+  \begin{proof}
+    Primeramente, \(\pi / \sin \pi z\)
+    tiene polos en \(\mathbb{Z}\).
+    El residuo en \(n \in \mathbb{Z}\) es:
+    \begin{equation*}
+      \res \left( \frac{\pi}{\sin \pi z}, n \right)
+	= \frac{\pi}{\pi \cos \pi n}
+	= (-1)^n
+    \end{equation*}
+    La función \(\Gamma(1 - z)\) tiene polos simples
+    en \(z \in - \mathbb{N}\),
+    allí \(\Gamma(z)\) es holomorfa.
+    Para \(n \in \mathbb{N}\):
+    \begin{equation*}
+      \res(\Gamma(z) \, \Gamma(1 - z), - n)
+	= \res(\Gamma(z), -n) \, \Gamma(n + 1)
+	= \frac{(-1)^n}{n!} \, n!
+	= (-1)^{-n}
+    \end{equation*}
+    De la misma forma,
+    para \(n \in \mathbb{N}_0\):
+    \begin{equation*}
+      \res(\Gamma(z) \, \Gamma(1 - z), n)
+	= (-1)^n
+    \end{equation*}
+    O sea,
+    los polos y residuos respectivos de ambas funciones coinciden.
+
+    Enseguida,
+    \(\Gamma(z) \, \Gamma(1 - z)\)
+    y \(\pi / \sin \pi z\) son ambas periódicas,
+    con período 1:
+    \begin{equation*}
+      \Gamma(z + 1) \, \Gamma(1 - (z + 1))
+	= z \Gamma(z) \cdot \frac{\Gamma(1 - z)}{z}
+	= \Gamma(z) \, \Gamma(1 - z)
+    \end{equation*}
+
+    Finalmente,
+    demostramos que ambas funciones coinciden en \(0 < s < 1\).
+    Podemos escribir:
+    \begin{equation*}
+      \Gamma(1 - s)
+	= \int_0^\infty u^{-s} \mathrm{e}^{-u} \, \mathrm{d} u
+	= t \int_0^\infty \mathrm{e}^{-v t} (v t)^{-s}
+	      \, \mathrm{d} v
+    \end{equation*}
+    Acá usamos el cambio de variables \(u = v t\).
+    Luego:
+    \begin{align*}
+      \Gamma(s) \, \Gamma(1 - s)
+	&= \int_0^\infty
+	       \mathrm{e}^{-t} t^{s - 1} \, \Gamma(1 - s)
+	     \, \mathrm{d} t \\
+	&= \int_0^\infty
+	     \mathrm{e}^{-t} t^{s - 1}
+	       \left(
+		 t \int_0^\infty \mathrm{e}^{- v t} (v t)^{-s}
+		     \, \mathrm{d} v
+	       \right) \, \mathrm{d} t \\
+	&= \int_0^\infty
+	     \int_0^\infty
+	       \mathrm{e}^{-t (1 + v)} v^{-s} \,
+		 \mathrm{d} v \, \mathrm{d} t \\
+	&= \int_0^\infty \frac{v^{-s}}{1 + v} \, \mathrm{d} v
+    \end{align*}
+    Con el cambio de variables \(v = \mathrm{e}^t\)
+    queda la integral que evaluamos
+    en~\eqref{eq:integral-Gamma(z)Gamma(1-z)}:
+    \begin{equation*}
+      \int_{-\infty}^\infty
+	\frac{\mathrm{e}^{- s t}}{1 + \mathrm{e}^t} \, \mathrm{d} t
+	= \frac{\pi}{\sin s \pi}
+    \end{equation*}
+
+    Uniendo todas las piezas,
+    ambas funciones deben ser iguales.
+  \end{proof}
+  De acá resulta directamente
+  el valor para argumento no entero más usado:
+  \begin{align}
+    ( \Gamma( 1/2 ))^2
+      &= \Gamma(1/2) \, \Gamma(1 - 1/2)
+       = \frac{\pi}{\sin \pi / 2}
+       = \pi \notag \\
+    \Gamma(1/2)
+      &= \sqrt{\pi} \label{eq:Gamma(1/2)}
+  \end{align}
+
+  Íntimamente relacionada es la función \(\mathrm{B}\)
+  (beta mayúscula),%
+    \index{\(\mathrm{B}\)|textbfhy}
+  definida para \(\Re x, \Re y > 0\):
+  \begin{equation}
+    \label{eq:definition-Beta}
+    \mathrm{B}(x, y)
+      = \int_0^1 t^{x - 1} (1 - t)^{y - 1} \, \mathrm{d} t
+  \end{equation}
+  Es claro que es simétrica:
+  \begin{equation}
+    \label{eq:Beta-symmetry}
+    \mathrm{B}(x, y)
+      = \mathrm{B}(y, x)
+  \end{equation}
+  También:
+  \begin{equation*}
+    \Gamma(x) \, \Gamma(y)
+      = \int_0^\infty \mathrm{e}^{-u} u^{x - 1} \, \mathrm{d} u
+	  \int_0^\infty \mathrm{e}^{-v} v^{y - 1} \, \mathrm{d} v
+      = \int_0^\infty \int_0^\infty
+	  \mathrm{e}^{-u - v} u^{x - 1} v^{y - 1}
+	     \, \mathrm{d} u \, \mathrm{d} v
+  \end{equation*}
+  El cambio de variables \(u = s t\) y \(v = s (1 - t)\) da:
+  \begin{equation*}
+    \Gamma(x) \, \Gamma(y)
+      = \int_0^\infty \mathrm{e}^{-s} s^{x + y - 1} \, \mathrm{d} s
+	  \int_0^1 t^{x - 1} (1 - t)^{y - 1} \, \mathrm{d} t
+      = \Gamma(x + y) \mathrm{B}(x, y)
+  \end{equation*}
+  de donde resulta la identidad básica,
+  que sirve para definir \(\mathrm{B}(x, y)\):
+  \begin{equation}
+    \label{eq:Gamma-Beta}
+    \mathrm{B}(x, y)
+      = \frac{\Gamma(x) \, \Gamma(y)}{\Gamma(x + y)}
+  \end{equation}
+
+  Por la fórmula de reducción~\eqref{eq:Gamma-reduction-n}%
+    \index{\(\Gamma\)!formula de reduccion@fórmula de reducción}
+  tenemos de~\eqref{eq:coeficiente-binomial}:%
+    \index{coeficiente binomial}
+  \begin{equation*}
+    \binom{\alpha}{n}
+      = \frac{\alpha^{\underline{n}}}{n!}
+      = \frac{\Gamma(\alpha + 1)}{\Gamma(\alpha - n + 1) \, n!}
+  \end{equation*}
+  Con~\eqref{eq:Gamma-factorial}
+  esto se parece a~\eqref{eq:coeficiente-binomial-factorial},
+  que hace sentido adoptar como definición:
+  \begin{equation}
+    \label{eq:complex-binomial-coefficient}
+    \binom{m + n}{m}
+      = \frac{(m + n)!}{m! \, n!}
+      = \frac{\Gamma(m + n + 1)}{\Gamma(m + 1) \, \Gamma(n + 1)}
+  \end{equation}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

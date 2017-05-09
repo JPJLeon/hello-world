@@ -1,0 +1,246 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{red!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+\renewcommand{\lstlistingname}{Listado}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#21 \quad Métodos de Ordenamiento}}
+
+
+\author{Aldo Berrios Valenzuela}
+
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]
+	Clase \#21\\
+	Métodos de Ordenamiento}
+
+\date{Martes 25 de octubre de 2016}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\begin{document}
+\maketitle
+
+\section{Métodos de Ordenamiento}
+Los métodos de ordenamiento de la burbuja, inserción realizan una inversión por cada permutación. A través del método simbólico, podemos representar la clase permutación $\mathcal{P}$ como sigue:
+\begin{equation*}
+\mathcal{P} = \mathcal{E} + \mathcal{Z} \star \mathcal{P}
+\end{equation*}
+donde la clase pasada, vimos que la función generatriz resultante para una clase de permutación no es más que la ecuación \eqref{21::Generatriz:permutacion}
+\begin{equation}\label{21::Generatriz:permutacion}
+\hat P\nparentesis{z} = \dfrac{1}{1-z}
+\end{equation}
+
+
+Nos interesan las inversiones de permutaciones. Sea $\iota\nparentesis{\pi}$ el número de inversiones de la permutación $\pi$. Como el orden de los elementos en la permutación $\pi$ es de importancia (ya que define la cantidad de inversiones que debemos hacer), definimos la función generatriz exponencial \eqref{21::EFG:inversiones} para representar dichas inversiones de $\pi$.
+\begin{equation}\label{21::EFG:inversiones}
+\hat I \nparentesis{z} = \sum_{\pi \in \mathcal{P}} \iota\nparentesis{\pi} \dfrac{z^{\nabsoluto{\pi}}}{\nabsoluto{\pi}!}
+\end{equation}
+Nos interesa el número promedio de inversiones en permutaciones de tamaño $n$:
+\begin{align*}
+E_n\nparentesis{\iota} &= \dfrac{\ncorchetes{z^n}\hat I \nparentesis{z}}{\ncorchetes{z^n}\hat P \nparentesis{z}}\numberthis\label{21::Cociente:Promedio}\\
+&= \ncorchetes{z^n}\hat I \nparentesis{z}
+\end{align*}
+A simple vista, resulta algo difícil de ver la razón de por qué el número promedio de inversiones se define como muestra \eqref{21::Cociente:Promedio}. Lo explicamos por partes:
+\begin{itemize}
+	\item Cada $\pi_i \in \mathcal{P}$ representa una permutación sobre un arreglo de tamaño $n$ (por simplicidad, suponemos que no hay elementos repetidos).
+	
+	\item Cada una de las permutaciones $\pi_i \in \mathcal{P}$ tiene $\iota \nparentesis{\pi_i}$ inversiones.
+	
+	\item En un arreglo de tamaño $n$, la cantidad de permutaciones $\pi_i \in \mathcal P$ es $n!$. 
+	
+	\item Por lo tanto, para un arreglo de tamaño $n$, la cantidad de inversiones sería (consideramos todas las permutaciones):
+	\begin{equation}
+	\sum _{1 \leq i \leq n!} \iota \nparentesis{\pi _k}
+	\end{equation}
+	
+	\item Usando la definición de promedio, dividimos por la cantidad total de permutaciones presentes en un arreglo de tamaño $n$. Usando funciones generatrices, el promedio de inversiones estaría dado por \eqref{21::Cociente:Promedio}.
+\end{itemize}
+
+La receta para construir permutaciones hace $\pi \star \nparentesis{1}$. Este \emph{conjunto} de permutaciones tiene las inversiones de $\pi$, $\nabsoluto{\pi} + 1$ veces. Si al último elemento (el $\nparentesis{1}$) se le asigna el rótulo $j$, aporta $\nabsoluto{\pi} + 1 -j$ inversiones. Pero $1 \leq j \leq \nabsoluto{\pi} + 1$:
+\begin{align*}
+\sum_{1 \leq j \leq \nabsoluto{\pi}+1}\nparentesis{\nabsoluto{\pi} + 1 - j}&=\sum_{1 \leq j \leq \nabsoluto{\pi} + 1} \nparentesis{\nabsoluto{\pi} + 1} - \sum_{1 \leq j \leq \nabsoluto{\pi} + 1}j\\
+&= \nparentesis{\nabsoluto{\pi} + 1}^2 - \dfrac{\nparentesis{\pi + 1} \nabsoluto{\pi}}{2}\\
+&= \nparentesis{\nabsoluto{\pi} + 1} \nparentesis{\nabsoluto{\pi} + 1-\dfrac{\nabsoluto{\pi}}{2}}\\
+&=\dfrac{\nparentesis{\nabsoluto{\pi} + 1} \nparentesis{\nabsoluto{\pi} + 2}}{2}
+\end{align*}
+Por lo tanto, el número total de inversiones en $\pi \star \nparentesis{1}$ es:
+\begin{equation*}
+\nparentesis{\nabsoluto{\pi} + 1} \iota\nparentesis{\pi} + \dfrac{\nparentesis{\nabsoluto{\pi} + 1}}{2}
+\end{equation*}
+Entonces:
+\begin{align*}
+\hat I \nparentesis{z} &= 0 + \sum_{\pi \in \mathcal{P}}\nparentesis{\nparentesis{\nabsoluto{\pi} + 1} \iota\nparentesis{\pi} + \dfrac{\nparentesis{\nabsoluto{\pi} + 1}}{2}}\dfrac{z^{\nabsoluto{\pi} + 1}}{\nparentesis{\nabsoluto{\pi} + 1}!}\\
+&= z \sum_{\pi \in \mathcal{P}}\iota \nparentesis{\pi}\dfrac{z^{\nabsoluto{\pi}}}{\nabsoluto{\pi}!} + \dfrac{1}{2}z\sum_{\pi \in \mathcal{P}}\nabsoluto{\pi} \dfrac{z^{\nabsoluto{\pi}}}{\nabsoluto{\pi}!}\\
+&= z \hat I \nparentesis{z} + \dfrac{1}{2}z\sum_{k \geq 0}kz^k
+\end{align*}
+\begin{align*}
+\hat I \nparentesis{z}&=z \hat I \nparentesis{z} + \dfrac{1}{2}z^2 \dfrac{d}{dz} \dfrac{1}{1-z}\\
+&= z \hat I \nparentesis{z} + \dfrac{1}{2}\dfrac{z^2}{\nparentesis{1-z}^2}\\
+\hat I \nparentesis{z} &= \dfrac{1}{2} \dfrac{z^2}{\nparentesis{1-z}^3}\\
+\ncorchetes{z^n} \hat I \nparentesis{z} &= \dfrac{1}{2}\ncorchetes{z^{n-2}}\nparentesis{1-z} ^{-3}\\
+&= \dfrac{1}{2}\binom{-3}{n-2}\\
+&= \dfrac{1}{2}\binom{n-2 + \nparentesis{3-1}}{3-1}\\
+&= \dfrac{1}{2}\binom{n}{2}\\
+&=\binom{n\nparentesis{n-1}}{4}
+\end{align*}
+Por lo tanto, asintóticamente se tiene que:
+\begin{equation}
+E_n\nparentesis{\iota} \sim \dfrac{n^2}{4}
+\end{equation}
+Los nuevos elementos aportan entre $0$ y $\nabsoluto{\pi}$ nuevas inversiones:
+\begin{equation*}
+\sum_{0 \leq k \leq \nabsoluto{\pi}} \dfrac{\nabsoluto{\pi}\nparentesis{\nabsoluto{\pi}+1}}{4}
+\end{equation*}
+
+
+Siguiente método más simple: shell sort.
+
+\subsection{Selection Sort}
+Recordemos el algoritmo:
+\begin{lstlisting}
+void sort(double a[], int n){
+	for (int i = 1; i < n; i++) {
+		int imax = i;
+		double max = a[i];
+		for (int j = i + 1; j < n; j++) {
+			if (a[j] > max) {
+				min = a[j]; imin = j;
+			}
+		}
+		double tmp = a[imin]; a[imin] = a[i]; a[i] = tmp;
+	}
+}
+\end{lstlisting}
+Nos interesa el número de asignaciones a \texttt{max}.
+\begin{itemize}
+	\item [$\rightsquigarrow$] Máximo de izquierda a derecha en la permutación $\pi, \chi \nparentesis{\pi}$ ($\chi\nparentesis{\pi}$: máximos de izquierda a derecha en la permutación $\pi$).
+\end{itemize}
+Si en $\pi \star \nparentesis{1}$ el último elemento $\nabsoluto{\pi} + 1$, hay un máximo más; en caso contrario, nada cambia. El número total de máximo es:
+\begin{equation*}
+\nparentesis{\nabsoluto{\pi} + 1} \chi \nparentesis{\pi} + 1
+\end{equation*}
+O sea, para:
+\begin{equation*}
+\hat M \nparentesis{z} = \sum_{\pi \in \mathcal{P}}\chi \nparentesis{\pi} \dfrac{z^{\nabsoluto{\pi}}}{\nabsoluto{\pi}!}
+\end{equation*}
+De la ecuación simbólica para permutaciones:
+\begin{align*}
+\hat M \nparentesis{z} &= 0 + \sum_{\pi \in \mathcal{P}}\nparentesis{\nparentesis{\nabsoluto{\pi} + 1} \chi \nparentesis{\pi} + 1}\\
+&= z\sum_{\pi \in \mathcal{P}}\chi \nparentesis{\pi}\dfrac{z^{\nabsoluto{\pi}}}{\nabsoluto{\pi}!} + z\sum_{\pi \in \mathcal{P}}\dfrac{z^{\nabsoluto{\pi}}}{\nparentesis{\nabsoluto{\pi} + 1}!}\\
+&=z\hat M \nparentesis{z} + \sum_{k \geq 0} \dfrac{z^{k+1}}{k+1}\\
+&=\hat M\nparentesis{z}= \dfrac{1}{1-z}\ln\dfrac{1}{1-z}\\
+\ncorchetes{z^n}\hat M \nparentesis{z} &= H_n = \sum_{1 \geq k \geq n}\dfrac{1}{k} = \ln n + \gamma + O \nparentesis{\dfrac{1}{n}}
+\end{align*}
+Donde $\gamma \approx 0.5772156\ldots $ y además, se tiene que $H_n$ son los números armónicos. La demostración:
+\begin{align*}
+\dfrac{1}{1-z}\sum_{k\geq 1} \dfrac{z^k}{k} &= \sum_{n \geq 0}\nparentesis{\sum_{1\geq k \geq n}\dfrac{1}{n}}z^n\\
+&= \sum_{n \geq 0} H_n z^n
+\end{align*}
+
+
+\end{document}

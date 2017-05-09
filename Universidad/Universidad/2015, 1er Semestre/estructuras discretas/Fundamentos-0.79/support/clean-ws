@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# clean-ws
+#
+# Copyright (c) 2014-2015 Horst H. von Brand
+# Bajo licencia MIT. Vea LICENSE-MIT para detalles
+
+for f; do
+	case "$f" in
+	*.dia | *.fig | *.png | *.jpg | *.jpeg)
+		break;;
+	esac
+
+	tmp=$(mktemp "$f".XXXXXX)
+	/bin/rm -f "$tmp"
+	/usr/bin/unexpand -a "$f" > "$tmp"
+	/usr/bin/perl -pi -e 's;\s+$;\n;' "$tmp"
+	if ! /bin/cmp -s "$f" "$tmp"; then
+		/bin/chmod --reference="$f" "$tmp"
+		/bin/mv "$tmp" "$f"
+
+	else
+		/bin/rm -f "$tmp"
+	fi
+done

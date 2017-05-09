@@ -1,0 +1,11 @@
+# .gitignore
+#
+# Copyright (c) 2012-2013 Horst H. von Brand
+# Bajo licencia MIT. Vea LICENSE-MIT para detalles
+
+*.o
+
+coin-changing
+tst-bs
+subset
+

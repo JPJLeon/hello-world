@@ -1,0 +1,83 @@
+// Example program
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+vector<int> v_global;
+int booleano=0;
+int romper=0;
+
+int funcion_combinatoria(int arreglo[],int size,int tam_caset,vector<int> v_aux){
+    if (size!=1){
+        int fijo=arreglo[0];        //fijo el primer valor, por ejemplo "a" de {a,b,c,d}
+
+        for(int i=1;i<size;i++){
+            if(fijo+arreglo[i]==tam_caset){
+                v_aux.push_back(arreglo[i]);          //evaluo si mi valor fijo "a" me da   
+                 v_global=v_aux;
+                booleano=1;                     //el tamaño deseado al sumarle el segundo valor "b",
+                break;
+            }                                    
+        
+            int a_aux[size-1];
+            a_aux[0]=fijo+arreglo[i];       //se crea un arreglo auxiliar que
+                                            //tendra la estructura {a+b,c,d}
+            for(int j=1;j<size-1;j++){
+                if(j>=i){
+                    a_aux[j]=arreglo[j+1];
+                }
+                else{
+                    a_aux[j]=arreglo[j];
+                }
+            }
+            if(booleano==0){
+                v_aux.push_back(arreglo[i]);
+                funcion_combinatoria(a_aux,size-1,tam_caset,v_aux);
+                if(booleano==0){
+                    v_aux.pop_back();
+                }
+            }
+            if(booleano!=0){
+                break;
+            }
+        }
+    }
+    return 0;
+}
+
+int main(){
+    int numeros[4]={9,3,2,4};
+    int tam_n=(sizeof(numeros)/sizeof(*numeros));
+    int caset=10;
+    int arreglo_aux[tam_n];
+    while(caset>0){
+        for(int i=0;i<tam_n-1;i++){
+            v_global={0};
+            v_global[0]=numeros[0];
+            funcion_combinatoria(numeros,tam_n,caset,v_global);
+      
+            for(int j=0;j<tam_n-1;j++){
+                arreglo_aux[j]=numeros[j+1];
+            }
+            arreglo_aux[tam_n-1]=numeros[0];
+
+            if(booleano!=0){
+                for (unsigned el=0; el<v_global.size(); el++){
+				            cout << v_global[el]<< " ";		    
+                }
+                cout<<"Duracion: "<<caset<<endl;
+                romper=1;
+                break;
+            }
+      
+            for(int k=0;k<tam_n;k++){
+                numeros[k]=arreglo_aux[k];
+            }        
+        }
+        if(romper!=0){
+            break;
+        }
+        caset--;
+    }
+    return 0;
+}

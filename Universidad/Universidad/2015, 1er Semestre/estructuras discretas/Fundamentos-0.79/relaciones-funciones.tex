@@ -1,0 +1,958 @@
+% relaciones-funciones.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Relaciones y funciones}
+\label{cha:relaciones-funciones}
+
+  Conceptos básicos de todas las matemáticas
+  son los de \emph{relación} y \emph{función}.
+  A pesar de su simplicidad,
+  ofrecen aspectos de bastante interés.
+  Nuevamente,
+  la mayor parte del material presentado
+  debe considerarse como sistematización de conocimientos previos.
+  Una buena sistematización del área es el texto de Düntsch y Gediga~%
+    \cite{duentsch00:_sets_relat_funct}.
+
+\section{Relaciones}
+\label{sec:relaciones}
+\index{relacion@relación|textbfhy}
+
+  \begin{definition}
+    Sean \(\mathcal{A}\) y \(\mathcal{B}\) conjuntos.
+    Una \emph{relación} \(R\) entre \(\mathcal{A}\) y \(\mathcal{B}\)
+    es un subconjunto de \(\mathcal{A} \times \mathcal{B}\).
+
+    Si \((a, b) \in R\),
+    se anota \(a \mathrel{R} b\).
+    Similarmente,
+    para \((a, b) \notin R\)
+    se anota \(a \mathrel{\centernot R} b\).
+  \end{definition}
+
+  Esto en rigor solo describe \emph{relaciones binarias},
+  es perfectamente posible considerar relaciones
+  de un solo elemento, de dos, tres o más elementos.
+  Las relaciones binarias son lejos las más importantes,
+  así que nos restringiremos a ellas acá.
+
+  Según esta definición son relaciones ``menor a''
+  entre números naturales,
+  ``pololea con'' entre personas,
+  ``precio de'' entre libros y sus precios en las librerías de la ciudad.
+  Nótese que perfectamente pueden haber varios elementos relacionados,
+  como por ejemplo \(1 < 2\), \(1 < 17\), \(1 < 31\).
+  De la misma forma,
+  el mismo libro puede tener precios diferentes
+  en distintas librerías,
+  pueden haber varias ediciones,
+  o una librería tiene copias usadas más o menos deterioradas.
+
+  Relacionado a lo anterior están los siguientes conceptos:
+  \begin{definition}
+    \index{relacion@relación!transpuesta|textbfhy}
+    Sea \(R\) una relación entre \(\mathcal{A}\) y \(\mathcal{B}\).
+    A la relación:
+    \begin{equation*}
+      R^{-1}
+	= \{(y, x) \colon x \mathrel{R} y\}
+    \end{equation*}
+    se le llama la \emph{transpuesta} de \(R\).
+  \end{definition}
+  \begin{definition}
+    \index{relacion@relación!composicion@composición|textbfhy}
+    Sea \(R_1\) una relación entre \(\mathcal{A}\) y \(\mathcal{B}\),
+    y \(R_2\) una relación entre \(\mathcal{B}\) y \(\mathcal{C}\).
+    A la relación \(R\) definida mediante:
+    \begin{equation*}
+      R = \{(x, z) \colon \exists y \in \mathcal{B} \colon
+			    x \mathrel{R_1} y \wedge y \mathrel{R_2} z\}
+    \end{equation*}
+    se le llama la \emph{composición} de \(R_1\) y \(R_2\),
+    y se anota \(R = R_2 \circ R_1\)
+  \end{definition}
+  Si consideramos que \(x \mathrel{R_1} y\)
+  como que la relación \(R_1\) lleva de \(x\) a \(y\),
+  y de la misma forma \(y \mathrel{R_2} z\)
+  que \(R_2\) lleva de \(y\) a \(z\),
+  entonces \(R_2 \circ R_1\)
+  es una relación que lleva de \(x\) a \(z\).
+
+  El caso más común de relación es el en que ambos conjuntos son el mismo.
+  Si \(R \subseteq \mathcal{U} \times \mathcal{U}\)
+  se habla de una relación sobre \(\mathcal{U}\).
+  Algunas propiedades de relaciones entre elementos del mismo conjunto
+  tienen nombres especiales:
+  \begin{definition}
+    Sea \(R\) una relación sobre \(\mathcal{U}\).
+    Entonces:
+    \begin{itemize}
+    \item
+      \index{relacion@relación!reflexiva|textbfhy}
+      Si para todo \(a \in \mathcal{U}\) se cumple \(a \mathrel{R} a\),
+      la relación se llama \emph{reflexiva}.
+    \item
+      \index{relacion@relación!irreflexiva|textbfhy}
+      Si para ningún \(a \in \mathcal{U}\) se cumple \(a \mathrel{R} a\),
+      la relación se llama \emph{irreflexiva}.
+    \item
+      \index{relacion@relación!transitiva|textbfhy}
+      Si para todo \(a, b, c \in \mathcal{U}\)
+      se cumple que si \(a \mathrel{R} b\)
+      y \(b \mathrel{R} c\) entonces \(a \mathrel{R} c\)
+      la relación se dice \emph{transitiva}.
+    \item
+      \index{relacion@relación!simetrica@simétrica|textbfhy}
+      Si para todo \(a, b \in \mathcal{U}\)
+      siempre que \(a \mathrel{R} b\) se tiene que \(b \mathrel{R} a\),
+      a la relación se le llama \emph{simétrica}.
+    \item
+      \index{relacion@relación!antisimetrica@antisimétrica|textbfhy}
+      Si para todo \(a, b \in \mathcal{U}\),
+      siempre que \(a \mathrel{R} b\)
+      y \(b \mathrel{R} a\) entonces \(a = b\)
+      se dice que la relación es \emph{antisimétrica}.
+    \item
+      \index{relacion@relación!total|textbfhy}
+      Si para todo \(a, b \in \mathcal{U}\),
+      se cumple \(a \mathrel{R} b\) o \(b \mathrel{R} a\),
+      se le llama relación \emph{total}.
+    \end{itemize}
+  \end{definition}
+  Ejemplos de relaciones reflexivas son \(=\) y \(\le\) sobre~\(\mathbb{Z}\).
+  La relación \(\ne\) no es reflexiva ni transitiva ni antisimétrica,
+  pero es simétrica,
+  la relación \(<\) en \(\mathbb{R}\) es irreflexiva,
+  es transitiva,
+  no es simétrica y es antisimétrica
+  (en forma vacía,
+   ya que no hay \(a, b \in \mathbb{R}\) con \(a < b\) y \(b < a\)).
+  La relación ``pololea con'' es simétrica,
+  y definitivamente no es antisimétrica.
+  La relación \(\ge\) en \(\mathbb{Z}\) es antisimétrica,
+  y no es simétrica.
+  Tanto \(\le\) como \(\ge\) sobre \(\mathbb{R}\) son totales
+  (para cada par \(a\), \(b\)
+   se cumple una de \(a \le b\) o \(b \le a\),
+   incluso cuando \(a = b\)).
+  La relación ``conoce a'' entre personas no es total
+  (hay gente que no se conoce entre sí).
+
+% Fixme: Mostrar ejemplos de c/propiedad por separado (o ejercicios...)
+% Fixme: Diagramas de Hasse para relaciones, funciones, ...
+
+  Nótese que una relación total
+  sobre un conjunto no vacío necesariamente es reflexiva,
+  ya que la definición exige que para cualquier par \(a\), \(b\)
+  (incluyendo el caso \(a = b\))
+  debe darse una de \(a \mathrel{R} b\) o \(b \mathrel{R} a\).
+
+  Algunas combinaciones de las propiedades se repiten frecuentemente
+  y llevan a propiedades interesantes de la relación,
+  con lo que merecen nombres especiales.
+  \begin{definition}
+    \index{relacion@relación!equivalencia|textbfhy}
+    Sea \(R\) una relación sobre \(\mathcal{U}\).
+    Si \(R\) es reflexiva, simétrica y transitiva
+    se le llama \emph{relación de equivalencia}.
+  \end{definition}
+  El caso clásico de relación de equivalencia es la igualdad.
+  Otros ejemplos son la congruencia y semejanza geométricas.
+  Veremos
+  (y usaremos)
+  muchas más en lo que sigue.
+
+  La característica más importante de las relaciones de equivalencia
+  está dada por el siguiente teorema.
+  \begin{theorem}
+    \label{theo:clases-equivalencia}
+    \index{relacion@relación!equivalencia!clases|see{clases de equivalencia}}
+    \index{clases de equivalencia|textbfhy}
+    Sea \(R \subseteq \mathcal{U}^2\) una relación de equivalencia.
+    Entonces los conjuntos definidos por:
+    \begin{equation*}
+      [a]_R
+	= \{x \in \mathcal{U} \colon a \mathrel{R} x\}
+    \end{equation*}
+    son disjuntos y su unión es todo \(\mathcal{U}\).
+  \end{theorem}
+  \begin{proof}
+    Hay dos cosas que demostrar acá:
+    \begin{enumerate}
+    \item
+      \(\displaystyle \bigcup_{a \in \mathcal{U}} [a]_R = \mathcal{U}\)
+    \item
+      \(\displaystyle [a]_R \cap [b]_R = \varnothing\) o \([a]_R = [b]_R\)
+    \end{enumerate}
+
+    Para el primer punto,
+    por reflexividad
+    \(x \in [x]_R\),
+    con lo que todo elemento \(x \in \mathcal{U}\)
+    aparece al menos en la clase \([x]_R\),
+    y la unión de todas las clases es \(\mathcal{U}\).
+
+    Para el segundo punto
+    consideremos dos elementos distintos \(a, b \in \mathcal{U}\),
+    y veamos las clases \([a]_R\) y \([b]_R\).
+    Si estos conjuntos son disjuntos,
+    no hay nada que demostrar.
+    Si no son disjuntos,
+    habrá \(x \in \mathcal{U}\)
+    en la intersección,
+    o sea \(x \in [a]_R\) y \(x \in [b]_R\).
+    Tenemos:
+    \begin{alignat}{2}
+      x &\mathrel{R} a
+	&\qquad
+	& \text{por suposición}		\label{eq:EC-1} \\
+      x &\mathrel{R} b
+	&&\text{por suposición}		\label{eq:EC-2} \\
+      a &\mathrel{R} x
+	&& \text{por simetría de \(R\) y~\eqref{eq:EC-2}} \label{eq:EC-3} \\
+      a &\mathrel{R} b
+	&& \text{por transitividad de \(R\) con~\eqref{eq:EC-2}
+		 y~\eqref{eq:EC-3}} \label{eq:EC-4} \\
+    \intertext{
+      Ahora bien,
+      si elegimos \(y \in [a]_R\):
+    }
+      y &\in [a]_R
+	&& \text{por suposición} \label{eq:EC-5} \\
+      y &\mathrel{R} a
+	&& \text{por definición de \([a]_R\)} \label{eq:EC-6} \\
+      y &\mathrel{R} b
+	&& \text{por transitividad,
+		 de~\eqref{eq:EC-6} con~\eqref{eq:EC-4}} \label{eq:EC-7} \\
+      y &\in [b]_R
+	&& \text{por definición de \([b]_R\)} \label{eq:EC-8}
+    \end{alignat}
+    Vale decir \([a]_R \subseteq [b]_R\).
+    Por simetría,
+    también \([b]_R \subseteq [a]_R\),
+    y así \([a]_R = [b]_R\).
+  \end{proof}
+  \begin{definition}
+    A los conjuntos \([a]_R\) les llamamos
+    \emph{clases de equivalencia de \(R\)},
+    al conjunto \([a]_R\) le llamamos
+    la \emph{clase de equivalencia de \(a\) (en \(R\))}.
+  \end{definition}
+  Omitiremos la relación en la notación de clases de equivalencia
+  cuando se subentienda cuál es la relación considerada.
+
+  A la situación del teorema~\ref{theo:clases-equivalencia}
+  se le dice que las clases \emph{particionan} el conjunto \(\mathcal{U}\).%
+    \index{conjunto!particiones|textbfhy}
+  Las clases corresponden precisamente
+  a los conjuntos de elementos que la relación considera ``equivalentes''.
+  \begin{example}
+    Una relación \(R\) tal que si \(a \mathrel{R} b\) y \(a \mathrel{R} c\)
+    entonces \(b \mathrel{R} c\) se llama \emph{euclidiana}.
+    Demuestre que toda relación euclidiana reflexiva
+    es una relación de equivalencia.
+
+    Para demostrar que \(R\) es relación de equivalencia,
+    debemos demostrar que es reflexiva,
+    simétrica y transitiva.
+    La relación dada es reflexiva por hipótesis,
+    falta demostrar las otras dos propiedades.
+    \begin{description}
+    \item[Simetría:]
+      Supongamos que \(a \mathrel{R} b\).
+      Por reflexividad de \(R\),
+      sabemos que \(a \mathrel{R} a\);
+      y de \(a \mathrel{R} b\) y \(a \mathrel{R} a\)
+      deducimos \(b \mathrel{R} a\).
+    \item[Transitividad:]
+      Supongamos \(a \mathrel{R} b\) y \(b \mathrel{R} c\).
+      Por simetría,
+      es \(b \mathrel{R} a\);
+      y de \(b \mathrel{R} a\) y \(b \mathrel{R} c\)
+      concluimos \(a \mathrel{R} c\).
+    \end{description}
+  \end{example}
+  \begin{example}
+    Consideremos las siguientes relaciones.
+    Nótese que para demostrar que una de las propiedades \emph{no} vale,
+    basta encontrar un único caso en que falla;
+    para demostrar que \emph{si} vale hay que cubrir todos los casos.
+    \begin{description}
+    \item[\boldmath \(a \mathrel{R_1} b\) si \(a b = 100\),
+	  sobre \(\mathbb{N}\):\unboldmath]
+      Analizamos las distintas propiedades en turno:
+      \begin{itemize}
+      \item
+	No es reflexiva,
+	ya que por ejemplo \(5\cdot 5 \ne 100\).
+      \item
+	Es simétrica
+	(si \(a b = 100\), entonces \(b a = 100\)).
+      \item
+	No es transitiva,
+	ya que \(a b = 100\) y \(b c = 100\) no significa \(a c = 100\).
+	Por ejemplo, tenemos \(5 \cdot 20 = 100\) y \(20 \cdot 5 = 100\),
+	pero \(5 \cdot 5 \ne 100\).
+      \item
+	No es antisimétrica,
+	ya que por ejemplo \(5 \mathrel{R_1} 20\)
+	y \(20 \mathrel{R_1} 5\),
+	pero \(5 \ne 20\).
+      \item
+	No es total,
+	ya que por ejemplo el natural \(3\)
+	no tiene ningún natural relacionado.
+      \end{itemize}
+    \item[\boldmath \(a \mathrel{R_2} b\) si \(a + b\) es par,
+	  sobre \(\mathbb{N}\):\unboldmath]
+      Esta es una relación de equivalencia.
+      Las clases son los números pares y los impares.
+      No es total.
+    \item[\boldmath \(x \mathrel{R_3} y\) siempre que \(x - y\) es racional,
+	  sobre \(\mathbb{R}\):\unboldmath]
+      Es relación de equivalencia.
+      En detalle:
+      \begin{description}
+      \item[Reflexiva:]
+	\(x \mathrel{R_3} x\) corresponde a \(x - x\) racional,
+	y \(0\) es racional.
+      \item[Transitiva:]
+	Si \(x \mathrel{R_3} y\) y también \(y \mathrel{R_3} z\),
+	quiere decir que \(x -y\) e \(y - z\) son racionales,
+	con lo que \(x - z = (x - y) + (y - z)\)
+	también es racional.
+      \item[Simétrica:]
+	Si \(x \mathrel{R_3} y\),
+	entonces \(x - y\) es racional,
+	y lo es \(-(x - y) = y - x\),
+	o sea,
+	\(y \mathrel{R_3} x\).
+      \end{description}
+      Sabemos que hay clases de equivalencia de \(R_3\),
+      aunque no son fáciles de describir.
+    \item[\boldmath \((x_1, y_1) \mathrel{R_4} (x_2, y_2)\)
+	  cuando \(x_1^2 + y_1^2 = x_2^2 + y_2^2\),
+	  sobre \(\mathbb{R}^2\):\unboldmath]
+      Equivalencia en \(\mathbb{R}^2\).
+      Las clases de equivalencia son circunferencias de radio \(r\)
+      alrededor del origen,
+      definidas por \(x^2 + y^2 = r^2\).
+    \end{description}
+    Considere una relación \(R\) y su transpuesta \(R^{-1}\)
+    sobre algún universo \(\mathcal{U}\).
+    Veamos qué podemos decir acerca de \(R^{-1}\)
+    si sabemos que:
+    \begin{description}
+    \item[\boldmath \(R\) es simétrica:\unboldmath]
+      \index{relacion@relación!simetrica@simétrica!transpuesta}
+      Que \(R\) sea simétrica significa
+      que siempre que \(a \mathrel{R} b\) también \(b \mathrel{R} a\).
+      Expresando esto en términos de \(R^{-1}\),
+      es que \(b \mathrel{R^{-1}} a\) siempre que \(a \mathrel{R^{-1}} b\),
+      y la transpuesta también lo es.
+    \item[\boldmath \(R\) es antisimétrica:\unboldmath]
+      \index{relacion@relación!antisimetrica@antisimétrica!transpuesta}
+      Similar al caso anterior,
+      se ve que en tal caso \(R^{-1}\) también es antisimétrica.
+    \item[\boldmath \(R\) es transitiva:\unboldmath]
+      \index{relacion@relación!transitiva!transpuesta}
+      Si \(R\) es transitiva,
+      \(R^{-1}\) también lo es
+      (``caminando en la dirección contraria'').
+    \item[\boldmath \(R\) es reflexiva:\unboldmath]
+      \index{relacion@relación!reflexiva!transpuesta}
+      Si \(a \mathrel{R} a\),
+      entonces \(a \mathrel{R^{-1}} a\),
+      y \(R^{-1}\) también es reflexiva.
+    \item[\boldmath \(R\) es total:\unboldmath]
+      \index{relacion@relación!total!transpuesta}
+      Si \(a \mathrel{R} b\) o \(b \mathrel{R} a\)
+      entonces también \(a \mathrel{R^{-1}} b\) o \(b \mathrel{R^{-1}} a\),
+      y \(R^{-1}\) también es total.
+    \end{description}
+    Se recomienda al lector analizar en detalle estas observaciones,
+    algunas no son tan simples como parecen.
+  \end{example}
+  \begin{definition}
+    \index{relacion@relación!orden|textbfhy}
+    Sea \(R\) una relación sobre un conjunto \(\mathcal{U}\).
+    Si \(R\) es reflexiva, transitiva y antisimétrica
+    se le llama \emph{relación de orden}.
+    A una relación de orden que es total
+    se le llama \emph{relación de orden total},
+    en caso contrario es \emph{parcial}.
+  \end{definition}
+
+  Ejemplos clásicos de relaciones de orden son \(\le\) y \(\ge\).
+  En \(\mathbb{Z}\) ambas son totales.
+  Otra relación de orden es \(\subseteq\) entre conjuntos.
+  No es total,
+  ya que dos conjuntos
+  no necesariamente se relacionan uno como subconjunto del otro.
+
+  Otro ejemplo es la relación ``divide a'',
+  definida sobre \(\mathbb{N}\) mediante:
+  \begin{equation*}
+    a \mid b
+       \text{\ si y solo si existe \(c \in \mathbb{N}\) tal que\ }
+	  b = a \cdot c
+  \end{equation*}
+  Veamos en detalle esto último:
+  \begin{description}
+  \item[Reflexividad:]
+    \(a \mid a\) ya que \(a = a \cdot 1\)
+    y \(1 \in \mathbb{N}\).
+  \item[Transitividad:]
+    \(a \mid b\) y \(b \mid c\)
+    significa que existen \(m, n \in \mathbb{N}\)
+    tales que:
+    \begin{equation*}
+      b = a \cdot m \qquad
+      c = b \cdot n
+    \end{equation*}
+    con lo que:
+    \begin{equation*}
+      c
+	= b \cdot n
+	= (a \cdot m) \cdot n
+	= a \cdot (m \cdot n)
+    \end{equation*}
+    que es decir \(a \mid c\).
+  \item[Antisimetría:]
+    Supongamos \(a \mid b\) y \(b \mid a\).
+    Entonces existen \(m, n \in \mathbb{N}\) tales que:
+    \begin{equation*}
+      b = a \cdot m \qquad
+      a = b \cdot n
+    \end{equation*}
+    Esto lleva a:
+    \begin{align*}
+      a
+	&= (a \cdot m) \cdot n \\
+      a \cdot 1
+	&= a \cdot (m \cdot n) \\
+      1
+	&= m \cdot n
+    \end{align*}
+    Si ahora demostramos \(m = 1\),
+    tenemos \(b = a \cdot m = a \cdot 1 = a\).
+    Esto lo haremos por contradicción.
+    Sabemos que \(1 \le m\);
+    supongamos entonces que \(1 < m\),
+    vale decir que para algún \(c \in \mathbb{N}\):
+    \begin{align*}
+      1 + c
+	&= m \\
+      1 \cdot n + c \cdot n
+	&= m \cdot n \\
+      n + c \cdot n
+	&= 1
+    \end{align*}
+    Esto significa que \(n < 1\),
+    y tal \(n\) no existe.
+  \end{description}
+  Este no es un orden total,
+  ya que por ejemplo no se da ni \(6 \mid 15\) ni \(15 \mid 6\).
+
+  Otros ejemplos dan las notaciones asintóticas de Bachmann-Landau%
+    \index{Bachmann-Landau, notaciones de}
+  definidas en la sección~\ref{sec:notacion-asintotica}.
+  Consideremos la relación entre funciones \(f\) y \(g\)
+  dada cuando \(f(n) = \Theta(g(n))\).
+  Si \(f(n) = \Theta(g(n))\),
+  hay \(n_0\) y constantes positivas \(c_1\) y \(c_2\)
+  tales que para todo \(n \ge n_0\)
+  se cumple \(c_1 g(n) \le f(n) \le c_2 g(n)\).
+  Esta relación es reflexiva
+  (podemos tomar \(n_0 = 1\), \(c_1 = 1/2\) y \(c_2 = 2\)),
+  con lo que \(f(n) = \Theta(f(n))\).
+  Es simétrica,
+  ya que para \(n \ge n_0\) tenemos:
+  \begin{equation*}
+    \frac{1}{c_2} \, f(n) \le g(n) \le \frac{1}{c_1} \, f(n)
+  \end{equation*}
+  vale decir,
+  \(g(n) = \Theta(f(n))\).
+  También es transitiva,
+  ya que si \(f(n) = \Theta(g(n))\)
+  y además \(g(n) = \Theta(h(n))\),
+  existen constantes \(n_0'\) y \(c_1'\) y \(c_2'\)
+  con \(c_1' h(n) \le g(n) \le c_2' h(n)\) cuando \(n \ge n_0'\).
+  Al tomar \(n \ge \max(n_0, n_0')\),
+  combinando resulta
+  \(c_1 c_1' h(n) \le f(n) \le c_2 c_2' h(n)\).
+  Esto corresponde a la definición de \(f(n) = \Theta(g(n))\).
+
+  Si consideramos \(f(n) = \Theta(g(n))\)
+  como una especie de ``igualdad'' entre funciones,
+  un desarrollo similar hará considerar \(f(n) = O(g(n))\)
+  como un ``menor o igual que'',
+  y similarmente \(f(n) = \Omega(g(n))\) como ``mayor o igual a''.
+  Nótese eso sí que estas relaciones \emph{no} son totales.
+  Tómense por ejemplo las funciones:
+  \begin{align*}
+    f(n)
+      &= \begin{cases}
+	   1 & \text{si \(n\) es par} \\
+	   n & \text{caso contrario}
+	 \end{cases}\\
+    g(n)
+      &= \begin{cases}
+	   n & \text{si \(n\) es par} \\
+	   1 & \text{caso contrario}
+	 \end{cases}
+  \end{align*}
+  No se cumple \(f(n) = \Omega(g(n))\)
+  ni \(f(n) = O(g(n))\),
+  y tampoco \(g(n) = \Omega(f(n))\)
+  ni \(g(n) = O(f(n))\).
+  Estas funciones resultan ser no comparables.
+
+\section{Funciones}
+\label{sec:funciones}
+\index{funcion@función|textbfhy}
+
+  Históricamente,
+  en los inicios del análisis se hablaba de ``curvas''
+  (ver por ejemplo incluso el título del texto de l'Hôpital~%
+    \cite{lHopital96:_analy_infin_petit_lignes_courb}),
+  el que Euler hablara de ``funciones''
+  (que inicialmente definiera esencialmente como expresiones algebraicas,
+   para más adelante acercarse al concepto actual)
+  fue un importante avance.
+  El concepto se refinó,
+  llegando a hacerse central en matemática
+  en su forma actual,
+  en que la función \(f\) asigna exactamente un valor \(f(x)\)
+  a cada \(x\).
+
+  Una \emph{función} es simplemente un tipo especial de relación.
+  Para ser más precisos:
+  \begin{definition}
+    Sean \(\mathcal{D}\) y \(\mathcal{R}\) conjuntos.
+    Decimos que una relación \(f\)
+    es una \emph{función de \(\mathcal{D}\) a \(\mathcal{R}\)}
+    si a cada \(x \in \mathcal{D}\)
+    le relaciona exactamente un elemento \(z\) de \(\mathcal{R}\).
+    Se anota \(f \colon \mathcal{D} \rightarrow \mathcal{R}\),
+    llamamos \emph{dominio} a \(\mathcal{D}\)%
+      \index{funcion@función!dominio|textbfhy}
+    y \emph{codominio}%
+      \index{funcion@función!codominio|textbfhy}
+    o \emph{recorrido}%
+      \index{funcion@función!recorrido|textbfhy}
+    a \(\mathcal{R}\).
+    Si \((x, z) \in f\) llamamos a \(z\) el \emph{valor de \(f\) en \(x\)},
+    o \emph{imagen} de \(x\),%
+      \index{funcion@función!imagen|textbfhy}
+    y anotamos \(f(x)\).
+    Al conjunto de todos los valores de la función
+    se le llama su \emph{rango}.%
+      \index{funcion@función!rango|textbfhy}
+    Se le llama \emph{preimagen de \(z\)}%
+      \index{funcion@función!preimagen|textbfhy}
+    a cualquier \(x\) tal que \(f(x) = z\).
+  \end{definition}
+
+  Los puntos centrales de la definición son:
+  \begin{enumerate}
+  \item
+    \(f(x)\) está definido para todos los \(x \in \mathcal{D}\).
+  \item
+    A cada \(x \in \mathcal{D}\)
+    la función le asigna exactamente un valor en \(\mathcal{R}\).
+  \end{enumerate}
+  En vez de escribir \(f(x) = x^2 + 2\)
+  anotaremos también \(f \colon x \mapsto x^2 + 2\).
+
+  El caso más común de funciones en matemática elemental
+  tiene dominio y rango conjuntos de números,
+  por ejemplo \(\mathbb{N}\).
+  Si rango y dominio son conjuntos de números,
+  el método más simple de especificar la función
+  es mediante una fórmula,
+  como:
+  \begin{equation*}
+    f(n) = n^2 + n + 41
+  \end{equation*}
+  No siempre es posible llegar a una fórmula cerrada.
+  En el caso particular en que el dominio es \(\mathbb{N}\)
+  una alternativa es usar una definición recursiva.
+  Un ejemplo importante es:
+  \begin{equation*}
+    f(1)
+      = 1, \quad
+	f(2)
+	  = 1, \quad
+	f(n + 2)
+	  = f(n + 1) + f(n)\;\,(n \ge 1)
+  \end{equation*}
+  Esta función es la secuencia de los números de Fibonacci,
+    \index{Fibonacci, numeros de@Fibonacci, números de}
+  que comienza:
+  \begin{equation*}
+    \left\langle 1, 1, 2, 3, 5, 8, 13, 21, 34, \dotsc \right\rangle\
+  \end{equation*}
+
+  Nuevamente,
+  hay clasificaciones:
+  \begin{definition}
+    Sea \(f \colon \mathcal{D} \rightarrow \mathcal{R}\) una función.
+    Entonces:
+    \begin{itemize}
+    \item
+      \index{funcion@función!inyectiva|textbfhy}%
+      \index{funcion@función!uno a uno}
+      Si para todo \(x, y \in \mathcal{D}\)
+      con \(x \ne y\), \(f(x) \ne f(y)\),
+      se dice \emph{inyectiva}
+      (o \emph{uno a uno}).
+    \item
+      \index{funcion@función!sobreyectiva|textbfhy}
+      Si para todo \(y \in \mathcal{R}\)
+      hay \(x \in \mathcal{D}\) tal que \(f(x) = y\)
+      se le llama \emph{sobreyectiva}
+      (o simplemente \emph{sobre}).
+    \item
+      \index{funcion@función!biyectiva|textbfhy}%
+      \index{biyeccion@biyección|see{función!biyectiva}}
+      Si la función es inyectiva y sobreyectiva se dice \emph{biyectiva},
+      también se le llama \emph{biyección}.
+    \end{itemize}
+  \end{definition}
+
+  Para demostrar
+  que una función \(f \colon \mathcal{X} \rightarrow \mathcal{Y}\)
+  es inyectiva,
+  debemos demostrar que si \(a \ne b\) entonces \(f(a) \ne f(b)\).
+  La manera más sencilla de hacer esto suele ser demostrar el contrapositivo:
+  Si \(f(a) = f(b)\),
+  entonces \(a = b\).
+  Para demostrar
+  que una función \(f \colon \mathcal{X} \rightarrow \mathcal{Y}\)
+  es sobreyectiva,
+  hay que demostrar que para cada \(y \in \mathcal{Y}\)
+  hay al menos un \(x \in \mathcal{X}\)
+  tal que \(f(x) = y\).
+  Para demostrar que una función es biyectiva
+  hay que demostrar las dos anteriores.
+
+  Como un ejemplo,
+  anotamos para \(a, b \in \mathbb{R}\) con \(a < b\)
+  el intervalo abierto \((a, b) = \{x \colon a < x < b\}\),
+  y \(\mathbb{R}^+\) para los reales positivos.
+  Definimos la función \(f \colon (a, b) \rightarrow \mathbb{R}^+\) mediante:
+  \begin{equation*}
+    f(t)
+      = \frac{t - a}{b - t}
+  \end{equation*}
+  Primeramente,
+  \(f\) es una función,
+  ya que a cada \(t \in (a, b)\)
+  le asigna un único valor en \(\mathbb{R}^+\).
+  También es inyectiva,
+  ya que:
+  \begin{align*}
+    f(t)
+      &= z \\
+      &= \frac{t - a}{b - t} \\
+    t
+      &= \frac{a + z b}{z + 1}
+  \end{align*}
+  Así,
+  a un valor dado de \(z > 0\) le corresponde a un único valor de \(t\).
+  Además es sobreyectiva,
+  ya que si \(z > 0\)
+  la última expresión siempre está definida.
+  Como hay una biyección entre \(\mathbb{R}\) y un rango,
+  podemos concluir que hay tantos números reales en un rango cualquiera
+  como el total de los reales.
+  Volveremos sobre este punto en el capítulo~\ref{cha:numerabilidad}.
+
+  Podemos construir nuevas funciones partiendo de funciones dadas,
+  dado que son simplemente relaciones:
+  \begin{definition}
+    \index{funcion@función!composicion@composición|textbfhy}
+    Sean \(f \colon \mathcal{A} \rightarrow \mathcal{B}\)
+    y \(g \colon \mathcal{B} \rightarrow \mathcal{C}\) funciones.
+    La \emph{composición} de \(f\) y \(g\) está definida
+    ya que son relaciones.
+    La \emph{función inversa de \(f\)},
+    \(f^{-1} \colon \mathcal{B} \rightarrow \mathcal{A}\)%
+      \index{funcion@función!inversa|textbfhy}
+    se define como la transpuesta de la relación,
+    \(f^{-1}(z) = x\) siempre que \(f(x) = z\).
+  \end{definition}
+  La función inversa solo puede existir
+  si el rango de \(f\) es su recorrido \(\mathcal{B}\)
+  (\(f\) es sobreyectiva),
+  y además un elemento de \(\mathcal{B}\) tiene una única preimagen
+  (\(f\) es inyectiva).
+  Combinando ambas,
+  \(f\) es biyectiva.
+  Además es fácil ver que en tal caso \((f^{-1})^{-1} = f\).
+
+  Si \(f\), \(g\), \(h\) son funciones,
+  es simple demostrar que
+  \((f \circ g) \circ h = f \circ (g \circ h)\)
+  (acá los paréntesis indican en qué orden se componen las funciones).
+  \begin{theorem}
+    \label{theo:gof}
+    Sean \(f \colon \mathcal{A} \rightarrow \mathcal{B}\)
+    y \(g \colon \mathcal{B} \rightarrow \mathcal{C}\) funciones.
+    Entonces:
+    \begin{enumerate}
+    \item
+      \label{theo:gof:inyectivas}
+      Si \(f\) y \(g\) son inyectivas,
+      lo es \(g \circ f\).
+    \item
+      \label{theo:gof:sobreyectivas}
+      Si \(f\) y \(g\) son sobreyectivas,
+      lo es \(g \circ f\).
+    \item
+      \label{theo:gof:biyectivas}
+      Si \(f\) y \(g\) son biyectivas,
+      lo es \(g \circ f\).
+      La función inversa de la composición
+      es \((g \circ f)^{-1} = f^{-1} \circ g^{-1}\).
+    \item
+      \label{theo:gof:gof-inyectiva}
+      Si \(g \circ f\) es inyectiva,
+      \(f\) es inyectiva
+      (\(g\) puede no serlo).
+    \item
+      \label{theo:gof:gof-sobreyectiva}
+      Si \(g \circ f\) es sobreyectiva,
+      \(g\) es sobreyectiva
+      (\(f\) puede no serlo).
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Demostramos cada punto por turno.
+    \begin{enumerate}
+    \item
+      Supongamos \((g \circ f)(x) = (g \circ f)(y)\).
+      Esto es \(g(f(x)) = g(f(y))\),
+      y como supusimos \(g\) inyectiva,
+      quiere decir que \(f(x) = f(y)\),
+      y esto a su vez que \(x = y\) ya que \(f\) es inyectiva.
+    \item
+      Si \(f\) y \(g\) son sobreyectivas,
+      quiere decir que para cada \(c \in \mathcal{C}\)
+      hay algún \(b \in \mathcal{B}\) tal que \(g(b) = c\),
+      y también que para cada \(b \in \mathcal{B}\) hay \(a \in \mathcal{A}\)
+      tal que \(f(a) = b\).
+      Combinando estas,
+      para cada \(c \in \mathcal{C}\) hay algún \(a \in \mathcal{A}\)
+      tal que \(g(f(a)) = c\),
+      que es decir \((g \circ f)(a) = c\),
+      y \(g \circ f\) es sobreyectiva también.
+    \item
+      Esto se obtiene combinando las partes~(\ref{theo:gof:inyectivas})
+      y~(\ref{theo:gof:sobreyectivas}).
+      La función \(g \circ f\) lleva
+      (vía \(f\))
+      de \(\mathcal{A}\) a \(\mathcal{B}\),
+      y luego
+      (vía \(g\))
+      de \(\mathcal{B}\) a \(\mathcal{C}\).
+
+      Para la inversa de \(g \circ f\)
+      usamos asociatividad y la definición de inversa:
+      \begin{equation*}
+	(f^{-1} \circ g^{-1}) \circ (g \circ f)
+	  = f^{-1} \circ (g^{-1} \circ g) \circ f
+	  = f^{-1} \circ f
+	  = \iota
+      \end{equation*}
+      Terminamos con la función identidad,
+      y componer por la derecha se trata de forma análoga
+      resultando la identidad también.
+      Concluimos que \(f^{-1} \circ g^{-1}\) es la inversa prometida.
+    \item
+      Sean \(x, y \in \mathcal{A}\) tales que \(f(x) = f(y)\).
+      Entonces	\(g(f(x)) = g(f(y))\),
+      y como suponemos \(g \circ f\) inyectiva,
+      \(x = y\),
+      con lo que \(f\) es inyectiva.
+      Mostraremos más adelante que \(g\) no tiene porqué ser inyectiva.
+    \item
+      Como \(g \circ f\) es sobreyectiva,
+      para cada \(c \in \mathcal{C}\) hay \(a \in \mathcal{A}\)
+      para el cual \((g \circ f)(a) = g(f(a)) = c\),
+      y podemos elegir \(b = f(a)\)
+      para demostrar que para todo \(c \in \mathcal{C}\)
+      hay \(b \in \mathcal{B}\)
+      tal que \(g(b) = c\).
+      Mostraremos más adelante que \(f\) no tiene porqué ser sobreyectiva.
+      \qedhere
+    \end{enumerate}
+  \end{proof}
+  Nótese que en la demostración de la parte~(\ref{theo:gof:gof-inyectiva})
+  nada podemos concluir sobre \(g\),
+  puede ser que en lo anterior no ``usamos'' valores de \(g\)
+  que hacen fallar la inyección.
+  Ver figura~\ref{fig:gof-is:inyectiva}.
+  De forma similar,
+  en la parte~(\ref{theo:gof:gof-sobreyectiva})
+  nada podemos decir sobre \(f\),
+  ver figura~\ref{fig:gof-is:sobreyectiva}.
+  \begin{figure}[htbp]
+    \centering
+    \subfloat[Inyectiva]
+	     {\pgfimage[height=2in]{images/gof-inyectiva}
+		\label{fig:gof-is:inyectiva}}
+    \hspace{1in}
+    \subfloat[Sobreyectiva]
+	     {\pgfimage[height=2in]{images/gof-sobreyectiva}
+		\label{fig:gof-is:sobreyectiva}}
+    \caption{Funciones compuestas inyectivas y sobreyectivas}
+    \label{fig:gof-is}
+  \end{figure}
+
+  En el caso especial en que dominio y codominio son iguales,
+  podemos hacer algunas cosas adicionales:
+  \begin{itemize}
+  \item
+    La \emph{función identidad},%
+      \index{funcion@función!identidad|textbfhy}
+    \(\iota \colon \mathcal{A} \rightarrow \mathcal{A}\),
+    se define mediante \(\iota(x) = x\) para todo \(x \in \mathcal{A}\).
+    Claramente cumple con \(\iota \circ f = f \circ \iota = f\)
+    para toda función \(f\).
+    Además,
+    \(\iota^{-1} = \iota\).
+  \item
+    Es obvio de la definición que \(f \circ f^{-1} = f^{-1} \circ f = \iota\)
+    si \(f\) es biyectiva.
+  \end{itemize}
+
+  En el caso de una función \(f \colon \mathcal{X} \rightarrow \mathcal{Z}\),
+  con \(\mathcal{A} \subseteq \mathcal{X}\)
+  se usa la notación
+    \(f(\mathcal{A}) = \{f(x) \colon x \in \mathcal{A}\}\)
+  para la imagen de un subconjunto del dominio.%
+    \index{funcion@función!imagen de un conjunto|textbfhy}
+  Igualmente,
+  para \(\mathcal{B} \subseteq \mathcal{Z}\)
+  se anota \(f^{-1} (\mathcal{B}) = \{x \colon f(x) \in \mathcal{B}\}\)
+  para la preimagen de un conjunto.%
+    \index{funcion@función!preimagen de un conjunto|textbfhy}
+  En el último caso la función inversa no tiene porqué existir
+  para que la notación tenga sentido.
+
+\section{Operaciones}
+\label{sec:operaciones}
+\index{operacion@operación|textbfhy}
+
+  Un caso particular importante de funciones son las \emph{operaciones}
+  sobre un conjunto \(\mathcal{A}\),
+  que formalmente no son más
+  que funciones
+    \(\operatorname{op} \colon \mathcal{A}^n \rightarrow \mathcal{A}\).
+  Nótese que esta definición trae implícito
+  que la operación entrega un valor en \(\mathcal{A}\)
+  para todos sus posibles argumentos,
+  cosa que suele indicarse diciendo que la operación es \emph{cerrada}.%
+    \index{operacion@operación!cerrada|textbfhy}
+  Se suelen distinguir operaciones \emph{unarias}%
+    \index{operacion@operación!unaria|textbfhy}
+  si tienen un único argumento,
+  y \emph{binarias} si tienen dos.%
+    \index{operacion@operación!binaria|textbfhy}
+  Pueden considerarse operaciones de más de dos argumentos,
+  pero son raras en la práctica.
+  Nótese también que por ejemplo la división entre números reales
+  no es una operación según nuestra definición
+  (\(a / b\) no está definido si \(b = 0\)).
+  Tampoco lo son las relaciones,
+  ya que por ejemplo \(a < b\) toma dos reales y entrega verdadero o falso.
+
+  Las operaciones de uso común suelen anotarse en forma especial,
+  por ejemplo para la operación binaria
+  de suma de \(a\) y \(b\) anotamos \(a + b\).
+  Esto se conoce como \emph{notación infijo}.%
+    \index{operacion@operación!notacion infijo@notación infijo|textbfhy}
+  Para operaciones unarias es posible la notación \emph{prefijo}%
+    \index{operacion@operación!notacion prefijo@notación prefijo|textbfhy}
+  (como en \(- a\) o \(\tan \alpha\))
+  o \emph{postfijo}%
+    \index{operacion@operación!notacion postfijo@notación postfijo|textbfhy}
+  (es el caso del factorial,
+   como en \(n!\)).
+
+  En rigor,
+  una expresión como \(a + b + c\) no tiene sentido,
+  debiera indicarse el orden en que se efectúan las operaciones
+  mediante paréntesis.
+  Para ahorrar notación,
+  se suelen adoptar convenciones:
+  Si \(a \circ b \circ c\) ha de interpretarse como
+  \((a \circ b) \circ c\)
+  se dice que la operación \emph{asocia hacia la izquierda}%
+    \index{operacion@operación!asociativa izquierda|textbfhy}
+  (o que es \emph{asociativa izquierda}),
+  si en cambio \(a \circ b \circ c\)
+  significa \(a \circ (b \circ c)\)
+  se dice que \emph{asocia hacia la derecha}%
+    \index{operacion@operación!asociativa derecha|textbfhy}
+  o es \emph{asociativa derecha}.
+  En caso que \(a \circ b \circ c\) no se le dé sentido,
+  se le llama \emph{no asociativa}.%
+    \index{operacion@operación!no asociativa|textbfhy}
+  Las operaciones comunes se consideran todas asociativas izquierdas;
+  salvo las potencias,
+  que son asociativas derechas
+  (o sea,
+   \(2^{3^4} = 2^{(3^4)}\)).
+
+  Si tenemos dos operaciones \(\odot\) y \(\oplus\),
+  y se interpretan
+  \(a \odot b \oplus c\) como \((a \odot b) \oplus c\)
+  y \(a \oplus b \odot c\) como \(a \oplus (b \odot c)\)
+  (siempre se efectúa \(\odot\) antes de \(\oplus\))
+  se dice que \(\odot\) tiene \emph{mayor precedencia} que \(\oplus\).
+    \index{operacion@operación!precedencia|textbfhy}
+  En caso que ambas operaciones sean asociativas izquierdas,
+  y \(a \odot b \oplus c\) se interpreta como \((a \odot b) \oplus c\)
+  y \(a \oplus b \odot c\) como \((a \oplus b) \odot c\)
+  (siempre se efectúan las operaciones de izquierda a derecha),
+  se dice que tienen la \emph{misma precedencia}.
+
+  Hay ciertas propiedades de las funciones mismas que son de interés también.
+  \begin{itemize}
+  \item
+    \index{operacion@operación!conmutativa|textbfhy}
+    Si \(a \circ b = b \circ a\) la operación se dice \emph{conmutativa}.
+  \item
+    \index{operacion@operación!asociativa|textbfhy}
+    Si \((a \circ b) \circ c = a \circ (b \circ c)\),
+    la operación se llama \emph{asociativa}.
+    Esto no debe confundirse
+    con las convenciones de notación mencionadas antes.
+  \item
+    \index{operacion@operación!elemento neutro|textbfhy}
+    De existir un elemento \(e\) tal que
+    \(a \circ e = e \circ a = a\) para todos los \(a\),
+    a \(e\) se le llama \emph{elemento neutro} de la operación.
+  \item
+    \index{operacion@operación!distributiva|textbfhy}
+    Si siempre se cumple
+    \((a \oplus b) \odot c = (a \odot c) \oplus (b \odot c)\),
+    se dice que \(\odot\) \emph{distribuye sobre} \(\oplus\)
+    \emph{por la derecha},
+    en forma similar
+    si \(a \odot (b \oplus c) = (a \odot b) \oplus (a \odot c)\)
+    \emph{por la izquierda}.
+    Si \(\odot\) distribuye sobre \(\oplus\) tanto por la derecha
+    como por la izquierda,
+    se dice simplemente que distribuye sobre ella.
+  \end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

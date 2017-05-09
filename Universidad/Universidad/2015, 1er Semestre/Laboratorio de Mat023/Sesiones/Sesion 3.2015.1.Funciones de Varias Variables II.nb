@@ -1,0 +1,3153 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 7.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     98028,       3144]
+NotebookOptionsPosition[     90381,       2941]
+NotebookOutlinePosition[     90810,       2959]
+CellTagsIndexPosition[     90767,       2956]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[TextData[{
+ StyleBox["Universidad T\[EAcute]cnica Federico Santa Mar\[IAcute]a",
+  LineSpacing->{1, 1},
+  ParagraphSpacing->{0, 1},
+  FontSize->24,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]],
+ StyleBox["\n",
+  LineSpacing->{1, 1},
+  ParagraphSpacing->{0, 1},
+  FontSize->40,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0.501961, 0.752941]],
+ StyleBox["Departamento de Matem\[AAcute]tica\nLaboratorio de Computaci\
+\[OAcute]n para las Aplicaciones \nde la Matem\[AAcute]tica en Ingenier\
+\[IAcute]a",
+  LineSpacing->{1, 1},
+  ParagraphSpacing->{0, 1},
+  FontSize->20,
+  FontColor->GrayLevel[0]],
+ StyleBox["\n",
+  FontSize->20,
+  FontColor->GrayLevel[0]]
+}], "Text",
+ CellFrame->False,
+ CellFrameMargins->8,
+ CellFrameColor->GrayLevel[0.341176],
+ CellFrameLabelMargins->10,
+ TextAlignment->Center,
+ TextJustification->0,
+ FontFamily->"Verdana",
+ FontSize->12,
+ FontSlant->"Plain",
+ FontColor->RGBColor[1, 0, 0]],
+
+Cell[TextData[{
+ StyleBox["Laboratorio de Matem\[AAcute]tica III - MAT023",
+  FontFamily->"Verdana",
+  FontSize->24,
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ StyleBox["\n",
+  FontFamily->"Verdana",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ StyleBox["SESION 3:",
+  FontFamily->"Verdana",
+  FontSize->24,
+  FontWeight->"Bold",
+  FontSlant->"Plain",
+  FontColor->RGBColor[0.87451, 0, 0]],
+ StyleBox[" ",
+  FontFamily->"Verdana",
+  FontSize->24,
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ StyleBox["Funciones de Varias Variables II\n",
+  FontFamily->"Verdana",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ StyleBox["Semana del 20 de Abril al 24 de Abril del 2015",
+  FontFamily->"Verdana",
+  FontSize->14,
+  FontSlant->"Plain"]
+}], "Text",
+ CellFrame->3,
+ CellFrameMargins->8,
+ CellFrameColor->GrayLevel[0],
+ CellFrameLabelMargins->2,
+ CellChangeTimes->{{3.524225767880762*^9, 3.5242257965380125`*^9}, 
+   3.527183947492691*^9, {3.5271840711567645`*^9, 3.527184085698596*^9}, {
+   3.527184137659568*^9, 3.527184143444899*^9}, 3.5271844630721807`*^9, {
+   3.5336675827612953`*^9, 3.5336676019963956`*^9}, {3.5336676510191994`*^9, 
+   3.533667667394136*^9}, {3.5427361066427507`*^9, 3.5427361631029797`*^9}, {
+   3.5430098580256524`*^9, 3.5430098837912655`*^9}, {3.5450492341241136`*^9, 
+   3.545049302884137*^9}, {3.5450495846651134`*^9, 3.54504963934027*^9}, 
+   3.577496181046875*^9, {3.57749628090625*^9, 3.57749628209375*^9}, {
+   3.577496383984375*^9, 3.57749638428125*^9}, {3.605628005109375*^9, 
+   3.6056280145*^9}, {3.60562829984375*^9, 3.60562831221875*^9}, {
+   3.60563241675*^9, 3.60563243059375*^9}, {3.60563255028125*^9, 
+   3.605632552203125*^9}, 3.605968396265625*^9, {3.60604628009375*^9, 
+   3.606046301*^9}, 3.606146721625*^9, {3.607874940421875*^9, 
+   3.607874980890625*^9}, {3.609763630578125*^9, 3.6097636409375*^9}, {
+   3.61045784478125*^9, 3.6104579015625*^9}, {3.610458488765625*^9, 
+   3.61045850615625*^9}, {3.6110626376875*^9, 3.6110626464375*^9}, {
+   3.612886221125*^9, 3.612886269234375*^9}, {3.612886357546875*^9, 
+   3.612886365921875*^9}, {3.617799245095381*^9, 3.6177993230641804`*^9}, {
+   3.618408679251232*^9, 3.6184087495604324`*^9}, {3.618937088921875*^9, 
+   3.6189371159375*^9}, {3.6203831570625*^9, 3.62038317421875*^9}, {
+   3.621359899319195*^9, 3.621359922461195*^9}, {3.621591239712401*^9, 
+   3.621591242239601*^9}, {3.621950863203125*^9, 3.621950881171875*^9}, {
+   3.62195091121875*^9, 3.621950912515625*^9}, {3.622034078282*^9, 
+   3.6220340939049997`*^9}, {3.635974084724959*^9, 3.6359741105341873`*^9}, {
+   3.635974156669004*^9, 3.635974190082733*^9}, {3.6363072910607843`*^9, 
+   3.63630734798304*^9}, {3.6363074421014233`*^9, 3.636307535494765*^9}, {
+   3.6378737473919353`*^9, 3.637873802474781*^9}, {3.638530286670169*^9, 
+   3.6385303056531487`*^9}},
+ TextAlignment->Center,
+ TextJustification->0,
+ Background->RGBColor[
+  0.44887464713511865`, 0.7404287785152972, 0.9400015259021897]],
+
+Cell[TextData[{
+ StyleBox["\n",
+  FontFamily->"Verdana",
+  FontSize->16,
+  FontWeight->"Bold",
+  FontSlant->"Plain",
+  FontColor->GrayLevel[0]],
+ StyleBox["Coordinador Acad\[EAcute]mico del Laboratorio   :   ",
+  FontFamily->"Verdana",
+  FontWeight->"Bold",
+  FontSlant->"Plain",
+  FontColor->GrayLevel[0]],
+ StyleBox["Jonathan Acosta (jonathan.acosta@usm.cl)",
+  FontFamily->"Verdana",
+  FontSlant->"Plain",
+  FontColor->GrayLevel[0]],
+ StyleBox["\nAyudante Coordinador y de Software       :  ",
+  FontFamily->"Verdana",
+  FontWeight->"Bold",
+  FontSlant->"Plain",
+  FontColor->GrayLevel[0]],
+ StyleBox[" Alfredo Alegr\[IGrave]a (alfredo.alegria.jimenez@gmail.com)",
+  FontFamily->"Verdana",
+  FontSlant->"Plain",
+  FontColor->GrayLevel[0]],
+ StyleBox["\t\t      \nSitio web:   http://lab.mat.utfsm.cl\n",
+  FontFamily->"Verdana",
+  FontVariations->{"CompatibilityType"->0},
+  FontColor->GrayLevel[0]],
+ StyleBox["Atenci\[OAcute]n Alumnos:",
+  FontFamily->"Arial Black",
+  FontSize->14,
+  FontVariations->{"CompatibilityType"->0},
+  FontColor->GrayLevel[0]],
+ StyleBox["  ",
+  FontFamily->"Verdana",
+  FontVariations->{"CompatibilityType"->0},
+  FontColor->GrayLevel[0]],
+ StyleBox["V\[IAcute]a e-mail al ayudante coordinador",
+  FontFamily->"Verdana",
+  FontWeight->"Bold",
+  FontVariations->{"CompatibilityType"->0},
+  FontColor->RGBColor[1, 0, 0]]
+}], "Text",
+ CellFrameMargins->8,
+ CellFrameColor->GrayLevel[0.341176],
+ CellFrameLabelMargins->10,
+ CellChangeTimes->{{3.491225342375*^9, 3.49122544646875*^9}, {
+  3.491225477015625*^9, 3.49122550525*^9}, {3.6363069267479467`*^9, 
+  3.6363069276189966`*^9}, {3.636307372675452*^9, 3.6363074022911463`*^9}},
+ TextAlignment->Left,
+ TextJustification->0,
+ FontFamily->"Verdana",
+ FontSize->12,
+ FontSlant->"Plain",
+ FontColor->GrayLevel[1]],
+
+Cell[TextData[StyleBox["",
+ FontSize->1,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0, 0, 1]]], "Text",
+ CellFrame->{{0, 0}, {10, 0}},
+ CellFrameColor->RGBColor[1, 0, 0],
+ TextAlignment->Center,
+ TextJustification->0,
+ FontSize->24],
+
+Cell[CellGroupData[{
+
+Cell["Derivada Direccional", "Seccion"],
+
+Cell[TextData[{
+ StyleBox["Definici\[OAcute]n de Derivada direccional: ",
+  FontWeight->"Bold",
+  FontSlant->"Italic"],
+ " ",
+ StyleBox[" Sea ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"f", ":", 
+    RowBox[{"U", "\[Subset]", 
+     RowBox[{
+      SuperscriptBox["\[DoubleStruckCapitalR]", "n"], "\[LongRightArrow]", 
+      " ", "\[DoubleStruckCapitalR]"}]}]}], TraditionalForm]]],
+ StyleBox["  una funci\[OAcute]n definida en el conjunto abierto ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox["U", TraditionalForm]]],
+ " ",
+ StyleBox["de ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["\[DoubleStruckCapitalR]", "n"], TraditionalForm]]],
+ StyleBox["  y sea ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "0"], TraditionalForm]]],
+ " un punto dado de",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{" ", 
+    RowBox[{"U", "."}]}], TraditionalForm]]],
+ " Dado ",
+ Cell[BoxData[
+  FormBox["v", TraditionalForm]]],
+ ", un vector unitario de ",
+ StyleBox[" ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["\[DoubleStruckCapitalR]", "n"], "."}], TraditionalForm]]],
+ " Se define la derivada de la funci\[OAcute]n ",
+ StyleBox[" ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox["f", TraditionalForm]]],
+ " ",
+ StyleBox["de ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{" ", 
+    SubscriptBox["P", "0"]}], TraditionalForm]]],
+ ", en la direci\[OAcute]n del vector  ",
+ Cell[BoxData[
+  FormBox["v", TraditionalForm]]],
+ ", denotada por ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox[
+     RowBox[{"\[PartialD]", " ", "f"}], 
+     RowBox[{
+      RowBox[{"\[PartialD]", " ", "v"}], " "}]], 
+    RowBox[{"(", 
+     SubscriptBox["P", "0"], ")"}]}], TraditionalForm]]],
+ ", o ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["D", "v"], "(", 
+    SubscriptBox["P", "0"], ")"}], TraditionalForm]]],
+ ", como el l\[IAcute]mite:\n\n                                               \
+  ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox[
+     RowBox[{"\[PartialD]", " ", "f"}], 
+     RowBox[{
+      RowBox[{"\[PartialD]", " ", "v"}], " "}]], 
+    RowBox[{"(", 
+     SubscriptBox["P", "0"], ")"}]}], TraditionalForm]]],
+ "= ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    UnderscriptBox["l\[IAcute]m", 
+     RowBox[{"t", "\[Rule]", "0"}]], 
+    FractionBox[
+     RowBox[{
+      RowBox[{"f", "(", 
+       RowBox[{
+        SubscriptBox["P", "0"], "+", 
+        RowBox[{"t", " ", "v"}]}], ")"}], "-", 
+      RowBox[{"f", "(", 
+       SubscriptBox["P", "0"], ")"}]}], "t"]}], TraditionalForm]]],
+ StyleBox[" ",
+  FontSize->16,
+  FontSlant->"Italic"],
+ StyleBox[" \n  \nSi ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"f", ":", 
+    RowBox[{"U", "\[Subset]", 
+     RowBox[{
+      SuperscriptBox["\[DoubleStruckCapitalR]", "n"], "\[LongRightArrow]", 
+      " ", "\[DoubleStruckCapitalR]"}]}]}], TraditionalForm]]],
+ StyleBox["  una funci\[OAcute]n diferenciable en  ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "0"], TraditionalForm]]],
+ "  de",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{" ", 
+    RowBox[{"U", "."}]}], TraditionalForm]]],
+ " Dado ",
+ Cell[BoxData[
+  FormBox["v", TraditionalForm]]],
+ ", un vector unitario de ",
+ StyleBox[" ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["\[DoubleStruckCapitalR]", "n"], "."}], TraditionalForm]]],
+ "La derivada de la funci\[OAcute]n ",
+ StyleBox[" ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox["f", TraditionalForm]]],
+ " ",
+ StyleBox["de ",
+  FontSlant->"Italic"],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{" ", 
+    SubscriptBox["P", "0"]}], TraditionalForm]]],
+ ", en la direci\[OAcute]n del vector  ",
+ Cell[BoxData[
+  FormBox["v", TraditionalForm]]],
+ ", es\n                                              \n                      \
+                           ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     FractionBox[
+      RowBox[{"\[PartialD]", " ", "f"}], 
+      RowBox[{
+       RowBox[{"\[PartialD]", " ", "v"}], " "}]], 
+     RowBox[{"(", 
+      SubscriptBox["P", "0"], ")"}]}], "=", 
+    RowBox[{"grad", " ", 
+     RowBox[{
+      RowBox[{"f", "(", 
+       SubscriptBox["P", "0"], ")"}], "\[CenterDot]", "v"}], " "}]}], 
+   TraditionalForm]]],
+ "         ",
+ StyleBox["    \n                                                             \
+                                                   ",
+  FontSlant->"Italic"]
+}], "Teorema",
+ CellFrame->True,
+ Evaluatable->False,
+ CellChangeTimes->{3.6385309271312065`*^9},
+ AspectRatioFixed->True],
+
+Cell[TextData[{
+ "Ejercicio. \n              Generar las derivadas direccionales para la \
+funci\[OAcute]n :\n                                                   ",
+ "  f =",
+ Cell[BoxData[
+  RowBox[{" ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ArcTan", "[", 
+      FractionBox["y", "x"], "]"}], "+", 
+     RowBox[{
+      SqrtBox["3"], 
+      RowBox[{"ArcSin", "[", 
+       FractionBox[
+        RowBox[{"x", " ", "y"}], "2"], "]"}]}]}], ";"}]}]],
+  FontFamily->"Times New Roman"],
+ " ",
+ "\nen el punto ( x0 , y0 )= ( 0.9 , 0.8 )   en todas las direcciones dadas \
+por un circulo unitario con centro en el punto. \n"
+}], "Ejercicio"],
+
+Cell["\<\
+
+Ingresemos la funci\[OAcute]n y el centro del circulo unitario\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"f", "=", 
+   RowBox[{
+    RowBox[{"ArcTan", "[", 
+     RowBox[{"y", "/", "x"}], "]"}], "+", 
+    RowBox[{
+     SqrtBox["3"], 
+     RowBox[{"ArcSin", "[", 
+      RowBox[{"x", " ", 
+       RowBox[{"y", "/", "2"}]}], "]"}]}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"x0", "=", "1."}], ";"}], " "}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"y0", "=", "1."}], ";"}]}], "Input"],
+
+Cell[TextData[{
+ StyleBox["\n",
+  FontWeight->"Bold"],
+ "El siguiente conjunto de comandos genera las derivadas direccionales para \
+una funci\[OAcute]n en el punto ( x0 , y0 ) para una sucesi\[OAcute]n de \
+direcciones dadas en un circulo unitario con centro en el punto e ilustra el \
+significado de la direcci\[OAcute]n del gradiente. Evalue los siguientes \
+comandos, observe y analice el resultado."
+}], "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Clear", "[", 
+  RowBox[{"punto", ",", "t", ",", "a", ",", "b", ",", "inic", ",", "vec"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"punto", "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"x", "\[Rule]", "x0"}], ",", 
+      RowBox[{"y", "\[Rule]", "y0"}]}], "}"}]}], ";", 
+   RowBox[{"d1", "=", 
+    RowBox[{"D", "[", 
+     RowBox[{"f", ",", "x"}], "]"}]}], ";", 
+   RowBox[{"d2", "=", 
+    RowBox[{"D", "[", 
+     RowBox[{"f", ",", "y"}], "]"}]}], ";"}], " "}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"vec", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"d1", "/.", "punto"}], ",", " ", 
+     RowBox[{"d2", "/.", "punto"}]}], "}"}]}], " ", ";", 
+  RowBox[{"Mag", "=", 
+   RowBox[{"Sqrt", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"vec", "[", 
+       RowBox[{"[", "1", "]"}], "]"}], "^", "2"}], "+", 
+     RowBox[{
+      RowBox[{"vec", "[", 
+       RowBox[{"[", "2", "]"}], "]"}], "^", "2"}]}], "]"}]}], " ", 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"If", "[", " ", 
+   RowBox[{
+    RowBox[{"Mag", "<", 
+     RowBox[{"10", "^", 
+      RowBox[{"(", 
+       RowBox[{"-", "6"}], ")"}]}]}], ",", " ", 
+    RowBox[{
+     RowBox[{
+     "Print", "[", "\"\<Usted tiene un punto cr\[IAcute]tico \>\"", "]"}], 
+     ";", 
+     RowBox[{"Abort", "[", " ", "]"}]}], ",", "1"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<El Vector Gradiente es \>\"", ",", " ", "vec", ",", " ", 
+    "\"\<  cuya magnitud es = \>\"", ",", "Mag"}], "]"}], " ", 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"inic", "=", " ", 
+   RowBox[{"vec", "/", "Mag"}]}], ";", 
+  RowBox[{"cominic", "=", 
+   RowBox[{
+    RowBox[{"inic", "[", 
+     RowBox[{"[", "1", "]"}], "]"}], "+", " ", 
+    RowBox[{"I", " ", 
+     RowBox[{"inic", "[", 
+      RowBox[{"[", "2", "]"}], "]"}]}]}]}], " ", ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<El vector unitario en la direcci\[OAcute]n del gradiente es  \>\"", 
+    ",", " ", "inic"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Print", "[", "\"\<Algunas Derivadas Direccionales\>\"", "]"}], 
+   " ", ";"}], " "}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"a", "=", 
+      RowBox[{"Cos", "[", "t", "]"}]}], ";", " ", 
+     RowBox[{"b", "=", 
+      RowBox[{"Sin", "[", "t", "]"}]}], ";", 
+     RowBox[{
+      RowBox[{"tripn", "[", "t", "]"}], "=", 
+      RowBox[{"{", 
+       RowBox[{"a", ",", "b"}], "}"}]}], ";", 
+     RowBox[{
+      RowBox[{"rap", "[", "t", "]"}], "=", " ", 
+      RowBox[{"vec", ".", 
+       RowBox[{"tripn", "[", "t", "]"}]}]}], ";", "\[IndentingNewLine]", " ", 
+     RowBox[{"Print", "[", 
+      RowBox[{"\"\<Direcci\[OAcute]n unitaria  \>\"", ",", 
+       RowBox[{"tripn", "[", "t", "]"}], ",", " ", 
+       "\"\<        Rapidez = \>\"", ",", 
+       RowBox[{"rap", "[", "t", "]"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+    ",", 
+    RowBox[{"{", 
+     RowBox[{"t", ",", "0", ",", 
+      RowBox[{"2", " ", "Pi"}], ",", ".1"}], "}"}]}], "]"}], ";"}]}], "Input"],
+
+Cell["\<\
+
+Note que, la mayor magnitud de la rapidez se logra para direcciones cercanas \
+a la del vector gradiente, el cual tiene la m\[AAcute]xima rapidez.\
+\>", "Posterior"],
+
+Cell["\<\
+
+A continuaci\[OAcute]n se presentan los vectores obtenidos anteriormente, los \
+cuales son proporcionales en tama\[NTilde]o a su rapidez. El vector negro en \
+la zona roja es el vector definido por el gradiente de la funci\[OAcute]n.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<Graphics`Arrow`\>\"", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"u", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"Hue", "[", 
+         RowBox[{
+          RowBox[{"1", "/", 
+           RowBox[{"(", 
+            RowBox[{"2", " ", "Pi"}], ")"}]}], " ", "t"}], "]"}], ",", 
+        RowBox[{"Arrow", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"0", ",", "0"}], "}"}], ",", 
+          RowBox[{
+           RowBox[{"Abs", "[", 
+            RowBox[{"rap", "[", "t", "]"}], "]"}], " ", 
+           RowBox[{"tripn", "[", "t", "]"}]}], ",", 
+          RowBox[{"HeadLength", "\[Rule]", "0.02"}]}], "]"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"t", ",", "0", ",", 
+        RowBox[{"2", "\[Pi]"}], ",", ".2"}], "}"}]}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"uu", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"{", 
+     RowBox[{"Arrow", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", " ", "vec", ",", 
+       RowBox[{"HeadLength", "\[Rule]", "0.08"}]}], "]"}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"vv", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"{", 
+     RowBox[{"Arrow", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", "vec", ",", 
+       RowBox[{"HeadLength", "\[Rule]", "0.02"}]}], "]"}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Show", "[", 
+  RowBox[{"u", ",", "uu", ",", "vv", ",", 
+   RowBox[{"AspectRatio", "\[Rule]", "Automatic"}], ",", 
+   RowBox[{"ImageSize", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"600", ",", "400"}], "}"}]}], ",", 
+   RowBox[{"AspectRatio", "\[Rule]", "Automatic"}], ",", 
+   RowBox[{
+   "PlotLabel", "->", 
+    "\"\<  El vector negro es el gradiente. La magnitud se\[NTilde]ala el \
+valor absoluto de la rapidez \>\""}]}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Ejercicio", " ", 
+   RowBox[{"propuesto", ":", "  ", "\[IndentingNewLine]", 
+    RowBox[{
+    "Pruebe", " ", "usted", " ", "con", " ", "otros", " ", "casos"}]}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"f", 
+     RowBox[{"(", 
+      RowBox[{"x", ",", "y"}], ")"}]}], "=", 
+    RowBox[{
+     RowBox[{"2", " ", "x", " ", "y"}], " ", "-", " ", 
+     RowBox[{"3", " ", 
+      RowBox[{"y", "^", "2"}]}]}]}], " ", ";", " ", 
+   RowBox[{"x0", "=", "5"}], ";", 
+   RowBox[{"y0", "=", "5"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"f", 
+     RowBox[{"(", 
+      RowBox[{"x", ",", "y"}], ")"}]}], "=", " ", 
+    RowBox[{
+     RowBox[{"2", 
+      RowBox[{"x", "^", "2"}]}], "+", 
+     RowBox[{"y", "^", "2"}]}]}], ";", " ", 
+   RowBox[{"x0", "=", 
+    RowBox[{"-", "1"}]}], ";", 
+   RowBox[{"y0", "=", "1"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"f", 
+    RowBox[{"(", 
+     RowBox[{"x", ",", "y"}], ")"}]}], "=", 
+   TagBox[
+    StyleBox[
+     RowBox[{"{", 
+      StyleBox[GridBox[{
+         {
+          RowBox[{
+           RowBox[{
+            FractionBox[
+             RowBox[{
+              RowBox[{"xy", "^", "2"}], "-", 
+              RowBox[{"2", "xy"}], "+", "x"}], 
+             RowBox[{
+              RowBox[{"x", "^", "2"}], "+", 
+              RowBox[{"y", "^", "2"}], "-", 
+              RowBox[{"2", "y"}], "+", "1"}]], "   ", "si", "   ", 
+            RowBox[{"(", 
+             RowBox[{"x", ",", "y"}], ")"}]}], " ", "\[NotEqual]", 
+           RowBox[{"(", 
+            RowBox[{"0", ",", "1"}], ")"}]}]},
+         {
+          RowBox[{"              ", 
+           RowBox[{
+            RowBox[{"0", "              ", "si", "   ", 
+             RowBox[{"(", 
+              RowBox[{"x", ",", "y"}], ")"}]}], "=", 
+            RowBox[{"(", 
+             RowBox[{"0", ",", "1"}], ")"}]}]}]}
+        }],
+       ShowAutoStyles->True]}],
+     ShowAutoStyles->False],
+    #& ]}], " ", ";", "  ", 
+  RowBox[{"x0", "=", "0"}], ";", "  ", 
+  RowBox[{"y0", "=", "1"}], ";"}]}], "Motivacion",
+ CellChangeTimes->{{3.638531029459071*^9, 3.638531391812852*^9}},
+ FontFamily->"Times New Roman"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Vector Gradiente", "Seccion",
+ CellChangeTimes->{{3.638530839482447*^9, 3.6385308775286903`*^9}},
+ FontSize->36],
+
+Cell["\<\
+Trazaremos para la funci\[OAcute]n definida mas abajo los vectores gradientes \
+en diversos puntos de la regi\[OAcute]n de definici\[OAcute]n:\
+\>", "Text"],
+
+Cell[TextData[{
+ StyleBox["Ejercicio:\nLa elevaci\[OAcute]n de una monta\[NTilde]a est\
+\[AAcute] dada por la funci\[OAcute]n z (x,y)= (", "Ejercicio"],
+ StyleBox[Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["x", "2"], "+", 
+    RowBox[{"3", " ", 
+     SuperscriptBox["y", "2"]}]}], TraditionalForm]], "Ejercicio"], 
+  "Ejercicio"],
+ StyleBox[")", "Ejercicio"],
+ StyleBox[Cell[BoxData[
+  FormBox[
+   StyleBox[
+    SuperscriptBox["\[ExponentialE]", 
+     RowBox[{"(", 
+      RowBox[{"1", "-", 
+       SuperscriptBox["x", "2"], "-", 
+       SuperscriptBox[
+        RowBox[{"y", " "}], "2"]}], ")"}]], "Ejercicio"], TraditionalForm]], 
+  "Ejercicio"], "Ejercicio"],
+ StyleBox[", en donde el semi eje positivo de las X apunta hacia el este y el \
+de las Y apunta hacia el norte. Un alpinista est\[AAcute] exactamente arriba \
+de (1,1). Si se mueve hacia el noroeste, \[DownQuestion]Asciende o desciende, \
+y con qu\[EAcute] pendiente?", "Ejercicio"]
+}], "Ejercicio",
+ TextAlignment->Left,
+ TextJustification->1],
+
+Cell["Definamos la funci\[OAcute]n y elaboremos su gr\[AAcute]fica \
+tridimensional:", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Clear", "[", 
+  RowBox[{"z", ",", "x", ",", "y"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"z", "[", 
+    RowBox[{"x_", ",", "y_"}], "]"}], "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      SuperscriptBox["x", "2"], "+", 
+      RowBox[{"3", 
+       SuperscriptBox["y", "2"]}]}], ")"}], 
+    RowBox[{"Exp", "[", 
+     RowBox[{"1", "-", 
+      SuperscriptBox["x", "2"], "-", 
+      SuperscriptBox["y", "2"]}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"dib1", "=", 
+  RowBox[{"Plot3D", "[", 
+   RowBox[{
+    RowBox[{"z", "[", 
+     RowBox[{"x", ",", "y"}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", 
+      RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"y", ",", 
+      RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"600", ",", "400"}], "}"}]}], ",", 
+    RowBox[{"PlotPoints", "\[Rule]", "40"}], ",", 
+    RowBox[{"ViewPoint", "->", 
+     RowBox[{"{", 
+      RowBox[{"2.226", ",", " ", 
+       RowBox[{"-", "1.647"}], ",", " ", "1.945"}], "}"}]}], ",", 
+    RowBox[{"PlotRange", " ", "->", "All"}]}], "]"}]}]}], "Input"],
+
+Cell["\<\
+Ahora, trazemos sus curvas de nivel para visualizar su comportamiento\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"dib2", "=", 
+  RowBox[{"ContourPlot", "[", 
+   RowBox[{
+    RowBox[{"z", "[", 
+     RowBox[{"x", ",", "y"}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", 
+      RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"y", ",", 
+      RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"600", ",", "400"}], "}"}]}], ",", " ", 
+    RowBox[{"PlotPoints", "\[Rule]", "100"}], ",", 
+    RowBox[{"Contours", "\[Rule]", "30"}]}], "]"}]}]], "Input"],
+
+Cell["Calculando el vector gradiente:", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<Calculus`VectorAnalysis`\>\"", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"vec", "=", " ", 
+  RowBox[{"Grad", "[", 
+   RowBox[{
+    RowBox[{"z", "[", 
+     RowBox[{"x", ",", "y"}], "]"}], ",", 
+    RowBox[{"Cartesian", "[", 
+     RowBox[{"x", ",", "y", ",", "z"}], "]"}]}], "]"}]}]}], "Input"],
+
+Cell["Por lo tanto, su pendiente en el punto (1,1)", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"pendiente", "=", 
+  RowBox[{"vec", "/.", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"x", "\[Rule]", "1"}], ",", 
+     RowBox[{"y", "\[Rule]", "1"}]}], "}"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{"valor", "=", 
+  SqrtBox[
+   RowBox[{
+    SuperscriptBox[
+     RowBox[{"pendiente", "[", 
+      RowBox[{"[", "1", "]"}], "]"}], "2"], "+", 
+    SuperscriptBox[
+     RowBox[{"pendiente", "[", 
+      RowBox[{"[", "2", "]"}], "]"}], "2"], "+", "0"}]]}]}], "Input"],
+
+Cell[TextData[{
+ "Entonces el alpinista descender\[AAcute], ya que su vector gradiente es \
+negativo en el punto, y la pendiente es de ",
+ Cell[BoxData[
+  FractionBox[
+   RowBox[{"2", " ", 
+    SqrtBox["10"]}], "\[ExponentialE]"]]]
+}], "Text"],
+
+Cell["\<\
+Para ilustrar el campo gradiente utilizamos el comando PlotVectorField:\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<Graphics`PlotField`\>\"", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"dib3", "=", 
+  RowBox[{"PlotVectorField", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"vec", "[", 
+       RowBox[{"[", "1", "]"}], "]"}], ",", 
+      RowBox[{"vec", "[", 
+       RowBox[{"[", "2", "]"}], "]"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", 
+      RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"y", ",", 
+      RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+    RowBox[{"ColorFunction", "\[Rule]", "Hue"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"600", ",", "400"}], "}"}]}], ",", " ", 
+    RowBox[{"Axes", "\[Rule]", "True"}]}], "]"}]}]}], "Input"],
+
+Cell["\<\
+Superponiendo el campo gradiente con las curvas de nivel de la \
+monta\[NTilde]a:\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"Show", "[", 
+  RowBox[{"dib2", ",", "dib3", ",", 
+   RowBox[{"ImageSize", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"600", ",", "500"}], "}"}]}]}], "]"}]], "Input"],
+
+Cell["\<\
+Note que los vectores gradientes son perpendiculares a las curvas de nivel y \
+que deben apuntar en la direcci\[OAcute]n de mayor crecimiento.\
+\>", "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Planos Tangente - Aplicaci\[OAcute]n de la diferencial", "Seccion",
+ CellChangeTimes->{{3.6385308804974804`*^9, 3.638530908474684*^9}}],
+
+Cell["Planos Tangentes", "Subseccion"],
+
+Cell["\<\
+Ejemplo:  Calcular y trazar el plano tangente a la siguiente superficie en el \
+punto (x0,y0,z0) en donde
+                x0= - 0.5  , y0  = 1  ,  z0  es el valor que corresponda:\
+\>", "Ejercicio"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"f", "=", 
+   RowBox[{"x", " ", "y", " ", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"x", "^", "2"}], "-", 
+       RowBox[{"y", "^", "2"}]}], ")"}], "/", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"x", "^", "2"}], "+", 
+       RowBox[{"y", "^", "2"}]}], ")"}]}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sup", "=", 
+   RowBox[{"Plot3D", "[", 
+    RowBox[{"f", ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", 
+       RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"y", ",", 
+       RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"600", ",", "400"}], "}"}]}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", 
+  RowBox[{
+  "\"\<La superficie queda guardada con el nombre \>\"", "sup", "\"\< \>\""}],
+   "]"}]}], "Input"],
+
+Cell[TextData[{
+ "\n",
+ StyleBox["Soluci\[OAcute]n:",
+  FontWeight->"Bold"],
+ "\nPrimero calculemos el valor  z0"
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"x0", "=", 
+   RowBox[{"-", "0.5"}]}], ";", " ", 
+  RowBox[{"y0", " ", "=", " ", "1"}], " ", ";", " ", 
+  RowBox[{"z0", "=", 
+   RowBox[{"f", "/.", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"x", "\[Rule]", "x0"}], ",", 
+      RowBox[{"y", "\[Rule]", "y0"}]}], "}"}]}]}]}]], "Input"],
+
+Cell["\<\
+Se calculan enseguida las derivadas parciales en el punto para tener el \
+vector normal a la superficie en el punto\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"fx", "=", 
+  RowBox[{
+   RowBox[{"D", "[", 
+    RowBox[{"f", ",", "x"}], "]"}], "/.", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"x", "\[Rule]", "x0"}], ",", 
+     RowBox[{"y", "\[Rule]", "y0"}]}], "}"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{"fy", "=", 
+  RowBox[{
+   RowBox[{"D", "[", 
+    RowBox[{"f", ",", "y"}], "]"}], "/.", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"x", "\[Rule]", "x0"}], ",", 
+     RowBox[{"y", "\[Rule]", "y0"}]}], "}"}]}]}]}], "Input"],
+
+Cell["El vector normal es:", "Text"],
+
+Cell[BoxData[
+ RowBox[{"vec", "=", " ", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"-", "fx"}], ",", 
+    RowBox[{"-", "fy"}], ",", "1"}], "}"}]}]], "Input"],
+
+Cell["Ahora se calcula el plano tangente", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"vec", ".", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"x", "-", "x0"}], ",", 
+     RowBox[{"y", "-", "y0"}], ",", 
+     RowBox[{"z", "-", "z0"}]}], "}"}]}], "\[Equal]", "0"}]], "Input"],
+
+Cell["o bien", "Text"],
+
+Cell[BoxData[
+ RowBox[{"z", "=", " ", 
+  RowBox[{"z0", " ", "+", " ", 
+   RowBox[{"fx", 
+    RowBox[{"(", 
+     RowBox[{"x", "-", "x0"}], ")"}]}], "+", 
+   RowBox[{"fy", 
+    RowBox[{"(", 
+     RowBox[{"y", "-", "y0"}], ")"}]}]}]}]], "Input"],
+
+Cell["Se grafica el plano en torno del punto.", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"eps", "=", "0.5"}], ";", " ", 
+  RowBox[{"plano", "=", 
+   RowBox[{"Plot3D", "[", 
+    RowBox[{"z", ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", 
+       RowBox[{"x0", "-", "eps"}], ",", 
+       RowBox[{"x0", "+", "eps"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"y", ",", 
+       RowBox[{"y0", "-", "eps"}], ",", 
+       RowBox[{"y0", "+", "eps"}]}], "}"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"600", ",", "400"}], "}"}]}]}], "]"}]}], ";", " ", 
+  RowBox[{
+  "Print", "[", "\"\<El plano queda guardado con el nombre  plano\>\"", 
+   "]"}]}]], "Input"],
+
+Cell["Pong\[AAcute]moslo sobre la superficie", "Text"],
+
+Cell[BoxData[
+ RowBox[{"Show", "[", 
+  RowBox[{"sup", ",", " ", "plano"}], "]"}]], "Input"],
+
+Cell["\<\
+
+Conclusi\[OAcute]n: El plano tangente aparece pegado a la superficie cort\
+\[AAcute]ndola mas all\[AAcute] del punto. Trate usted de probar con otros \
+puntos. Trate de \"equivocarse\" elevando un poco el nivel de z0 (por ejemplo \
+0.4). Usted ver\[AAcute] que el plano se despega totalmente.
+\
+\>", "Posterior"],
+
+Cell[TextData[StyleBox["NOTA -------->",
+ FontWeight->"Bold",
+ FontColor->RGBColor[1, 0, 0]]], "Text"],
+
+Cell["\<\
+A continuaci\[OAcute]n se tratar\[AAcute] de mostrar como,mediante planos \
+tangentes en algunos puntos puede reproducirse la superficie.Son pocos los \
+puntos,por ello la poca precisi\[OAcute]n y es una peque\[NTilde]a parte de \
+la superficie.Pero da una idea.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Clear", "[", 
+   RowBox[{"x", ",", "y", ",", "z", ",", "z0", ",", "y0", ",", "z0"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"f", "=", 
+   RowBox[{"x", " ", "y", " ", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"x", "^", "2"}], "-", 
+       RowBox[{"y", "^", "2"}]}], ")"}], "/", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"x", "^", "2"}], "+", 
+       RowBox[{"y", "^", "2"}]}], ")"}]}]}]}], ";", 
+  RowBox[{"Print", "[", "\"\<Superfice \>\"", "]"}], ";", 
+  RowBox[{"sup", "=", 
+   RowBox[{"Plot3D", "[", 
+    RowBox[{"f", ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", 
+       RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"y", ",", 
+       RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"600", ",", "400"}], "}"}]}]}], "]"}]}], ";", 
+  RowBox[{
+  "Print", "[", "\"\<Se graficaran solo los primeros planos tangentes\>\"", 
+   "]"}], ";", 
+  RowBox[{"Clear", "[", 
+   RowBox[{"punto", ",", "nnorm", ",", "eso", ",", "qw", ",", "di"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"kj", "=", "0"}], ";", 
+  RowBox[{"Do", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"kj", "=", 
+      RowBox[{"kj", "+", "1"}]}], ";", 
+     RowBox[{"ki", "=", "0"}], ";", 
+     RowBox[{"Do", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"ki", "=", 
+         RowBox[{"ki", "+", "1"}]}], ";", 
+        RowBox[{"x0", "=", 
+         RowBox[{"0.1", "  ", "i"}]}], ";", 
+        RowBox[{"y0", "=", 
+         RowBox[{"0.1", "  ", "j"}]}], ";", 
+        RowBox[{"z0", "=", 
+         RowBox[{"f", "/.", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"x", "\[Rule]", "x0"}], ",", 
+            RowBox[{"y", "\[Rule]", "y0"}]}], "}"}]}]}], ";", 
+        RowBox[{
+         RowBox[{"punto", "[", 
+          RowBox[{"ki", ",", "kj"}], "]"}], "=", 
+         RowBox[{"{", 
+          RowBox[{"x0", ",", "y0", ",", "z0"}], "}"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"nnorm", "[", 
+          RowBox[{"ki", ",", "kj"}], "]"}], "=", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"-", 
+             RowBox[{"D", "[", 
+              RowBox[{"f", ",", "x"}], "]"}]}], ",", 
+            RowBox[{"-", 
+             RowBox[{"D", "[", 
+              RowBox[{"f", ",", "y"}], "]"}]}], ",", "1"}], "}"}], "/.", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"x", "\[Rule]", "x0"}], ",", 
+            RowBox[{"y", "\[Rule]", "y0"}], ",", 
+            RowBox[{"z", "\[Rule]", "z0"}]}], "}"}]}]}], ";", 
+        RowBox[{"Print", "[", 
+         RowBox[{"\"\<Normal a la superficie en el punto \>\"", ",", 
+          RowBox[{"punto", "[", 
+           RowBox[{"ki", ",", "kj"}], "]"}], ",", "\"\< : \>\"", ",", 
+          RowBox[{"nnorm", "[", 
+           RowBox[{"ki", ",", "kj"}], "]"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"eso", "[", 
+          RowBox[{"ki", ",", "kj"}], "]"}], "=", 
+         RowBox[{
+          RowBox[{"nnorm", "[", 
+           RowBox[{"ki", ",", "kj"}], "]"}], ".", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"x", ",", "y", ",", "z"}], "}"}], "-", 
+            RowBox[{"punto", "[", 
+             RowBox[{"ki", ",", "kj"}], "]"}]}], ")"}]}]}], ";", 
+        RowBox[{"Print", "[", 
+         RowBox[{"\"\<Plano Tangente en el punto  \>\"", ",", 
+          RowBox[{"eso", "[", 
+           RowBox[{"ki", ",", "kj"}], "]"}], ",", "\"\< = 0\>\""}], "]"}], 
+        ";", " ", 
+        RowBox[{
+         RowBox[{"qw", "[", 
+          RowBox[{"ki", ",", "kj"}], "]"}], "=", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"z", "/.", 
+            RowBox[{"Solve", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"eso", "[", 
+                RowBox[{"ki", ",", "kj"}], "]"}], "\[Equal]", "0"}], ",", 
+              "z"}], "]"}]}], ")"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"a1", "=", 
+         RowBox[{
+          RowBox[{"punto", "[", 
+           RowBox[{"ki", ",", "kj"}], "]"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+        RowBox[{"a2", "=", 
+         RowBox[{
+          RowBox[{"punto", "[", 
+           RowBox[{"ki", ",", "kj"}], "]"}], "[", 
+          RowBox[{"[", "2", "]"}], "]"}]}], ";", 
+        RowBox[{"ep", "=", "0.03"}], ";", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"j", "\[Equal]", 
+           RowBox[{"-", "2.1"}]}], ",", 
+          RowBox[{
+           RowBox[{"di", "[", 
+            RowBox[{"ki", ",", "kj"}], "]"}], "=", 
+           RowBox[{"Plot3D", "[", 
+            RowBox[{
+             RowBox[{"qw", "[", 
+              RowBox[{"ki", ",", "kj"}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"x", ",", 
+               RowBox[{"a1", "-", "ep"}], ",", 
+               RowBox[{"a1", "+", "ep"}]}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"y", ",", 
+               RowBox[{"a2", "-", "ep"}], ",", 
+               RowBox[{"a2", "+", "ep"}]}], "}"}], ",", 
+             RowBox[{"ImageSize", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"600", ",", "400"}], "}"}]}]}], "]"}]}], ",", 
+          RowBox[{
+           RowBox[{"di", "[", 
+            RowBox[{"ki", ",", "kj"}], "]"}], "=", 
+           RowBox[{"Plot3D", "[", 
+            RowBox[{
+             RowBox[{"qw", "[", 
+              RowBox[{"ki", ",", "kj"}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"x", ",", 
+               RowBox[{"a1", "-", "ep"}], ",", 
+               RowBox[{"a1", "+", "ep"}]}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"y", ",", 
+               RowBox[{"a2", "-", "ep"}], ",", 
+               RowBox[{"a2", "+", "ep"}]}], "}"}], ",", 
+             RowBox[{"DisplayFunction", "->", "Identity"}]}], "]"}]}], ",", 
+          RowBox[{"ImageSize", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"600", ",", "400"}], "}"}]}]}], "]"}]}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", 
+         RowBox[{"-", "2.1"}], ",", "2.1"}], "}"}]}], "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"j", ",", 
+      RowBox[{"-", "2.1"}], ",", "2.1"}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Show", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"di", "[", 
+      RowBox[{"i", ",", "j"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "ki"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "1", ",", "kj"}], "}"}]}], "]"}], ",", 
+   RowBox[{"DisplayFunction", "->", "$DisplayFunction"}], ",", 
+   RowBox[{"ImageSize", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"600", ",", "400"}], "}"}]}]}], "]"}]}], "Input"],
+
+Cell["Aplicaciones de la diferencial. ", "Subseccion"],
+
+Cell[TextData[{
+ "Definici\[OAcute]n.\n                  La diferencial en un punto es \
+aproximadamente igual a la variaci\[OAcute]n que experimenta una funci\
+\[OAcute]n en ese punto.  Esto es, si la funci\[OAcute]n    z = f(x,y)  es \
+diferenciable \nen  P(a,b) :      \n                                          \
+  \[CapitalDelta]f     \[TildeEqual]   df     \no bien        \n              \
+   \[CapitalDelta]f  = f(a + h , b + k) - f (a , b )   \[TildeEqual]   ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       SubscriptBox["\[PartialD]", "x"], " ", 
+       RowBox[{"f", "(", 
+        RowBox[{"a", ",", "b"}], ")"}]}], "  ", "dx"}], "  ", "+", "  ", 
+     RowBox[{
+      RowBox[{
+       SubscriptBox["\[PartialD]", "y"], " ", 
+       RowBox[{"f", "(", 
+        RowBox[{"a", ",", "b"}], ")"}]}], " ", "dy"}]}], "  ", "=", " "}], 
+   TraditionalForm]]],
+ "df    \n\ndonde se  entiende :   dx = h   ;  dy = k .\n"
+}], "Teorema"],
+
+Cell["\<\
+La siguiente funci\[OAcute]n es diferenciable en la regi\[OAcute]n dada. \
+\[DownQuestion]Cu\[AAcute]l es una raz\[OAcute]n para ello?.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Clear", "[", 
+  RowBox[{"f", ",", "x", ",", "y"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"f", "=", 
+   RowBox[{
+    RowBox[{"x", " ", 
+     RowBox[{"(", 
+      RowBox[{"1", "+", 
+       RowBox[{"y", "^", "2"}]}], ")"}]}], " ", "-", " ", 
+    RowBox[{"Sin", "[", "x", "]"}]}]}], ";", " ", 
+  RowBox[{"Plot3D", "[", 
+   RowBox[{"f", ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", 
+      RowBox[{"-", "2"}], ",", "2"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"y", ",", 
+      RowBox[{"-", "10"}], ",", "10"}], "}"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"600", ",", "400"}], "}"}]}]}], "]"}]}]}], "Input"],
+
+Cell[TextData[{
+ StyleBox["Ejercicio: La sigui", "Motivacion"],
+ StyleBox["ente f", "Motivacion",
+  FontColor->RGBColor[0, 0.501961, 0.501961]],
+ StyleBox["u", "Text",
+  FontColor->RGBColor[0, 0.501961, 0.501961]],
+ StyleBox["nci\[OAcute]n ", "Motivacion",
+  FontColor->RGBColor[0, 0.501961, 0.501961]],
+ StyleBox["no es diferenciable en el origen aunque tiene ambas derivadas \
+parciales en ese punto. \n              \n                         f(x) = ", 
+  "Motivacion"],
+ StyleBox[Cell[BoxData[
+  FormBox[
+   TagBox[
+    StyleBox[
+     RowBox[{"{", 
+      StyleBox[GridBox[{
+         {
+          FractionBox[
+           RowBox[{"x", " ", "y"}], 
+           RowBox[{
+            SuperscriptBox["x", "2"], " ", "+", " ", 
+            SuperscriptBox["y", "2"]}]]},
+         {"0"}
+        }],
+       ShowAutoStyles->True]}],
+     ShowAutoStyles->False],
+    #& ], TraditionalForm]], "Motivacion"], "Motivacion"],
+ StyleBox["        ", "Motivacion"],
+ StyleBox[Cell[BoxData[
+  FormBox[GridBox[{
+     {
+      RowBox[{
+       RowBox[{"si", "   ", 
+        RowBox[{"(", " ", 
+         RowBox[{"x", " ", ",", " ", "y"}], " ", ")"}]}], " ", "\[NotEqual]", 
+       " ", 
+       RowBox[{"(", " ", 
+        RowBox[{"0", " ", ",", " ", "0"}], " ", ")"}]}]},
+     {
+      RowBox[{"en", " ", "el", " ", "origen", " "}]}
+    }], TraditionalForm]], "Motivacion"], "Motivacion"],
+ StyleBox["\n              Indicaci\[OAcute]n:  No puede calcular las \
+derivadas parciales en cero usando D. Debe recurrir a la definici\[OAcute]n \
+que fu\[EAcute]\n                                 recordada en el primer tema \
+de esta sesi\[OAcute]n. Observe una gr\[AAcute]fica de la funci\[OAcute]n.    \
+               ", "Motivacion"]
+}], "Ejercicio"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"rr", "[", 
+   RowBox[{"x_", ",", "y_"}], "]"}], ":=", " ", 
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"x", "\[Equal]", "0"}], "&&", 
+     RowBox[{"y", "\[Equal]", "0"}]}], ",", "0", ",", 
+    RowBox[{"x", " ", 
+     RowBox[{"y", " ", "/", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"x", "^", "2"}], "+", 
+        RowBox[{"y", "^", "2"}]}], ")"}]}]}]}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Plot3D", "[", 
+  RowBox[{
+   RowBox[{"rr", "[", 
+    RowBox[{"x", ",", "y"}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"y", ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+   RowBox[{"PlotPoints", "\[Rule]", "30"}], ",", 
+   RowBox[{"ImageSize", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"600", ",", "400"}], "}"}]}]}], "]"}]], "Input"],
+
+Cell["\<\
+Ejercicio:
+               Las dimensiones de una caja rectangular cerrada son 80 cm., \
+60cm. y 50 cm., repectivamente, con un error posible de 0.2 cm. en cada \
+dimensi\[OAcute]n. Utilice las diferenciales para estimar el error \
+m\[AAcute]ximo en el c\[AAcute]lculo del \[AAcute]rea de la superficie de la \
+caja.
+       \
+\>", "Motivacion"],
+
+Cell["\<\
+Ejercicio.
+               Emplee las diferenciales para estimar la cantidad de aluminio \
+que se necesita para una lata cerrada de bebida con di\[AAcute]metro de 8 cm. \
+y una alura de 12 cm., adem\[AAcute]s, la lata debe tener un espesos de  0.04 \
+cm.
+               \
+\>", "Motivacion"],
+
+Cell["\<\
+Ejercicicio.
+               Utilice las diferenciales para calcular la cantidad de alumnio \
+de una lata cil\[IAcute]ndrica cerrrada de 10 cm. de alto y 4 cm. de di\
+\[AAcute]metro , si el alumnio  de la pared es de 0.05 cm. de espesor y el \
+metal de la tapa y el fondo es de 0.1 cm. de espesor.
+                 \
+\>", "Motivacion"],
+
+Cell["\<\
+Ejercicio.
+            La presi\[OAcute]n, el volumen y la temperatura de un mol de un \
+gas ideal se relacionan mediante la ecuaci\[OAcute]n  P V = 8.31 T donde P se \
+mide en kilopascales, V en litros y T en kelvins. Utilice las diferenciales \
+para calcular el cambio aproximado de la presi\[OAcute]n, si el volumen se \
+incrementa de 12  litros  a 112.3  litros  y la temperatura disminuye de 210 \
+Kelvin  a 305 Kelvin.
+               \
+\>", "Motivacion"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Funciones Inversas. Sistemas de coordenadas", "Seccion",
+ CellChangeTimes->{{3.638530616096995*^9, 3.638530643456761*^9}, 
+   3.6385308687004085`*^9}],
+
+Cell["Matriz Jacobiana y Funci\[OAcute]n Inversa", "Subseccion"],
+
+Cell[TextData[{
+ StyleBox["Un problema frecuente es determinar bajo que condiciones una funci\
+\[OAcute]n es invertible localmente en torno a un punto. En el caso de \
+sistemas de coordenadas esto ser\[AAcute] importante en el curso Matem\
+\[AAcute]tica IV.",
+  FontSize->18,
+  FontWeight->"Plain"],
+ "\n "
+}], "Text",
+ FontSize->24,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0, 0.250004, 0.500008]],
+
+Cell[TextData[{
+ "TEOREMA   de la funci\[OAcute]n inversa.\n\n         Sea f :  U \[Subset] ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["R", "n"], TraditionalForm]]],
+ "  \[Rule]  ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["R", "n"], TraditionalForm]]],
+ "  tal que a   x = (",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["x", "1"], TraditionalForm]]],
+ ", ... , ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["x", "n"], TraditionalForm]]],
+ ") \n         le asocia    f( x ) = ( ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["f", "1"], TraditionalForm]]],
+ "(x), .....,  ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["f", "n"], TraditionalForm]]],
+ "(x))  \n  y  cuyas funciones componentes ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["f", "i"], TraditionalForm]]],
+ "  tienen derivadas  parciales \n  de primer orden continuas en  torno de ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "0"], TraditionalForm]]],
+ " punto interior de U.\n  \n          Si  el determinante de  f   en   ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "0"], TraditionalForm]]],
+ "  es  no  nulo  entonces \n la funci\[OAcute]n f es localmente invertible \
+en torno de  ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "0"], TraditionalForm]]],
+ ", adem\[AAcute]s:\n \n                       si   ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["Q", "0"], TraditionalForm]]],
+ " = f(",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "0"], TraditionalForm]]],
+ ")  entonces  \n       \n                       ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["J", 
+    SuperscriptBox["f", 
+     RowBox[{"-", "1"}]]], TraditionalForm]]],
+ "(",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["Q", "0"], TraditionalForm]]],
+ ") =  ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox[
+    RowBox[{"[", 
+     RowBox[{
+      SubscriptBox["J", "f"], "(", 
+      SubscriptBox["P", "0"], ")"}], "]"}], 
+    RowBox[{"-", "1"}]], TraditionalForm]]],
+ "\n                       "
+}], "Teorema",
+ CellChangeTimes->{{3.6385306795034795`*^9, 3.6385306841598253`*^9}}],
+
+Cell[TextData[{
+ "DEFINICION : Matr\[IAcute]z Jacobiana.\n                        Sea f :  U \
+\[Subset] ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["R", "n"], TraditionalForm]]],
+ "  \[Rule]  ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["R", "m"], TraditionalForm]]],
+ "  tal que a   \n             x = (",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["x", "1"], TraditionalForm]]],
+ ", ... , ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["x", "n"], TraditionalForm]]],
+ ") le asocia    f( x ) = ( ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["f", "1"], TraditionalForm]]],
+ "(x), .....,  ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["f", "m"], TraditionalForm]]],
+ "(x))  \n  y  cuyas funciones componentes ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["f", "i"], TraditionalForm]]],
+ "  tienen derivadas  parciales \n  de primer orden en  ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "0"], TraditionalForm]]],
+ " punto interior de U.\n                        La matriz  Jacobiana de  f  \
+en  ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "0"], TraditionalForm]]],
+ "  ser\[AAcute]:\n\n       ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["J", "f"], TraditionalForm]]],
+ "(",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "0"], TraditionalForm]]],
+ ")  ",
+ StyleBox["= ",
+  FontWeight->"Bold"],
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox[
+    RowBox[{"(", GridBox[{
+       {
+        RowBox[{
+         FractionBox[
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["f", "1"]}], 
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["x", "1"]}]], 
+         RowBox[{"(", 
+          SubscriptBox["P", "0"], ")"}]}], 
+        RowBox[{
+         FractionBox[
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["f", "1"]}], 
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["x", "2"]}]], 
+         RowBox[{"(", 
+          SubscriptBox["P", "0"], ")"}]}], "...", 
+        RowBox[{
+         FractionBox[
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["f", "1"]}], 
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["x", "n"]}]], 
+         RowBox[{"(", 
+          SubscriptBox["P", "0"], ")"}]}]},
+       {
+        RowBox[{
+         FractionBox[
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["f", "2"]}], 
+          RowBox[{" ", 
+           RowBox[{"\[PartialD]", " ", 
+            SubscriptBox["x", "1"]}]}]], 
+         RowBox[{"(", 
+          SubscriptBox["P", "0"], ")"}]}], 
+        RowBox[{
+         FractionBox[
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["f", "2"]}], 
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["x", "2"]}]], 
+         RowBox[{"(", 
+          SubscriptBox["P", "0"], ")"}]}], "...", 
+        RowBox[{
+         FractionBox[
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["f", "2"]}], 
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["x", "n"]}]], 
+         RowBox[{"(", 
+          SubscriptBox["P", "0"], ")"}]}]},
+       {"...", "...", "...", "..."},
+       {
+        RowBox[{
+         FractionBox[
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["f", "m"]}], 
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["x", "1"]}]], 
+         RowBox[{"(", 
+          SubscriptBox["P", "0"], ")"}]}], 
+        RowBox[{
+         FractionBox[
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["f", "m"]}], 
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["x", "2"]}]], 
+         RowBox[{"(", 
+          SubscriptBox["P", "0"], ")"}]}], "...", 
+        RowBox[{
+         FractionBox[
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["f", "m"]}], 
+          RowBox[{"\[PartialD]", " ", 
+           SubscriptBox["x", "n"]}]], 
+         RowBox[{"(", 
+          SubscriptBox["P", "0"], ")"}]}]}
+      }], ")"}], "mxn"], TraditionalForm]],
+  FontWeight->"Bold"]
+}], "Teorema",
+ CellChangeTimes->{{3.6385306996131134`*^9, 3.6385306996912975`*^9}}],
+
+Cell[TextData[{
+ "DEFINICION: Jacobiano. \n\n                       El determinante de la \
+matriz jacobiana de f en ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "0"], TraditionalForm]]],
+ "\n                       se llamar\[AAcute] \"jacobiano de f en ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "0"], TraditionalForm]]],
+ "\" y se denotar\[AAcute]\n                       \n                         \
+                           ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox[
+    RowBox[{"  ", 
+     FormBox[
+      RowBox[{"\[PartialD]", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         SubscriptBox["f", "1"], ",", 
+         RowBox[{"...", "."}], ",", 
+         SubscriptBox["f", "n"]}], ")"}]}],
+      TraditionalForm]}], 
+    RowBox[{"  ", 
+     FormBox[
+      RowBox[{"\[PartialD]", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         SubscriptBox["x", "1"], ",", 
+         RowBox[{"...", "."}], ",", 
+         SubscriptBox["x", "n"]}], ")"}]}],
+      TraditionalForm]}]], TraditionalForm]]],
+ "\n                                                    "
+}], "Teorema",
+ CellChangeTimes->{{3.638530715276743*^9, 3.638530717542451*^9}}],
+
+Cell["Sistema de coordenadas.", "Subseccion"],
+
+Cell["\<\
+Ejercicio.
+               SISTEMA DE COORDENADAS PARABOLICO
+              Probar que la funci\[OAcute]n  ( u,v, \[Phi])  -> (x,y,z)  \
+definida:
+                             x = u v Cos[\[Phi]] ;  y  = u v Sin[\[Phi]]  ;  \
+z = (v^2 - u^2)/2
+             es localmente invertible.
+             \
+\>", "Ejercicio"],
+
+Cell["Primero se introducen las funciones componentes:", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"x", "=", 
+   RowBox[{"u", " ", "v", " ", 
+    RowBox[{"Cos", "[", "\[Phi]", "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"y", "=", 
+   RowBox[{"u", " ", "v", " ", 
+    RowBox[{"Sin", "[", "\[Phi]", "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"z", "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      SuperscriptBox["v", "2"], "-", 
+      SuperscriptBox["u", "2"]}], ")"}], "/", "2"}]}], ";"}]}], "Input"],
+
+Cell["Se calcula la matriz jacobiana J de la funcion", "Text"],
+
+Cell[BoxData[
+ RowBox[{"Jac", "=", 
+  RowBox[{"(", GridBox[{
+     {
+      RowBox[{"D", "[", 
+       RowBox[{"x", ",", "u"}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{"x", ",", "v"}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{"x", ",", "\[Phi]"}], "]"}]},
+     {
+      RowBox[{"D", "[", 
+       RowBox[{"y", ",", "u"}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{"y", ",", "v"}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{"y", ",", "\[Phi]"}], "]"}]},
+     {
+      RowBox[{"D", "[", 
+       RowBox[{"z", ",", "u"}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{"z", ",", "v"}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{"z", ",", "\[Phi]"}], "]"}]}
+    }], ")"}]}]], "Input"],
+
+Cell["Calculemos su determinante y simplifiquemos la expresi\[OAcute]n", \
+"Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"J", "=", 
+   RowBox[{"Det", "[", "Jac", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"%", "//", "FullSimplify"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Det", "[", 
+    RowBox[{"Inverse", "[", "Jac", "]"}], "]"}], "//", "FullSimplify"}], "//",
+   "MatrixForm"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"1", "/", "J"}], "//", "FullSimplify"}]}], "Input"],
+
+Cell["\<\
+Ejercicio
+                      SISTEMA DE COORDENADAS ESFERICO.
+               Consideremos la funci\[OAcute]n  (\[Rho],\[Phi],\[Theta]) \
+\[Rule] (x,y,z)  definida:
+                                                            x = \[Rho] Sin(\
+\[Phi]) Cos(\[Theta])
+\t\t\t\t\ty = \[Rho] Sin(\[Phi]) Sin(\[Theta])
+\t\t\t\t\tz = \[Rho] Cos(\[Phi])
+\t\t\t\t
+                 Calcular la matriz jacobiana del sistema de coordenadas esf\
+\[EAcute]rico y con ello obtener las derivadas parciales de  \[Rho],\[Phi],\
+\[Theta]   con respecto a  x, y, z.
+                 \
+\>", "Propuesto"],
+
+Cell["Primero se introducen las funciones componentes:", "Text"],
+
+Cell[BoxData[""], "Input"],
+
+Cell["Se calcula la matriz jacobiana J de la funcion", "Text"],
+
+Cell[BoxData[""], "Input"],
+
+Cell["Calculemos su determinante y simplifiquemos la expresi\[OAcute]n", \
+"Text"],
+
+Cell[BoxData[""], "Input"],
+
+Cell["\<\
+INTERPRETACION:   
+la primera l\[IAcute]nea contiene las derivadas parciales de \[Rho] con \
+respecto a  x, y, z
+la segunda l\[IAcute]nea contiene las derivadas parciales de \[Phi] con \
+respecto a x, y , z
+la tercera l\[IAcute]nea contiene las derivadas parciales de \[Theta] con \
+respecto a x, y, z\
+\>", "Text"],
+
+Cell[TextData[{
+ "\nEl jacobiano de la transformaci\[OAcute]n inversa:    ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox[
+    RowBox[{"\[PartialD]", " ", 
+     RowBox[{"(", 
+      RowBox[{"x", ",", "y", ",", "z"}], ")"}]}], 
+    RowBox[{"\[PartialD]", " ", 
+     RowBox[{"(", 
+      RowBox[{"\[Rho]", ",", "\[Phi]", ",", "\[Theta]"}], ")"}]}]], 
+   TraditionalForm]],
+  FontSize->24],
+ "   es igual al determinante\nde la matriz inversa de J, esto es,  ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox["1", 
+    RowBox[{"Det", "[", "J", "]"}]], TraditionalForm]]],
+ ".  Veamos  si esto es efectivo."
+}], "Text"],
+
+Cell[BoxData[""], "Input"],
+
+Cell[TextData[{
+ " Efectivamente corresponde a   ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox["1", 
+    RowBox[{"Det", "[", "J", "]"}]], TraditionalForm]]],
+ ".  \n"
+}], "Text"],
+
+Cell["\<\
+NOTA: 
+           Otros cambios de coordenadas muy \[UAcute]tiles en ingenier\
+\[IAcute]a pueden encontrarse en el texto de la Colecci\[OAcute]n Schaum: \
+\"Basic Equations of Engineering Science\",  de los profesores W.Hughes & E. \
+Gaylord  del Carnegie Institute of Technology.
+\
+\>", "Propuesto"],
+
+Cell["\<\
+Ejercicio
+                             Dada la transformaci\[OAcute]n x = u - 2v  ;  y \
+= 2u + v
+a .- Escribir las ecuaciones de la transformaci\[OAcute]n inversa.
+b.- Evaluar el Jacobiano de la Transformaci\[OAcute]n as\[IAcute] como el de \
+la Transformaci\[OAcute]n Inversa.\
+\>", "Motivacion"],
+
+Cell[TextData[{
+ "Ejercicio.\n               ",
+ StyleBox["Considere el sistema de tres ecuaciones algebraicas no lineales :\n\
+                                                x = u + v + w\n               \
+                                 y = ", "Motivacion"],
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["u", "2"], TraditionalForm]]],
+ "+ ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["v", "2"], TraditionalForm]]],
+ "+",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["w", "2"], TraditionalForm]]],
+ "\n                                                z = ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["u", "3"], TraditionalForm]]],
+ "+ ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["v", "3"], TraditionalForm]]],
+ "+",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["w", "3"], TraditionalForm]]],
+ "\nCalcular  ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox[
+    RowBox[{"\[PartialD]", " ", "v"}], 
+    RowBox[{"\[PartialD]", " ", "y"}]], TraditionalForm]]],
+ " en el punto ( x , y , z ) correspondiente  a    ( u , v , w ) = ( 1 , 2 , \
+-1 ). "
+}], "Motivacion"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Ejemplo de Aplicaci\[OAcute]n (Opcional)", "Seccion",
+ CellChangeTimes->{{3.6385307688004274`*^9, 3.6385307922070417`*^9}}],
+
+Cell["\<\
+Principio de la Energia Potencial M\[IAcute]nima para el C\[AAcute]lculo de \
+Vigas.\
+\>", "Subseccion"],
+
+Cell["\<\
+La idea del m\[EAcute]todo es minimizar la energ\[IAcute]a potencial que \
+adquiere la viga al deformarse, esta energ\[IAcute]a potencial es funci\
+\[OAcute]n de la deflexi\[OAcute]n de la viga, la cual se aproxima mediante \
+una expresi\[OAcute]n que satisfaga las condiciones de borde \
+geom\[EAcute]tricas del sistema.
+Minimizando la energ\[IAcute]a potencial se obtienen las inc\[OAcute]gnitas \
+llamadas tambi\[EAcute]n \"grados de libertad del sistema\".
+\
+\>", "Text"],
+
+Cell["\<\
+Ejemplo :
+Para la viga hiperest\[AAcute]tica de la figura, calcule la deflexi\[OAcute]n \
+a lo largo de la luz.
+\
+\>", "Ejercicio"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Carga", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"Polygon", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0.01"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0.01"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0.1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0.1"}], "}"}]}], "}"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Viga", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"AbsoluteThickness", "[", "3", "]"}], ",", 
+      RowBox[{"Line", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "0.02"}], ",", "0"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"1.02", ",", "0"}], "}"}]}], "}"}], "]"}]}], "}"}], "]"}]}],
+   ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Empot", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"Polygon", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.02"}], ",", "0.05"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.02"}], ",", 
+         RowBox[{"-", "0.05"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.04"}], ",", 
+         RowBox[{"-", "0.05"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.04"}], ",", "0.05"}], "}"}]}], "}"}], "]"}], "]"}]}],
+   ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Apoyo", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"Polygon", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1.02", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", 
+         RowBox[{"-", "0.04"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.04", ",", 
+         RowBox[{"-", "0.04"}]}], "}"}]}], "}"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Apoyo2", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"AbsoluteThickness", "[", "3", "]"}], ",", 
+      RowBox[{"Line", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"0.95", ",", 
+           RowBox[{"-", "0.06"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"1.1", ",", 
+           RowBox[{"-", "0.06"}]}], "}"}]}], "}"}], "]"}]}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Li", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"AbsoluteThickness", "[", "1", "]"}], ",", 
+      RowBox[{"Line", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "0.02"}], ",", 
+           RowBox[{"-", "0.15"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"1.02", ",", 
+           RowBox[{"-", "0.15"}]}], "}"}]}], "}"}], "]"}]}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Escrito", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Text", "[", 
+       RowBox[{
+        RowBox[{"StyleForm", "[", 
+         RowBox[{"\"\<EI\>\"", ",", 
+          RowBox[{"FontSize", "\[Rule]", "20"}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"0.2", ",", 
+          RowBox[{"-", "0.05"}]}], "}"}]}], "]"}], ",", 
+      RowBox[{"Text", "[", 
+       RowBox[{
+        RowBox[{"StyleForm", "[", 
+         RowBox[{"\"\<L\>\"", ",", 
+          RowBox[{"FontSize", "\[Rule]", "20"}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"0.5", ",", 
+          RowBox[{"-", "0.13"}]}], "}"}]}], "]"}], ",", 
+      RowBox[{"Text", "[", 
+       RowBox[{
+        RowBox[{"StyleForm", "[", 
+         RowBox[{"\"\<q\>\"", ",", 
+          RowBox[{"FontSize", "\[Rule]", "20"}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "0.12"}], "}"}]}], "]"}]}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Show", "[", 
+   RowBox[{
+   "Carga", ",", "Viga", ",", "Empot", ",", "Apoyo", ",", "Apoyo2", ",", "Li",
+     ",", "Escrito", ",", 
+    RowBox[{"PlotRange", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.5"}], ",", "1.5"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.2"}], ",", "0.2"}], "}"}]}], "}"}]}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"600", ",", "200"}], "}"}]}], ",", 
+    RowBox[{"AspectRatio", "\[Rule]", "Automatic"}]}], "]"}], ";"}]}], "Input"],
+
+Cell["Supongamos una soluci\[OAcute]n polin\[OAcute]mica del siguiente estilo \
+:", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Clear", "[", 
+  RowBox[{"a", ",", "b", ",", "x", ",", "y", ",", "q", ",", "EI", ",", "L"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"y", "[", "x_", "]"}], "=", 
+   RowBox[{"b1", "+", 
+    RowBox[{"b2", " ", "x"}], "+", 
+    RowBox[{"b3", " ", 
+     SuperscriptBox["x", "2"]}], "+", 
+    RowBox[{"b4", " ", 
+     SuperscriptBox["x", "3"]}], "+", 
+    RowBox[{"b5", " ", 
+     SuperscriptBox["x", "4"]}]}]}], ";"}]}], "Input"],
+
+Cell["Condiciones de borde geom\[EAcute]tricas.", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"sistema", "=", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"y", "[", "0", "]"}], "\[Equal]", "0"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"y", "'"}], "[", "0", "]"}], "\[Equal]", "0"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"y", "[", "L", "]"}], "\[Equal]", "0"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"%", "//", "MatrixForm"}]}], "Input"],
+
+Cell["\<\
+Dado que tenemos 3 ecuaciones y 5 inc\[OAcute]gnitas, podemos resolver para \
+tres de ellas en funci\[OAcute]n de las otras dos, en este caso, despejamos \
+b1, b2, b3.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"a", "=", 
+  RowBox[{"Solve", "[", 
+   RowBox[{"sistema", ",", 
+    RowBox[{"{", 
+     RowBox[{"b1", ",", "b2", ",", "b3"}], "}"}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"b1", "=", 
+   RowBox[{"b1", "/.", 
+    RowBox[{"a", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"b2", "=", 
+   RowBox[{"b2", "/.", 
+    RowBox[{"a", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"b3", "=", 
+   RowBox[{"b3", "/.", 
+    RowBox[{"a", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}]}], "Input"],
+
+Cell["Finalmente, la deflexi\[OAcute]n queda determinada por:", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"y", "[", "x", "]"}], "//", "FullSimplify"}]], "Input"],
+
+Cell["verificando las condiciones de borde...", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"y", "[", "0", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"y", "'"}], "[", "0", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"y", "[", "L", "]"}], "//", "FullSimplify"}]}], "Input"],
+
+Cell["\<\
+En este caso, la energ\[IAcute]a potencial de la viga queda definida por:\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"EP", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     FractionBox["1", "2"], 
+     RowBox[{
+      SubsuperscriptBox["\[Integral]", "0", "L"], 
+      RowBox[{"EI", " ", 
+       SuperscriptBox[
+        RowBox[{"D", "[", 
+         RowBox[{
+          RowBox[{"y", "[", "x", "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", "2"}], "}"}]}], "]"}], "2"], 
+       RowBox[{"\[DifferentialD]", "x"}]}]}]}], "-", 
+    RowBox[{
+     SubsuperscriptBox["\[Integral]", "0", "L"], 
+     RowBox[{"q", " ", 
+      RowBox[{"y", "[", "x", "]"}], 
+      RowBox[{"\[DifferentialD]", "x"}]}]}]}], "//", "Expand"}]}]], "Input"],
+
+Cell["\<\
+C\[AAcute]lculo energ\[IAcute]a potencial m\[IAcute]nima, lo que debemos \
+hacer es encontrar el punto cr\[IAcute]tico de EP, para ello, se debe \
+resolver el siguiente sistema.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"EPmin", "=", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", "b4"}], "]"}], "\[Equal]", "0"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", "b5"}], "]"}], "\[Equal]", "0"}]}], 
+    "\[IndentingNewLine]", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"sol", "=", 
+  RowBox[{"Solve", "[", 
+   RowBox[{"EPmin", ",", 
+    RowBox[{"{", 
+     RowBox[{"b4", ",", "b5"}], "}"}]}], "]"}]}]}], "Input"],
+
+Cell["Verificaci\[OAcute]n de punto m\[IAcute]nimo.", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"D", "[", 
+  RowBox[{"EP", ",", 
+   RowBox[{"{", 
+    RowBox[{"b4", ",", "2"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Det", "[", 
+  RowBox[{"(", GridBox[{
+     {
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", 
+        RowBox[{"{", 
+         RowBox[{"b4", ",", "2"}], "}"}]}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"D", "[", 
+         RowBox[{"EP", ",", "b4"}], "]"}], ",", "b5"}], "]"}]},
+     {
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"D", "[", 
+         RowBox[{"EP", ",", "b5"}], "]"}], ",", "b4"}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", 
+        RowBox[{"{", 
+         RowBox[{"b5", ",", "2"}], "}"}]}], "]"}]}
+    }], ")"}], "]"}]}], "Input"],
+
+Cell["\<\
+Punto estacionario m\[IAcute]nimo, la soluci\[OAcute]n es estable, cabe \
+destacar que tambi\[EAcute]n existen problemas en donde los puntos \
+cr\[IAcute]ticos son inestables ( problemas de pandeo ).
+Reemplazando b4 y b5 en y[x] se tiene el polinomio que describe la deflexi\
+\[OAcute]n de la viga.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"b4", "=", 
+   RowBox[{"b4", "/.", 
+    RowBox[{"sol", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"b5", "=", 
+   RowBox[{"b5", "/.", 
+    RowBox[{"sol", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"y", "[", "x", "]"}]}], "Input"],
+
+Cell["\<\
+En este caso la soluci\[OAcute]n resulta ser exacta, ( se puede obtener \
+mediante otros m\[EAcute]todos anal\[IAcute]ticos ) pero eso s\[OAcute]lo \
+depende del problema y del tipo de soluci\[OAcute]n que se asuma, por \
+ejemplo...si se asume una soluci\[OAcute]n del tipo :\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Clear", "[", "y1", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"y1", "[", "x_", "]"}], "=", 
+   RowBox[{"a1", "+", 
+    RowBox[{"a2", " ", "x"}], "+", 
+    RowBox[{"a3", " ", 
+     SuperscriptBox["x", "2"]}], "+", 
+    RowBox[{"a4", " ", 
+     SuperscriptBox["x", "3"]}]}]}], ";"}]}], "Input"],
+
+Cell["Condiciones de borde geom\[EAcute]tricas.", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"sistema", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"y1", "[", "0", "]"}], "\[Equal]", "0"}], ",", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"y1", "'"}], "[", "0", "]"}], "\[Equal]", "0"}], ",", 
+     RowBox[{
+      RowBox[{"y1", "[", "L", "]"}], "\[Equal]", "0"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"%", "//", "MatrixForm"}]}], "Input"],
+
+Cell["\<\
+Dado que tenemos 3 ecuaciones y 4 inc\[OAcute]gnitas, podemos resolver para \
+tres de ellas en funcion de la restante, en este caso, despejamos a1, a2, a3.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"a", "=", 
+  RowBox[{"Solve", "[", 
+   RowBox[{"sistema", ",", 
+    RowBox[{"{", 
+     RowBox[{"a1", ",", "a2", ",", "a3"}], "}"}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"a1", "=", 
+   RowBox[{"a1", "/.", 
+    RowBox[{"a", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"a2", "=", 
+   RowBox[{"a2", "/.", 
+    RowBox[{"a", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"a3", "=", 
+   RowBox[{"a3", "/.", 
+    RowBox[{"a", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}]}], "Input"],
+
+Cell["Finalmente, la deflexi\[OAcute]n queda determinada por:", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"y1", "[", "x", "]"}], "//", "FullSimplify"}]], "Input"],
+
+Cell["verificando las condiciones de borde...", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"y1", "[", "0", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"y1", "'"}], "[", "0", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"y1", "[", "L", "]"}], "//", "FullSimplify"}]}], "Input"],
+
+Cell["La energ\[IAcute]a potencial de la viga queda definida por:", "Text"],
+
+Cell[BoxData[
+ RowBox[{"EP", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     FractionBox["1", "2"], 
+     RowBox[{
+      SubsuperscriptBox["\[Integral]", "0", "L"], 
+      RowBox[{"EI", " ", 
+       SuperscriptBox[
+        RowBox[{"D", "[", 
+         RowBox[{
+          RowBox[{"y1", "[", "x", "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", "2"}], "}"}]}], "]"}], "2"], 
+       RowBox[{"\[DifferentialD]", "x"}]}]}]}], "-", 
+    RowBox[{
+     SubsuperscriptBox["\[Integral]", "0", "L"], 
+     RowBox[{"q", " ", 
+      RowBox[{"y1", "[", "x", "]"}], 
+      RowBox[{"\[DifferentialD]", "x"}]}]}]}], "//", "Expand"}]}]], "Input"],
+
+Cell["C\[AAcute]lculo energ\[IAcute]a potencial m\[IAcute]nima.", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"EPmin", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"D", "[", 
+      RowBox[{"EP", ",", "a4"}], "]"}], "\[Equal]", "0"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"sol", "=", 
+  RowBox[{"Solve", "[", 
+   RowBox[{"EPmin", ",", "a4"}], "]"}]}]}], "Input"],
+
+Cell["Verificaci\[OAcute]n de punto m\[IAcute]nimo.", "Text"],
+
+Cell[BoxData[
+ RowBox[{"D", "[", 
+  RowBox[{"EP", ",", 
+   RowBox[{"{", 
+    RowBox[{"a4", ",", "2"}], "}"}]}], "]"}]], "Input"],
+
+Cell["Punto estacionario m\[IAcute]nimo, la soluci\[OAcute]n es estable.", \
+"Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"a4", "=", 
+   RowBox[{"a4", "/.", 
+    RowBox[{"sol", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"y1", "[", "x", "]"}]}], "Input"],
+
+Cell["Esta es una soluci\[OAcute]n aproximada.", "Posterior"],
+
+Cell[TextData[{
+ "Compare los resultados anteriores para la viga con los siguientes valores :\
+\nRigidez por flexi\[OAcute]n = EI = 4000000 ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"[", 
+    SuperscriptBox["Nm", "2"], "]"}], TraditionalForm]]],
+ "\nLargo de viga = L = 6 [m]\nCarga Distribu\[IAcute]da = q = 6000 [N m]\n"
+}], "Ejercicio"],
+
+Cell["Recordemos, La soluci\[OAcute]n original es :", "Text"],
+
+Cell[BoxData[
+ RowBox[{"y", "[", "x", "]"}]], "Input"],
+
+Cell["La aproximaci\[OAcute]n por polinomio de grado cuatro es :", "Text"],
+
+Cell[BoxData[
+ RowBox[{"y1", "[", "x", "]"}]], "Input"],
+
+Cell["ingresando los valores de las constantes...", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"q", "=", "6000"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"L", "=", "6"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"EI", " ", "=", " ", "4000000"}], ";"}]}], "Input"],
+
+Cell["...y graficando para comparar...", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"pri", "=", 
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{"-", 
+      RowBox[{"y", "[", "x", "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "0", ",", "L"}], "}"}], ",", 
+     RowBox[{"DisplayFunction", "\[Rule]", "Identity"}], ",", 
+     RowBox[{"PlotStyle", "\[Rule]", 
+      RowBox[{"RGBColor", "[", 
+       RowBox[{"1", ",", "0", ",", "0"}], "]"}]}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"seg", "=", 
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{"-", 
+      RowBox[{"y1", "[", "x", "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "0", ",", "L"}], "}"}], ",", 
+     RowBox[{"DisplayFunction", "\[Rule]", "Identity"}], ",", 
+     RowBox[{"PlotStyle", "\[Rule]", 
+      RowBox[{"RGBColor", "[", 
+       RowBox[{"0", ",", "1", ",", "0"}], "]"}]}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Show", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"pri", ",", "seg"}], "}"}], ",", 
+   RowBox[{"DisplayFunction", "\[Rule]", "$DisplayFunction"}], ",", 
+   RowBox[{"PlotRange", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "0.1"}], ",", "0.1"}], "}"}]}], ",", 
+   RowBox[{"ImageSize", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"600", ",", "400"}], "}"}]}]}], "]"}]}], "Input"],
+
+Cell["\<\
+En rojo se grafica la soluci\[OAcute]n exacta y en verde la aproximaci\
+\[OAcute]n.\
+\>", "Posterior"],
+
+Cell["\<\
+Ejemplo :
+Para la viga simplemente apoyada de la figura, determine la deflexi\[OAcute]n \
+a lo largo de la luz.
+\
+\>", "Ejercicio"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Carga", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"Polygon", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0.01"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0.01"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0.1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0.1"}], "}"}]}], "}"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Viga", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"AbsoluteThickness", "[", "3", "]"}], ",", 
+      RowBox[{"Line", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"0", ",", "0"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", "0"}], "}"}]}], "}"}], "]"}]}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Ap", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"Polygon", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0"}], ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.02"}], ",", 
+         RowBox[{"-", "0.04"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0.02", ",", 
+         RowBox[{"-", "0.04"}]}], "}"}]}], "}"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Ap2", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"AbsoluteThickness", "[", "3", "]"}], ",", 
+      RowBox[{"Line", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "0.05"}], ",", 
+           RowBox[{"-", "0.04"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"0.05", ",", 
+           RowBox[{"-", "0.04"}]}], "}"}]}], "}"}], "]"}]}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Apoyo", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"Polygon", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0.98", ",", 
+         RowBox[{"-", "0.04"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1.02", ",", 
+         RowBox[{"-", "0.04"}]}], "}"}]}], "}"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Apoyo2", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"AbsoluteThickness", "[", "3", "]"}], ",", 
+      RowBox[{"Line", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"0.95", ",", 
+           RowBox[{"-", "0.06"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"1.05", ",", 
+           RowBox[{"-", "0.06"}]}], "}"}]}], "}"}], "]"}]}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Li", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"AbsoluteThickness", "[", "1", "]"}], ",", 
+      RowBox[{"Line", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"0", ",", 
+           RowBox[{"-", "0.15"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", 
+           RowBox[{"-", "0.15"}]}], "}"}]}], "}"}], "]"}]}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Texto", "=", 
+   RowBox[{"Graphics", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Text", "[", 
+       RowBox[{
+        RowBox[{"StyleForm", "[", 
+         RowBox[{"\"\<EI\>\"", ",", 
+          RowBox[{"FontSize", "\[Rule]", "20"}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"0.2", ",", 
+          RowBox[{"-", "0.05"}]}], "}"}]}], "]"}], ",", 
+      RowBox[{"Text", "[", 
+       RowBox[{
+        RowBox[{"StyleForm", "[", 
+         RowBox[{"\"\<L\>\"", ",", 
+          RowBox[{"FontSize", "\[Rule]", "20"}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"0.5", ",", 
+          RowBox[{"-", "0.13"}]}], "}"}]}], "]"}], ",", 
+      RowBox[{"Text", "[", 
+       RowBox[{
+        RowBox[{"StyleForm", "[", 
+         RowBox[{"\"\<q\>\"", ",", 
+          RowBox[{"FontSize", "\[Rule]", "20"}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "0.12"}], "}"}]}], "]"}]}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Show", "[", 
+   RowBox[{
+   "Carga", ",", "Viga", ",", "Ap", ",", "Ap2", ",", "Apoyo", ",", "Apoyo2", 
+    ",", "Li", ",", "Texto", ",", 
+    RowBox[{"PlotRange", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.5"}], ",", "1.5"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "0.2"}], ",", "0.2"}], "}"}]}], "}"}]}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"600", ",", "200"}], "}"}]}], ",", 
+    RowBox[{"AspectRatio", "\[Rule]", "Automatic"}]}], "]"}], ";"}]}], "Input"],
+
+Cell["Una soluci\[OAcute]n aproximada interesante de analizar puede ser:", \
+"Text"],
+
+Cell[BoxData[{
+ RowBox[{"Clear", "[", 
+  RowBox[{"c", ",", "L", ",", "q", ",", "EI", ",", "y2", ",", "y3"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"y2", "[", "x_", "]"}], "=", 
+  RowBox[{
+   UnderoverscriptBox["\[Sum]", 
+    RowBox[{"i", "=", "1"}], "3"], 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"c", "[", "i", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      FractionBox[
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"2", " ", "i"}], "-", "1"}], ")"}], "\[Pi]", " ", "x"}], 
+       "L"], "]"}]}], ")"}]}]}]}], "Input"],
+
+Cell["Note que cumple las condiciones de desplazamiento :", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"y2", "[", "0", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"y2", "[", "L", "]"}]}], "Input"],
+
+Cell["\<\
+En este caso, la energ\[IAcute]a potencial de la viga queda definida por:\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"EP", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     FractionBox["1", "2"], 
+     RowBox[{
+      SubsuperscriptBox["\[Integral]", "0", "L"], 
+      RowBox[{"EI", " ", 
+       SuperscriptBox[
+        RowBox[{"D", "[", 
+         RowBox[{
+          RowBox[{"y2", "[", "x", "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", "2"}], "}"}]}], "]"}], "2"], 
+       RowBox[{"\[DifferentialD]", "x"}]}]}]}], "-", 
+    RowBox[{
+     SubsuperscriptBox["\[Integral]", "0", "L"], 
+     RowBox[{"q", " ", 
+      RowBox[{"y2", "[", "x", "]"}], 
+      RowBox[{"\[DifferentialD]", "x"}]}]}]}], "//", "Expand"}]}]], "Input"],
+
+Cell["\<\
+C\[AAcute]lculo energ\[IAcute]a potencial m\[IAcute]nima, lo que debemos \
+hacer es encontrar el punto cr\[IAcute]tico de EP, para ello, se debe \
+resolver el siguiente sistema.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"EPmin", "=", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", 
+        RowBox[{"c", "[", "1", "]"}]}], "]"}], "\[Equal]", "0"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", 
+        RowBox[{"c", "[", "2", "]"}]}], "]"}], "\[Equal]", "0"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", 
+        RowBox[{"c", "[", "3", "]"}]}], "]"}], "\[Equal]", "0"}]}], 
+    "\[IndentingNewLine]", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"sol", "=", 
+  RowBox[{"Solve", "[", 
+   RowBox[{"EPmin", ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"c", "[", "1", "]"}], ",", 
+      RowBox[{"c", "[", "2", "]"}], ",", 
+      RowBox[{"c", "[", "3", "]"}]}], "}"}]}], "]"}]}]}], "Input"],
+
+Cell["Verificando que es un punto de m\[IAcute]nimo...", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"D", "[", 
+  RowBox[{"EP", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"c", "[", "1", "]"}], ",", "2"}], "}"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Det", "[", 
+  RowBox[{"(", GridBox[{
+     {
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"c", "[", "1", "]"}], ",", "2"}], "}"}]}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"D", "[", 
+         RowBox[{"EP", ",", 
+          RowBox[{"c", "[", "1", "]"}]}], "]"}], ",", 
+        RowBox[{"c", "[", "2", "]"}]}], "]"}]},
+     {
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"D", "[", 
+         RowBox[{"EP", ",", 
+          RowBox[{"c", "[", "2", "]"}]}], "]"}], ",", 
+        RowBox[{"c", "[", "1", "]"}]}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"c", "[", "2", "]"}], ",", "2"}], "}"}]}], "]"}]}
+    }], ")"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Det", "[", 
+  RowBox[{"(", GridBox[{
+     {
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"c", "[", "1", "]"}], ",", "2"}], "}"}]}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"D", "[", 
+         RowBox[{"EP", ",", 
+          RowBox[{"c", "[", "1", "]"}]}], "]"}], ",", 
+        RowBox[{"c", "[", "2", "]"}]}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"D", "[", 
+         RowBox[{"EP", ",", 
+          RowBox[{"c", "[", "1", "]"}]}], "]"}], ",", 
+        RowBox[{"c", "[", "3", "]"}]}], "]"}]},
+     {
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"D", "[", 
+         RowBox[{"EP", ",", 
+          RowBox[{"c", "[", "2", "]"}]}], "]"}], ",", 
+        RowBox[{"c", "[", "1", "]"}]}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"c", "[", "2", "]"}], ",", "2"}], "}"}]}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"D", "[", 
+         RowBox[{"EP", ",", 
+          RowBox[{"c", "[", "2", "]"}]}], "]"}], ",", 
+        RowBox[{"c", "[", "3", "]"}]}], "]"}]},
+     {
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"D", "[", 
+         RowBox[{"EP", ",", 
+          RowBox[{"c", "[", "3", "]"}]}], "]"}], ",", 
+        RowBox[{"c", "[", "1", "]"}]}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"D", "[", 
+         RowBox[{"EP", ",", 
+          RowBox[{"c", "[", "3", "]"}]}], "]"}], ",", 
+        RowBox[{"c", "[", "2", "]"}]}], "]"}], 
+      RowBox[{"D", "[", 
+       RowBox[{"EP", ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"c", "[", "3", "]"}], ",", "2"}], "}"}]}], "]"}]}
+    }], ")"}], "]"}]}], "Input"],
+
+Cell["Punto estacionario m\[IAcute]nimo, la soluci\[OAcute]n es estable.", \
+"Text"],
+
+Cell["finalmente, el polinomio queda determinado por :", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"c", "[", "1", "]"}], "=", 
+   RowBox[{
+    RowBox[{"c", "[", "1", "]"}], "/.", 
+    RowBox[{"sol", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"c", "[", "2", "]"}], "=", 
+   RowBox[{
+    RowBox[{"c", "[", "2", "]"}], "/.", 
+    RowBox[{"sol", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"c", "[", "3", "]"}], "=", 
+   RowBox[{
+    RowBox[{"c", "[", "3", "]"}], "/.", 
+    RowBox[{"sol", "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"y2", "[", "x", "]"}]}], "Input"],
+
+Cell["Esta es una soluci\[OAcute]n aproximada.", "Posterior"],
+
+Cell["La soluci\[OAcute]n exacta para este sistema es :", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"y3", "[", "x_", "]"}], "=", 
+  RowBox[{
+   FractionBox[
+    RowBox[{"q", " ", "x"}], 
+    RowBox[{"24", " ", "EI"}]], 
+   RowBox[{"(", 
+    RowBox[{
+     SuperscriptBox["L", "3"], "-", 
+     RowBox[{"2", " ", "L", " ", 
+      SuperscriptBox["x", "2"]}], "+", 
+     SuperscriptBox["x", "3"]}], ")"}]}]}]], "Input"],
+
+Cell[TextData[{
+ "Compare los resultados anteriores para la viga con los siguientes valores :\
+\nRigidez por flexi\[OAcute]n = EI = 4000000 ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"[", 
+    SuperscriptBox["Nm", "2"], "]"}], TraditionalForm]]],
+ "\nLargo de viga = L = 6 [m]\nCarga Distribu\[IAcute]da = q = 6000 [N m]"
+}], "Ejercicio"],
+
+Cell["Recordemos, La soluci\[OAcute]n original es :", "Text"],
+
+Cell[BoxData[
+ RowBox[{"y3", "[", "x", "]"}]], "Input"],
+
+Cell["La aproximaci\[OAcute]n por series trigonom\[EAcute]tricas es :", "Text"],
+
+Cell[BoxData[
+ RowBox[{"y2", "[", "x", "]"}]], "Input"],
+
+Cell["ingresando los valores de las constantes...", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"q", "=", "6000"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"L", "=", "6"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"EI", " ", "=", " ", "4000000"}], ";"}]}], "Input"],
+
+Cell["...y graficando para comparar...", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"pri", "=", 
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{"-", 
+      RowBox[{"y3", "[", "x", "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "0", ",", "L"}], "}"}], ",", 
+     RowBox[{"DisplayFunction", "\[Rule]", "Identity"}], ",", 
+     RowBox[{"PlotStyle", "\[Rule]", 
+      RowBox[{"RGBColor", "[", 
+       RowBox[{"1", ",", "0", ",", "0"}], "]"}]}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"seg", "=", 
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{"-", 
+      RowBox[{"y2", "[", "x", "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "0", ",", "L"}], "}"}], ",", 
+     RowBox[{"DisplayFunction", "\[Rule]", "Identity"}], ",", 
+     RowBox[{"PlotStyle", "\[Rule]", 
+      RowBox[{"RGBColor", "[", 
+       RowBox[{"0", ",", "1", ",", "0"}], "]"}]}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Show", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"pri", ",", "seg"}], "}"}], ",", 
+   RowBox[{"DisplayFunction", "\[Rule]", "$DisplayFunction"}], ",", 
+   RowBox[{"PlotRange", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "0.03"}], ",", "0"}], "}"}]}], ",", 
+   RowBox[{"ImageSize", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"600", ",", "400"}], "}"}]}]}], "]"}]}], "Input"],
+
+Cell["\<\
+En rojo se grafica la soluci\[OAcute]n exacta y en verde la aproximaci\
+\[OAcute]n.\
+\>", "Posterior"],
+
+Cell["La aproximaci\[OAcute]n es casi perfecta, analicemos \
+num\[EAcute]ricamente :", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"x", ",", 
+      RowBox[{"y3", "[", "x", "]"}], ",", 
+      RowBox[{"y2", "[", "x", "]"}], ",", 
+      RowBox[{"Abs", "[", 
+       RowBox[{
+        RowBox[{"y3", "[", "x", "]"}], "-", 
+        RowBox[{"y2", "[", "x", "]"}]}], "]"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", "0", ",", "6", ",", "0.5"}], "}"}]}], "]"}], "//", 
+  "MatrixForm"}]], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["JAS / AAJ", "Subseccion"]], "Seccion",
+ CellChangeTimes->{
+  3.5562037818125*^9, {3.5899793239225025`*^9, 3.5899793285305786`*^9}, {
+   3.618684532854108*^9, 3.618684540843455*^9}, {3.6378738411003*^9, 
+   3.6378738796476884`*^9}, {3.6378739116637435`*^9, 3.637873951090309*^9}},
+ TextAlignment->Right]
+},
+WindowToolbars->"EditBar",
+WindowSize->{1273, 765},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+ShowSelection->True,
+Magnification->1.100000023841858,
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (December 4, 2014)",
+StyleDefinitions->"Estilo USM.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[545, 20, 929, 33, 169, "Text"],
+Cell[1477, 55, 2954, 65, 148, "Text"],
+Cell[4434, 122, 1790, 55, 165, "Text"],
+Cell[6227, 179, 231, 8, 42, "Text"],
+Cell[CellGroupData[{
+Cell[6483, 191, 39, 0, 73, "Seccion"],
+Cell[6525, 193, 4611, 172, 404, "Teorema",
+ Evaluatable->False],
+Cell[11139, 367, 632, 19, 177, "Ejercicio"],
+Cell[11774, 388, 87, 3, 71, "Text"],
+Cell[11864, 393, 439, 15, 90, "Input"],
+Cell[12306, 410, 416, 8, 122, "Text"],
+Cell[12725, 420, 3147, 95, 245, "Input"],
+Cell[15875, 517, 176, 4, 60, "Posterior"],
+Cell[16054, 523, 258, 5, 96, "Text"],
+Cell[16315, 530, 2007, 58, 145, "Input"],
+Cell[18325, 590, 2295, 73, 276, "Motivacion"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[20657, 668, 118, 2, 58, "Seccion"],
+Cell[20778, 672, 166, 3, 33, "Text"],
+Cell[20947, 677, 1018, 27, 112, "Ejercicio"],
+Cell[21968, 706, 94, 1, 33, "Text"],
+Cell[22065, 709, 1192, 36, 88, "Input"],
+Cell[23260, 747, 93, 2, 33, "Text"],
+Cell[23356, 751, 558, 16, 44, "Input"],
+Cell[23917, 769, 47, 0, 33, "Text"],
+Cell[23967, 771, 336, 9, 65, "Input"],
+Cell[24306, 782, 60, 0, 33, "Text"],
+Cell[24369, 784, 482, 15, 74, "Input"],
+Cell[24854, 801, 243, 7, 45, "Text"],
+Cell[25100, 810, 95, 2, 33, "Text"],
+Cell[25198, 814, 772, 22, 65, "Input"],
+Cell[25973, 838, 105, 3, 33, "Text"],
+Cell[26081, 843, 189, 5, 44, "Input"],
+Cell[26273, 850, 166, 3, 33, "Text"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[26476, 858, 141, 1, 50, "Seccion"],
+Cell[26620, 861, 38, 0, 72, "Subseccion"],
+Cell[26661, 863, 208, 4, 66, "Ejercicio"],
+Cell[26872, 869, 917, 30, 85, "Input"],
+Cell[27792, 901, 125, 5, 109, "Text"],
+Cell[27920, 908, 321, 10, 44, "Input"],
+Cell[28244, 920, 139, 3, 33, "Text"],
+Cell[28386, 925, 489, 16, 65, "Input"],
+Cell[28878, 943, 36, 0, 33, "Text"],
+Cell[28917, 945, 155, 5, 44, "Input"],
+Cell[29075, 952, 50, 0, 33, "Text"],
+Cell[29128, 954, 221, 7, 44, "Input"],
+Cell[29352, 963, 22, 0, 33, "Text"],
+Cell[29377, 965, 242, 8, 44, "Input"],
+Cell[29622, 975, 55, 0, 33, "Text"],
+Cell[29680, 977, 641, 19, 65, "Input"],
+Cell[30324, 998, 54, 0, 33, "Text"],
+Cell[30381, 1000, 91, 2, 44, "Input"],
+Cell[30475, 1004, 323, 7, 114, "Posterior"],
+Cell[30801, 1013, 102, 2, 34, "Text"],
+Cell[30906, 1017, 286, 5, 59, "Text"],
+Cell[31195, 1024, 6894, 191, 365, "Input"],
+Cell[38092, 1217, 54, 0, 72, "Subseccion"],
+Cell[38149, 1219, 973, 23, 337, "Teorema"],
+Cell[39125, 1244, 159, 3, 33, "Text"],
+Cell[39287, 1249, 689, 21, 65, "Input"],
+Cell[39979, 1272, 1722, 47, 195, "Ejercicio"],
+Cell[41704, 1321, 434, 14, 44, "Input"],
+Cell[42141, 1337, 460, 14, 44, "Input"],
+Cell[42604, 1353, 353, 8, 124, "Motivacion"],
+Cell[42960, 1363, 299, 7, 124, "Motivacion"],
+Cell[43262, 1372, 344, 7, 124, "Motivacion"],
+Cell[43609, 1381, 470, 9, 147, "Motivacion"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[44116, 1395, 156, 2, 50, "Seccion"],
+Cell[44275, 1399, 64, 0, 72, "Subseccion"],
+Cell[44342, 1401, 399, 11, 104, "Text"],
+Cell[44744, 1414, 2023, 71, 465, "Teorema"],
+Cell[46770, 1487, 3988, 134, 436, "Teorema"],
+Cell[50761, 1623, 1151, 35, 260, "Teorema"],
+Cell[51915, 1660, 45, 0, 72, "Subseccion"],
+Cell[51963, 1662, 323, 9, 206, "Ejercicio"],
+Cell[52289, 1673, 64, 0, 33, "Text"],
+Cell[52356, 1675, 478, 15, 87, "Input"],
+Cell[52837, 1692, 62, 0, 33, "Text"],
+Cell[52902, 1694, 707, 24, 70, "Input"],
+Cell[53612, 1720, 82, 1, 33, "Text"],
+Cell[53697, 1723, 164, 4, 65, "Input"],
+Cell[53864, 1729, 253, 7, 65, "Input"],
+Cell[54120, 1738, 592, 14, 334, "Propuesto"],
+Cell[54715, 1754, 64, 0, 33, "Text"],
+Cell[54782, 1756, 26, 0, 44, "Input"],
+Cell[54811, 1758, 62, 0, 33, "Text"],
+Cell[54876, 1760, 26, 0, 44, "Input"],
+Cell[54905, 1762, 82, 1, 33, "Text"],
+Cell[54990, 1765, 26, 0, 44, "Input"],
+Cell[55019, 1767, 325, 8, 145, "Text"],
+Cell[55347, 1777, 603, 19, 127, "Text"],
+Cell[55953, 1798, 26, 0, 44, "Input"],
+Cell[55982, 1800, 176, 7, 84, "Text"],
+Cell[56161, 1809, 310, 7, 124, "Propuesto"],
+Cell[56474, 1818, 308, 7, 136, "Motivacion"],
+Cell[56785, 1827, 1061, 36, 215, "Motivacion"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[57883, 1868, 129, 1, 50, "Seccion"],
+Cell[58015, 1871, 114, 3, 72, "Subseccion"],
+Cell[58132, 1876, 485, 9, 133, "Text"],
+Cell[58620, 1887, 141, 5, 101, "Ejercicio"],
+Cell[58764, 1894, 4590, 146, 205, "Input"],
+Cell[63357, 2042, 91, 1, 33, "Text"],
+Cell[63451, 2045, 475, 14, 65, "Input"],
+Cell[63929, 2061, 57, 0, 33, "Text"],
+Cell[63989, 2063, 496, 15, 125, "Input"],
+Cell[64488, 2080, 191, 4, 33, "Text"],
+Cell[64682, 2086, 634, 21, 105, "Input"],
+Cell[65319, 2109, 71, 0, 33, "Text"],
+Cell[65393, 2111, 89, 2, 44, "Input"],
+Cell[65485, 2115, 55, 0, 33, "Text"],
+Cell[65543, 2117, 219, 5, 85, "Input"],
+Cell[65765, 2124, 97, 2, 33, "Text"],
+Cell[65865, 2128, 642, 20, 61, "Input"],
+Cell[66510, 2150, 201, 4, 33, "Text"],
+Cell[66714, 2156, 557, 17, 125, "Input"],
+Cell[67274, 2175, 61, 0, 33, "Text"],
+Cell[67338, 2177, 752, 25, 76, "Input"],
+Cell[68093, 2204, 322, 6, 96, "Text"],
+Cell[68418, 2212, 362, 11, 85, "Input"],
+Cell[68783, 2225, 299, 5, 59, "Text"],
+Cell[69085, 2232, 337, 10, 65, "Input"],
+Cell[69425, 2244, 57, 0, 33, "Text"],
+Cell[69485, 2246, 418, 13, 65, "Input"],
+Cell[69906, 2261, 179, 3, 33, "Text"],
+Cell[70088, 2266, 634, 21, 105, "Input"],
+Cell[70725, 2289, 71, 0, 33, "Text"],
+Cell[70799, 2291, 90, 2, 44, "Input"],
+Cell[70892, 2295, 55, 0, 33, "Text"],
+Cell[70950, 2297, 222, 5, 85, "Input"],
+Cell[71175, 2304, 75, 0, 33, "Text"],
+Cell[71253, 2306, 644, 20, 61, "Input"],
+Cell[71900, 2328, 73, 0, 33, "Text"],
+Cell[71976, 2330, 305, 10, 65, "Input"],
+Cell[72284, 2342, 61, 0, 33, "Text"],
+Cell[72348, 2344, 128, 4, 44, "Input"],
+Cell[72479, 2350, 84, 1, 33, "Text"],
+Cell[72566, 2353, 210, 6, 65, "Input"],
+Cell[72779, 2361, 61, 0, 27, "Posterior"],
+Cell[72843, 2363, 337, 8, 173, "Ejercicio"],
+Cell[73183, 2373, 61, 0, 33, "Text"],
+Cell[73247, 2375, 54, 1, 44, "Input"],
+Cell[73304, 2378, 74, 0, 33, "Text"],
+Cell[73381, 2380, 55, 1, 44, "Input"],
+Cell[73439, 2383, 59, 0, 33, "Text"],
+Cell[73501, 2385, 225, 6, 85, "Input"],
+Cell[73729, 2393, 48, 0, 33, "Text"],
+Cell[73780, 2395, 1295, 38, 85, "Input"],
+Cell[75078, 2435, 112, 3, 27, "Posterior"],
+Cell[75193, 2440, 141, 5, 101, "Ejercicio"],
+Cell[75337, 2447, 4913, 157, 225, "Input"],
+Cell[80253, 2606, 84, 1, 33, "Text"],
+Cell[80340, 2609, 564, 18, 94, "Input"],
+Cell[80907, 2629, 67, 0, 34, "Text"],
+Cell[80977, 2631, 113, 2, 64, "Input"],
+Cell[81093, 2635, 97, 2, 34, "Text"],
+Cell[81193, 2639, 644, 20, 56, "Input"],
+Cell[81840, 2661, 201, 4, 33, "Text"],
+Cell[82044, 2667, 894, 27, 145, "Input"],
+Cell[82941, 2696, 64, 0, 33, "Text"],
+Cell[83008, 2698, 2787, 90, 125, "Input"],
+Cell[85798, 2790, 84, 1, 33, "Text"],
+Cell[85885, 2793, 64, 0, 33, "Text"],
+Cell[85952, 2795, 687, 22, 105, "Input"],
+Cell[86642, 2819, 61, 0, 27, "Posterior"],
+Cell[86706, 2821, 65, 0, 33, "Text"],
+Cell[86774, 2823, 348, 12, 58, "Input"],
+Cell[87125, 2837, 335, 8, 138, "Ejercicio"],
+Cell[87463, 2847, 61, 0, 33, "Text"],
+Cell[87527, 2849, 55, 1, 44, "Input"],
+Cell[87585, 2852, 79, 0, 33, "Text"],
+Cell[87667, 2854, 55, 1, 44, "Input"],
+Cell[87725, 2857, 59, 0, 33, "Text"],
+Cell[87787, 2859, 225, 6, 85, "Input"],
+Cell[88015, 2867, 48, 0, 33, "Text"],
+Cell[88066, 2869, 1295, 38, 85, "Input"],
+Cell[89364, 2909, 112, 3, 27, "Posterior"],
+Cell[89479, 2914, 94, 1, 33, "Text"],
+Cell[89576, 2917, 460, 14, 44, "Input"]
+}, Closed]],
+Cell[90051, 2934, 326, 5, 39, "Seccion"]
+}
+]
+*)
+
+(* End of internal cache information *)

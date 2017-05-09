@@ -1,0 +1,119 @@
+README
+======
+:Author: Sergio A. Morales
+:Email:	 smorales@alumnos.inf.utfsm.cl
+:Date:	 20081016
+
+Resumen
+-------
+
+La siguiente serie de documentos presenta el resumen de las clases de
+Fundamentos de Informática impartidas por el Dr. Horst H. von Brand en la
+Universidad Técnica Federico Santa María durante el segundo semestre del año
+2008.  Estas notas tomadas en clase se encuentran en constante revisión por
+parte del staff y alumnos del ramo.  La versión actual incluye
+actualizaciones con material de los años 2009 al 2012.
+
+
+Requerimientos
+--------------
+
+Para compilar la colección de documentos necesitarás:
+
+* Linux (probablemente bajo MacOS funcione, puede que funcione bajo
+  Windows, pero seguramente sólo en un ambiente como CygWin)
+* +make+
+* Algún motor LaTeX (+TeTeX+, +TeXlive+, etc)
+* Se requieren algunos paquetes extra, que +TeXlive+ no instala por omisión.
+  En Fedora, para instalar por ejemplo el paquete +subfig+, se da el comando:
+    +yum install "tex(subfig.sty)"+
+* Alguna herramienta LaTeX que provea el programa +pdflatex+
+* +BibTeX+ para procesar las referencias bibliográficas
+* +makeindex+ para generar los índices
+* +asymptote+ para figuras
+* +dia+ se usa para generar el esquema de una red
+* +gnuplot+ dibuja algunas gráficas
+* +Graphviz+ para figuras de algunos grafos
+* +fig2dev+ (parte del paquete +transfig+) para procesar fórmulas químicas
+  creadas con +chemtool+
+
+Para editar estos documentos se requieren además:
+
+* +chemtool+ (para editar las fórmulas químicas en ejemplos en archivos
+  +*.cht+ para el método de enumeración de Polya, y exportar los gráficos
+  respectivos a formato +fig+)
+
+Hay archivos +*.mc+ que contienen programas para +maxima+ (o +xmaxima+)
+que contienen definiciones usadas para algunos ejemplos numéricos. Hay
+además algunos programas en C.
+
+Para (opcionalmente) generar versiones HTML o PDF de este documento se
+requieren también:
+
+* +asciidoc+
+* +xmlto+
+
+Compilación
+-----------
+
+Basta ejecutar
+
+----
+make
+----
+
+Hay programas de soporte en +support+, algunos de los cuales son
+invocados desde +support/Clean.mk+. Están escritos en +bash+ (usan una
+variedad de herramientas estándar, y también +git+) o +perl+.
+
+Otros
+-----
+
+Los documentos también presentan material y revisiones de cursos
+impartidos en años posteriores al 2008.
+
+Notas sobre estilo LaTeX
+------------------------
+
+Tengo mis propias mañas al escribir LaTeX, además de seguir algunas
+sugerencias propias de la AMS para escribir matemáticas. Por favor, al
+editar estos archivos intente seguir estos lineamientos.
+
+Lista de paquetes LaTeX usados
+------------------------------
+
+Esta es la lista de paquetes usados. Todos son parte de TeXlive.
+
+algorithm2e
+amsmath
+amssymb
+amsthm
+array
+babel
+babelbib
+calc
+centernot
+cite
+complexity
+csquotes
+dcolumn
+enumitem
+euscript
+fnpct
+fixltx2e
+fourier
+geometry
+hyperref
+icomma
+inputenc
+listings
+lmodern
+makeidx
+microtype
+multirow
+pgf
+scalerel
+stmaryrd
+subfig
+xfrac
+xy

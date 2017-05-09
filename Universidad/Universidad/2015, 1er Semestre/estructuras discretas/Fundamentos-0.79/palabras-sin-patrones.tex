@@ -1,0 +1,332 @@
+% palabras-sin-patrones.tex
+%
+% Copyright (c) 2013-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\subsection{Palabras que no contienen un patrón dado}
+\label{sec:strings-excluding-pattern}
+\index{palabra!numero@número}
+
+  Nos interesan secuencias que no contengan un patrón dado.%
+    \index{palabra!patron@patrón}
+  Un ejemplo simple es secuencias binarias sin ceros seguidos.
+  Llamemos \(\mathcal{B}_{00}\) a esta clase.
+  Un elemento de \(\mathcal{B}_{00}\) puede ser vacío o \(0\),
+  o es \(1\) o \(01\)
+  seguido por un elemento de \(\mathcal{B}_{00}\).
+  O sea:
+  \begin{equation*}
+    \mathcal{B}_{00}
+      = \mathcal{E} + \{0\} + \{1, 01\} \times \mathcal{B}_{00}
+  \end{equation*}
+  Si \(z\) marca cada símbolo,
+  para la respectiva función generatriz ordinaria \(B_{00}(z)\):%
+    \index{generatriz}
+  \begin{align*}
+    B_{00}(z)
+      &= 1 + z + (z + z^2) B_{00}(z) \\
+  \intertext{Despejando:}
+    B_{00}(z)
+      &= \frac{1 + z}{1 - z - z^2}
+  \end{align*}
+  Resulta ser
+    \(\left[ z^n \right] B_{00}(z) = F_n + F_{n + 1} = F_{n + 2}\),
+  un número de Fibonacci.%
+    \index{Fibonacci, numeros de@Fibonacci, números de}
+
+  Si ahora buscamos que no contenga \(k\) ceros seguidos,
+  podemos expresar:
+  \begin{equation*}
+    \mathcal{B}_{0^k}
+      = \mathcal{P}_{< k}
+	  + \mathcal{P}_{< k}
+	      \times \{ 1 \} \times \mathcal{B}_{0^k}
+  \end{equation*}
+  Acá \(\mathcal{P}_{< k}\)
+  es la clase de secuencias de menos de \(k\) ceros:
+  \begin{equation*}
+    \mathcal{P}_{< k}
+      = \mathcal{E} + \{0\} + \{0\}^2 + \dotsb + \{0\}^{k - 1}
+  \end{equation*}
+  Las respectivas funciones generatrices ordinarias cumplen:
+  \begin{align}
+    P_{< k} (z)
+      &= 1 + z + z^2 + \dotsb + z^{k - 1} \notag \\
+      &= \frac{1 - z^k}{1 - z} \notag \\
+    B_{0^k} (z)
+      &= \frac{1 - z^k}{1 - z} (1 + z B_{0^k} (z)) \notag \\
+  \intertext{Despejando:}
+    B_{0^k} (z)
+      &= \frac{1 - z^k}{1 - 2 z + z^{k + 1}}
+	   \label{eq:B0^k}
+  \end{align}
+  Podemos extraer información adicional de acá.
+  Los coeficientes de \(B_{0^k}(z)\)
+  son el número de \foreignlanguage{english}{strings}
+  que no contienen \(0^k\),
+  el coeficiente de \(z^n\)
+  dividido por \(2^n\) es la proporción del total:
+  \begin{align*}
+    B_{0^k}(z)
+      &= \sum_{n \ge 0}
+	   \text{\{\# de largo \(n\) sin \(0^k\)\}} z^n \\
+    B_{0^k}(z / 2)
+      &= \sum_{n \ge 0}
+	   \text{\{\# de largo \(n\) sin \(0^k\)\}} / 2^n z^n \\
+    B_{0^k}(1 / 2)
+      &= \sum_{n \ge 0}
+	   \text{\{\# de largo \(n\) sin \(0^k\)\}} / 2^n \\
+      &= \sum_{n \ge 0}
+	   \Pr( \text{No hay \(0^k\) en los primeros \(n\)}) \\
+      &= \sum_{n \ge 0}
+	   \Pr( \text{Primer \(0^k\)
+		      termina después de \({} > n\)} ) \\
+      &= \text{Posición esperada
+	       del fin de los primeros \(k\) ceros}
+  \end{align*}
+  A esto se le llama \emph{tiempo de espera}%
+    \index{palabra!tiempo de espera|textbfhy}
+  (en inglés,
+   \emph{\foreignlanguage{english}{waiting time}}).%
+     \index{palabra!waiting time@\emph{\foreignlanguage{english}{waiting time}}|see{palabra!tiempo de espera}}
+  Resulta:
+  \begin{theorem}
+    \label{theo:waiting-time-2^k}
+    El tiempo de espera para los primeros \(k\) ceros
+    en un \foreignlanguage{english}{string} binario al azar es:
+    \begin{equation}
+      \label{eq:waiting-time-2^k}
+      B_{0^k}(1/2)
+	= 2^{k + 1} - 2
+    \end{equation}
+  \end{theorem}
+  O sea,
+  en promedio hay que esperar \(30\)~bits hasta hallar \(0000\).
+  La pregunta obvia es si esto vale también para otros patrones
+  de largo cuatro,
+  por ejemplo \(0001\).
+  Resulta que no es así.
+  Consideremos la primera vez que aparece \(000\).
+  Es igualmente probable que continúe \(0000\) o \(0001\).
+  Si \(0000\) no calza es \(0001\),
+  y para \(0000\) debemos esperar al menos \(4\)~bits más.
+  Si \(0001\) no calza,
+  es porque es \(0000\) y el próximo bit puede completar \(0001\).
+
+  Consideremos un patrón \(p\) de largo \(k\) arbitrario
+  tomados entre \(s\) símbolos entonces.
+  Sea \(\mathcal{B}_p\)
+  la clase de \foreignlanguage{english}{strings}
+  que no contienen \(p\),
+  y sea \(\mathcal{T}_p\)
+  la clase de \foreignlanguage{english}{strings}
+  que terminan en \(p\),
+  pero en los cuales \(p\) no aparece nunca antes del final.
+  Es claro que \(\mathcal{B}_p\) y \(\mathcal{T}_p\) son disjuntos.
+  Si agregamos un símbolo a un \foreignlanguage{english}{string}
+  en \(\mathcal{B}_p\),
+  el resultado es un \foreignlanguage{english}{string} no vacío
+  en \(\mathcal{B}_p\) o en \(\mathcal{T}_p\).
+  O sea:%
+    \index{metodo simbolico@método simbólico}
+  \begin{equation*}
+    \mathcal{B}_p + \mathcal{T}_p
+      = \mathcal{E} + \mathcal{B}_p \times \{ 0, 1, \dotsc, s - 1 \}
+  \end{equation*}
+  Esto nos da la ecuación funcional
+  para las respectivas funciones generatrices ordinarias:%
+    \index{generatriz}
+  \begin{equation}
+    \label{eq:B+T-fe}
+    B_p(z) + T_p(z)
+      = 1 + s z B_p(z)
+  \end{equation}
+  Hace falta determinar \(\mathcal{T}_p\).
+  Es similar a \(\mathcal{B}_p \times \{ p \}\),
+  pero debemos considerar que un elemento de \(\mathcal{B}_p\)
+  puede terminar en ``casi'' \(p\),
+  con lo que solo le falta una cola.
+
+  El desarrollo que sigue
+  es básicamente de Odlyzko~\cite{odlyzko85:_enum_strings}.
+  Escribiremos \(\lvert x \rvert\)
+  para el largo del \foreignlanguage{english}{string} \(x\)
+  (el número de símbolos que lo componen).
+  Para describir la manera
+  en que dos \foreignlanguage{english}{strings} se traslapan
+  definimos la \emph{correlación}%
+    \index{palabra!correlacion@correlación|textbfhy}
+  entre los \foreignlanguage{english}{string} \(x\) e \(y\)
+  (posiblemente de distinto largo)
+  como el polinomio \(c_{x y}(t)\) de grado \(\lvert x \rvert - 1\)
+  tal que el coeficiente de \(t^k\)
+  se determina ubicando \(y\) bajo \(x\)
+  de manera que el primer caracter de \(y\)
+  cae bajo el \(k\)\nobreakdash-ésimo caracter de \(x\).
+  El coeficiente es \(1\) si ambos son iguales donde traslapan,
+  \(0\) en caso contrario.
+  Por ejemplo,
+  si \(x = \mathtt{c a b c a b c}\)
+  e \(y = \mathtt{a b c a b c d e}\),
+  resulta \(c_{x y}(t) = t^4 + t\),
+  como muestra el cuadro~\ref{tab:cxy}.
+  \begin{table}[ht]
+    \centering
+    \begin{tabular}{>{\(}l<{\)}*{16}{>{\(\mathtt}c<{\)}}>{\(}r<{\)}}
+      x: & c & a & b & c & a & b & c &	 &   &	 &   &	 &   &	 &   \\
+      y: & a & b & c & a & b & c & d & e &   &	 &   &	 &   &	 & 0 \\
+	 &   & a & b & c & a & b & c & d & e &	 &   &	 &   &	 & 1 \\
+	 &   &	 & a & b & c & a & b & c & d & e &   &	 &   &	 & 0 \\
+	 &   &	 &   & a & b & c & a & b & c & d & e &	 &   &	 & 0 \\
+	 &   &	 &   &	 & a & b & c & a & b & c & d & e &   &	 & 1 \\
+	 &   &	 &   &	 &   & a & b & c & a & b & c & d & e &	 & 0 \\
+	 &   &	 &   &	 &   &	 & a & b & c & a & b & c & d & e & 0
+    \end{tabular}
+    \caption{Cálculo de $c_{x y} (t) = t^4 + t$}
+    \label{tab:cxy}
+  \end{table}
+  Nótese que en general \(c_{x y}(t) \ne c_{y x}(t)\)
+  (en el ejemplo es \(c_{y x}(t) = 0\)).
+  De particular interés
+  es la \emph{autocorrelación} \(c_x(t) = c_{x x}(t)\),
+  la correlación de un \foreignlanguage{english}{string}
+  consigo mismo.%
+    \index{palabra!autocorrelacion@autocorrelación|textbfhy}
+  En el ejemplo,
+  \(c_x (t) = t^6 + t^3 + 1\).
+
+  Fijemos un patrón \(p\) de largo \(k\),
+  y escribamos:
+  \begin{align*}
+    B_p(z)
+      &= \sum_{n \ge 0} b_n z^n \\
+    T_p(z)
+      &= \sum_{n \ge 0} t_n z^n
+  \end{align*}
+  Consideremos uno de los \(b_n\)
+  \foreignlanguage{english}{strings} de largo \(n\)
+  que no terminan en \(p\),
+  y adosemos \(p\) al final.
+  Sea \(n + r\) la posición
+  en la cual por primera vez termina \(p\) en el resultado,
+  donde \(0 < r \le k\).
+  Como \(p\) también aparece al final,
+  deben coincidir el prefijo de largo \(k - r\) de \(p\)
+  y el sufijo de largo \(k - r\) de \(p\),
+  o sea,
+  \(\left[ t^{k - r} \right] c_p(t) = 1\).
+
+  Para un ejemplo,
+  sea el patrón \(p = \mathtt{a a b a}\)
+  y el \foreignlanguage{english}{string}
+    \(x = \mathtt{a b a b b a a b} \in \mathcal{B}_p\).
+  Es \(k = \lvert p \rvert = 4\)
+  y \(n = \lvert x \rvert = 8\).
+  Vemos que
+    \(x p = \mathtt{a b a b b
+		    \textcolor{red}{a a b a}
+		    \textcolor{blue}{a b a}}\),
+  o sea,
+  \(r = 1\)
+  (hay un traslapo de \(k - r = 4 - 1 = 3\)
+   entre el principio del patrón
+   y el final del \foreignlanguage{english}{string}).
+  Tenemos un miembro de \(\mathcal{T}_p\) de largo \(n + r = 9\)
+  y una cola de largo \(k - r = 3\),
+  determinados en forma única por \(x\) y \(p\).
+  Esta descomposición solo es posible cuando
+  \(\left[ t^{k - r} \right] c_p (t) = 1\).
+
+  Nos interesa contar estos \foreignlanguage{english}{string}.
+  Hay \(t_{n + r}\) de ellos,
+  la descomposición descrita es una biyección.
+  Vale decir,
+  como los coeficientes de \(c_p\) son cero o uno:
+  \begin{equation}
+    \label{eq:bn=tnc}
+    b_n
+      = \sum_{0 < r \le k}
+	  t_{n + r} \left[ t^{k - r} \right] c_p (t)
+  \end{equation}
+  Multiplicando~\eqref{eq:bn=tnc}
+  por \(z^{n + k}\) y sumando para \(n \ge 0\)
+  (recordar que \(k = \lvert p \rvert \ge \deg(c_p(t)) + 1\))
+  da:
+  \begin{align}
+    B_p(z) z^k
+      &= \sum_{n \ge 0}
+	   z^{n + k}
+	   \sum_{0 < r \le k}
+	     t_{n + r}
+	     \left[ t^{k - r} \right] c_p (t)
+		 \notag \\
+  \intertext{Esta es la convolución de \(T_p(z)\) con \(c_p(z)\):}
+    B_p(z) z^k
+      &= T_p(z) c_p(z) \label{eq:T-fe}
+  \end{align}
+
+  Uniendo las piezas anteriores
+  tenemos un resultado de Solov'ev~%
+    \cite{solovev66:_combin_ident_its_applic_probl}:
+  \begin{theorem}
+    \label{theo:Bp-gf}
+    Sea \(p\) un patrón de largo \(k\) formado por \(s\) símbolos,
+    con autocorrelación \(c_p(z)\).
+    Entonces
+    el número de \foreignlanguage{english}{strings} de largo \(n\)
+    que no contienen el patrón \(p\)
+    tiene función generatriz ordinaria:
+    \begin{equation}
+      \label{eq:Bp-gf}
+      B_p(z)
+	= \frac{c_p(z)}{(1 - s z) c_p(z) + z^k}
+    \end{equation}
+    El tiempo de espera para el patrón \(p\)%
+      \index{palabra!tiempo de espera}
+    está dado por:
+    \begin{equation}
+      \label{eq:WT-p}
+      W_p
+	= s^k c_p (1 / s)
+    \qedhere
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    La ecuación~\eqref{eq:Bp-gf}
+    es la solución del sistema de ecuaciones~\eqref{eq:B+T-fe}
+    y~\eqref{eq:T-fe}.
+    El tiempo de espera
+    es como se discutió antes para el patrón \(0^k\),
+    la expresión dada
+    resulta de substituir \(z = 1 / s\) en~\eqref{eq:Bp-gf}.
+  \end{proof}
+  Incidentalmente,
+  al ser \(c_p\)
+  un polinomio de coeficientes enteros de grado menor a \(k\),
+  por~\eqref{eq:WT-p} el tiempo de espera siempre es un entero.
+
+  Completando la discusión previa,
+  tenemos \(c_{0000} (z) = 1 + z + z^2 + z^3\)
+  y \(c_{0001} (z) = 1\).
+  El tiempo de espera para el patrón \(p\)
+  está dado por \(2^4 c_p(1/2)\).
+  Para nuestros dos patrones,
+  por las fórmulas desarrolladas antes:
+  \begin{align}
+    B_{0000}(z)
+      &= \frac{1 - z^4}{1 - 2 z + z^5}
+	      \label{B0000-fg} \\
+    W_{0000}
+      &= 30   \label{B0000-wt} \\
+    B_{0001}(z)
+      &= \frac{1}{1 - 2 z + z^4}
+	      \label{B0001-fg} \\
+    W_{0001}
+      &= 16   \label{B0001-wt}
+  \end{align}
+  Por técnicas similares se pueden manejar conjuntos de patrones.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

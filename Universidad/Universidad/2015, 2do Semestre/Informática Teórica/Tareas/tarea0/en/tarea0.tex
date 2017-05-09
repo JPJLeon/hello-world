@@ -1,0 +1,80 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{dcolumn}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{fourier}
+
+\newcommand{\num}{0}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\newcommand{\cycle}[2]{\genfrac{[}{]}{0pt}{}{#1}{#2}}	 % Stirling 1a especie
+
+\title{INF-155: Introducción a la Informática Teórica\\
+       ILI-225: Informática Teórica \\[0.4\baselineskip]
+       Tarea \#\num \\
+       \emph{``¡Hagamos monitos!''}
+      }
+\author{\href{mailto:vonbrand@inf.utfsm.cl}{Horst von Brand}
+	\and {Alondra Rojas Ruz}
+	\and {Cristóbal Galleguillos}
+	\and {Renato Sanhueza}}
+\date{21 de octubre 2015}
+
+\begin{document}
+\maketitle
+
+\thispagestyle{empty}
+
+\section*{Preguntas}
+
+  Usando \href{http://www.texample.net/tikz}{TikZ},
+  dibuje los siguientes autómatas finitos deterministas:
+  \begin{itemize}
+  \item % 20152t0p1
+    \(M = (Q, \Sigma, \delta, q_0, F)\),
+    con \(Q = \{q_0, q_1, q_2\}\),
+    \(\Sigma = \{0, 1\}\),
+    \(F = \{q_2\}\),
+    con la función de transición dada por la siguiente tabla:
+    \begin{center}
+      \begin{tabular}{>{\(}c<{\)}|>{\(}c<{\)}>{\(}c<{\)}}
+	    &  0  &  1	\\
+	\hline
+	q_0 & q_0 & q_1 \\
+	q_1 & q_0 & q_2 \\
+	q_2 & q_2 & q_2 
+      \end{tabular}
+    \end{center}
+  \item % 20152t0p2
+    \(M = (Q, \Sigma, \delta, S_0, F)\),
+    con \(Q = \{S_0, S_1, S_2, S_3\}\),
+    \(\Sigma = \{a, b\}\),
+    \(F = \{S_3\}\),
+    en el cual la función de transición está dada por la siguiente tabla:
+    \begin{center}
+      \begin{tabular}{>{\(}c<{\)}|>{\(}c<{\)}>{\(}c<{\)}}
+	    &  a  &  b	\\
+	\hline
+	S_0 & S_1 & S_0 \\
+	S_1 & S_1 & S_2 \\
+	S_2 & S_1 & S_3 \\
+	S_3 & S_1 & S_0
+      \end{tabular}
+    \end{center}
+  \item % 20152t0p3
+    Diseñe y dibuje un DFA que acepte palabras sobre \(\Sigma = \{a, b, c\}\)
+    que contengan \(a a\).
+  \end{itemize}
+
+\input{condiciones}
+  \vfill\hfill AR/CG/RS/HvB/\LaTeXe
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

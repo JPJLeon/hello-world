@@ -1,0 +1,63 @@
+% juegos-completos.tex
+%
+% Copyright (c) 2011-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section{Juegos completos de poker}
+\label{sec:poker-juegos}
+\index{juegos de poker|see{combinatoria!juegos de poker}}
+\index{combinatoria!juegos de poker|textbfhy}
+
+  Los señores George G.~Akeley,
+  Robert Blake,
+  Randolph Carter
+  y Edward P.~Davis
+  juegan poker.
+  Interesa saber
+  de cuántas maneras se pueden repartir las \(52\)~cartas
+  en \(4\)~manos de \(5\)~cartas,
+  quedando \(32\)~cartas en el mazo.
+
+  Podemos atacar el problema considerando que Akeley
+  elige \(5\) cartas de las \(52\),
+  que Blake elige \(5\) de las restantes,
+  y así sucesivamente.
+  El resultado es:
+  \begin{align*}
+    \binom{52}{5}
+	\cdot \binom{52 - 5}{5}
+	\cdot \binom{52 - 2 \cdot 5}{5}
+	\cdot \binom{52 - 3 \cdot 5}{5}
+      &= \frac{52!}{5! \, 5! \, 5! \, 5! \, 32!} \\
+      &= \binom{52}{5 \; 5 \; 5 \; 5 \; 32}
+  \end{align*}
+
+  Si consideramos las cartas en un orden cualquiera,
+  podemos representar la distribución
+  asociando cada posición con quien la tiene.
+  De esta forma,
+  tenemos una biyección
+  entre secuencias de \(52\)~dueños de las cartas respectivas
+  y las distribuciones de las cartas.
+  Para simplificar notación,
+  denotamos a los caballeros
+  por las primeras letras de sus apellidos,
+  y el mazo por \(\mathtt{M}\).
+  Buscamos entonces el número de secuencias de \(52\)~símbolos
+  elegidos
+  entre
+    \(\{\mathtt{A}, \mathtt{B}, \mathtt{C}, \mathtt{D},
+	\mathtt{M}\}\)
+  formadas con \(5\)~\(\mathtt{A}\),
+  \(5\)~\(\mathtt{B}\),
+  \(5\)~\(\mathtt{C}\),
+  \(5\)~\(\mathtt{D}\) y \(32\)~\(\mathtt{M}\).
+  Esto nos lleva directamente al resultado anterior
+  al aplicar el tao,
+  sección~\ref{sec:tao-bookkeeper}.%
+    \index{combinatoria!secuencias con repeticiones}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

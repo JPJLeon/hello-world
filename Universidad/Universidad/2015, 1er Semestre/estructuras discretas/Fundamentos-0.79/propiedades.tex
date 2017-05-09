@@ -1,0 +1,1323 @@
+% propiedades.tex
+%
+% Copyright (c) 2014-2015 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Propiedades adicionales}
+\label{cha:propiedades-adicionales}
+\index{propiedad|textbfhy}
+
+  De manera muy similar
+  a como contabilizamos las estructuras de un tamaño dado
+  mediante funciones generatrices
+  podemos representar el total de alguna característica.
+  Dividiendo por el número de estructuras del tamaño respectivo
+  tenemos el promedio del valor de interés.%
+    \index{propiedad!promedio}
+  Esto suele ser relevante como medida del rendimiento promedio
+  de algún algoritmo o estructura de datos.%
+    \index{analisis de algoritmos@análisis de algoritmos}
+
+  Veremos dos maneras complementarias de atacar esta clase de situaciones.
+  Partiremos por una representación directa,
+  más sencilla de aplicar en muchos casos,
+  pero que entrega información limitada.
+  Luego mostraremos una técnica que permite obtener estadísticas detalladas.
+
+\section{Funciones generatrices cumulativas}
+\label{sec:generatrices-cumulativas}
+\index{generatriz!cumulativa|textbfhy}
+
+  Para precisar,
+  consideremos una clase de objetos \(\mathcal{A}\).
+  Como siempre el número de objetos de tamaño \(n\)
+  lo anotaremos \(a_n\),
+  con función generatriz:
+  \begin{align}
+    A(z)
+      &= \sum_{\alpha \in \mathcal{A}} z^{\lvert \alpha \rvert}
+	    \label{eq:A-def} \\
+      &= \sum_{n \ge 0} a_n z^n
+	    \label{eq:A-an}
+  \end{align}
+  Consideremos no sólo el número de objetos,
+  sino alguna característica,
+  cuyo valor para el objeto \(\alpha\) anotaremos \(\chi(\alpha)\).
+  Es natural definir la \emph{función generatriz cumulativa}:%
+    \index{generatriz!cumulativa|textbfhy}
+  \begin{equation}
+    \label{eq:cogf-def}
+    C(z)
+      = \sum_{\alpha \in \mathcal{A}} \chi(\alpha) z^{\lvert \alpha \rvert}
+  \end{equation}
+  Vale decir,
+  los coeficientes son la suma de la medida \(\chi\)
+  para un tamaño dado:
+  \begin{equation}
+    \label{eq:cogf-coefficient}
+    [z^n] C(z)
+      = \sum_{\lvert \alpha \rvert = n} \chi(\alpha)
+  \end{equation}
+  Así tenemos el valor promedio para objetos de tamaño \(n\):%
+    \index{valor esperado}
+    \index{propiedad!promedio}
+  \begin{equation}
+    \label{eq:chi-expected}
+    \E_n[\chi]
+      = \frac{[z^n] C(z)}{[z^n] A(z)}
+  \end{equation}
+
+  La discusión precedente es aplicable
+  si tenemos objetos no rotulados entre manos.
+  Si corresponden objetos rotulados,
+  podemos definir las respectivas funciones generatrices exponenciales:
+  \begin{align}
+    \widehat{A}(z)
+      &= \sum_{\alpha \in \mathcal{A}}
+	   \frac{z^{\lvert \alpha \rvert}}{\lvert \alpha \rvert !}
+		\label{eq:Ahat-def} \\
+      &= \sum_{n \ge 0} a_n \frac{z^n}{n!}
+		\label{eq:Ahat-an} \\
+    \widehat{C}(z)
+      &= \sum_{\alpha \in \mathcal{A}}
+	   \chi(\alpha) \frac{z^{\lvert \alpha \rvert}}{\lvert \alpha \rvert !}
+		\label{eq:Chat-def}
+  \end{align}
+  Nuevamente,
+  como los factoriales en los coeficientes se cancelan:
+  \begin{equation}
+    \label{eq:chi-expected-hat}
+    \E_n[\chi]
+      = \frac{[z^n] \widehat{C}(z)}{[z^n] \widehat{A}(z)}
+  \end{equation}
+
+  Para un primer ejemplo trivial,
+  consideremos secuencias binarias%
+    \index{secuencia!binaria}
+  y determinemos el número promedio de ceros
+  en las secuencias de largo \(n\).
+  Estos son secuencias de objetos sin rotular
+  (intercambiar un par de ceros no cambia la secuencia).
+  Podemos describir la clase de las secuencias de interés como:
+  \begin{equation}
+    \label{eq:binary-sequence}
+    \mathcal{S}
+      = \mathcal{E} + \mathcal{S} \times \{0, 1\}
+  \end{equation}
+  Para la función generatriz respectiva:
+  \begin{equation}
+    \label{eq:S-def}
+    S(z)
+      = \sum_{\sigma \in \mathcal{S}} z^{\lvert \sigma \rvert}
+  \end{equation}
+  el método simbólico lleva directamente a:%
+    \index{metodo simbolico@método simbólico}
+  \begin{equation*}
+    S(z)
+       = 1 + 2 z S(z)
+  \end{equation*}
+  con solución:
+  \begin{equation}
+    \label{eq:S-soln}
+    S(z)
+      = \frac{1}{1 - 2 z}
+  \end{equation}
+  de donde vemos que:%
+    \index{propiedad!promedio}
+  \begin{equation*}
+    [z^n] S(z)
+      = 2^n
+  \end{equation*}
+  Como esperábamos.
+
+  Si llamamos \(\zeta(\sigma)\) al número de ceros
+  en la secuencia \(\sigma\),
+  vemos que el número total de ceros
+  en todas las secuencias de largo \(\lvert \sigma \rvert + 1\)
+  que pueden crearse a partir de \(\sigma\)
+  es simplemente \(2 \zeta(\sigma) + 1\)
+  (añadir \(1\) aporta \(\zeta(\sigma)\) ceros al total,
+   agregar \(0\) aporta \(\zeta(\sigma) + 1\)).
+  Siguiendo la descripción de la clase
+  podemos derivar una ecuación para \(C(z)\):
+  \begin{align}
+    C(z)
+      &= \sum_{\sigma \in \mathcal{S}}
+	   \zeta(\sigma) z^{\lvert \sigma \rvert}
+		     \label{eq:C-def} \\
+      &= \zeta(\epsilon)
+	   + \sum_{\sigma \in \mathcal{S}}
+	       (2 \zeta(\sigma) + 1) z^{\lvert \sigma \rvert + 1}
+		      \notag \\
+      &= 2 z \sum_{\sigma \in \mathcal{S}}
+	     \zeta(\sigma)  z^{\lvert \sigma \rvert}
+	   + z \sum_{\sigma \in \mathcal{S}} z^{\lvert \sigma \rvert}
+		      \notag \\
+      &= 2 z C(z) + z S(z)
+		      \label{eq:C-fe}
+  \end{align}
+  Con~\eqref{eq:S-soln} podemos resolver~\eqref{eq:C-fe}:
+  \begin{equation}
+    \label{eq:C-soln}
+    C(z)
+      = \frac{z}{(1 - 2 z)^2}
+  \end{equation}
+  De acá:
+  usando la convención de Iverson
+  (ver la sección~\ref{sec:sumatorias-productorias}):%
+     \index{Iverson, convencion de@Iverson, convención de}
+  \begin{align*}
+    [z^n] C(n)
+       &= [z^n] \frac{z}{(1 - 2 z)^2} \\
+       &= \begin{cases}
+	     0				& \text{si \(n = 0\)} \\
+	     [z^{n - 1}] (1 - 2 z)^{-2} & \text{si \(n > 0\)}
+	  \end{cases} \\
+       &= [n > 0] n \cdot 2^{n - 1} \\
+       &= n \, 2^{n - 1}
+  \end{align*}
+  Combinando con lo anterior:%
+    \index{propiedad!promedio}
+  \begin{align}
+    \E_n[\zeta]
+       &= \frac{[z^n] C(z)}{[z^n] S(z)} \notag \\
+       &= \frac{n}{2}  \label{eq:E(zeta)}
+  \end{align}
+  Tal como esperábamos.
+
+  \lstinputlisting[language=C,
+		   xleftmargin=3em, numbers=left,
+		   caption={Ordenamiento por inserción},
+		   label=lst:insercion-2]
+		  {code/insertion.c}
+  Una de las áreas principales de aplicación de la combinatoria
+  es el análisis detallado de algoritmos,%
+    \index{analisis de algoritmos@análisis de algoritmos}
+  como ilustra nuestro siguiente ejemplo.
+  Analizaremos el algoritmo de ordenamiento por inserción,
+  mostrado en el listado~\ref{lst:insercion-2}.%
+    \index{ordenamiento!insercion@inserción}%
+    \index{analisis de algoritmos@análisis de algoritmos!ordenamiento!insercion@inserción}
+  Interesa particularmente el número de veces que se ejecuta la línea~9.
+  Es claro que este número es \(O(n)\),
+  pero interesa una descripción más precisa.
+
+  Si suponemos que todos los valores son diferentes,
+  y que todos los órdenes de los datos de entrada son igualmente probables,
+  esto se reduce a analizar la permutación de los valores.
+  Vemos que para un valor dado de \lstinline!i!
+  los valores previos ya han sido ordenados,
+  con lo que el valor de \lstinline!a[i]!
+  se compara con los valores anteriores que son mayores a él,
+  y éstos se mueven una posición hacia arriba en el arreglo
+  en la línea~9.
+
+  En una permutación \(\pi\) se dice que hay una \emph{inversión}%
+    \index{permutacion@permutación!inversion@inversión|textbfhy}
+  si \(\pi(i) > \pi(j)\) con \(i < j\).
+  La parte central del análisis
+  es entonces determinar el número promedio de inversiones
+  en permutaciones de \(n\) elementos.
+  Anotemos \(\iota(\pi)\) para el número de inversiones
+  de la permutación \(\pi\),
+  y definamos la función generatriz cumulativa:
+  \begin{equation}
+    \label{eq:I-def}
+    I(z)
+      = \sum_{\pi \in \mathcal{P}}
+	  \iota(\pi) \frac{z^{\lvert \pi \rvert}}{\lvert \pi \rvert !}
+  \end{equation}
+  Nos interesa particularmente el número promedio de inversiones
+  para permutaciones de tamaño~\(n\).
+
+  Podemos describir permutaciones mediante la expresión simbólica:
+  \begin{equation}
+    \label{eq:P-class}
+    \mathcal{P}
+      = \mathcal{E} + \mathcal{P} \star \mathcal{Z}
+  \end{equation}
+  Vale decir,
+  una permutación es vacía
+  o es una permutación combinada con un elemento adicional.
+  Dada la permutación \(\pi\)
+  construimos permutaciones de largo \(\lvert \pi \rvert + 1\)
+  añadiendo un nuevo elemento vía la operación \(\star\).
+  Estamos creando \(\lvert \pi \rvert + 1\) nuevas permutaciones,
+  cada una de las cuales conserva las inversiones que tiene,
+  y agrega entre \(0\) y \(\lvert \pi \rvert\) nuevas inversiones
+  dependiendo del valor elegido como último.
+  El total de inversiones en el conjunto de permutaciones así creado
+  a partir de \(\pi\) es:
+  \begin{equation}
+    \label{eq:iota-decomposed}
+    (\lvert \pi \rvert + 1) \iota(\pi)
+      + \sum_{0 \le k \le \lvert \pi \rvert} k
+      = (\lvert \pi \rvert + 1) \iota(\pi)
+	  +  \frac{\lvert \pi \rvert ( \lvert \pi \rvert + 1)}{2}
+  \end{equation}
+  Con esto tenemos la descomposición para la función generatriz cumulativa
+  (la permutación de cero elementos no tiene inversiones):
+  \begin{align}
+    I(z)
+      &= \sum_{\pi \in \mathcal{P}}
+	   \iota(\pi) \frac{z^{\lvert \pi \rvert}}{\lvert \pi \rvert !}
+	       \label{eq:Inv-definition} \\
+      &= \iota(\epsilon)
+	   + \sum_{\pi \in \mathcal{P}}
+	       \left(
+		 (\lvert \pi \rvert + 1) \iota(\pi)
+		     +	\frac{\lvert \pi \rvert ( \lvert \pi \rvert + 1)}{2}
+	       \right)
+	       \frac{z^{\lvert \pi \rvert + 1}}{(\lvert \pi \rvert + 1)!}
+		   \label{eq:Inv-decomposed} \\
+      &= \sum_{\pi \in \mathcal{P}}
+	   \iota(\pi) \frac{z^{\lvert \pi \rvert + 1}}{\lvert \pi \rvert !}
+	   + \frac{1}{2}
+	       \sum_{\pi \in \mathcal{P}}
+		 \frac{z^{\lvert \pi \rvert + 1}}{\lvert \pi \rvert !}
+		 \lvert \pi \rvert \notag \\
+      &= z I(z) + \frac{1}{2} z \sum_{k \ge 0} k z^k \notag \\
+      &= z I(z) + \frac{z^2}{2 (1 - z)^2}
+  \end{align}
+  Despejando:
+  \begin{equation}
+    \label{eq:Inv-explicit}
+    I(z)
+      = \frac{1}{2} \frac{z^2}{(1 - z)^3}
+  \end{equation}
+  Obtenemos el número promedio de inversiones directamente:%
+    \index{permutacion@permutación!inversion@inversión!numero promedio@número promedio}%
+    \index{propiedad!promedio}
+  \begin{align}
+    \E_n[\iota]
+      &= [z^n] I(z)
+	   \label{En-iota} \\
+      &= \frac{1}{2} \binom{n}{2}
+	   \notag \\
+      &= \frac{n (n - 1)}{4}
+	  \label{En-iota-explicit}
+  \end{align}
+  En consecuencia,
+  en promedio al ordenar \(n\)~elementos
+  el método de inserción mueve \(n (n - 1) / 4\)~elementos.
+  Esto también resulta ser el número promedio de comparaciones de elementos,
+  ver el listado~\ref{lst:insercion-2}.
+
+  Podemos definir árboles binarios como un \emph{nodo externo}%
+    \index{arbol binario@árbol binario|textbfhy}%
+    \index{arbol binario@árbol binario!nodo externo|textbfhy}
+  (simbolizado por \(\Box\))
+  o un \emph{nodo interno}%
+    \index{arbol binario@árbol binario!nodo interno|textbfhy}
+  (simbolizado por \(\Circle\))
+  conectado a dos árboles binarios
+  (izquierdo y derecho).
+  Así podemos expresar la clase de árboles binarios como:
+  \begin{equation}
+    \label{eq:A-class}
+    \mathcal{A}
+      = \Box + \Circle \times \mathcal{A} \times \mathcal{A}
+  \end{equation}
+  Con \(\lvert \alpha \rvert\) el número de nodos internos%
+    \index{arbol binario@árbol binario!nodo interno}
+  del árbol binario \(\alpha\)
+  y \(\boxed{\alpha}\) su número de nodos externos,%
+    \index{arbol binario@árbol binario!nodo externo}
+  por inducción estructural%
+    \index{induccion@inducción!estructural}:
+  \begin{equation}
+    \label{eq:A-internal-external-size}
+    \boxed{\alpha}
+      = \lvert \alpha \rvert + 1
+  \end{equation}
+
+  Si consideramos como medida de tamaño el número de nodos internos,
+  la descripción simbólica~\eqref{eq:A-class} da la ecuación funcional:
+  \begin{equation}
+    \label{eq:A-fe}
+    A(z)
+      = 1 + z A^2(z)
+  \end{equation}
+  que entrega:
+  \begin{equation}
+    \label{eq:A-explicit}
+    A(z)
+      = \frac{1 - \sqrt{1 - 4 z}}{2 z}
+  \end{equation}
+  que sabemos de~\eqref{eq:gf-Catalan} da los números de Catalan:%
+    \index{Catalan, numeros de@Catalan, números de}
+  \begin{equation}
+    \label{eq:A-coeff}
+    a_n
+      = C_n
+      = \frac{1}{n + 1} \binom{2 n}{n}
+  \end{equation}
+
+  En un árbol binario,
+  la \emph{altura} de un nodo es la distancia de la raíz.%
+    \index{arbol binario@árbol binario!altura de un nodo|textbfhy}
+  Se define el \emph{largo de camino interno}%
+    \index{arbol binario@árbol binario!largo de camino interno|textbfhy}
+  (en inglés \emph{\foreignlanguage{english}{internal path length}})
+  del árbol
+  como la suma de las alturas de los nodos internos,
+  lo anotamos \(\pi(\alpha)\).
+  El \emph{largo de camino externo}%
+    \index{arbol binario@árbol binario!largo de camino externo|textbfhy}
+  (en inglés \emph{\foreignlanguage{english}{external path length}})
+  del árbol
+  es la suma de las alturas de los nodos externos,
+  que anotamos \(\xi(\alpha)\).
+  Si buscamos en un árbol binario
+  en el que los nodos en el subárbol izquierdo son menores que la raíz,
+  y ésta a su vez menor que los nodos en el subárbol derecho,
+  \(\pi(\alpha)\) es la suma de los costos
+  para buscar los \(\lvert \alpha \rvert\)~nodos internos,
+  mientras \(\xi(\alpha)\) es la suma de los costos
+  para buscar los \(\lvert \alpha \rvert + 1\)~nodos externos,
+  partiendo cada vez de la raíz.
+  Si almacenamos datos en los nodos internos
+  en la forma de árboles binarios de búsqueda,
+  nodos externos corresponden a búsquedas fallidas
+
+  Calculemos el promedio de los largos de camino
+  en árboles binarios de \(n\)~nodos internos.
+  De partida,
+  ambas medidas son cero para el árbol que sólo tiene un nodo externo.
+  De la descripción del árbol binario \(\alpha\)
+  como nodo raíz y subárboles izquierdo y derecho
+  (\(\alpha_l\) y \(\alpha_r\),
+   respectivamente),
+  como al agregar una raíz la altura de cada nodo aumenta en uno
+  (y la suma de las alturas aumenta en el número de nodos considerados),
+  podemos escribir:
+  \begin{align}
+    \pi(\alpha)
+      &= \pi(\alpha_l) + \lvert \alpha_l \rvert
+	  + \pi(\alpha_r) + \lvert \alpha_r \rvert
+	      \label{eq:pi-decomposed} \\
+    \xi(\alpha)
+      &= \xi(\alpha_l) + \boxed{\alpha_l}
+	  + \xi(\alpha_r) + \boxed{\alpha_r} \notag \\
+      &= \xi(\alpha_l) + \lvert \alpha_l \rvert + 1
+	  + \xi(\alpha_r) + \lvert \alpha_r \rvert + 1
+	      \label{eq:xi-decomposed}
+  \end{align}
+  Esto lleva directamente a las ecuaciones funcionales
+  para las funciones generatrices cumulativas:
+  \begin{align}
+    I(z)
+      &= \sum_{\alpha \in \mathcal{A}} \pi(\alpha) z^{\lvert \alpha \rvert}
+	   \label{eq:Ipi-def} \\
+      &= \sum_{\substack{\alpha_l \in \mathcal{A} \\
+			 \alpha_r \in \mathcal{A}}}
+	       (\pi(\alpha_l) + \lvert \alpha_l \rvert
+		  + \pi(\alpha_r) + \lvert \alpha_r \rvert)
+	       z^{\lvert \alpha_l \rvert + \lvert \alpha_r \rvert + 1}
+	   \label{eq:Ipi-decomposed} \\
+    E(z)
+      &= \sum_{\alpha \in \mathcal{A}} \xi(\alpha) z^{\lvert \alpha \rvert}
+	   \label{eq:E-def} \\
+      &= \sum_{\substack{\alpha_l \in \mathcal{A} \\
+			 \alpha_r \in \mathcal{A}}}
+	       (\xi(\alpha_l) + \lvert \alpha_l \rvert + 1
+		  + \xi(\alpha_r) + \lvert \alpha_r \rvert + 1)
+	       z^{\lvert \alpha_l \rvert + \lvert \alpha_r \rvert + 1}
+	   \label{eq:E-decomposed}
+  \end{align}
+  Consideremos las sumas resultantes,
+  por ejemplo:
+  \begin{align*}
+    \sum_{\substack{\alpha_l \in \mathcal{A} \\
+		    \alpha_r \in \mathcal{A}}}
+      \pi(\alpha_l) z^{\lvert \alpha_l \rvert + \lvert \alpha_r \rvert + 1}
+      &= z \sum_{\alpha_l \in \mathcal{A}}
+	     \pi(\alpha_l) z^{\lvert \alpha_l \rvert}
+	   \cdot \sum_{\alpha_r \in \mathcal{A}} z^{\lvert \alpha_r \rvert} \\
+      &= z I(z) A(z)
+  \end{align*}
+  Otro tipo de suma es:
+  \begin{align*}
+    \sum_{\substack{\alpha_l \in \mathcal{A} \\
+		    \alpha_r \in \mathcal{A}}}
+      \lvert \alpha_l \rvert
+      z^{\lvert \alpha_l \rvert + \lvert \alpha_r \rvert + 1}
+    &= z \sum_{\alpha_l \in \mathcal{A}}
+	   \lvert \alpha_l \rvert z^{\lvert \alpha_l \rvert}
+	 \cdot \sum_{\alpha_r \in \mathcal{A}} z^{\lvert \alpha_r \rvert} \\
+    &= z^2 A'(z) A(z)
+  \end{align*}
+  Acá usamos:
+  \begin{equation*}
+    z A'(z)
+      = \sum_{\alpha \in \mathcal{A}}
+	  \lvert \alpha \rvert z^{\lvert \alpha \rvert}
+  \end{equation*}
+  Finalmente:
+  \begin{align*}
+    \sum_{\substack{\alpha_l \in \mathcal{A} \\
+		    \alpha_r \in \mathcal{A}}}
+      z^{\lvert \alpha_l \rvert + \lvert \alpha_r \rvert + 1}
+      &= z \sum_{\alpha_l \in \mathcal{A}} z^{\lvert \alpha_l \rvert}
+	    \cdot \sum_{\alpha_r \in \mathcal{A}} z^{\lvert \alpha_r \rvert} \\
+      &= z A^2(z)
+  \end{align*}
+  En~\eqref{eq:Ipi-decomposed}
+  los primeros tipos de suma se repiten dos veces
+  (una vez al sumar sobre \(\alpha_l\) y una vez al sumar sobre \(\alpha_r\)):
+  \begin{equation}
+    \label{eq:Ipi-functional}
+    I(z)
+      = 2 z I(z) A(z) + 2 z^2 A(z) A'(z)
+  \end{equation}
+  Despejando \(I(z)\):
+  \begin{align}
+    I(z)
+      &= \frac{2 z^2 A(z) A'(z)}{1 - 2 z A(z)} \notag \\
+      &= \frac{1 - 3 z - (1 - z) \sqrt{1 - 4 z}}{z (1 - 4 z)}
+	    \label{eq:Ipi-explicit}
+  \end{align}
+  Por el teorema de Bender
+  (teorema~\ref{theo:Bender})%
+    \index{Bender, teorema de}
+  tenemos que:
+  \begin{align}
+    [z^n] I(z)
+      &\sim \lim_{z \to 1/4}
+	      \left(
+		\frac{1 - 3 z - (1 - z) \sqrt{1 - 4 z}}{z}
+	      \right)
+	      \cdot 4^n \notag \\
+      &\sim 4^n
+	 \label{eq:In-asy}
+  \end{align}
+  Nos interesa el promedio,%
+    \index{propiedad!promedio}
+  para lo que según~\eqref{eq:En-value} requerimos además:
+  \begin{align*}
+    [z^n] A(z)
+      &=    C_n \\
+      &=    \frac{1}{n + 1} \binom{2 n}{n} \\
+      &\sim \frac{4^n n^{-3/2}}{\sqrt{\pi}}
+  \end{align*}
+  (lo último de la fórmula de Stirling~\eqref{eq:Stirling}%
+     \index{Stirling, formula de@Stirling, fórmula de}
+   para factoriales con la expresión~\eqref{eq:Comb=f/f*f}
+   para coeficientes binomiales).
+  Con esto el promedio buscado es:
+  \begin{align}
+    \E_n[\pi]
+      &=    \frac{[z^n] I(z)}{[z^n] A(z)} \notag \\
+      &\sim \sqrt{\pi} n^{3/2}
+	  \label{eq:En-pi-value}
+  \end{align}
+  El costo promedio de búsquedas exitosas en el árbol
+  resulta así:%
+    \index{arbol binario@árbol binario!busqueda exitosa@búsqueda exitosa}
+  \begin{equation}
+    \frac{\E_n[\pi]}{n}
+      \sim \sqrt{\pi n}
+	  \label{eq:A-success-asy}
+  \end{equation}
+
+  Para \(E(z)\) tenemos de forma similar:
+  \begin{equation*}
+    \label{eq:E-functional}
+    E(z)
+      = 2 z E(z) A(z) + 2 z^2 A(z) A'(z) + 2 z A^2(z)
+  \end{equation*}
+  Despejando:
+  \begin{align}
+    E(z)
+      &= \frac{2 z^2 A(z) A'(z) + 2 z A^2(z)}{1 - 2 z A(z)}  \notag \\
+      &= \frac{1 - \sqrt{1 - 4 z}}
+	      {1 - 4 z}
+	    \label{eq:E-explicit}
+  \end{align}
+  Esto es sencillo de manejar usando~\eqref{eq:binomial(-1/2,k)}
+  y aproximando el coeficiente binomial
+  mediante la fórmula de Stirling~\eqref{eq:Stirling}:
+  \begin{align}
+    [z^n] E(z)
+      &=    [z^n] \frac{1}{1 - 4 z} - [z^n] (1 - 4 z)^{-1/2} \notag \\
+      &=    4^n - \binom{-1/2}{n}(-4)^n \notag \\
+      &=    4^n - \frac{1}{4^n} \binom{2 n}{n} \cdot 4^n \notag \\
+      &\sim 4^n \left(1 - \sqrt{\frac{2}{\pi n}} \right)
+	   \label{eq:E-asy}
+  \end{align}
+  Para el costo promedio de las \(n + 1\)~posibles búsquedas fallidas%
+    \index{arbol binario@árbol binario!busqueda fallida@búsqueda fallida}
+  resulta:
+  \begin{align}
+    \frac{\E_n[\xi]}{n + 1}
+      &=    \frac{[z^n] E(z)}{(n + 1) [z^n] A(z)} \notag \\
+      &\sim \sqrt{\pi n}
+	  \label{eq:A-fail-asy}
+  \end{align}
+
+  Interesa analizar el comportamiento de árboles binarios de búsqueda,%
+    \index{arbol binario de busqueda@árbol binario de búsqueda|textbfhy}%
+    \index{analisis de algoritmos@análisis de algoritmos!arbol binario de busqueda@árbol binario de búsqueda}
+  particularmente el costo promedio de búsquedas exitosas y fallidas.
+  Árboles binarios de búsqueda
+  normalmente se crean insertando sucesivamente los elementos a buscar,
+  con lo que un modelo razonable
+  es considerar que se insertan elementos de claves diferentes
+  y que todas las permutaciones de los datos
+  son igualmente probables.
+  Nótese que estas son las mismas estructuras que consideramos antes,
+  pero la distribución es diferente.
+
+  Al elegir la raíz
+  estamos dividiendo los restantes valores en dos subárboles,
+  estos valores están intercalados.
+  Si los tamaños de los subárboles izquierdo y derecho
+  son \(\lvert \alpha_l \rvert\) y \(\lvert \alpha_r \rvert\),
+  respectivamente,
+  el mismo árbol binario de búsqueda
+  resulta del siguiente número de permutaciones diferentes:
+  \begin{equation*}
+    \binom{\lvert \alpha_l \rvert + \lvert \alpha_r \rvert}
+	  {\lvert \alpha_l \rvert}
+  \end{equation*}
+  y sabemos que los coeficientes binomiales%
+    \index{coeficiente binomial}
+  tienen su máximo cuando \(\lvert \alpha_l \rvert = \lvert \alpha_r \rvert\).
+  Vale decir,
+  construir árboles binarios de búsqueda insertando elementos
+  en orden aleatorio da resultados más balanceados.
+
+  Suponemos además que la probabilidad de buscar cada uno de los datos
+  es la misma,
+  y además que búsquedas fallidas tienen la misma probabilidad
+  para cada rango de claves
+  antes,
+  entre cada par de elementos
+  y luego del último.
+  El costo de una búsqueda exitosa es la altura del nodo interno
+  que contiene el dato buscado,
+  el de una búsqueda fallida es la altura del nodo externo
+  en que termina.
+
+  Bajo los supuestos indicados,
+  el primer elemento de la permutación de \(n\) elementos
+  (digamos que es \(k\))
+  es la raíz del árbol,
+  los elementos menores que \(k\) forman el subárbol izquierdo
+  mientras los elementos mayores integran el subárbol derecho.
+  Dado que todas las permutaciones se suponen igualmente probables,
+  también lo son
+  las permutaciones de los elementos que forman los subárboles.
+  Sabemos que la función generatriz para permutaciones es:
+  \begin{align}
+    \widehat{P}(z)
+      &= \sum_{\sigma \in \mathcal{P}}
+	   \frac{z^{\lvert \sigma \rvert}}{\lvert \sigma \rvert !}
+	      \label{eq:P-def} \\
+      &= \frac{1}{1 - z}
+	      \label{eq:P-explicit}
+  \end{align}
+  Tenemos la función generatriz cumulativa del largo de camino interno:
+  \begin{align}
+    \widehat{I}(z)
+      &= \sum_{\sigma \in \mathcal{P}}
+	   \pi(\sigma)
+	   \frac{z^{\lvert \sigma \rvert}}{\lvert \sigma \rvert !}
+	      \label{eq:BST-I-def} \\
+  \intertext{Descomponemos según la raíz:}
+    \widehat{I}(z)
+      &= \sum_{\substack{\sigma_l \in \mathcal{P} \\
+			 \sigma_r \in \mathcal{P}}}
+	   \binom{\lvert \sigma_l \rvert + \lvert \sigma_r \lvert}
+		 {\lvert \sigma_l \rvert}
+	   \frac{z^{\lvert \sigma_l \rvert + \lvert \sigma_r \rvert + 1}}
+		{(\lvert \sigma_l \rvert + \lvert \sigma_r \rvert + 1)!}
+	   (\pi(\sigma_l) + \pi(\sigma_r)
+	      + \lvert \sigma_l \rvert + \lvert \sigma_r \rvert)
+	      \label{eq:BST-I-decomposed} \\
+  \intertext{Derivamos para simplificar la suma:}
+    \widehat{I}'(z)
+      &= \sum_{\substack{\sigma_l \in \mathcal{P} \notag \\
+			 \sigma_r \in \mathcal{P}}}
+	   \frac{z^{\lvert \sigma_l \rvert}}{\lvert \sigma_l \rvert !}
+	   \frac{z^{\lvert \sigma_r \rvert}}{\lvert \sigma_r \rvert !}
+	   (\pi(\sigma_l) + \lvert \sigma_l \rvert
+	      + \pi(\sigma_r) + \lvert \sigma_r \rvert) \\
+      &= 2 \widehat{I}(z) \widehat{P}(z)
+	   + 2 z \widehat{P}(z) \widehat{P}'(z) \notag \\
+      &= \frac{2 \widehat{I}(z)}{1 - z} + \frac{2 z}{(1 - z)^2}
+	      \label{eq:BST-I-ode}
+  \end{align}
+  Condición inicial es que \(\widehat{I}(0) = 0\),
+  ya que el árbol con un único nodo externo tiene \(\pi(\Box) = 0\).
+  La solución de la ecuación diferencial~\eqref{eq:BST-I-ode} es:
+  \begin{equation}
+    \label{eq:BST-I-explicit}
+    \widehat{I}(z)
+      = \frac{2}{(1 - z)^2} \ln \frac{1}{1 - z} - \frac{2 z}{(1 - z)^3}
+  \end{equation}
+  Esta es esencialmente la función generatriz~\eqref{eq:Hn-sum-gf}
+  de la suma de números harmónicos,
+  \eqref{eq:Hn-sum} da los coeficientes:
+  \begin{align}
+    \E_n[\pi]
+      &=    2 (n + 1) (H_{n + 1} - 1) - 2 n
+	      \label{eq:BST-En-pi-explicit} \\
+      &\sim 2 n \ln n
+	      \label{eq:BST-En-pi-asy}
+  \end{align}
+  El costo promedio de una búsqueda exitosa es así:%
+    \index{arbol binario de busqueda@árbol binario de búsqueda!busqueda exitosa@búsqueda exitosa|textbfhy}%
+    \index{propiedad!promedio}
+  \begin{equation}
+    \label{eq:BST-success}
+    \frac{\E_n[\pi]}{n}
+      \sim 2 \ln n
+  \end{equation}
+
+  De forma similar tratamos búsquedas fallidas:
+  \begin{align}
+    \widehat{E}(z)
+      &= \sum_{\sigma \in \mathcal{P}}
+	   \xi(\sigma)
+	   \frac{z^{\lvert \sigma \rvert}}{\lvert \sigma \rvert !}
+	      \label{eq:BST-E-def} \\
+      &= \sum_{\substack{\sigma_l \in \mathcal{P} \\
+			 \sigma_r \in \mathcal{P}}}
+	   \binom{\lvert \sigma_l \rvert + \lvert \sigma_r \lvert}
+		 {\lvert \sigma_l \rvert}
+	   \frac{z^{\lvert \sigma_l \rvert + \lvert \sigma_r \rvert + 1}}
+		{(\lvert \sigma_l \rvert + \lvert \sigma_r \rvert + 1)!}
+	   (\xi(\sigma_l) + \lvert \sigma_l \rvert + 1
+	      + \xi(\sigma_r) + \lvert \sigma_r \rvert + 1)
+	      \label{eq:BST-E-decomposed} \\
+    \widehat{E}'(z)
+      &= \sum_{\substack{\sigma_l \in \mathcal{P} \notag \\
+			 \sigma_r \in \mathcal{P}}}
+	   \frac{z^{\lvert \sigma_l \rvert}}{\lvert \sigma_l \rvert !}
+	   \frac{z^{\lvert \sigma_r \rvert}}{\lvert \sigma_r \rvert !}
+	   (\xi(\sigma_l) + \xi(\sigma_r)
+	      + \lvert \sigma_l \rvert + 1
+	      + \lvert \sigma_r \rvert + 1) \notag \\
+      &= 2 \widehat{E}(z) \widehat{P}(z)
+	   + 2 z \widehat{P}(z) \widehat{P}'(z)
+	   + 2 \widehat{P}^2(z) \notag \\
+      &= \frac{2 \widehat{E}(z)}{1 - z} + \frac{2}{(1 - z)^3}
+	      \label{eq:BST-E-ode}
+  \end{align}
+  Nuevamente,
+  como \(\xi(\Box) = 0\) es \(\widehat{E}(0) = 0\).
+  Solución de la ecuación diferencial es:
+  \begin{equation}
+    \label{eq:BST-E-explicit}
+    \widehat{E}(z)
+      = \frac{2}{(1 - z)^2} \ln \frac{1}{1 - z}
+  \end{equation}
+  De~\eqref{eq:Hn-sum} tenemos los coeficientes:
+  \begin{equation*}
+    [z^n] E(z)
+      = 2 (n + 1) (H_{n + 1} - 1)
+  \end{equation*}
+  El costo promedio de una búsqueda fallida resulta ser:%
+    \index{arbol binario de busqueda@árbol binario de búsqueda!busqueda fallida@búsqueda fallida|textbfhy}%
+    \index{propiedad!promedio}
+  \begin{align}
+    \frac{\E_n[\xi]}{n + 1}
+      &=   2 (H_{n + 1} - 1)
+		      \label{eq:BST-En-xi-explicit} \\
+      &\sim 2 \ln n
+		      \label{eq:BST-En-xi-asy}
+  \end{align}
+
+\section{Generatrices multivariadas}
+\label{sec:multivariable-GF}
+\index{generatriz!multivariada|textbfhy}
+
+  Una manera distinta de atacar el problema general que hemos planteado
+  es usar funciones generatrices multivariadas.
+    Consideraremos una clase \(\mathcal{A}\),
+  con objetos \(\alpha \in \mathcal{A}\) de tamaño \(\lvert \alpha \rvert\);
+  y a su vez un parámetro,
+  cuyo valor para \(\alpha\) es \(\chi(\alpha)\).
+  Como hasta ahora usaremos la indeterminada \(z\) para contabilizar tamaños,
+  y usaremos la indeterminada \(u\)
+  para marcar el valor del parámetro de interés.
+  Si los átomos que componen \(\alpha\) son indistinguibles,
+  es natural definir la función generatriz ordinaria:
+  \begin{equation}
+    \label{eq:obgf-def}
+    A(z, u)
+      = \sum_{\alpha \in \mathcal{A}} z^{\lvert \alpha \rvert} u^{\chi(\alpha)}
+  \end{equation}
+  De la misma forma,
+  si los átomos son distinguibles
+  es apropiada la función generatriz exponencial:
+  \begin{equation}
+    \label{eq:ebgf-def}
+    \widehat{A}(z, u)
+      = \sum_{\alpha \in \mathcal{A}}
+	  \frac{z^{\lvert \alpha \rvert}}{\lvert \alpha \rvert !}
+	     u^{\chi(\alpha)}
+  \end{equation}
+  Es común que nos interese el valor promedio de \(\chi(\alpha)\)
+  para objetos de tamaño dado.%
+    \index{propiedad!promedio}
+  Nótese que:
+  \begin{equation}
+    \label{eq:obgf-partial}
+    \frac{\partial A}{\partial u}
+      = \sum_{\alpha \in \mathcal{A}}
+	  \chi(\alpha) u^{\chi(\alpha) - 1} z^{\lvert \alpha \rvert}
+  \end{equation}
+  Así podemos calcular los valores promedios a partir de
+  los coeficientes de las siguientes sumas:
+  \begin{align}
+    \sum_{\alpha \in \mathcal{A}} z^{\lvert \alpha \rvert}
+      &= A(z, 1)
+	  \label{eq:obgf|u=1} \\
+    \sum_{\alpha \in \mathcal{A}} \chi(\alpha) z^{\lvert \alpha \rvert}
+      &= \left. \frac{\partial A}{\partial u} \right\rvert_{u = 1}
+	  \label{eq:obgf_u|u=1}
+  \end{align}
+  Vemos que~\eqref{eq:obgf|u=1}
+  no es más que la función generatriz~\eqref{eq:A-def}
+  del número de objetos,
+  mientras~\eqref{eq:obgf_u|u=1}
+  es la función generatriz cumulativa~\eqref{eq:cogf-def}.
+
+  En aras de brevedad,
+  usaremos la notación:%
+    \index{derivada parcial, notacion@derivada parcial, notación}
+  \begin{equation}
+    \label{eq:partial-notation}
+    A_z(z, u)
+      = \frac{\partial A}{\partial z}
+    \qquad
+    A_u(z, u)
+      = \frac{\partial A}{\partial u}
+  \end{equation}
+  En esto el subíndice indica el argumento de la función
+  (o sea,
+   primer y segundo argumento respectivamente en el ejemplo).
+  Para derivadas parciales superiores anotamos por ejemplo:
+  \begin{equation*}
+    A_{z z}(z, u)
+      = \frac{\partial^2 A}{\partial z^2}
+    \hspace*{3em}
+    A_{u z}(z, u)
+      = \frac{\partial^2 A}{\partial z \partial u}
+    \hspace*{3em}
+    A_{z u}(z, u)
+      = \frac{\partial^2 A}{\partial u \partial z}
+  \end{equation*}
+  Nótese que el orden de los subíndices es el orden en que se deriva.
+
+  En particular,
+  extraer los coeficientes de \(z^n\) de las sumas mencionadas
+  entrega los valores necesarios:%
+    \index{valor esperado}
+  \begin{align}
+    \E_n[\chi]
+      &= \frac{\sum_{\lvert \alpha \rvert = n} \chi(\alpha)}{a_n}
+	   \label{eq:En-def} \\
+      &= \frac{[z^n] A_u(z, 1)}{[z^n] A(z, 1)}
+	   \label{eq:En-value}
+  \end{align}
+  Exactamente el mismo razonamiento
+  se aplica a funciones generatrices exponenciales
+  (los denominadores \(n!\) se cancelan).
+
+  La ventaja de esta línea de desarrollo
+  frente al de la sección~\ref{sec:generatrices-cumulativas}
+  es que la función generatriz multivariada contiene la distribución completa
+  de los valores.
+  En particular,
+  vemos que la función generatriz de probabilidad
+  (ver~\ref{sec:PGF})
+  de la medida \(\chi\) para objetos de tamaño \(n\) está dada por:
+  \begin{equation}
+    \label{eq:PGF-chi}
+    G_n(u)
+      = \frac{[z^n] A(z, u)}{[z^n] A(z, 1)}
+  \end{equation}
+  Aplicando~\eqref{eq:PGF-variance} vemos que:%
+    \index{propiedad!varianza}
+  \begin{align}
+    \var_n[\chi]
+      &= G_n''(1) + G_n'(1) - \left( G_n'(1) \right)^2 \\
+      &= \frac{[z^n] A_{u u} (z, 1)}{[z^n] A(z, 1)}
+	    + \frac{[z^n] A_u (z, 1)}{[z^n] A(z, 1)}
+	    - \left( \frac{[z^n] A_u (z, 1)}{[z^n] A(z, 1)} \right)^2
+		 \label{eq:varn-chi}
+  \end{align}
+  Cabe resaltar que en~\eqref{eq:varn-chi}
+  se producirán importantes cancelaciones por la resta,
+  se requieren valores precisos para los coeficientes
+  para poder usarla.
+  Esta fórmula se aplica sin cambios a funciones generatrices exponenciales,
+  los factoriales de los denominadores se cancelan
+  como ocurría en~\eqref{eq:chi-expected-hat}.
+
+  Repitiendo el primer ejemplo,
+  obtengamos el número promedio de \(0\) en secuencias binarias de largo \(n\).%
+    \index{secuencia!binaria}
+  Estas secuencias quedan descritas por la expresión simbólica
+  (compare con~\eqref{eq:binary-sequence}):
+  \begin{equation}
+    \label{eq:S-class}
+    \mathcal{S}
+      = \Seq(\{0\} + \{1\})
+  \end{equation}
+  Usando \(z\) para tamaño
+  (número total de símbolos)
+  y \(u\) para el número de ceros,
+  la función generatriz correspondiente a \(\{0\} + \{1\}\) es:
+  \begin{equation}
+    \label{eq:01-bgf}
+    z u + z
+      = z (1 + u)
+  \end{equation}
+  con lo que al aplicar el método simbólico resulta:
+  \begin{equation}
+    \label{eq:S-obgf}
+    S(z, u)
+      = \frac{1}{1 - z (1 + u)}
+  \end{equation}
+  Aplicando la técnica explicitada por~\eqref{eq:En-value}
+  a~\eqref{eq:S-obgf} tenemos:
+  \begin{align*}
+    S(z, 1)
+      &= \frac{1}{1 - 2 z} \\
+    S_u(z, u)
+      &= \frac{z}{(1 - z (1 + u))^2} \\
+    S_u(z, 1)
+      &= \frac{z}{(1 - 2 z)^2}
+  \end{align*}
+  Nuevamente tenemos~\eqref{eq:E(zeta)} para el promedio:%
+    \index{propiedad!promedio}
+  \begin{align*}
+    [z^n] S(z, 1)
+      &= [z^n] \frac{1}{1 - 2 z}
+       = 2^n \\
+    [z^n] S_u(z, 1)
+      &= [z^n] \frac{z}{(1 - 2 z)^2}
+       = n \, 2^{n - 1}
+  \end{align*}
+  En consecuencia,
+  el número promedio de ceros es:
+  \begin{equation}
+    \label{eq:S-ave}
+    \frac{[z^n] S_u(z, 1)}{[z^n] S(z, 1)}
+      = \frac{n \, 2^{n - 1}}{2^n}
+      = \frac{n}{2}
+  \end{equation}
+  Tal como esperábamos.
+
+  Vamos por la varianza:%
+    \index{propiedad!varianza}
+  \begin{align*}
+    S_{u u}(z, u)
+      &= \frac{2 z^2}{(1 - z - z u)^3} \\
+    S_{u u}(z, 1)
+      &= \frac{2 z^2}{(1 - 2 z)^3} \\
+    [z^n] S_{u u}(z, 1)
+      &= \frac{1}{2} \binom{n}{2} 2^n \\
+      &= n (n - 1) 2^{n - 2}
+  \end{align*}
+  Con~\eqref{eq:varn-chi}
+  resulta la varianza del número de ceros
+  en secuencias binarias de largo \(n\):
+  \begin{align}
+    \var_n[\zeta]
+      &= \frac{n (n - 1) 2^{n - 2}}{2^n}
+	   + \frac{n 2^{n - 1}}{2^n}
+	   - \left( \frac{n 2^{n - 1}}{2^n} \right)^2 \notag \\
+      &= \frac{n}{4} \label{eq:S-var}
+  \end{align}
+
+  Un ejemplo más complejo es el algoritmo obvio
+  para hallar el máximo de un arreglo,%
+    \index{maximo@máximo}%
+    \index{analisis de algoritmos@análisis de algoritmos!maximo@máximo}
+  ver el listado~\ref{lst:maximo}.
+  Es evidente que el número de veces que se actualiza la variable
+  \lstinline!m! es \(O(n)\),
+  pero interesa dar una respuesta más precisa.
+  \lstinputlisting[language=C,
+		   xleftmargin=3em, numbers=left,
+		   caption={Hallar el máximo},
+		   label=lst:maximo]
+		   {code/maximum.c}
+  Necesitamos un modelo para responder a la pregunta.
+  Si suponemos que todos los valores son diferentes,
+  y que todas las maneras de ordenarlos son igualmente probables,
+  estamos buscando el número promedio de máximos de izquierda a derecha
+  de permutaciones.%
+    \index{permutacion@permutación!maximos izquierda a derecha@máximos izquierda a derecha|textbfhy}
+  Podemos describir la clase de permutaciones simbólicamente
+  como en~\eqref{eq:P-class}:
+  \begin{equation}
+    \label{eq:P-class-again}
+    \mathcal{P}
+      = \mathcal{E} + \mathcal{P} \star \mathcal{Z}
+  \end{equation}
+  Si llamamos \(\chi(\sigma)\) al número de máximos de izquierda a derecha
+  en la permutación \(\sigma\),
+  la función generatriz de probabilidad de que una permutación de tamaño \(n\)
+  tenga \(k\) máximos de izquierda a derecha es:
+  \begin{equation}
+    \label{eq:M-pgf}
+    M(z, u)
+      = \sum_{\sigma \in \mathcal{P}}
+	  \frac{z^{\lvert \sigma \rvert}}{\lvert \sigma \rvert !}
+	    u^{\chi(\sigma)}
+  \end{equation}
+  Esto casualmente es la función generatriz exponencial bivariada
+  correspondiente a la clase~\eqref{eq:P-class-again}.
+
+  Como el último elemento de la permutación
+  es un máximo de izquierda a derecha
+  si es el máximo de todos ellos,
+  usando la convención de Iverson%
+     \index{Iverson, convencion de@Iverson, convención de}
+  (ver la sección~\ref{sec:sumatorias-productorias})
+  podemos expresar el número de máximos de izquierda a derecha
+  en la permutación resultante de \(\sigma \star (1)\)
+  si se asigna el rótulo \(j\) al elemento nuevo como:
+  \begin{equation}
+    \label{eq:chi+1}
+    \chi(\sigma) + [j = \lvert \sigma \rvert + 1]
+  \end{equation}
+  con lo que:
+  \begin{align}
+    M(z, u)
+      &= \sum_{\sigma \in \mathcal{P}}
+	   \sum_{1 \le j \le \lvert \sigma \rvert + 1}
+	     \frac{z^{\lvert \sigma \rvert + 1}}{(\lvert \sigma \rvert + 1)!}
+	       u^{\chi(\sigma) + [j = \lvert \sigma \rvert + 1]}
+		  \label{eq:M-decomposed} \\
+      &= \sum_{\sigma \in \mathcal{P}}
+	   \frac{z^{\lvert \sigma \rvert + 1}}{(\lvert \sigma \rvert + 1)!}
+	      u^{\chi(\sigma)}
+	   \sum_{1 \le j \le \lvert \sigma \rvert + 1}
+	     u^{[j = \lvert \sigma \rvert + 1]}
+		  \notag  \\
+      &= \sum_{\sigma \in \mathcal{P}}
+	   \frac{z^{\lvert \sigma \rvert + 1}}{(\lvert \sigma \rvert + 1)!}
+	      u^{\chi(\sigma)} (\lvert \sigma \rvert + u)
+		  \label{eq:M-decomposed-result}
+  \end{align}
+  Derivando respecto de \(z\):
+  \begin{align*}
+    M_z(z, u)
+      &= \sum_{\sigma \in \mathcal{P}}
+	   \frac{z^{\lvert \sigma \rvert}}{\lvert \sigma \rvert !}
+	   u^{\chi(\sigma)}
+	   (\lvert \sigma \rvert + u) \\
+      &= z M_z(z, u) + u M(z, u)
+  \end{align*}
+  Vale decir:
+  \begin{equation}
+    \label{eq:M-pde}
+    (1 - z) M_z(z, u) - u M(z, u)
+      = 0
+  \end{equation}
+  En~\eqref{eq:M-pde} la variable~\(u\) interviene como parámetro,
+  esta es una ecuación diferencial ordinaria.
+  Como \(M(0, u) = 1\),
+  la solución es:
+  \begin{align}
+    M(z, u)
+      &= \left( \frac{1}{1 - z} \right)^u
+	    \label{eq:M-solution} \\
+      &= \sum_{n, k} \cycle{n}{k} \frac{z^n}{n!} u^k
+	    \label{eq:M-solution-Stirling1}
+  \end{align}
+  Aparecen los números de Stirling de primera especie~%
+    \eqref{eq:Stirling-1-EGF},%
+    \index{Stirling, numeros de@Stirling, números de!primera especie}
+  o sea,
+  hay tantas permutaciones de \(n\)~elementos
+  con \(k\)~máximos de izquierda a derecha
+  como permutaciones con \(k\)~ciclos.%
+    \index{permutacion@permutación!ciclos}
+  Derivando respecto de \(u\):
+  \begin{align*}
+    M_u(z, 1)
+      &= \frac{1}{1 - z} \ln \frac{1}{1 - z}
+  \end{align*}
+  Reconocemos la función generatriz~\eqref{eq:H(z)}
+  de los números harmónicos,%
+    \index{numeros harmonicos@números harmónicos}
+  y el número promedio de asignaciones a \lstinline!m!
+  buscando el máximo entre \(n\) elementos resulta ser:%
+    \index{propiedad!promedio}
+  \begin{align}
+    \E_n[\chi]
+      &= [z^n] M_u(z, 1) \notag \\
+      &= H_n  \label{eq:En-max} \\
+      &= \ln n + \gamma + O(1 / n) \label{eq:En-max-asy}
+  \end{align}
+  Lo último de la expansión asintótica~\eqref{eq:Hn-asy-Bn}.
+
+  Para usar~\eqref{eq:PGF-variance} calculamos:
+  \begin{equation}
+    \label{eq:Muu}
+    M_{u u}(z, 1)
+      = \frac{\ln^2 (1 - z)}{1 - z}
+  \end{equation}
+  Esta es la función~\eqref{eq:ln:alpha-beta}
+  que analizamos en la sección~\ref{sec:gf-logs}.
+  Con la definición de números harmónicos generalizados~\eqref{eq:H(m)n}%
+    \index{numeros harmonicos@números harmónicos!generalizados|textbfhy}
+  resulta la elegante fórmula:
+  \begin{equation}
+    \label{eq:Muu-coef}
+    [z^n] M_{u u}(z, 1)
+      = H^2_n - H^{(2)}_n
+  \end{equation}
+  Tenemos lo necesario para calcular la varianza:%
+    \index{propiedad!varianza}
+  \begin{align}
+    \var_n[\chi]
+      &= [z^n] M_{u u}(z, 1) + [z^n] M_u(z, 1) - ([z^n] M_u(z, 1))^2 \notag \\
+      &= H^2_n - H^{(2)}_n + H_n - H^2_n \notag \\
+      &= H_n - H^{(2)}_n
+	  \label{eq:varn-max}
+  \end{align}
+
+  Ilustramos el cálculo de los largos promedio
+  de camino interno y externo en árboles binarios.%
+    \index{abrol binario@árbol binario}%
+    \index{arbol binario@árbol binario!largo de camino interno}%
+    \index{arbol binario@árbol binario!largo de camino externo}%
+  Expresamos la clase de árboles binarios
+  como en~\eqref{eq:A-class}:
+  \begin{equation}
+    \label{eq:A-class-again}
+    \mathcal{A}
+      = \Box + \Circle \times \mathcal{A} \times \mathcal{A}
+  \end{equation}
+  Como al agregar una raíz la altura de cada nodo aumenta en uno
+  (y la suma de las alturas aumenta en el número de nodos)
+  podemos escribir para el largo de camino interno:
+  \begin{align}
+    I(z, u)
+      &= 1 + z \sum_{\substack{\alpha_l \in \mathcal{A} \\
+			       \alpha_r \in \mathcal{A}}}
+		 z^{\lvert \alpha_l \rvert}
+		   u^{\pi(\alpha_l) + \lvert \alpha_l \rvert}
+		 z^{\lvert \alpha_r \rvert}
+		   u^{\pi(\alpha_r) + \lvert \alpha_r \rvert}
+	   \label{A-bgf-decomposed} \\
+      &= 1 + z \left(
+		 \sum_{\alpha \in \mathcal{A}}
+		   (z u)^{\lvert \alpha \rvert} u^{\pi(\alpha)}
+	       \right)^2 \notag \\
+      &= 1 + z I^2(z u, u)
+	   \label{eq:A-bgf-decomposed-result}
+  \end{align}
+  Derivando respecto de \(u\):
+  \begin{align*}
+    I_u(z, u)
+      &= 2 z I(z u, u) (z I_z(z u, u) + I_u(z u, u)) \\
+    I_u(z, 1)
+      &= 2 z I(z, 1) (z I_z(z, 1) + I_u(z, 1)) \\
+    I_u(z, 1)
+      &= \frac{2 z^2 I(z, 1) I_z(z, 1)}{1 - 2 z I(z, 1)}
+  \end{align*}
+  Pero \(I(z, 1) = A(z)\),
+  donde \(A(z)\) está dada por~\eqref{eq:A-explicit},
+  con lo que \(I_z(z, 1) = A'(z)\),
+  y resulta:
+  \begin{align}
+    I_u(z, 1)
+      &= \frac{2 z^2 A(z) A'(z)}{1 - 2 z A(z)} \notag \\
+      &= \frac{1 - 3 z - (1 - z) \sqrt{1 - 4 z}}{z - 4 z^2}
+	   \label{eq:Ipi-bgf_u|u=1}
+  \end{align}
+  Esto es nuevamente~\eqref{eq:Ipi-explicit}.
+
+  De forma parecida podemos tratar el largo de camino externo.%
+    \index{arbol binario@árbol binario!largo de camino externo}
+  Siguiendo la misma descomposición del árbol:
+  \begin{align}
+    E(z, u)
+      &= \sum_{\alpha \in \mathcal{A}}
+	   z^{\lvert \alpha \rvert} u^{\xi(\alpha)}
+	   \label{E-bgf-decomposed} \\
+      &= 1 + z \sum_{\substack{\alpha_l \in \mathcal{A} \\
+			       \alpha_l \in \mathcal{A}}}
+		 z^{\lvert \alpha_l \rvert + \lvert \alpha_r \rvert}
+		 u^{\xi(\alpha_l) + \boxed{\alpha_l}
+		     + \xi(\alpha_r) + \boxed{\alpha_r}} \notag \\
+      &= 1 + z \left(
+		 \sum_{\alpha \in \mathcal{A}}
+		   z^{\lvert \alpha \rvert}
+		   u^{\xi(\alpha) + \boxed{\alpha}}
+	       \right)^2 \notag \\
+      &= 1 + z \left(
+		 \sum_{\alpha \in \mathcal{A}}
+		   z^{\lvert \alpha \rvert}
+		   u^{\xi(\alpha) + \lvert \alpha \rvert + 1}
+	       \right)^2 \notag \\
+      &= 1 + z u^2 \left(
+		     \sum_{\alpha \in \mathcal{A}}
+		       (z u)^{\lvert \alpha \rvert}
+		       u^{\xi(\alpha)}
+		   \right)^2 \notag \\
+      &= 1 + z u^2 E^2(z u, u)
+	   \label{eq:E-bgf-decomposed-result}
+  \end{align}
+  Como antes,
+  derivando ambos lados respecto de \(u\):
+  \begin{align*}
+    E_u(z, u)
+      &= 2 z u E^2(z u, u)
+	  + 2 z u^2 E(z u, u) ( z E_z(z u, u) + E_u(z u, u)) \\
+    E_u(z, 1)
+      &= 2 z E^2(z, 1)
+	  + 2 z E(z, 1) ( z E_z(z, 1) + E_u(z, 1))
+  \end{align*}
+  Despejando,
+  como \(E(z, 1) = A(z)\):
+  \begin{align}
+    E_u(z, 1)
+      &= \frac{2 z A^2(z) + 2 z^2 A(z) A'(z)}{1 - 2 z A(z)} \notag \\
+      &= \frac{1 - \sqrt{1 - 4 z}}{1 - 4 z}
+	 \label{eq:E-bgf_u|u=1-asy}
+  \end{align}
+  Nuevamente~\eqref{eq:E-explicit},
+  que da el promedio asintótico~\eqref{eq:A-fail-asy}..
+
+  Si construimos árboles binarios insertando claves en orden aleatorio,
+  la distribución es diferente.
+  Para el largo de camino interno tenemos:
+  \begin{align}
+    \widehat{I}(z, u)
+      &= \sum_{\alpha \in \mathcal{P}}
+	   \frac{z^{\lvert \alpha \rvert}}{\lvert \alpha \rvert !}
+	   u^{\pi(\alpha)}
+		 \label{eq:BST-IPL-mgf-def} \\
+      &= 1 + \sum_{\substack{\alpha_l \in \mathcal{P} \\
+			     \alpha_r \in \mathcal{P}}}
+	       \binom{\lvert \alpha_l \rvert + \lvert \alpha_r \rvert}
+		     {\lvert \alpha_l \rvert}
+		 \frac{z^{\lvert \alpha_l \rvert + \lvert \alpha_r \rvert + 1}}
+		      {(\lvert \alpha_l \rvert + \lvert \alpha_r \rvert + 1)!}
+		 u^{\pi(\alpha_l) + \alpha_l + \pi(\alpha_r) + \alpha_r}
+		 \label{eq:BST-IPL-mgf-decomposed}
+  \end{align}
+  Para simplificar,
+  derivamos respecto de \(z\):
+  \begin{align}
+    \widehat{I}_z(z, u)
+      &= \sum_{\substack{\alpha_l \in \mathcal{P} \\
+			 \alpha_r \in \mathcal{P}}}
+	   \binom{\lvert \alpha_l \rvert + \lvert \alpha_r \rvert}
+		 {\lvert \alpha_l \rvert}
+	     \frac{z^{\lvert \alpha_l \rvert + \lvert \alpha_r \rvert}}
+		  {(\lvert \alpha_l \rvert + \lvert \alpha_r \rvert)!}
+	     u^{\pi(\alpha_l) + \alpha_l + \pi(\alpha_r) + \alpha_r}
+		 \notag \\
+      &= \sum_{\substack{\alpha_l \in \mathcal{P} \\
+			 \alpha_r \in \mathcal{P}}}
+	   \frac{(z u)^{\lvert \alpha_l \rvert}}
+		{\lvert \alpha_l \rvert !}
+	   u^{\pi(\alpha_l)}
+	     \cdot \frac{(z u)^{\lvert \alpha_r \rvert}}
+			{\lvert \alpha_r \rvert !}
+		   u^{\pi(\alpha_r)} \notag \\
+      &= \widehat{I}^2(z u, u)
+		 \label{eq:BST-IPL-mgf-z-decomposed}
+  \end{align}
+  Nos interesan las derivadas \(\widehat{I}_u(z, 1)\)
+  y \(\widehat{I}_{u u}(z, 1)\),
+  ya sabemos que \(\widehat{I}(z, 1) = (1 - z)^{-1}\).
+  Tenemos:
+  \begin{align}
+    \widehat{I}_{z u}(z, u)
+      &= 2 \widehat{I}(z u, u)
+	   (z \widehat{I}_z(z u, u) + \widehat{I}_u(z u, u))
+	     \label{eq:I_zu} \\
+    \widehat{I}_{z u u}(z, u)
+      &= 2 (z \widehat{I}_z(z u, u) + \widehat{I}_u(z u, u))^2 \notag \\
+      &\qquad  + 2 \widehat{I}(z u, u)
+		 (z^2 \widehat{I}_{z z}(z u, u)
+		     + z \widehat{I}_{z u}(z u, u)
+		     + z \widehat{I}_{u z}(z u, u)
+		     + \widehat{I}_{u u}(z u, u))
+	     \label{eq:I_zuu}
+  \end{align}
+  Por el teorema de Schwartz%
+    \index{Schwartz, teorema de}
+  (también conocido como teorema de Clairaut,%
+    \index{Clairaut, teorema de}
+   ver textos de cálculo,
+   como Zakon~\cite{zakon09:_mathem_analy_ii}
+   o Thomson, Bruckner y Bruckner~%
+     \cite[teorema 12.5]{thomson08:_elemen_real_analy})
+  si las derivadas son continuas
+  se cumple que:
+  \begin{equation*}
+    f_{x y} (x, y)
+      = f_{y x}(x, y)
+  \end{equation*}
+  En general,
+  podemos permutar el orden de derivación a gusto
+  si alguna de las derivadas de interés es continua.
+  En nuestro caso,
+  al ser \([z^n] \widehat{I}(z, u)\) un polinomio en~\(u\)
+  y \(\widehat{I}(z, 1) = (1 - z)^{-1}\),
+  que tiene infinitas derivadas continuas en \(z = 0\),
+  las derivadas que nos interesan en \(z = 0\), \(u = 1\)
+  siempre existen y son continuas.
+  Reordenando derivadas en~\eqref{eq:I_zu}
+  y~\eqref{eq:I_zuu},
+  evaluado para \(u = 1\) resulta:
+  \begin{align*}
+    \widehat{I}_{u z}(z, 1)
+      &= 2 \widehat{I}(z, 1)
+	   (z \widehat{I}_z(z, 1) + \widehat{I}_u(z, 1)) \\
+    \widehat{I}_{u u z}(z, 1)
+      &= 2 (z \widehat{I}_z(z, 1) + \widehat{I}_u(z, 1))^2
+	   + 2 \widehat{I}(z, 1)
+	       (z^2 \widehat{I}_{z z}(z, 1)
+		   + 2 z \widehat{I}_{u z}(z, 1)
+		   + \widehat{I}_{u u}(z, 1))
+  \end{align*}
+  Despejando:
+  \begin{equation}
+    \label{eq:Iu-ode}
+    \widehat{I}_{u z}(z, 1)
+      = \frac{2 I_u(z, 1)}{1 - z} + \frac{2 z}{(1 - z)^3}
+  \end{equation}
+  Condiciones iniciales para las ecuaciones diferenciales~\eqref{eq:Iu-ode}
+  y su similar de~\eqref{eq:I_zuu}
+  da la condición \([z^0] \widehat{I}(z, u) = 1\),
+  de donde \(\widehat{I}_u(0, 1) = 0\),
+  con lo que:
+  \begin{equation}
+    \label{eq:Iu|u=1}
+    \widehat{I}_u(z, 1)
+      = 2 \frac{1}{(1 - z)^2} \ln \frac{1}{1 - z} - \frac{z}{(1 - z)^2}
+  \end{equation}
+  y también,
+  reemplazando~\eqref{eq:Iu|u=1} en~\eqref{eq:I_zuu}
+  y resolviendo la ecuación diferencial resultante,
+  donde nuestra condición anterior ahora da \(\widehat{I}_{u u}(0, 1) = 0\):
+  \begin{equation}
+    \label{eq:Iuu|u=1}
+    \widehat{I}_{u u}(z, 1)
+      = \frac{1}{(1 - z)^3}
+	  \left(
+	    4 (1 + z) \ln^2 \frac{1}{1 - z}
+	      - 4 (1 + z) \ln \frac{1}{1 - z}
+	      + 2 z^2 + 4 z
+	  \right)
+  \end{equation}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

@@ -1,0 +1,255 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{relsize}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#6\quad Cuadratura Gaussiana}}
+
+
+\author{Aldo Berrios Valenzuela}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#6\\Cuadratura Gaussiana}
+
+\date{Miércoles 17 de Agosto de 2016}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\newcolumntype{M}{>{$}c<{$}}
+
+
+\begin{document}
+\maketitle
+\section{Cuadratura Gaussiana}
+Estamos interesados en investigar la posibilidad de escribir cuadraturas (cálculo de la integral definida) más precisas sin incrementar el número de \textit{puntos de cuadratura} (aka $x_0, x_1, \ldots, x_n$). Esto puede ser posible si nos tomamos la libertad de escoger estos puntos. Por lo tanto, el problema de cuadratura se transforma en un problema de escoger los puntos de cuadratura en adición a determinar los respectivos coeficientes tal que la cuadratura es exacta para los polinomios de grado máximo. Las cuadraturas que son obtenidas con este método se conocen como \emph{cuadratura Gaussiana}\footnote{Introduction to Numerical Analysis by Doron Levy, sección 6.6.1}.
+
+%\paragraph{Idea:} Si puedo \underline{\smash{elegir}} los $x_i$, puedo obtener aproximaciones \comillas{mejores} (en otras palabras,  interpolar con polinomios de grado mayor). Si tengo $n$ puntos $x_j$ con $nf\nparentesis{x_j}$, son $2n$ parámetros, puedo ajustar a polinomio de grado $2n-1$\ldots
+
+Escabrosos detalles del caso general puede encontrarlos en \comillas{Introduction to Numerical Analysis} by Doron Levy (\texttt{na.pdf} en el moodle).
+
+\begin{ejemplo}[Cuadratura Gaussiana con $n=2$]\label{06::CuadGauss:n2}
+	Supongamos que queremos encontrar dos puntos de cuadratura de la ecuación\footnote{Se obtiene con análisis numérico, así que no se preocupe.}:
+	\begin{equation}\label{06::Asterisco}
+	\int_{-1}^1f\nparentesis{x}\mathit{dx}\approx a_0f\nparentesis{x_0}+a_1f\nparentesis{x_1}
+	\end{equation}
+	Como queremos encontrar los valores de $a_0, a_1, x_0$ y $x_1$, esperamos que la ecuación \eqref{06::Asterisco} sea exacta para polinomios de grado $\leq 2\cdot 2-1=3$. Osea, es exacta para $1, x, x^2, x^3$ (puede reemplazar $f\nparentesis{x}$ por cualquier otra cosa, claro, si es que busca complicarse la existencia\ldots). Entonces, reemplazamos $f\nparentesis{x}=x^k$ con $k\in\llaves{0, 1, 2, 3}$ para la $k$-ésima ecuación, y con ello, formamos el siguiente sistema de ecuaciones:
+	\begin{equation}\label{06::SistemaEcuaciones}
+	\int_{-1}^{1}x^k\mathit{dx}=a_0x_0^k+a_1x_1^k\qquad\qquad;k\in\llaves{0, 1, 2, 3}
+	\end{equation}
+	Resolvemos la integral:
+	\begin{align*}
+	\int_{-1}^1x^k \mathit{dx}&=\dfrac{x^{k+1}}{k+1}\Bigg |_{-1}^1
+	=\begin{cases}
+	\hspace{2.9mm}0, &\text{si }k\text{ es impar}\\
+	\dfrac{2}{k+1}, &\text{si }k\text{ es par}
+	\end{cases}
+	\end{align*}
+	y reemplazamos en el sistema de ecuaciones \eqref{06::SistemaEcuaciones}::
+	\begin{align}
+	2&= a_0+a_1\label{06::1Ec}\\
+	0&= a_0x_2+a_1x_1\label{06::2Ec}\\
+	\dfrac{2}{3}&= a_0x_2^2+a_1x_1^2\label{06::3Ec}\\
+	0&= a_0x_0^3+a_1x_1^3\label{06::4Ec}
+	\end{align}
+	Finalmente, al resolver el sistema de ecuaciones de \eqref{06::1Ec}, \eqref{06::2Ec}, \eqref{06::3Ec} y \eqref{06::4Ec} se obtiene:
+	\begin{equation*}
+	a_0=1,\qquad a_1=1,\qquad x_0=\dfrac{1}{\sqrt{3}},\qquad x_1=-\dfrac{1}{\sqrt{3}}
+	\end{equation*}
+\end{ejemplo}
+Una observación es que los coeficientes de los valores extremos $a_0$ y $a_1$ son iguales:
+\begin{equation*}
+a_0=a_1
+\end{equation*}
+y que los puntos de cuadratura extremos $x_0$ y $x_1$ son opuestos, vale decir:
+\begin{equation*}
+x_0=x_1
+\end{equation*}
+
+Lo anterior es extendible para $n$ puntos de cuadratura, donde:
+\begin{equation}
+a_0=a_{n-1},\qquad x_0=x_{n-1}
+\end{equation}
+\paragraph{Importante:} No lo demostraremos\ldots 
+
+\begin{ejemplo}[Cuadratura Gaussiana con $n=3$]
+	Supongamos que queremos encontrar tres puntos de cuadratura, entonces usamos la ecuación:
+	\begin{align*}
+	\int_{-1}^{1}f\nparentesis{x}\mathit{dx}\approx a_0f\nparentesis{x_0}+a_1f\nparentesis{x_1}+a_2f\nparentesis{x_2}
+	\end{align*}
+	Sospechamos que:
+	\begin{align*}
+	x_0&=-x_2\\
+	x_1&=0\\
+	a_0&=a_2
+	\end{align*}
+	Siguiendo los pasos del ejemplo \ref{06::CuadGauss:n2}, podemos resumir el sistema de ecuaciones generado a través del Cuadro \ref{06::SistemaEcuaciones:Cuadro}.
+	\begin{table}[!h]
+		\renewcommand{\arraystretch}{1.3}
+		\centering
+		\begin{tabular}{M|M@{\quad=\quad}M}
+			k&\mathlarger{\int}_{-1}^1 x^k \mathit{dx}&a_0x_0^k+a_1x_1^k+a_2x_2^k\\[7pt]
+			\hline
+			0&2&a_0+a_1+a_2\\
+			1&0&a_0x_0+a_1x_1+a_2x_2\\
+			2&\dfrac{2}{3}&a_0x_0^2+a_1x_1^2+a_2x_2^2\\
+			3&0&a_0x_0^3+a_1x_1^3+a_2x_2^3\\
+			4&\dfrac{2}{5}&a_0x_0^4+a_1x_1^4+a_2x_2^4\\
+			5&0&a_0x_0^5+a_1x_1^5+a_2x_2^5\\
+		\end{tabular}
+		\caption{Usamos los valores de $a_0x_0^k+a_1x_1^k+a_2x_2^k=0$ sólo para comprobar nuestras sospechas propuestas en el comienzo. Las demás ecuaciones las usamos para encontrar los valores restantes: $a_0, a_1, a_2, x_0, x_2$}
+		\label{06::SistemaEcuaciones:Cuadro}
+	\end{table}
+	
+	Comenzamos con la ecuación que tiene $k=2$:
+	\begin{align*}
+	\dfrac{2}{3}&=2a_0x_2^2\\
+	 x_2^2&=\dfrac{1}{3a_0}\numberthis\label{06::Ej2:x2:inicio}
+	\end{align*}
+	Continuamos con $k=4$:
+	\begin{align*}
+	\dfrac{2}{5}&=2a_0x_2^4\\
+	\dfrac{2}{5}&=2a_0\nparentesis{\dfrac{1}{3a_0}}^2\\
+	\dfrac{1}{5}&=a_0\cdot \dfrac{1}{9a_0^2}\\
+	\dfrac{1}{5}&=\dfrac{1}{9a_0}\\
+	9a_0&=5\\
+	\therefore a_0&=\dfrac{5}{9}
+	\end{align*}
+	Luego, reemplazamos $a_0$ en \eqref{06::Ej2:x2:inicio}:
+	\begin{align*}
+	x_2^2&=\dfrac{1}{3\cdot \dfrac{5}{9}}\\
+	&=\dfrac{3}{5}\\
+	\therefore x_2&=\sqrt{\dfrac{3}{5}}
+	\end{align*}
+	Además:
+	\begin{align*}
+	a_1&=2-2a_0\\
+	&=2-\dfrac{5}{9}\\
+	&=\dfrac{13}{9}
+	\end{align*}
+	
+	Luego, sólo basta con reemplazar en el sistema de ecuaciones para comprobar que esto se cumpla. Pero no lo haremos nosotros \ldots
+\end{ejemplo}
+
+Los casos interesantes de cuadratura son:
+\begin{equation}
+\int_a^b\omega\nparentesis{x}f\nparentesis{x}\mathit{dx}
+\end{equation}
+Existen un par de fórmulas que permiten resolverlas. Si quiere más detalles vea el libro \comillas{Introduction to Numerical Analysis} by Doron Levy (\texttt{na.pdf} en el moodle).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

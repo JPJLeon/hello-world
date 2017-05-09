@@ -1,0 +1,531 @@
+% recurrencias.tex
+%
+% Copyright (c) 2013-2015 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Recurrencias}
+\label{sec:recurrencias}
+\index{recurrencia|textbfhy}
+
+  Es común encontrarse con situaciones
+  en las cuales debemos resolver alguna \emph{recurrencia},
+  vale decir,
+  tenemos una ecuación que relaciona valores de una secuencia
+  (generalmente adicionando algunos valores iniciales).
+  Esto aparece tanto en la solución de problemas combinatorios
+  como en el análisis de diversos algoritmos.
+  Algunas de las técnicas que discutiremos
+  se desarrollaron inicialmente
+  para su aplicación en campos diversos como la economía
+  o el control de procesos.
+  Quienes hayan profundizado en el estudio
+  de la solución de ecuaciones diferenciales
+  hallarán paralelos sorprendentes
+  (y divergencias importantes)
+  con esa área.
+  No disponemos de espacio
+  para estudiar ese fenómeno en más detalle
+  (ni es de nuestro interés inmediato).
+
+\section{Definición del problema}
+\label{sec:definicion-problema-recurrencia}
+
+  La situación general puede describirse:
+  \begin{equation}
+    \label{eq:recurrence-general}
+    f(a_n, a_{n + 1}, \dotsc, a_{n + k}, n)
+      = 0
+  \end{equation}
+  Si en~\eqref{eq:recurrence-general} aparecen \(a_n\) y \(a_{n + k}\),
+  se habla de una \emph{recurrencia de orden \(k\)}.%
+    \index{recurrencia!orden|textbfhy}
+  En general harán falta \(k\) valores para determinar la secuencia,
+  típicamente dados como \(a_0\) hasta \(a_{k - 1}\),
+  de~\eqref{eq:recurrence-general} podremos obtener \(a_k\),
+  con \(a_1\) a \(a_k\) tenemos \(a_{k + 1}\),
+  y así sucesivamente.
+  Es claro que hallar una expresión cerrada
+  para los términos de tales secuencias
+  será posible solo en situaciones especiales.
+
+\section{Recurrencias lineales}
+\label{sec:recurrencias-lineales-teoria}
+ \index{recurrencia!lineal|textbfhy}
+
+  Una recurrencia se dice \emph{lineal} si puede escribirse de la forma:
+  \begin{equation}
+    \label{eq:recurrence-linear}
+    u_k(n) a_{n + k}
+	+ u_{k - 1} (n) a_{n + k - 1}
+	+ \dotsb
+	+ u_0(n) a_n
+      = f(n)
+  \end{equation}
+  donde \(u_i(n)\) y \(f(n)\) son funciones conocidas.
+  Si tanto \(u_k\) como \(u_0\) son diferentes de cero,
+  es una \emph{recurrencia de orden \(k\)}.
+  Si \(f(n) = 0\),
+  se dice que la recurrencia es \emph{homogénea},
+    \index{recurrencia!lineal!homogenea@homogénea|textbfhy}
+  en caso contrario \emph{no homogénea}.
+  El estudio de las recurrencias lineales
+  hace uso del álgebra lineal,
+  para mayores detalles véanse por ejempo Strang~%
+    \cite{strang09:_intr_linear_algebra}
+  o Treil~%
+    \cite{treil14:_linear_algeb_done_wrong}.
+
+  Es claro que si las secuencias \(\langle x_n \rangle\)
+  y \(\langle y_n \rangle\) satisfacen una recurrencia lineal homogénea,
+  la combinación lineal \(\langle \alpha x_n + \beta y_n \rangle\)
+  también la satisface.
+  Esta es la razón del nombre.
+  Si expresamos la recurrencia homogénea como:
+  \begin{equation}
+    \label{eq:recurrence-linear-homogeneous}
+    a_{n + k}
+      = u_{k - 1}(n) a_{n + k - 1}
+	 + u_{k - 2}(n) a_{n + k - 2}
+	 + \dotsb
+	 + u_0(n) a_n
+  \end{equation}
+  con los vectores%
+    \index{vector}
+    \(\boldsymbol{a}_n = (a_{n + k - 1}, a_{n + k - 2}, \dotsc, a_n)\)
+  podemos expresar la recurrencia~\eqref{eq:recurrence-linear-homogeneous}
+  como:%
+    \index{matriz}
+  \begin{equation}
+    \label{eq:recurrence-linear-homogeneous-matrix-form}
+    \boldsymbol{a}_{n + 1}
+      = \boldsymbol{U}_n \cdot \boldsymbol{a}_n
+  \end{equation}
+  donde:
+  \begin{equation}
+    \label{eq:recurrence-linear-homogeneous-matrix}
+    \boldsymbol{U}_n
+      = \begin{pmatrix}
+	  u_{k - 1}(n) & u_{k - 2}(n) & \cdots & u_1(n) & u_0(n) \\
+	  1	       & 0	      & \cdots & 0	&   0	 \\
+	  0	       & 1	      & \cdots & 0	&   0	 \\
+	  \vdots       & \vdots	      & \ddots & \vdots & \vdots \\
+	  0	       & 0	      & \cdots & 1	&   0
+	\end{pmatrix}
+  \end{equation}
+  lo que nos permite expresar:
+  \begin{equation}
+    \label{eq:recurrence-linear-homogeneous-matrix-soln}
+    \boldsymbol{a}_n
+      = \boldsymbol{U}_{n - 1}
+	  \cdot \boldsymbol{U}_{n - 2}
+	  \cdot \dotsb
+	  \cdot \boldsymbol{U}_0
+	  \cdot \boldsymbol{a}_0
+  \end{equation}
+  Esto dice que la solución de la ecuación lineal homogénea
+  es la combinación lineal
+  de \(k\) soluciones linealmente independientes:%
+    \index{recurrencia!lineal!solucion@solución|textbfhy}
+  Podemos elegir
+  los \(k\) componentes de \(\boldsymbol{a}_0\) independientemente,
+  si ninguna de las matrices \(\boldsymbol{U}_n\) es singular
+  vectores iniciales linealmente independientes
+  darán vectores finales linealmente independientes.
+  La solución general de la recurrencia lineal no homogénea
+  puede expresarse como una solución particular%
+    \index{recurrencia!lineal!solucion particular@solución particular}
+  y la combinación lineal de \(k\) soluciones linealmente independientes
+  de la recurrencia homogénea.
+
+  En caso que \(\boldsymbol{U}_n\) sea una matriz constante \(\boldsymbol{U}\)
+  (la recurrencia tiene coeficientes constantes),
+  la ecuación~\eqref{eq:recurrence-linear-homogeneous-matrix-soln}
+  se reduce a:
+  \begin{equation}
+    \label{eq:recurrence-linear-homogeneous-matrix-const-soln}
+    \boldsymbol{a}_n
+      = \boldsymbol{U}^n \cdot \boldsymbol{a}_0
+  \end{equation}
+  Técnicas eficientes para el cálculo de potencias
+  (ver la sección~\ref{sec:potencias})%
+    \index{potencia!calculo@cálculo}
+  permiten obtener el vector \(\boldsymbol{a}_n\)
+  rápidamente de~\eqref{eq:recurrence-linear-homogeneous-matrix-const-soln}.
+  Esto ofrece una alternativa a las técnicas expuestas
+  en el capítulo~\ref{cha:funciones-generatrices}.%
+    \index{generatriz}
+
+  Una matriz \(\boldsymbol{A}\) se dice \emph{diagonalizable}%
+    \index{matriz!diagonalizable|textbfhy}
+  si hay una matriz diagonal \(\boldsymbol{D}\)%
+    \index{matriz!diagonal}
+  y una matriz invertible \(\boldsymbol{P}\)%
+    \index{matriz!invertible}
+  tales que
+    \(\boldsymbol{A} = \boldsymbol{P}^{-1} \boldsymbol{D} \boldsymbol{P}\).
+  Calcular potencias de una matriz expresada de esta forma
+  es particularmente simple,
+  ya que
+    \(\boldsymbol{A}^n = \boldsymbol{P}^{-1} \boldsymbol{D}^n \boldsymbol{P}\),
+  y la potencia de la matriz diagonal
+  es simplemente las potencias de sus elementos.
+  Los elementos de la matriz \(\boldsymbol{D}\)
+  resultan ser los valores propios de \(\boldsymbol{A}\),%
+    \index{matriz!valor propio}
+  las soluciones de la ecuación
+    \(\det(\boldsymbol{A} - \lambda \boldsymbol{I}) = 0\).
+  Esto da una forma alternativa
+  de expresar la solución de la recurrencia~\eqref{eq:recurrence-linear}
+  para el caso de coeficientes constantes.
+
+\section{Recurrencias lineales de primer orden}
+\label{sec:rec-lineal-1er}
+
+  Un caso de particular interés práctico son las recurrencias lineales
+  de primer orden,%
+    \index{recurrencia!lineal!primer orden}
+  que podemos escribir:
+  \begin{equation}
+    \label{eq:recurrencia-lineal-1}
+    a_{n + 1}
+      = u_n a_n + f_n
+  \end{equation}
+  Vemos que si dividimos~\eqref{eq:recurrencia-lineal-1}
+  por el \emph{factor sumador}:%
+    \index{recurrencia!lineal!factor sumador}
+  \begin{equation}
+    \label{eq:recurrencia-lineal-2}
+    s_n
+      = \prod_{0 \le k \le n} u_k
+  \end{equation}
+  (lo que presupone que \(u_k \ne 0\) en el rango de interés)
+  queda:
+  \begin{equation*}
+    \frac{a_{n + 1}}{s_n} - \frac{a_n}{s_{n - 1}}
+      = \frac{f_n}{s_n}
+  \end{equation*}
+  Sumando ambos lados obtenemos la solución.
+
+  La fórmula general es bastante engorrosa,
+  ilustraremos la técnica mediante un ejemplo.
+  % http://math.stackexchange.com 135803
+  Sea:
+  \begin{equation}
+    \label{eq:recurrencia-ejemplo-1}
+    a_{n + 1}
+      = \frac{2 (n + 1) a_n + 5 (n + 1)!}{3}
+      \qquad a_0 = 5
+  \end{equation}
+  Reordenando un poco:
+  \begin{equation*}
+    a_{n + 1} - \frac{2 (n + 1)}{3} \, a_n
+      = \frac{5 (n + 1)!}{3}
+  \end{equation*}
+  Vemos que el factor sumador es:
+  \begin{align*}
+    s_n
+      &= \prod_{0 \le k \le n} \frac{2 (n + 1)}{3} \\
+      &= \left( \frac{2}{3} \right)^{n + 1} \, (n + 1)!
+  \end{align*}
+  Dividiendo la recurrencia por esto y sumando para \(0 \le k \le n - 1\)
+  resulta:
+  \begin{align*}
+    \frac{a_n}{(2/3)^n n!} - \frac{a_0}{s_{-1}}
+      &= \frac{5}{3} \, \sum_{0 \le k \le n - 1}
+			  \left( \frac{3}{2} \right)^{k + 1} \\
+    \frac{a_n}{(2/3)^n n!} - \frac{5}{1}
+      &= \frac{5}{3} \cdot \frac{3}{2} \cdot \frac{(3/2)^n - 1}{3/2 - 1} \\
+    \frac{a_n}{(2/3)^n n!}
+      &= 5 + 5 \cdot \left( (3/2)^n - 1 \right) \\
+      &= 5 \cdot (3/2)^n \\
+    a_n
+      &= 5 n!
+  \end{align*}
+
+  A veces esto sirve para simplificar sumas.
+  Siguiendo esencialmente la estrategia de Rockett~%
+    \cite{rockett81:_sums_inver_binom_coeff}
+  calcularemos:
+  \begin{equation*}
+    \sum_{0 \le k \le n} \binom{n}{k}^{-1}
+      = \frac{1}{n!} \sum_{0 \le k \le n} k! (n - k)!
+  \end{equation*}
+  Nos concentramos en la suma:
+  \begin{align}
+    S_n
+      &= \sum_{0 \le k \le n} k! (n - k)!
+	    \label{eq:sum-k!*(n-k)!-def} \\
+      &= \sum_{0 \le k \le n - 1} k! (n - k)! + n! \notag \\
+      &= \sum_{0 \le k \le n - 1} k! (n - 1 - k)! ((n + 1) - (k + 1))
+	   + n! \notag \\
+      &= (n + 1) \sum_{0 \le k \le n - 1} k! (n - 1 - k)!
+	   - \sum_{0 \le k \le n - 1} k! (n - 1 - k)! (k + 1)
+	   + n! \notag \\
+      &= (n + 1) S_{n - 1}
+	   - \sum_{0 \le k \le n - 1} (k + 1)! (n - (k + 1))!
+	   + n! \notag \\
+      &= (n + 1) S_{n - 1}
+	   - \sum_{1 \le k \le n} k! (n - k)!
+	   + n! \notag \\
+      &= (n + 1) S_{n - 1}
+	   - (S_n - n!)
+	   + n! \notag \\
+   2 S_n
+      &= (n + 1) S_{n - 1} + 2 n!
+	    \label{eq:sum-k!*(n-k)!-rec}
+  \end{align}
+  Esta es una recurrencia lineal de primer orden.%
+    \index{recurrencia!lineal!primer orden}
+  De la definición~\eqref{eq:sum-k!*(n-k)!-def} es \(S_0 = 1\).
+
+  El factor sumador de~\eqref{eq:sum-k!*(n-k)!-rec} es \(2^{-n} (n + 1)!\):%
+    \index{factor sumador|see{recurrencia!lineal!primer orden}}
+  \begin{align*}
+    \frac{2^{n + 1}}{(n + 1)!} S_n
+      &= \frac{2^n}{n!} S_{n - 1} + \frac{2^{n + 1}}{n + 1} \\
+    \frac{2^{n + 1}}{(n + 1)!} S_n - \frac{2}{1!} S_0
+      &= \sum_{1 \le k \le n} \frac{2^{k + 1}}{k + 1} \\
+  \intertext{Casualmente coincide con el término para \(k = 0\):}
+    \frac{2^{n + 1}}{(n + 1)!} S_n
+      &= \sum_{0 \le k \le n} \frac{2^{k + 1}}{k + 1}
+  \end{align*}
+  O sea:
+  \begin{equation}
+    \label{eq:sum-k!*(n-k)!-value}
+    S_n
+      = \frac{(n + 1)!}{2^{n + 1}}
+	  \sum_{0 \le k \le n} \frac{2^{k + 1}}{k + 1}
+  \end{equation}
+  Con esto nuestra suma original es:
+  \begin{equation}
+    \label{eq:reciprocal-binomial-sum}
+    \sum_{0 \le k \le n} \binom{n}{k}^{-1}
+      = \frac{n + 1}{2^{n + 1}} \sum_{0 \le k \le n} \frac{2^{k + 1}}{k + 1}
+  \end{equation}
+
+\section{Recurrencias lineales de coeficientes constantes}
+\label{sec:recurrencias-lineales}
+\index{recurrencia!lineal!coeficientes constantes}
+
+  Un caso particularmente importante
+  es el de relaciones de recurrencias de la forma:
+  \begin{equation*}
+    a_k u_{n + k} + a_{k - 1} u_{n + k - 1} + \dotsb + a_0 u_n = f(n)
+  \end{equation*}
+  donde los \(a_i\) son constantes y \(f(n)\) es una función cualquiera.
+  Esto se llama
+  una \emph{relación de recurrencia lineal de coeficientes constantes}
+  (de \emph{orden k}, si \(a_k \ne 0\)).
+  Si \(f(n) = 0\),
+  se dice \emph{homogénea}.
+  Se requieren \(k\) condiciones adicionales para fijar la solución,
+  que generalmente toman la forma de \emph{condiciones iniciales}
+  dando los valores de \(u_0\) hasta \(u_{k - 1}\).
+  Esto completa una \emph{recurrencia lineal}.
+  La recurrencia de Fibonacci que resolvimos antes
+  es una recurrencia de segundo orden,
+  lineal,
+  de coeficientes constantes,
+  homogénea.
+  La recurrencia a la que nos llevó
+  la Competencia de Ensayos de la Universidad de Miskatonic
+  (sección~\ref{sec:conjetura->teorema})
+  es de primer orden,
+  lineal de coeficientes constantes,
+  no homogénea.
+
+  Tratar el caso general es bastante engorroso,
+  mostraremos el procedimiento mediante un ejemplo.
+  De forma similar a la aplicación de funciones generatrices ordinarias
+  presentada acá
+  pueden aplicarse funciones generatrices exponenciales
+  como lo hicimos en la sección~\ref{sec:Fibonacci-exponenciales}
+  para los números de Fibonacci.
+  Cuál se usa en un caso particular
+  dependerá de lo que resulte más simple.
+
+  Consideremos la recurrencia:
+  \begin{equation*}
+    u_{n + 2} + 4 u_n = 5 n^2 \qquad \text{\(u_0 = 1\), \(u_1 = 3\)}
+  \end{equation*}
+  Los primeros valores son:
+  \begin{equation*}
+    \left\langle
+      1, 3, -4, -7, 36, 73, -64, -167, 436, 913, \dotsc
+    \right\rangle
+  \end{equation*}
+  Aplicando nuestra estrategia general,
+  definimos:
+    \index{recurrencia!generatriz}
+  \begin{equation*}
+    U(z) = \sum_{n \ge 0} u_n z^n
+  \end{equation*}
+  Siguiendo la receta,
+  y aplicando las propiedades de funciones generatrices ordinarias queda:
+  \begin{equation*}
+    \frac{U(z) - 3 z - 1}{z^2} + 4 \, U(z)
+      = 5 (z \mathrm{D})^2 \left(\frac{1}{1 - z}\right) \\
+  \end{equation*}
+  Despejando y expresando en fracciones parciales:
+  \begin{equation*}
+    U(z)
+      = \frac{82 z + 37}{25 (1 + 4 z^2)}
+	  + \frac{2}{(1 - z)^3}
+	  - \frac{19}{5 (1 - z)^2}
+	  + \frac{33}{25 (1 - z)}
+  \end{equation*}
+  Luego basta ``leer'' los coeficientes en esto.
+  Puntos interesantes ponen los términos:
+  \begin{align*}
+    \frac{1}{1 + 4 z^2}
+      &= \sum_{n \ge 0} (-4)^n z^{2 n} \\
+    \frac{z}{1 + 4 z^2}
+      &= \sum_{n \ge 0} (-4)^n z^{2 n + 1} \\
+    \frac{1}{(1 - z)^3}
+      &= \sum_{n \ge 0} \binom{-3}{n} \, (-1)^n z^n \\
+      &= \sum_{n \ge 0} \frac{(n + 2) (n + 1)}{2} \, z^n \\
+    \frac{1}{(1 - z)^2}
+      &= \sum_{n  \ge 0} \binom{-2}{n} \, (-1)^n z^n \\
+      &= \sum_{n \ge 0} (n + 1) z^n
+  \end{align*}
+  Podemos entonces expresar la solución como:
+  \begin{align*}
+    u_{2 k}
+      &= \frac{37}{25} \cdot (-4)^k
+	   + 2 \cdot \frac{(2 k + 2) (2 k + 1)}{2}
+	   - \frac{19}{5} \cdot (2 k + 1)
+	   + \frac{33}{25} \\
+      &= \frac{37}{25} \cdot (-4)^k
+	   + 4 k^2 - \frac{8}{5} k - \frac{12}{25} \\
+    u_{2 k + 1}
+      &= \frac{82}{25} \cdot (-4)^k
+	   + 2 \cdot \frac{(2 k + 3) (2 k + 2)}{2}
+	   - \frac{19}{5} \cdot (2 k + 2)
+	   + \frac{33}{25} \\
+      &= \frac{82}{25} \cdot (-4)^k
+	   + 4 k^2
+	   + \frac{12}{5} k
+	   - \frac{7}{25}
+  \end{align*}
+  Esta separación en términos pares e impares es incómoda.
+  Usando números complejos podemos factorizar más:%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)}
+  \begin{align*}
+    1 + 4 z^2
+      &= (1 - 2 \mathrm{i} z) (1 + 2 \mathrm{i} z) \\
+    \frac{1}{1 + 4 z^2}
+      &= \frac{1}{2} \, \left(
+			  \frac{1}{1 + 2 \mathrm{i} z}
+				     + \frac{1}{1 - 2 \mathrm{i} z}
+			\right) \\
+    \frac{z}{1 + 4 z^2}
+      &= \frac{\mathrm{i}}{4} \,
+	   \left(
+	     \frac{1}{1 + 2 \mathrm{i} z}
+	       - \frac{1}{1 - 2 \mathrm{i} z}
+	   \right)
+  \end{align*}
+  y podemos entonces expresar:
+  \begin{align*}
+    u_n
+      &= \frac{82}{25} \cdot
+	   \frac{\mathrm{i}}{4} \,
+	     \bigl(
+	       (-2 \mathrm{i})^n - (2 \mathrm{i})^n
+	     \bigr)
+	   + \frac{37}{25} \cdot
+		\frac{1}{2} \,
+		  \bigl(
+		    (-2 \mathrm{i})^n + (2 \mathrm{i})^n
+		  \bigr) \\
+      &\hspace{3em}
+	   + 2 \cdot \frac{(n + 2) (n + 1)}{2}
+	   - \frac{19}{5} \cdot (n + 1)
+	   + \frac{33}{25} \\
+      &= \frac{\left(
+		 (37 - 41 \mathrm{i}) \mathrm{i}^n
+		    + (37 + 41 \mathrm{i}) (-\mathrm{i})^n
+	       \right) 2^n
+	      }{50}
+	   + n^2
+	   - \frac{4 n}{5}
+	   - \frac{12}{25}
+  \end{align*}
+  Es bien poco probable que hubiéramos adivinado esta solución\ldots
+
+  Alternativamente,
+  para el término:
+  \begin{equation*}
+      \frac{87 z + 37}{25 (1 + 4 z^2)}
+      = \frac{37 - 41 \mathrm{i}}{2} \cdot \frac{1}{1 - 2 \mathrm{i} z}
+	  + \frac{37 + 41 \mathrm{i}}{2} \cdot \frac{1}{1 + 2 \mathrm{i} z}
+  \end{equation*}
+  Podemos expresar el aporte mediante exponenciales complejas%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!exponencial}
+  (conjugar el exponente corresponde a conjugar):
+  \begin{equation*}
+    \exp(u) \cdot \exp(n v)
+      + \exp(\overline{u}) \cdot \exp(n \overline{v})
+  \end{equation*}
+  Tenemos:
+  \begin{align*}
+    \frac{37 + 41 \mathrm{i}}{2}
+      &= \exp(u) \\
+    2 \mathrm{i}
+      &= \exp (v)
+  \end{align*}
+  Tomando en cuenta que:%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!funciones trigonometricas@funciones trigonométricas}
+  \begin{align*}
+    \cos v
+      &= \frac{\mathrm{e}^{\mathrm{i} v}
+		  + \mathrm{e}^{ - \mathrm{i} v}}
+	      {2} \\
+    \sin v
+      &= - \mathrm{i} \, \frac{\mathrm{e}^{\mathrm{i} v}
+				 - \mathrm{e}^{ - \mathrm{i} v}}
+			      {2}
+  \end{align*}
+  si escribimos \(u = a + b \mathrm{i}\) y \(v = c + d \mathrm{i}\)
+  después de simplificar la solución:
+  \begin{align*}
+    \exp(u) \cdot \exp(n v)
+      + \exp(\overline{u}) \cdot \exp(n \overline{v})
+      &= \exp(a + b \mathrm{i} + n (c + d \mathrm{i}))
+	   + \exp(a - b \mathrm{i} + n (c - d \mathrm{i})) \\
+      &= \exp(a + n c) (\exp((b + n d) \mathrm{i})
+			  + \exp(- (b + n d) \mathrm{i})) \\
+      &= 2 \exp(a + n c) \cos (b + n d)
+  \end{align*}
+  En detalle,
+  para este caso tenemos:
+  \begin{align*}
+    e^a
+      &= \frac{\sqrt{37^2 + 41^2}}{2}
+       = \frac{5 \sqrt{122}}{2} \\
+    \cos b
+      &= \frac{37}{\sqrt{37^2 + 41^2}}
+       = \frac{37 \sqrt{122}}{610} \\
+    e^c
+      &= 2 \\
+    \cos d
+      &= \frac{0}{\sqrt{0^2 + 2^2}}
+       = 0
+      \qquad d = \frac{\pi}{2}
+  \end{align*}
+  y la solución puede expresarse:
+  \begin{equation*}
+    u_n
+      = 5 \sqrt{122} \cdot 2^{n - 1}
+	  \cdot \cos \left( b + \frac{n \pi}{2} \right)
+	   + n^2
+	   - \frac{4 n}{5}
+	   - \frac{12}{25}
+\end{equation*}
+
+\input{ricatti}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

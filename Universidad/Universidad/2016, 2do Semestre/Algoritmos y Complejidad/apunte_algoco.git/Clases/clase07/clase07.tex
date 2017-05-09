@@ -1,0 +1,264 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{2mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit]{titlesec}
+
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+\newcommand{\definicion}[1]{\textit{\underline{\smash{#1}}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=0.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=0.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#7\quad Algoritmos, valga la redundancia}}
+
+\author{Aldo Berrios Valenzuela}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#7\\Algoritmos, valga la redundancia}
+
+\usepackage{tikz,ifthen}
+\usetikzlibrary{automata,positioning, babel}
+\definecolor{navyblue}{RGB}{0,148,222}
+\usetikzlibrary{fit}
+\tikzset{shorten >=1pt,node distance=1.8cm,on grid, >=stealth, initial text=Inicio,
+	every state/.style={ draw=navyblue!50,very thick,fill=navyblue!20, minimum size=3pt},
+	bend angle=35, every loop/.style={looseness=13}}
+
+
+\begin{document}
+\maketitle
+\section{Algoritmos}
+Con algoritmos buscamos lo que es optimización combinatoria. Corresponde a un problema de programación de tareas (scheduling en inglés)
+
+\begin{ejemplo}\label{07::EjemploAlma}
+	Supongamos que usted está a cargo de programar observaciones en ALMA. Para justificar el gasto de este enorme recurso, su misión es programar el máximo número de observaciones. Las observaciones tienen instante de inicio y duración, y no pueden traslaparse.
+	
+	Formalmente, el proyecto $i$ tiene duración el intervalo abierto $\left[ s_i, s_i+\ell _i \right[$. Se pide elegir el subconjunto $\Pi\subseteq P$ tales que los elementos de $\Pi$ sean disjuntos y el número de elementos de $\Pi$ sea máximo (Figura \ref{07::Tareas1}). 
+	\begin{figure}[!h]
+		\centering
+		\newcommand{\lineaTarea}[3]{\draw (#1, 0.15+#2) -- (#1, -0.15+#2) -- (#1, #2) -- (#1+#3, #2) -- (#1+#3, 0.15+#2) -- (#1+#3, -0.15+#2)} % argumentos -> (x, y, largo)
+		\begin{tikzpicture}
+			\lineaTarea{0}{0}{2};
+			\lineaTarea{1}{-0.5}{2.5};
+			\lineaTarea{2.6}{-1}{2};
+			\node at (-0.2, 0.1) (t1) {$t_1$};
+			\node at (-0.2+1, 0.1-0.5) (t1) {$t_2$};
+			\node at (-0.2+2.6, 0.1-1) (t1) {$t_3$};
+		\end{tikzpicture}
+		\caption{Cada una de las líneas que se presentan en la figura representan el intervalo de tiempo que dura cada proyecto/tarea. Para el caso, se observa que la $t_1$ traslapa con $t_2$, $t_2$ traslapa con $t_1$ y $t_3$ y $t_3$ sólo traslapa con $t_2$.}
+		\label{07::Tareas1}
+	\end{figure}
+	¿Cómo hacerlo? (básicamente, estamos suponiendo que el observatorio se arrienda por proyecto y no por ganancia). Proponemos algunas sugerencias:
+	
+	\begin{itemize}
+		\item \emph{Sugerencia 1:} Repetidamente elegir la tarea más corta que no entra en conflicto. La Figura \ref{07::Tareas2}
+		\begin{figure}[!h]
+			\centering
+			\newcommand{\lineaTarea}[3]{\draw (#1, 0.15+#2) -- (#1, -0.15+#2) -- (#1, #2) -- (#1+#3, #2) -- (#1+#3, 0.15+#2) -- (#1+#3, -0.15+#2)} % argumentos -> (x, y, largo)
+			\begin{tikzpicture}
+			\lineaTarea{0}{0}{2};
+			\lineaTarea{1.9}{-0.5}{0.8};
+			\lineaTarea{2.6}{-1}{2};
+			\node at (-0.2, 0.1) (t1) {$t_1$};
+			\node at (-0.2+1.9, 0.1-0.5) (t1) {$t_2$};
+			\node at (-0.2+2.6, 0.1-1) (t1) {$t_3$};
+			\end{tikzpicture}
+			\caption{$t_2$ es la tarea más corta. Sin embargo, si empezamos con $t_2$, dejamos fuera a $t_1$ y $t_3$ haciendo un total de 1 tarea. Si empezamos con $t_1$, $t_2$ queda fuera, pero en su lugar realizamos $t_3$; un total de 2 tareas.}
+			\label{07::Tareas2}
+		\end{figure}
+	 muestra un contraejemplo, por lo tanto, esta sugerencia no es óptima.
+	 
+	 \item \emph{Sugerencia 2:}  Elegir la tarea con inicio más temprano que no crea conflicto. La Figura \ref{07::Tareas3}
+	\begin{figure}[!h]
+		\centering
+		\newcommand{\lineaTarea}[3]{\draw (#1, 0.15+#2) -- (#1, -0.15+#2) -- (#1, #2) -- (#1+#3, #2) -- (#1+#3, 0.15+#2) -- (#1+#3, -0.15+#2)} % argumentos -> (x, y, largo)
+		\begin{tikzpicture}
+		\lineaTarea{0}{0}{5};
+		\lineaTarea{1}{-0.5}{1};
+		\lineaTarea{3}{-0.5}{1};
+		\node at (-0.2, 0.1) (t1) {$t_1$};
+		\node at (-0.2+1, 0.1-0.5) (t1) {$t_2$};
+		\node at (-0.2+3, 0.1-0.5) (t1) {$t_3$};
+		\end{tikzpicture}
+		\caption{Si empezamos con $t_1$, dejamos fuera a $t_2$ y $t_3$, haciendo un total de 1 tarea. Por otro lado, si realizamos $t_2$ y $t_3$ dejamos fuera a $t_1$, pero hacemos 2 tareas.}
+		\label{07::Tareas3}
+	\end{figure}
+	 muestra un contraejemplo, por lo tanto, esta sugerencia no es óptima.
+	 
+	 \item \emph{Sugerencia 3:} Marcar cada proyecto con el número de proyectos con que entra en conflicto, programar en orden creciente de conflictos. La Figura \ref{07::Tareas4}
+	 \begin{figure}[!h]
+	 	\centering
+	 	\newcommand{\lineaTarea}[3]{\draw (#1, 0.15+#2) -- (#1, -0.15+#2) -- (#1, #2) -- (#1+#3, #2) -- (#1+#3, 0.15+#2) -- (#1+#3, -0.15+#2)} % argumentos -> (x, y, largo)
+	 	\begin{tikzpicture}
+		 	\lineaTarea{0}{0}{2};
+		 	\lineaTarea{2.5}{0}{2};
+		 	\lineaTarea{5}{0}{2};
+		 	\lineaTarea{7.5}{0}{2};
+		 	\lineaTarea{1.5}{-0.5}{1.5};
+		 	\lineaTarea{1.5}{-2*0.5}{1.5};
+		 	\lineaTarea{1.5}{-3*0.5}{1.5};
+		 	\lineaTarea{4}{-0.5}{1.5};
+		 	\lineaTarea{6.5}{-0.5}{1.5};
+		 	\lineaTarea{6.5}{-2*0.5}{1.5};
+		 	\lineaTarea{6.5}{-3*0.5}{1.5};
+		 	\node at (-0.2, 0.1) (t1) {$t_1$};
+		 	\node at (-0.2+2.5, 0.1) (t1) {$t_2$};
+		 	\node at (-0.2+5, 0.1) (t1) {$t_3$};
+		 	\node at (-0.2+7.5, 0.1) (t1) {$t_4$};
+		 	\node at (-0.2+4, 0.1-0.5) (t1) {$t_5$};
+	 	\end{tikzpicture}
+	 	\caption{El algoritmo nos dice derechamente realizar las tareas $t_5$ junto con $t_1$ o cualquiera de las tareas que entran en conflicto con ella y $t_4$ o cualquiera de las tareas que entran en conflicto con este último. Eso nos da un total de $3$ tareas, pero si hacemos $t_1, t_2, t_3$ y $t_4$ hacemos un total de 4. Me echaron a perder el día.}
+	 	\label{07::Tareas4}
+	 \end{figure}
+	 muestra un contraejemplo, por lo tanto, esta sugerencia no es óptima. 
+	\end{itemize}
+\end{ejemplo}
+
+¿Estructura común?
+\begin{itemize}
+	\item Elija elementos sucesivamente según hasta que no queden opciones viables.
+	
+	\item Entre las opciones visibles en cada paso, elija la que minimiza (maximiza) alguna propiedad.
+\end{itemize}
+De eso es lo que precisamente tratan los \emph{Greedy Algorithms} (algoritmos voraces, aunque mejor traducción sería \comillas{ávido}). Es importante destacar que estos no encuentran la solución óptima del problema, pero sí es una aproximación bastante buena. (en el fondo es la solución óptima, pero no necesariamente la \emph{más} óptima)
+
+\subsection{Comprobar que un algoritmo es óptimo}
+Volvamos al ejemplo \ref{07::EjemploAlma}. En ese caso, el \emph{criterio} que tenemos que usar para encontrar la solución óptima consta en elegir la tarea que \emph{finaliza} más temprano y no entra en conflictos. Para el proyecto $i$, el instante de \emph{fin} es
+\begin{equation*}
+f_i=s_i+\ell _i
+\end{equation*}
+¿es óptimo?
+
+Para comprobar que un algoritmo es óptimo debemos demostrar lo siguiente: \begin{itemize}
+	\item \emph{Elección voraz (greedy choice):} Para toda instancia $P$, hay una solución óptima que incluye el primer elemento $\hat p$ elegido.
+	
+	\item \emph{Estructura inductiva:} Dada la elección voraz $\hat{p}$, queda un subproblema menor $P'$ tal que si $\Pi'$ es solución óptima de $P'$, $\llaves{\hat{p}}\cup \Pi'$ es solución viable de $P$ ($P'$ no tiene \comillas{restricciones externas}).	
+	
+	\item \emph{Subestructura óptima}: Si $P'$ queda de $P$ al sacar $\hat p$, y  $\Pi'$ es óptima para $P'$, $\Pi'\cup\llaves{\hat{p}}$ es óptima para $P$.
+\end{itemize}
+Con estos tres podemos demostrar que la secuencia de elecciones de $\hat{p}$ da una solución óptima por inducción sobre los pasos.  
+
+\subsubsection{Demostrando un algoritmo voraz}
+Volvamos al ejemplo \ref{07::EjemploAlma}. Si quisiéramos demostrar que la sugerencia 3 es óptima (a pesar de que echamos a perder el negocio con la Figura \ref{07::Tareas4}) solo tenemos que seguir los pasos anteriores:
+\begin{itemize}
+	\item \emph{Elección voraz:} Sea $\hat p$ la primera tarea elegida y $\Pi^*$ la solución óptima para $P$. Si $\hat p \in \Pi^*$, estamos listos. En caso contrario,  sea $\Pi'$ la solución obtenida reemplazando el proyecto más temprano de $\Pi^*$ por $\hat p$. Esto no produce nuevos conflictos, y $\nabsoluto{\Pi^*}=\nabsoluto{\Pi'}$, ambos son óptimos.
+	
+	\item \emph{Estructura inductiva:}	El elegir $\hat p$ nos deja un problema $P'$ sin restricciones externas (elegir $\hat p$ elimina de consideración las tareas que entran en conflicto con $\hat p$, pero nada más).
+	
+	\item \emph{Subestructura óptima:} Si $P'$ queda después de elegir $\hat p$, y $\Pi'$ es óptima para $P'$, entonces $\Pi'\cup \llaves{\hat p}$ es óptima para $P$.
+\end{itemize}
+\begin{proof}
+	Sea $\Pi'$ como dado. Entonces $\Pi'\cup\llaves{\hat p}$ es viable para $P$, y $\nabsoluto{\Pi'\cup \llaves{\hat p}}=\nabsoluto{\Pi'}+1$. Sea $\Pi^*$ una solución óptima para $P$ que contiene $\hat p$ . Entonces $\Pi^*\setminus\llaves{\hat p}$ es una solución óptima para $P'$. Pero entonces:
+	\begin{align*}
+	\nabsoluto{\Pi'}&=\nabsoluto{\Pi^* \setminus \llaves{\hat p}}\\
+	&=\nabsoluto{\Pi^* }-1\\
+	\rightsquigarrow \nabsoluto{\Pi'\cup \llaves{\hat p}}&=\nabsoluto{\Pi^* }
+	\end{align*}
+	y $\Pi' \cup \llaves{\hat p}$ es óptima.
+\end{proof}
+
+\begin{newquote}
+No todos los problemas tienen solución tan óptima y eficiente como este.
+\end{newquote}
+\begin{newquote}
+Sólo encontramos una de las soluciones óptimas
+\end{newquote}
+
+\end{document}

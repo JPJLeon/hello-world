@@ -1,0 +1,242 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{red!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+\renewcommand{\lstlistingname}{Listado}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{<inserte nombre del documento>}
+\rhead{<inserte contenido>}
+
+
+\author{Aldo Berrios Valenzuela}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]
+	Clase \#23\\
+	Algoritmo de Kruskal}
+
+\begin{document}
+\maketitle
+
+\section{Algoritmo de Kruskal}
+Dado un grafo conexo $G = \nparentesis{V, E}$ con rótulos $\omega: E\rightarrow \mathbb{R}^+$ \comentarioc{rotulamos los arcos, a cada arco le estamos asignando un peso)}, buscamos el árbol recubridor mínimo (mínima suma de los rótulos de los arcos). Minimal Spanning Tree, MST.
+
+El algoritmo de kruskal es:
+\begin{lstlisting}
+Ordenar $E$ en orden de costo creciente
+$S \leftarrow \emptyset$
+for $v \in V$ do
+	Agregar {$v$} a $S$
+end
+$T \leftarrow \emptyset$
+for $uv\in E$ do	/* En orden! */
+	if $u$ y $v$ no pertenecen al mismo conjunto en $S$ then
+		Agregar $uv$ a $T$
+		Unir los conjuntos de $u$ y $v$ en $S$
+	end
+end
+return ($V, T$)
+\end{lstlisting}
+
+Central: Manipulación de clases de equivalencia (reflexiva, transitiva, simétrica), conjunto $S$.
+\begin{center}
+	\comentarioc{Grafo de pierola}
+\end{center}
+\comentarioc{En el fondo el grafo resultante aparece en una clase de equivalencia o algo así (cambiar redacción)}
+\begin{center}
+	\comentarioc{otro dibujo con el grafo minimo}
+\end{center}
+Tres operaciones centrales:
+\begin{itemize}
+	\item Inicializar
+	\item Find
+	\item Unión
+\end{itemize}
+\emph{Idea:} 
+\begin{itemize}
+	\item Representar la clase mediante un elemento representante.
+	\item Un arreglo \texttt{parent}[$v$]: padre de $v$. \comentarioc{en lugar de crear nodos con punteros al hijo, estos nodos tienen puntero al padre}
+\end{itemize}
+O sea:
+\begin{center}
+	\comentarioc{Figura 1 apunte HvB: Clase 23}
+\end{center}
+\emph{Find:} Seguir punteros  a padres hasta bucle $\rightarrow$ representante.
+
+\emph{Unión:} Hallar representantes (si no vienen dados), colgar el árbol menor del mayor (no aumente la altura).
+
+Agregar \texttt{rank}[$v$]: Altura del árbol con raíz en $v$.
+
+Algoritmos:
+\begin{lstlisting}
+Make Set($V$)
+	for $v \in V$ do
+		parent[$v$] $\leftarrow v$
+		rank[$v$] $\leftarrow 0$
+	end
+\end{lstlisting}
+
+\begin{lstlisting}
+find ($u$)
+	while $u \ne $parent[$u$] do
+		$u \leftarrow $ parent[$u$]
+	end
+	return $u$
+	
+union ($u, v$) 	/* representantes */
+	if rank[$u$] $<$ rank[$v$] then
+		parent [$u$] $\leftarrow v$
+	else
+		parent[$v$] $\leftarrow u$
+		if rank[$u$] = rank[$v$] then
+			rank[$u$] $\leftarrow $ rank [$u$] + 1
+		end
+	end
+\end{lstlisting}
+
+¿Nº mínimo de nodos si rank $=r$ de la raíz? \comentarioc{colocar los dibujos asociados para cada valor de $r$}
+\begin{itemize}
+	\item $r = 0$
+	\item $r = 1$
+	\item $r = 2$
+	\item $r = 3$
+\end{itemize}
+Si el rank $= r$, entonces se observa que el algoritmo demora $2^r$ (y puede lograrse, $\leftarrow$ son \emph{árboles binomiales}). Si $B_0$ es un nodo, entonces $B_r$ es unir dos $B_{r-1}$. Por lo tanto, camino a la raíz de un árbol de rank $r$ es a lo más $r$, si tiene $n$ nodos es a lo más $\log_2 n$.
+
+Algoritmo de Kruskal: A lo más $2\nabsoluto{E}$ \texttt{find} $\rightsquigarrow \nabsoluto{V} - 1$.
+\begin{equation}
+O\nparentesis{\nabsoluto{V} + 2\nabsoluto{E}\log _2 \nabsoluto{V}}= O\nparentesis{\nabsoluto{E}\log\nabsoluto{V}}
+\end{equation}
+
+\subsection{Path Compression}
+\begin{center}
+	\comentarioc{Dibujo: después de hacer un find hacemos un path compression}
+\end{center}
+Algoritmo path compression:
+\begin{lstlisting}
+find ($v$)
+	$u \leftarrow v$;
+	while $u \ne $parent[$u$] do
+		$u \leftarrow$ parent[$u$]
+	end
+	while $v \ne$ parent[$v$] do
+		$x \leftarrow$ parent[$v$]
+		parent[$v$] $\leftarrow u$
+		$v \leftarrow x$
+	end
+\end{lstlisting}
+Un programa un poco más simple:
+\begin{lstlisting}
+while $u \ne parent[$u$] do$
+	parent[$u$] $\leftarrow$ parent[parent[$u$]]
+	$u \leftarrow$ parent[$u$]
+end
+\end{lstlisting}
+
+
+
+
+
+\end{document}

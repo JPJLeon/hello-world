@@ -1,0 +1,100 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{fourier}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage[colorlinks]{hyperref}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2cm, right = 2cm]{geometry}
+
+\usepackage[spanish, es-noshorthands]{babel}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\usepackage{graphicx}
+
+
+\definecolor{red}{RGB}{200,0,0}
+
+\title{INF-155: Introducción a la Informática Teórica\\ILI-225: Informática Teórica \\
+       Tarea \#2 \\
+       \emph{``\#YOLO''}
+      }
+\author{{Horst von Brand} \and {Alondra Rojas Ruz} \and {Cristobal Galleguillos} \and {Renato Sanhueza Ulsen}}
+\date{9 de noviembre 2015}
+
+
+\begin{document}
+\maketitle
+
+\section*{Problemas}
+\begin{enumerate}
+
+\item Dada la expresión regular $ R = (c(0|1)^*c)^* $ con $\Sigma=\{0,1,c\}$ y el NFA A:
+
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,on grid,>=stealth, initial text=Inicio,
+every state/.style={draw=red!50,very thick,fill=red!20},
+bend angle=35]]
+
+\node[state,initial]  (q_0)                       {$q_0$};
+\node[state]          (q_1) [right=of q_0]        {$q_1$};
+\node[state]          (q_2) [right=of q_1]        {$q_2$};
+\node[state]          (q_3) [right=of q_2]        {$q_3$};
+\node[state]          (q_4) [right=of q_3]        {$q_4$};
+\node[state]          (q_5) [right=of q_4]   	  {$q_5$};
+\node[state]          (q_6) [right=of q_5]        {$q_6$};
+\node[state]          (q_7) [right=of q_6]        {$q_7$};
+\node[state]          (q_8) [right=of q_7]        {$q_8$};
+\node[state,accepting](q_9) [right=of q_8]        {$q_9$};
+\path[->] 
+(q_0)  edge              node[below]        {\(x\)} (q_1)
+
+(q_1)  edge              node[below]        {\(=\)} (q_2)
+
+(q_2)  edge              node[above]        {\(\epsilon\)} (q_3)
+(q_2)  edge   [bend right]           node[below]        {\(\epsilon\)} (q_5) 
+
+(q_3)  edge              node[below]        {\(y\)} (q_4)
+
+(q_4)  edge              node[above]        {\(\epsilon\)} (q_5)
+(q_4)  edge   [bend right]           node[above]        {\(\epsilon\)} (q_3)
+
+
+(q_5)  edge              node[above]        {\(+\)} (q_6)
+
+(q_6)  edge              node[below]        {\(\epsilon\)} (q_7)
+(q_6)  edge      [bend left]        node[above]        {\(\epsilon\)} (q_9)
+
+
+(q_7)  edge              node[above]        {\(z\)} (q_8)
+
+(q_8)  edge              node[below]        {\(\epsilon\)} (q_9)
+(q_8)  edge     [bend left]         node[below]        {\(\epsilon\)} (q_7);
+
+\end{tikzpicture}
+\end{center}
+Con $\Sigma'=\{x,y,z,=,+\}$ se pide lo siguiente:
+
+
+\begin{itemize}
+\item Transformar la expresión regular R en un NFA utilizando el algoritmo de construcción de Thompson. Se evalúa el desarrollo por lo que debe 
+incluir todos los pasos del algoritmo. Tanto el desarrollo como el resultado debe ser dibujado usando TikZ. 
+\item Transformar el NFA A en un DFA utilizando el algoritmo de construcción de subconjuntos. Se evalúa el desarrollo. El DFA resultante debe
+ser dibujado usando TikZ.
+\end{itemize}
+
+\item Probar la regularidad o no regularidad del lenguaje \(\mathcal{L}= \big\{pp^{R}q \colon p,q \in \big\{0,1\big\}^{+}\big\} \).\\
+\textbf{Hint:} Puede ser una buena idea usar alguna propiedad de clausura para simplificar la demostración. 
+
+\item A una víctima \(x\) de un ramo \(x\) (conocido como TALF) se le pide determinar si el lenguaje \(\mathcal{L} = \big\{ 1^{3}0^{n} : n \geq 1 \big\} \) es regular o no. La víctima sospecha que el lenguaje no es regular (obviando el hecho de que podría describirse como una expresión regular, o mediante un DFA o NFA), por lo que intenta demostrar su idea mediante el \emph{Lema de Bombeo}. Primero, toma la constante N del lema  para una subcadena \(\alpha\beta = 1^{3}0^{x}\), tal que \(|\alpha\beta| \leq N\). Sea \(\alpha = 1\) y \(\beta = 1^{2}0^{x}\) entonces \(\gamma=b^{N-x}\). Cuando \(k = 0\), \(\sigma = \alpha\beta^0\gamma = \alpha\gamma = ab^{N-x}\), que ya no pertenece a \(\mathcal{L}\) y por lo tanto no es regular.
+Sin embargo, como nosotros somos más astutos sabemos que su conslusión es errada.
+
+Explique detalladamente con sus palabras cual fue el error cometido por la víctima al aplicar el lema de bombeo, lo que le llevo a tomar una conclusión equivocada.
+
+\end{enumerate}
+\newpage
+\input{condiciones}
+  \vfill\hfill CG/AR/RS/HvB/\LaTeXe
+\end{document}
+
+

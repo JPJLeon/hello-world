@@ -1,0 +1,170 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{red!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+\renewcommand{\lstlistingname}{Listado}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{<inserte nombre del documento>}
+\rhead{<inserte contenido>}
+
+
+\author{Aldo Berrios Valenzuela}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]
+Clase \#25\\
+Algoritmo de Kruskal III}
+
+\begin{document}
+\maketitle
+
+\section{Algoritmo de Kruskal (continuación de la continuación)}
+\begin{center}
+	\comentarioc{Algoritmo}
+\end{center}
+\begin{center}
+	\comentarioc{Dibujo de triangulitos}
+\end{center}
+Secuencia $C$ de compress en $\mathcal{F}$ $\rightsquigarrow$ $C_{+}$ sobre $\mathcal{F}_{+}$, $C_-$ sobre $\mathcal F_-$, operaciones \texttt{shatter}, asignaciones \texttt{parent[}$z$\texttt{]}$ \leftarrow z$. Sean $n_+$, $n_-$ número de nodos $\mathcal F_+$, $\mathcal{F}_-$, $m_+, m_-$ operaciones en $C_+$, $C_-$-
+
+Sea $T\nparentesis{\mathcal F, C}$ el costo (\# asignaciones a punteros) al aplicar $C$ a $\mathcal F$:
+\begin{equation}\label{25::PrimeraCota}
+T\nparentesis{\mathcal F, C} \leq T\nparentesis{\mathcal F_+, C_+} + T\nparentesis{\mathcal F_-, C_-} + m_+ + n
+\end{equation}
+Sabemos que hay a lo más
+\begin{equation*}
+\dfrac{n}{2^i}
+\end{equation*}
+nodos de rank $i$, por lo que:
+\begin{align*}
+n_+ &\leq \sum_{i > s}\dfrac{n}{2^i}\\
+&=\dfrac{n}{2^s}
+\end{align*}
+Del teorema que vimos la clase pasada, sabemos:
+\begin{align*}
+T\nparentesis{\mathcal{F}_+, C_+} & \leq n_+ r\\
+& \leq \dfrac{nr}{2^s}
+\end{align*}
+Si elegimos $s = \log _2 r$, queda $T\nparentesis{\mathcal F _+, C_+} \leq n$. Como \eqref{25::PrimeraCota} vale para \emph{todo} $\mathcal F$, $C$, tenemos:
+\begin{align*}
+T\nparentesis{m, n, r} &\leq n + T \nparentesis{m_-, n_-, \log_2 r} + n + m_+\\
+T\nparentesis{m, n, r} - m &\leq T\nparentesis{m_-, n_-, \log_2r} - m_- + 2n\\
+T'\nparentesis{m, n, r} &= T\nparentesis{m, n, r} - m\\
+T'\nparentesis{m, n, r} & \leq T'\nparentesis{m_-, n_-, \log_2 r} + 2n\\
+&\leq T'\nparentesis{m, n, \log_2 r} + 2n
+\end{align*}
+Sabemos:
+\begin{align*}
+T'\nparentesis{m, n, r=0} &= T\nparentesis{m, n, 0} - m \leq 0\\
+\rightsquigarrow T'\nparentesis{m, n, r} &\leq 2n \log_2^* r
+\end{align*}
+
+
+\comentarioc{El objetivo de esto fue analizar la secuencia de operaciones}
+
+
+
+\end{document}
+

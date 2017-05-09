@@ -1,0 +1,483 @@
+% manos-poker.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section{Manos de poker}
+\label{sec:manos-poker}
+\index{manos de poker|see{combinatoria!manos de poker}}
+\index{combinatoria!manos de poker|textbfhy}
+
+% Fixme: Revisar las reglas, contabilizar _todas_ las manos
+%	 (hay que restar alternativas repetidas, etc)
+%	 ¿Algún juego más complejo (2 mazos, ...)?
+
+  Nuestro siguiente tema de interés es contar subconjuntos
+  que cumplen ciertas restricciones.
+  Como conjuntos,
+  siguiendo a Lehman, Leighton y Meyer~%
+    \cite{lehman15:_mathem_comput_scien},
+  usaremos manos de \foreignlanguage{english}{poker}.
+
+  En \foreignlanguage{english}{poker}
+  a cada jugador se le da una \emph{mano} de cinco cartas,
+  elegidas del mazo inglés,
+  formado por cuatro \emph{pintas}:%
+    \index{carta!pinta}
+  Pica (\(\spadesuit\)),
+    \index{carta!pinta!pica (\(\spadesuit\))|textbfhy}
+  corazón (\(\heartsuit\)),
+    \index{carta!pinta!corazon (\(\heartsuit\))@corazón (\(\heartsuit\))|textbfhy}
+  trébol (\(\clubsuit\))
+    \index{carta!pinta!trebol (\(\clubsuit\))@trébol (\(\clubsuit\))|textbfhy}
+  y diamante (\(\diamondsuit\));
+    \index{carta!pinta!diamante (\(\diamondsuit\))|textbfhy}
+  en cada pinta hay trece \emph{valores}:%
+    \index{carta!valor|textbfhy}
+  As, \(2\) a \(10\),
+  \foreignlanguage{english}{Jack},
+  \foreignlanguage{english}{Queen}
+  y \foreignlanguage{english}{King}.
+  El número total de manos posibles es:
+  \begin{equation*}
+    \binom{52}{5} = 2\,598\,960
+  \end{equation*}
+
+  Como estrategia general,
+  buscaremos secuencias que describan las manos que queremos contar
+  (porque contar secuencias es fácil),
+  y nos aseguraremos que hay una biyección
+  (o que haya alguna otra relación clara,
+   como un mapa \(2\) a \(1\))
+  entre descripciones
+  y manos.
+
+\subsection{Royal Flush}
+\label{sec:royal-flush}
+
+  Es la mano más alta en \foreignlanguage{english}{poker}.
+  Consta de \foreignlanguage{english}{As},
+  \foreignlanguage{english}{King},
+  \foreignlanguage{english}{Queen},
+  \foreignlanguage{english}{Jack}, \(10\) de la misma pinta,
+  por ejemplo:
+  \begin{equation*}
+    \begin{array}{@{\{}*{4}{c@{\;\;}}c@{\}}}
+      A \spadesuit & K \spadesuit & Q \spadesuit &
+	J \spadesuit & 10 \spadesuit
+    \end{array}
+  \end{equation*}
+  Está claro que hay una mano de éstas para cada pinta,
+  con lo que hay exactamente \(4\).
+
+\subsection{Straight Flush}
+\label{sec:straight-flush}
+
+  Consta de \(5\) cartas de la misma pinta en secuencia,
+  donde \foreignlanguage{english}{As} cuenta como \(1\)
+  (no después de \foreignlanguage{english}{King},
+   como en el \foreignlanguage{english}{Royal Flush}).
+  Ejemplos son:
+  \begin{equation*}
+    \begin{array}{@{\{}*{4}{c@{\;\;}}c@{\}}}
+      8 \spadesuit & 9 \spadesuit & 10 \spadesuit &
+	J \spadesuit & Q \spadesuit \\
+      A \heartsuit & 2 \heartsuit & 3 \heartsuit  &
+	4 \heartsuit & 5\heartsuit \\
+      3 \clubsuit  & 4 \clubsuit  & 5 \clubsuit	  &
+	6\clubsuit  & 7\clubsuit
+    \end{array}
+  \end{equation*}
+  Estas manos podemos describirlas mediante
+  una secuencia que indica:
+  \begin{itemize}
+  \item
+    El valor de la primera carta en la secuencia.
+    Este puede elegirse de \(9\) maneras
+    (entre \(1\) y \(9\)).
+  \item
+    La pinta,
+    que puede elegirse de \(4\) maneras.
+  \end{itemize}
+  En nuestros ejemplos:
+  \begin{equation*}
+    \begin{array}{l@{{} \longleftrightarrow \{}*{4}{c@{\;\;}}c@{\}}}
+      (8, \spadesuit) &
+	8 \spadesuit  & 9 \spadesuit & 10 \spadesuit &
+	J \spadesuit  & Q \spadesuit \\
+      (1, \heartsuit) &
+	A \heartsuit  & 2 \heartsuit & 3 \heartsuit  &
+	4 \heartsuit  & 5 \heartsuit \\
+      (3, \clubsuit)  &
+	3 \clubsuit   & 4 \clubsuit  & 5 \clubsuit   &
+	6 \clubsuit   & 7 \clubsuit
+    \end{array}
+  \end{equation*}
+  Por la regla del producto,%
+    \index{combinatoria!regla del producto}
+  el número total de estas manos es:
+  \begin{equation*}
+    9 \cdot \binom{4}{1} = 36
+  \end{equation*}
+  Como esto no describe un \foreignlanguage{english}{Royal Flush},
+  no hace falta ningún ajuste adicional.
+
+\subsection{Four of a Kind}
+\label{sec:four-of-a-kind}
+
+  Esta es una mano con cuatro cartas del mismo valor.
+  Por ejemplo:
+  \begin{align*}
+    \begin{array}{@{\{}*{4}{c@{\;\;}}c@{\}}}
+      8 \spadesuit  & 8 \heartsuit & 8 \clubsuit &
+	8 \diamondsuit	 & 5 \diamondsuit \\
+      2 \spadesuit  & 2 \heartsuit & 2 \clubsuit  &
+	2 \diamondsuit	 & 3 \clubsuit
+    \end{array}
+  \end{align*}
+  Para calcular cuántas de estas hay,
+  armamos un mapa de secuencias a manos de este tipo
+  y contamos las secuencias.
+  En este caso,
+  una mano queda descrita por:
+  \begin{itemize}
+  \item El valor que se repite.
+  \item El valor de la quinta carta.
+  \item La pinta de la quinta carta.
+  \end{itemize}
+  Hay una biyección entre secuencias de estos tres elementos
+  y manos.
+  En nuestros ejemplos,
+  las correspondencias son:
+  \begin{align*}
+    \begin{array}{l@{{} \longleftrightarrow \{}*{4}{c@{\;\;}}c@{\}}}
+      (8, 5, \diamondsuit) &
+	8 \spadesuit & 8 \heartsuit & 8 \clubsuit & 8 \diamondsuit
+	   & 5 \diamondsuit \\
+      (2, 3, \clubsuit)	   &
+	2 \spadesuit & 2 \heartsuit & 2 \clubsuit & 2 \diamondsuit
+	   & 3 \clubsuit
+    \end{array}
+  \end{align*}
+  Para el valor tenemos \(13\) posibilidades,
+  para el valor de la quinta carta quedan \(12\) posibilidades,
+  y hay \(4\) opciones para la pinta de la quinta carta.
+  En total,
+  usando la regla del producto,%
+    \index{combinatoria!regla del producto}
+  son \(13 \cdot 12 \cdot 4 = 624\) posibilidades.
+  Hay \(1\) en \(2\,598\,960 / 624 = 4\,165\) manos,
+  no sorprende que se considere muy buena.
+
+\subsection{Full House}
+\label{sec:full-house}
+
+  Es una mano con tres cartas de un valor
+  y dos de otro.
+  Ejemplos:
+  \begin{equation*}
+    \begin{array}{@{\{}*{4}{c@{\;\;}}c@{\}}}
+       2 \heartsuit & 2 \clubsuit & 2 \diamondsuit & Q \spadesuit
+	  & Q \diamondsuit \\
+       5 \spadesuit & 5 \clubsuit & 5 \diamondsuit & K \spadesuit
+	  & K \heartsuit
+    \end{array}
+  \end{equation*}
+  Nuevamente un mapa con secuencias:
+  \begin{itemize}
+  \item
+    El valor del trío,
+    que puede especificarse de \(13\) maneras.
+  \item
+    Las pintas del trío,
+    que son elegir \(3\) de entre \(4\).
+  \item
+    El valor del par,
+    que se puede tomar de \(12\) maneras.
+  \item
+    Las pintas del par,
+    que se eligen \(2\) entre \(4\).
+  \end{itemize}
+  Las manos ejemplo corresponden con:
+  \begin{equation*}
+    \begin{array}{l@{{} \longleftrightarrow \{}*{4}{c@{\;\;}}c@{\}}}
+      (2, \{\heartsuit, \clubsuit, \diamondsuit\},
+       Q, \{\spadesuit, \diamondsuit\}) &
+	 2 \heartsuit & 2 \clubsuit & 2 \diamondsuit & Q \spadesuit
+	    & Q \diamondsuit \\
+      (5, \{\spadesuit, \clubsuit, \diamondsuit\},
+       K, \{\spadesuit, \heartsuit\})	&
+	 5 \spadesuit & 5 \clubsuit & 5 \diamondsuit & K \spadesuit
+	    & K \heartsuit
+    \end{array}
+  \end{equation*}
+  Por la regla del producto%
+    \index{combinatoria!regla del producto}
+  el número de \foreignlanguage{english}{Full Houses} es entonces:
+  \begin{equation*}
+    13 \cdot \binom{4}{3} \cdot 12 \cdot \binom{4}{2} = 3\,744
+  \end{equation*}
+
+\subsection{Flush}
+\label{sec:flush}
+
+  Mano con \(5\) cartas de la misma pinta,
+  como por ejemplo:
+  \begin{equation*}
+    \begin{array}{@{\{}*{4}{c@{\;\;}}c@{\}}}
+      A \heartsuit & 3 \heartsuit & 4 \heartsuit &
+	8 \heartsuit & K \heartsuit
+    \end{array}
+  \end{equation*}
+  Esto se describe mediante la secuencia que da:
+  \begin{itemize}
+  \item
+    Un conjunto de \(5\) valores,
+    se eligen \(5\) de entre \(13\).
+  \item
+    Una pinta,
+    se elige una entre \(4\).
+  \end{itemize}
+  En nuestro ejemplo:
+  \begin{equation*}
+    \begin{array}{l@{{} \longleftrightarrow \{}*{4}{c@{\;\;}}c@{\}}}
+      (\{A, 3, 4, 8, K\}, \heartsuit) &
+	 A \heartsuit & 3 \heartsuit & 4 \heartsuit &
+	   8 \heartsuit & K \heartsuit
+    \end{array}
+  \end{equation*}
+  De estas manos hay entonces:
+  \begin{equation*}
+    \binom{13}{5} \cdot \binom{4}{1} = 5\,148
+  \end{equation*}
+  Esto también describe al \foreignlanguage{english}{Royal Flush}
+  y al \foreignlanguage{english}{Straight Flush},
+  debemos restar éstos
+  (regla de la suma):%
+    \index{combinatoria!regla de la suma}
+  \begin{equation*}
+    5\,148 - 4 - 36 = 5\,108
+  \end{equation*}
+
+\subsection{Manos con dos pares}
+\label{sec:dos-pares}
+
+  Interesa calcular cuántas manos con dos pares hay,
+  vale decir,
+  dos cartas de un valor,
+  dos cartas de otro valor,
+  y una carta de un tercer valor.
+  Ejemplos son:
+  \begin{align*}
+    \begin{array}{@{\{}*{4}{c@{\;\;}}c@{\}}}
+      3 \heartsuit & 3 \diamondsuit & Q \spadesuit & Q \clubsuit
+	 & 5 \diamondsuit \\
+      9 \heartsuit & 9 \clubsuit    & K \spadesuit & K \diamondsuit
+	 & 2 \spadesuit
+    \end{array}
+  \end{align*}
+  Cada mano queda descrita por:
+  \begin{itemize}
+  \item
+    El valor del primer par,
+    puede elegirse de \(13\) maneras.
+  \item
+    Las pintas del primer par,
+    se toman \(2\) de entre \(4\).
+  \item
+    El valor del segundo par,
+    que se puede elegir de \(12\) maneras.
+  \item
+    Las pintas del segundo par,
+    se eligen \(2\) entre \(4\).
+  \item
+    El valor de la carta extra,
+    es uno de \(11\).
+  \item
+    La pinta de la carta extra,
+    que es una de \(4\).
+  \end{itemize}
+  Se pensaría entonces que el número buscado es:
+  \begin{equation*}
+    13 \cdot \binom{4}{2} \cdot 12 \cdot \binom{4}{2}
+     \cdot 11 \cdot \binom{4}{1}
+  \end{equation*}
+  ¡Esto es incorrecto!
+  El mapa entre secuencias y manos no es una biyección,
+  es \(2\) a \(1\)
+  (podemos elegir cualquiera de los dos pares como primero).
+  El valor correcto es:
+  \begin{equation*}
+    \frac{13 \cdot \binom{4}{2} \cdot 12 \cdot \binom{4}{2}
+	    \cdot 11 \cdot \binom{4}{1}}{2}
+      = 123\,552
+  \end{equation*}
+  No es una mano particularmente buena.
+
+  Pero además es perturbadora:
+  Es fácil omitir el detalle de que no es una biyección.
+  Hay dos salidas:
+  \begin{enumerate}
+  \item
+    Cada vez que se usa
+    un mapa \(f \colon \mathcal{A} \rightarrow \mathcal{B}\),
+    verifique que el mismo número de elementos de \(\mathcal{A}\)
+    llevan a cada elemento de \(\mathcal{B}\);
+    si este número es \(k\),
+    aplique la regla de división con \(k\).%
+      \index{combinatoria!regla de division@regla de división}
+  \item
+    Intente otra forma de resolver el problema.
+    Muchas veces hay varias formas de enfrentarlo --
+    y debieran dar el mismo resultado.
+    Claro que suele ocurrir que métodos distintos
+    dan resultados que se \emph{ven} diferentes,
+    aunque resultan ser iguales.
+  \end{enumerate}
+
+  Arriba usamos un método,
+  veamos un segundo:
+  Hay una biyección entre estas manos y secuencias que especifican:
+  \begin{itemize}
+  \item
+    Los valores de los dos pares,
+    se pueden elegir \(2\) entre \(13\).
+  \item
+    Las pintas del par de menor valor,
+    se eligen \(2\) entre \(4\).
+  \item
+    Las pintas del par de mayor valor,
+    se eligen \(2\) entre \(4\).
+  \item
+    El valor de la carta extra,
+    es \(1\) entre \(11\).
+  \item
+    La pinta de la carta extra,
+    es \(1\) entre \(4\).
+  \end{itemize}
+  Para nuestro ejemplo:
+  \begin{equation*}
+    \begin{array}{l@{{} \longleftrightarrow \{}*{4}{c@{\;\;}}c@{\}}}
+      (\{3, Q\}, \{\diamondsuit, \heartsuit\},
+	 \{\spadesuit, \clubsuit\},
+       5, \diamondsuit\}) &
+	 3 \diamondsuit & 3 \heartsuit & Q \spadesuit &
+	 Q \clubsuit  & 5 \diamondsuit \\
+      (\{9, K\}, \{\clubsuit, \heartsuit\},
+	 \{\spadesuit, \heartsuit\},
+       2, \spadesuit\})	  &
+	 9 \clubsuit	& 9 \heartsuit & K \spadesuit &
+	 K \diamondsuit & 2 \spadesuit
+    \end{array}
+  \end{equation*}
+  Esto lleva a:
+  \begin{equation*}
+    \binom{13}{2} \cdot \binom{4}{2} \cdot \binom{4}{2} \cdot 11
+      \cdot \binom{4}{1}
+  \end{equation*}
+  Es el mismo resultado anterior,
+  claro que escrito de forma ligeramente diferente.
+
+\subsection{Manos con todas las pintas}
+\label{sec:todas-las-pintas}
+
+  Buscamos el número de manos con cartas de todas las pintas.
+  Por ejemplo:
+  \begin{equation*}
+    \begin{array}{@{\{}*{4}{c@{\;\;}}c@{\}}}
+      7 \heartsuit & 8 \diamondsuit & K \clubsuit &
+	A \spadesuit & 3 \heartsuit
+    \end{array}
+  \end{equation*}
+  Esto podemos describirlo mediante:
+  \begin{itemize}
+  \item
+    Los valores de las cartas de cada pinta,
+    o sea \(13 \cdot 13 \cdot 13 \cdot 13\) posibilidades.
+  \item
+    El valor de la carta extra,
+    con \(12\) selecciones posibles.
+  \item
+    La pinta de la carta extra,
+    \(4\) opciones.
+  \end{itemize}
+  La mano del ejemplo se describe mediante:
+  \begin{equation*}
+    \begin{array}{l@{{} \longleftrightarrow \{}*{4}{c@{\;\;}}c@{\}}}
+      (A, 7, 8, K, 3, \heartsuit) &
+	 7 \heartsuit & 8 \diamondsuit & K \clubsuit &
+	 A \spadesuit & 3 \heartsuit
+    \end{array}
+  \end{equation*}
+  El problema es nuevamente que esto no es una biyección,
+  en el ejemplo podemos considerar \(3\heartsuit\) o \(7\heartsuit\)
+  como la carta extra,
+  y el mapa es \(2\) a \(1\).
+  El número buscado es:
+  \begin{equation*}
+    \frac{13^4 \cdot 4 \cdot 12}{2}
+      = 685\,464
+  \end{equation*}
+
+  Una forma alternativa
+  es dar los valores del par de la misma pinta,
+  y la pinta del par;
+  y luego los valores de las tres cartas de las pintas restantes.
+  Nuestro ejemplo se describe mediante:
+  \begin{equation*}
+    \begin{array}{l@{{} \longleftrightarrow \{}*{4}{c@{\;\;}}c@{\}}}
+      (\{3, 7\}, \heartsuit, A, K, 8) &
+	 7 \heartsuit & 8 \diamondsuit & K \clubsuit &
+	 A \spadesuit & 3 \heartsuit
+    \end{array}
+  \end{equation*}
+  Acá hemos supuesto
+  el orden \(\spadesuit, \heartsuit, \clubsuit, \diamondsuit\)
+  de las pintas.
+  Esto da nuevamente:
+  \begin{equation*}
+    \binom{13}{2} \cdot \binom{4}{1} \cdot 13 \cdot 13 \cdot 13
+      = 685\,464
+  \end{equation*}
+
+\subsection{Manos con valores diferentes}
+\label{sec:poker-different-values}
+
+  Nos interesa ahora contar el número de manos
+  en las cuales todos los valores son diferentes.
+  Una forma alternativa de describir estas manos
+  es diciendo que no tienen pares.
+  Veremos varias maneras para obtener esto.
+
+  Una primera forma de enfrentar esto
+  es considerar
+  que la primera carta se puede elegir de entre \(52\),
+  la segunda entre las \(48\) que no tienen el valor de la primera,
+  y así sucesivamente.
+  Pero el hablar de la primera, segunda y sucesivas cartas
+  presupone orden,
+  alerta del riesgo de contar demás.%
+    \index{combinatoria!sobrecontar}
+  Como son todas diferentes,
+  basta dividir por el número de ordenamientos de \(5\) cartas,
+  vale decir \(5! = 120\).
+  O sea:
+  \begin{equation*}
+    \frac{52 \cdot 48 \cdot 44 \cdot 40 \cdot 36}{5!}
+      = 1\,317\,888
+  \end{equation*}
+
+  Una solución alternativa
+  consiste en seleccionar los valores de las \(5\) cartas,
+  entre los \(13\) valores posibles,
+  y luego a cada carta asignarle una pinta entre \(4\).
+  Esto da:
+  \begin{equation*}
+    \binom{13}{5} \cdot 4^5
+      = 1\,317\,888
+  \end{equation*}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

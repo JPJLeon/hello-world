@@ -1,0 +1,11 @@
+Los archivos *.asy en este directorio son programas en asymptote para
+generar los respectivos gráficos en PDF.
+
+Los archivos *.cht en este directorio fueron generados mediante chemtool.
+Esta herramienta se requiere para regenerar los respectivos archivos *.fig
+incluidos acá.
+
+Hay algunos *.gp, son gráficos en gnuplot. Probablemente debieran reescribirse
+para asymptote, al menos donde usan texto.
+
+Hay un par de *.dia, usan bibliotecas de dia que no son fáciles de reproducir.

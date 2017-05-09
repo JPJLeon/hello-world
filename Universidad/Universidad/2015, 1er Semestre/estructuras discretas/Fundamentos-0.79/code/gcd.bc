@@ -1,0 +1,63 @@
+/* gcd.bc*/
+
+/* Copyright (c) 2014 Horst H. von Brand */
+/* Bajo licencia MIT. Vea LICENSE-MIT para detalles */
+
+/* Various GCD */
+
+/* Recursive */
+
+define rgcd(a, b) {
+    if(b == 0) return a else return (rgcd(b, a % b))
+}
+
+/* Iterative */
+
+define gcd(a, b) {
+   auto x, y, t;
+
+   if(a >= 0) x = a else x = -a;
+   if(b >= 0) y = b else y = -b
+
+   while(y > 0) {
+       t = x % y;
+       x = y;
+       y = t;
+   }
+   return x;
+}
+
+/* Binary */
+
+define bgcd(a, b) {
+   auto u, x, y, t
+
+   if(a == 0) return b
+   if(b == 0) return a
+
+   x = a; y = b
+
+   u = 1
+   while((x % 2 == 0) && (y % 2 == 0)) {
+       u = 2 * u
+       x = x / 2; y = y / 2;
+   }
+   while(x % 2 == 0) {
+       x = x / 2
+   }
+   while(y % 2 == 0) {
+       y = y / 2
+   }
+
+   if(x < y) {
+       t = x; x = y; y = t
+   }
+
+   while(x != y) {
+       t = (x - y) / 2
+       while(t % 2 == 0) t = t / 2
+       x = y; y = t
+   }
+
+   return u * x
+}

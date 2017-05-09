@@ -1,0 +1,1761 @@
+% coloreo-Polya.tex
+%
+% Copyright (c) 2011-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Teoría de coloreos de Pólya}
+\label{cha:coloreo-Pólya}
+\index{Polya, teoria de enumeracion de@Pólya, teoría de enumeración de}
+
+  Los problemas combinatorios que hemos enfrentado hasta acá
+  han sido relativamente sencillos.
+  Sólo al considerar la construcción ciclo de objetos no rotulados
+  (capítulo~\ref{cha:metodo-simbolico})%
+    \index{metodo simbolico@método simbólico}
+  tuvimos que considerar simetrías de los objetos bajo estudio.
+  El teorema de enumeración de Pólya
+  (abreviado \emph{PET},
+   por \emph{\foreignlanguage{english}{Pólya Enumeration Theorem}})
+  en realidad fue publicado en 1927 por John Howard Redfield,
+  en 1937 George Pólya lo redescubrió independientemente
+  y lo popularizó aplicándolo a muchos problemas de conteo,
+  en particular de compuestos químicos~%
+    \cite{polya37:_kombin_anzah_grupp_graph_verbin,
+	  polya87:_combin_enumer_group_graph_chemic_compoun}.
+
+\section{Grupos de permutaciones}
+\label{sec:grupos-permutaciones}
+
+  Desarrollaremos la teoría para la situación simple
+  en la cual solo contamos coloreos.
+  Una derivación más intuitiva
+  (que puede ser útil para motivar el desarrollo presente)
+  ofrece Tucker~\cite{tucker74:_Polya_enum_example}.
+  \begin{definition}
+    \index{grupo!permutaciones}
+    Sea \(G\) un conjunto de permutaciones
+    del conjunto finito \(\mathcal{X}\).
+    Si \(G\) es un grupo
+    (con la composición de permutaciones)
+    decimos que
+      \emph{\(G\) es un grupo de permutaciones de \(\mathcal{X}\)}.
+  \end{definition}
+  Si tomamos \(\mathcal{X} = \{1, 2, \dotsc, n\}\),
+  entonces un grupo de permutaciones
+  es simplemente un subgrupo de \(\mathtt{S}_n\).%
+    \index{grupo!simetrico@simétrico}%
+    \index{grupo!subgrupo}
+  El cuadro~\ref{tab:subgrupos-S3}
+  lista todos los subgrupos de \(\mathtt{S}_3\).
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{*{3}{>{\(}l<{\)}}}
+      H_1 = \{\iota\}			       &
+	 H_2 = \{\iota, (1\;2)\}	       &
+	 H_3 = \{\iota, (1\;3)\}		   \\
+      H_4 = \{\iota, (2\;3)\}		       &
+	 H_5 = \{\iota, (1\;2\;3), (1\;3\;2)\} &
+	 H_6 = \mathtt{S}_3
+    \end{tabular}
+    \caption{Los subgrupos de $\mathtt{S}_3$}
+    \label{tab:subgrupos-S3}
+  \end{table}
+  El grupo alternante \(\mathtt{A}_3\)%
+    \index{grupo!alternante}
+  aparece como \(H_5\) en el cuadro.
+  Para ver si un subconjunto de un grupo finito es un subgrupo,
+  basta verificar si es cerrado
+  por lo demostrado anteriormente para grupos.
+
+  Otros ejemplos se obtienen
+  como grupos de simetría de objetos geométricos.
+  Por ejemplo,
+  si rotulamos los vértices de un cuadrado
+  en orden contrario a las manecillas del reloj
+  (ver la figura~\ref{fig:cuadrado}),
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/cuadrado}
+    \\[3ex]
+    \begin{tabular}[c]{l>{\(}l<{\)}}
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+      Identidad					    & (1) (2) (3) (4) \\
+      Rotación en \(\pi / 2\)			    & (1\;2\;3\;4)    \\
+      Rotación en \(\pi\)			    & (1\;3) (2\;4)   \\
+      Rotación en \(3 \pi / 2\)			    & (1\;4\;3\;2)    \\
+      Reflexión en diagonal 1\;3		    & (2\;4)	      \\
+      Reflexión en diagonal 2\;4		    & (1\;3)	      \\
+      Reflexión en bisector perpendicular de 1\;2   & (1\;2) (3\;4)   \\
+      Reflexión en bisector perpendicular de 1\;4   & (1\;4) (2\;3)   \\
+      \hline
+    \end{tabular}
+    \caption{Un cuadrado y sus simetrías}
+    \label{fig:cuadrado}
+  \end{figure}
+  cada simetría
+  induce una permutación del conjunto \(\{1, 2, 3, 4\}\),
+  y obtenemos las simetrías indicadas.
+  Estas \(8\)~permutaciones
+  forman el llamado \emph{grupo dihedral de orden \(8\)},%
+    \index{grupo!dihedral}
+  \(\mathtt{D}_8\).
+  En general,
+  las simetrías de un \(n\)\nobreakdash-ágono regular%
+    \index{poligono@polígono}
+  forman un grupo de \(2 n\)~elementos,
+  el \emph{grupo dihedral de orden \(2 n\)}
+  que se anota~\(\mathtt{D}_{2 n}\).
+  Debe tenerse cuidado:
+  Esta es la notación que se usa en álgebra,
+  en geometría este mismo grupo se anota~\(\mathtt{D}_n\).
+  Si solo se consideran las rotaciones
+  de un polígono regular de \(n\) lados,
+  tenemos el grupo cíclico de orden \(n\),%
+    \index{grupo!ciclico@cíclico}
+  anotado \(\mathtt{C}_n\),
+  isomorfo a \(\mathbb{Z}_n\) con la suma.
+
+  Una situación similar se produce cuando estudiamos grafos
+  en vez de figuras geométricas,
+  en donde las ``simetrías'' son permutaciones de los vértices
+  que transforman arcos en arcos.
+  A una permutación de este tipo
+  se le llama \emph{automorfismo} del grafo%
+    \index{grafo!automorfismo}
+  (viene a ser un isomorfismo del grafo consigo mismo).%
+    \index{grafo!isomorfismo}
+
+  Un ejemplo de grafo es la figura~\ref{fig:automorfismos},
+  interesa saber cuántos automorfismos tiene.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/automorfismo}
+    \\[2ex]
+    \begin{tabular}[c]{>{\(}l<{\)}@{ se extiende a }>{\(}l<{\)}@{\qquad}
+		       >{\(}l<{\)}@{ se extiende a }>{\(}l<{\)}}
+       \iota	 & \iota	       &
+	  (1\;3) & (1\;3) (4\;6) \\
+       (1\;3\;5) & (1\;3\;5) (2\;4\;6) &
+	  (1\;5) & (1\;5) (2\;4) \\
+       (1\;5\;3) & (1\;5\;3) (2\;6\;4) &
+	  (3\;5) & (3\;5) (2\;6)
+    \end{tabular}
+    \caption{Un grafo de seis vértices y sus automorfismos}
+    \label{fig:automorfismos}
+  \end{figure}
+  Primero observamos que los vértices del grafo
+  caen naturalmente en dos grupos:
+  Los vértices \(\{1, 3, 5\}\) son de grado \(4\),
+  mientras \(\{2, 4, 6\}\) son de grado \(2\).
+  Ningún automorfismo puede transformar
+  un vértice del primer grupo en uno del segundo.
+  Por otro lado,
+  está claro
+  que podemos tomar \emph{cualquier} permutación de \(\{1, 2, 3\}\)
+  y extenderla a un automorfismo del grafo.
+  Por ejemplo,
+  si \((1\;3\;5)\) es parte de un automorfismo \(\alpha\),
+  entonces \(\alpha\) tiene que transformar \(2\) en \(4\),
+  ya que \(2\) es el único vértice adyacente a \(1\) y \(3\),
+  y \(4\) es el único vértice adyacente
+  a sus imágenes \(3\) y \(5\).
+  De la misma forma,
+  \(\alpha\) lleva \(4\) en \(6\) y \(6\) en \(2\),
+  por lo que \(\alpha = (1\;3\;5) (2\;4\;6)\).
+  En forma análoga,
+  cada una de las seis permutaciones de \(\{1, 2, 3\}\)
+  puede extenderse de forma única a un automorfismo del grafo,
+  como muestra la misma figura~\ref{fig:automorfismos}.
+  Hay exactamente seis automorfismos,
+  que son las permutaciones listadas arriba.
+
+\section{Órbitas y estabilizadores}
+\label{sec:orbitas-estabilizadores}
+\index{grupo!permutaciones!orbita@órbita}
+\index{grupo!permutaciones!estabilizador}
+
+  Sea \(G\) un grupo de permutaciones
+  de un conjunto \(\mathcal{X}\).
+  Veremos que la estructura del grupo
+  lleva naturalmente a una partición de \(\mathcal{X}\).
+  Definamos la relación \(\sim\) sobre \(\mathcal{X}\) mediante
+  \(x \sim y\) siempre que para algún \(\gamma \in G\)
+  tenemos \(\gamma(x) = y\).
+  Verificamos que \(\sim\)
+  es una relación de equivalencia de la forma usual:%
+    \index{relacion@relación!equivalencia}
+  \begin{description}
+  \item[Reflexiva:]
+    Como \(\iota\) es parte de todo grupo,
+    y \(\iota(x) = x\) para todo \(x \in \mathcal{X}\),
+    tenemos \(x \sim x\).
+  \item[Simétrica:]
+    Supongamos \(x \sim y\),
+    o sea \(\gamma(x) = y\) para algún \(\gamma \in G\).
+    Como \(G\) es un grupo,
+    \(\gamma^{-1} \in G\),
+    y como \(\gamma^{-1}(y) = x\),
+    tenemos \(y \sim x\).
+  \item[Transitiva:]
+    Si \(x \sim y\) y \(y \sim z\)
+    debe ser \(\gamma_1(x) = y\) y \(\gamma_2(y) = z\)
+    para \(\gamma_1, \gamma_2 \in G\),
+    y como \(G\) es un grupo,
+    \(\gamma_2 \gamma_1 \in G\),
+    con lo que \(\gamma_2 \gamma_1 (x) = z\)
+    y \(x \sim z\).
+  \end{description}
+  Como \(\sim\) es relación de equivalencia,
+  define una partición de \(\mathcal{X}\);
+  \(x\) e \(y\) pertenecen a la misma clase
+  si y solo si hay una permutación en \(G\)
+  que transforma \(x\) en \(y\).
+  A las clases de equivalencia
+  se les conoce como las \emph{órbitas} de \(G\) en \(\mathcal{X}\).
+  La \emph{órbita de \(x\)} es la clase que contiene a \(x\):
+  \begin{equation*}
+    G x
+      = \{y \in \mathcal{X} \colon y = \gamma(x)
+	       \text{\ para algún\ } \gamma \in G\}
+  \end{equation*}
+
+  Intuitivamente,
+  la órbita \(G x\) son los elementos de \(\mathcal{X}\)
+  que no se distinguen de \(x\) bajo operaciones de \(G\).
+  En el caso de la figura~\ref{fig:automorfismos}
+  los conjuntos de vértices \(\{1, 3, 5\}\) y \(\{2, 4, 6\}\)
+  son órbitas del grupo.
+  El grafo de la figura~\ref{fig:ejemplo-orbitas}
+  tiene un grupo más complejo.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/orbitas}
+    \vspace{2\baselineskip}
+
+    \begin{tabular}[c]{>{\(}l<{\)}*{2}{@{\quad}>{\(}l<{\)}}}
+      \iota  & \iota  & \iota		    \\
+      (a\;b) & (d\;f) & (h\;i) (k\;l)	    \\
+	     &	      & (h\;j) (k\;m)	    \\
+	     &	      & (i\;j) (l\;m)	    \\
+	     &	      & (h\;i\;j) (k\;l\;m) \\
+	     &	      & (h\;j\;i) (k\;m\;l)
+    \end{tabular}
+    \caption{Un ejemplo de grafo
+	     y los generadores de su grupo de automorfismos}
+    \label{fig:ejemplo-orbitas}
+  \end{figure}
+  Acá los automorfismos
+  se obtienen combinando las permutaciones
+  de la figura~\ref{fig:ejemplo-orbitas}.
+  Hay un total de \(2 \cdot 2 \cdot 6 = 24\) permutaciones
+  en este grupo.
+  Son órbitas
+  \(\{a, b\}\), \(\{c\}\), \(\{d, f\}\), \(\{e\}\), \(\{g\}\),
+  \(\{h, i, j\}\), \(\{k, l, m\}\),
+  y se ve que ``son parecidos'' los elementos de cada una de ellas,
+  en que las operaciones del grupo los intercambian.
+
+  Las órbitas presentan un par de problemas numéricos obvios:
+  ¿Cuántas órbitas hay?
+  ¿Qué tamaños tienen?
+
+  Si \(G\) es un grupo de permutaciones,
+  llamaremos \(G(x \rightarrow y)\)
+  al conjunto de permutaciones que llevan \(x\) a \(y\),
+  o sea:
+  \begin{equation*}
+    G(x \rightarrow y) = \{\gamma \in G \colon g(x) = y\}
+  \end{equation*}
+  En particular,
+  \(G(x \rightarrow x)\)
+  es el conjunto de permutaciones
+  que tienen a \(x\) como punto fijo.
+  Este conjunto se llama el \emph{estabilizador} de \(x\),%
+    \index{grupo!permutaciones!estabilizador}
+  y se anota \(G_x\).
+  Si \(\gamma_1\) y \(\gamma_2\) están en \(G_x\):
+  \begin{equation*}
+    \gamma_2 \gamma_1(x) = \gamma_2(x) = x
+  \end{equation*}
+  por lo que \(\gamma_2 \gamma_1 \in G_x\),
+  y \(G_x\) es un subgrupo de \(G\).
+  También tenemos:
+  \begin{theorem}
+    \label{theo:stabilizer-coset-l}
+    Sea \(G\) un grupo de permutaciones,
+    y sea \(\gamma \in G(x \rightarrow y)\).
+    Entonces:
+    \begin{equation*}
+      G(x \rightarrow y) = \gamma G_x
+    \end{equation*}
+    el coset izquierdo de \(G_x\) respecto a \(\gamma\).
+  \end{theorem}
+  \begin{proof}
+    Demostraremos que todo elemento de \(\gamma G_x\)
+    pertenece a \(G(x \rightarrow y)\) y viceversa,
+    con lo que ambos conjuntos son iguales.
+
+    Si \(\alpha\) pertenece a \(\gamma G_x\),
+    es \(\alpha = \gamma \beta\) para algún \(\beta \in G_x\).
+    O sea,
+    \(\alpha(x) = \gamma \beta(x) = \gamma(x) = y\),
+    con lo que \(\alpha\) pertenece a \(G(x \rightarrow y)\).
+    Por el otro lado,
+    si \(\pi \in G(x \rightarrow y)\),
+    entonces \(\gamma^{-1} \pi(x) = \gamma^{-1}(y) = x\),
+    de manera que \(\gamma^{-1} \pi = \delta\),
+    donde \(\delta \in G_x\),
+    y así \(\pi = \gamma \delta \in \gamma G_x\).
+    Ambos conjuntos son iguales.
+  \end{proof}
+  De forma muy similar al teorema~\ref{theo:stabilizer-coset-l}
+  se demuestra lo siguiente:
+  \begin{theorem}
+    \label{theo:stabilizer-coset-r}
+    Sea \(G\) un grupo de permutaciones de \(\mathcal{X}\),
+    y sea \(\gamma \in G(x \rightarrow y)\).
+    Entonces:
+    \begin{equation*}
+      G(x \rightarrow y) = G_y \gamma
+    \end{equation*}
+    el coset derecho de \(G_y\) respecto a \(\gamma\).
+  \end{theorem}
+  \begin{proof}
+    Si \(\alpha\) pertenece a \(G_y \gamma\),
+    es \(\alpha = \beta \gamma\) para algún \(\beta \in G_y\),
+    vale decir
+    \(
+      \alpha(y)
+	= \beta \gamma(y)
+	= \beta(x)
+	= y
+    \)
+    o sea \(\beta \in G(x \rightarrow y)\).
+    Al revés,
+    supongamos \(\pi \in G(x \rightarrow y)\),
+    y consideremos
+    \(
+      \pi \gamma^{-1}(y)
+	= \pi(x)
+	= y
+    \)
+    y por tanto \(\pi \gamma^{-1} \in G_y\),
+    o \(\pi \in G_y \gamma\),
+    y sigue el resultado.
+  \end{proof}
+
+  De los anteriores teoremas obtenemos:
+  \begin{corollary}
+    \label{cor:G_x=G_y}
+    Sea \(G\) un grupo de permutaciones de \(\mathcal{X}\),
+    sea \(x \in \mathcal{X}\) un elemento cualquiera,
+    e \(y\) un elemento en la órbita de \(x\).
+    Entonces \(\lvert G_x \rvert = \lvert G_y \rvert\).
+  \end{corollary}
+  \begin{proof}
+    Inmediato,
+    ya que el tamaño de un coset es el orden del subgrupo
+    (lo demostramos para el teorema de Lagrange);%
+      \index{Lagrange, teorema de}
+% Wreckme: Referencia al teorema cuando se unan ambos apuntes
+    y por los teoremas~\ref{theo:stabilizer-coset-l}
+    y~\ref{theo:stabilizer-coset-r} tenemos
+    \(
+      \lvert G_y \rvert
+	= \lvert G(x \rightarrow y) \rvert
+	= \lvert G_x \rvert
+    \).
+  \end{proof}
+
+  \begin{theorem}
+    \label{theo:GxG_x=G}
+    Sea \(G\) un grupo de permutaciones de \(\mathcal{X}\),
+    y sea \(x\) un elemento de \(\mathcal{X}\).
+    Entonces:
+    \begin{equation*}
+      \lvert G x \rvert \cdot \lvert G_x \rvert
+	= \lvert G \rvert
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Usamos la idea de contar por filas y columnas.
+    Para un elemento \(x \in \mathcal{X}\)
+    el conjunto de pares
+      \(S_x = \{(\gamma, y) \colon \gamma(x) = y\}\)
+    puede describirse
+    mediante una tabla como la del cuadro~\ref{tab:gamma-y}.
+    \begin{table}[htbp]
+      \centering
+      \begin{tabular}[c]{>{\(}l<{\)}|>{\(}r<{\)}>{\(}c<{\)}
+			 >{\(}l<{\)}|>{\(}l<{\)}}
+		   & \cdots & y & \cdots		 &
+			\\
+	\hline
+	\vdots	   &	    &	&			 &
+			\\
+	\gamma & \phantom{\text{si \(\gamma(x) = y\)}} &
+	  \multicolumn{2}{l|}{\;\;\;\checkmark\
+			      si \(\gamma(x) = y\)
+			      \hspace*{1.5em}} &
+	  r_\gamma(S_x) \\
+	\vdots	   &	    &	&			 &
+			\\
+	\hline
+		   &	     & c_y(S_x) &		 &
+      \end{tabular}
+      \caption{Pares $(\gamma, y)$
+	       para demostración del teorema~\ref{theo:GxG_x=G}}
+      \label{tab:gamma-y}
+    \end{table}
+    Dado que \(\gamma\) es una permutación,
+    hay un único \(y\)
+    tal que \(\gamma(x) = y\) para cada \(\gamma\),
+    con lo que \(r_\gamma(S_x) = 1\).
+    El total por columna \(c_y(S_x)\)
+    es el número de permutaciones \(\gamma\)
+    tales que \(\gamma(x) = y\),
+    vale decir
+    \(\lvert G(x \rightarrow y) \rvert\).
+    Si \(y\) está en la órbita \(G x\),
+    por el teorema~\ref{theo:stabilizer-coset-l}
+    y el hecho que el coset de un subgrupo%
+      \index{coset}
+    tiene el tamaño del subgrupo,
+    tenemos
+    \(\lvert G(x \rightarrow y) \rvert = \lvert G_x \rvert\).
+    Por otro lado,
+    si \(y\) no está en la órbita \(G x\),
+    \(\lvert G(x \rightarrow y) \rvert = 0\).
+    Las dos formas de contar los elementos de \(S_x\) dan:
+    \begin{equation*}
+      \sum_{y \in \mathcal{X}} c_y (S_x)
+	= \sum_{\gamma \in G} r_\gamma(S_x)
+    \end{equation*}
+    Al lado izquierdo hay \(\lvert G x \rvert\) términos
+    que valen \(\lvert G_x \rvert\) cada uno,
+    los demás valen \(0\);
+    al lado derecho hay \(\lvert G \rvert\) términos
+    que valen \(1\) cada uno.
+    Así tenemos el resultado prometido.
+  \end{proof}
+
+  Este teorema permite calcular el tamaño de un grupo
+  si se conoce el tamaño de una órbita
+  y el estabilizador respectivo.
+  Consideremos por ejemplo el grupo \(\mathtt{T}\)
+  de rotaciones en el espacio de un tetraedro,%
+    \index{poliedro!regular}%
+    \index{tetraedro}
+  ver la figura~\ref{fig:rotaciones-tetraedro-1}.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/tetraedro-vertice}
+    \caption{Rotaciones de un tetraedro}
+    \label{fig:rotaciones-tetraedro-1}
+  \end{figure}
+  Las rotaciones alrededor del eje marcado
+  son las que mantienen fijo el vértice \(1\),
+  y hay \(3\) de estas,
+  \(\lvert \mathtt{T}_d \rvert = 3\).
+  Por otro lado,
+  girando el tetraedro en el espacio
+  se puede colocar en la posición \(1\)
+  cualquiera de los \(4\) vértices,
+  y tenemos \(\lvert \mathtt{T} d \rvert = 4\).
+  En consecuencia,
+  el grupo de rotaciones en el espacio de un tetraedro es
+  de orden
+  \(\lvert \mathtt{T} \rvert
+      = \lvert \mathtt{T}_d \rvert
+	  \cdot \lvert \mathtt{T} d \rvert
+      = 3 \cdot 4
+      = 12\).
+  Resulta que \(\mathtt{T}\)
+  no es más que el grupo alternante \(\mathtt{A}_4\).%
+    \index{grupo!alternante}
+
+  Otro ejemplo lo da el icosaedro trunco,%
+    \index{poliedro}%
+    \index{icosaedro trunco}
+  la forma básica de la pelota de fútbol tradicional,
+  ver la figura~\ref{fig:icosaedro-trunco}.
+  \begin{figure}[htbp]
+    \centering
+   \pgfimage[width=0.35\textwidth]
+	     {images/20070219213318!Truncated_icosahedron}
+    % http://upload.wikimedia.org/wikipedia/commons/archive/c/c3/20070219213318%21Truncated_icosahedron.png
+    % Public domain
+    \caption{Icosaedro trunco}
+    \label{fig:icosaedro-trunco}
+  \end{figure}
+  Este es el sólido arquimedeano%
+    \index{solido arquimedeano@sólido arquimedeano|see{poliedro!arquimedeano}}%
+    \index{poliedro!arquimedeano}
+  limitado por \(12\)~hexágonos y \(20\)~pentágonos%
+    \index{poligono@polígono}
+  (un total de \(32\)~caras),
+  \(90\)~aristas y \(60\)~vértices.
+  Si consideramos rotaciones en el espacio de este sólido,
+  como en cada vértice confluyen un pentágono y dos hexágonos
+  la única simetría
+  que mantiene fijo un vértice es \(\iota\).
+  Vía rotaciones podemos hacer coincidir ese vértice con cualquiera,
+  por lo que tenemos
+  que \(\lvert G \rvert
+	  = \lvert G_x \rvert \cdot \lvert G x \rvert
+	  = 1 \cdot 60
+	  = 60\).
+  Obtener el orden de este grupo manipulando el sólido
+  sería mucho más complicado.
+
+\section{Número de órbitas}
+\label{sec:numero-orbitas}
+
+  Vamos ahora a contar el número de órbitas de un grupo \(G\)
+  de permutaciones de \(\mathcal{X}\).
+  Cada órbita es un subconjunto de elementos indistinguibles
+  bajo las operaciones de \(G\),
+  y el número de órbitas
+  dice cuántos tipos de elementos distinguibles hay.
+
+  Supóngase que se quieren fabricar tarjetas de identidad cuadradas,
+  divididas en nueve cuadrados de los cuales se perforan dos.
+  Véase la figura~\ref{fig:tarjetas} para algunos ejemplos.
+  \begin{figure}[htbp]
+    \centering
+    \subfloat[]{
+      \pgfimage{images/badge-1}
+      \label{subfig:badge-1}
+    }%
+    \hspace{2em}%
+    \subfloat[]{
+      \pgfimage{images/badge-2}
+      \label{subfig:badge-2}
+    }%
+    \hspace{2em}%
+    \subfloat[]{
+      \pgfimage{images/badge-3}
+      \label{subfig:badge-3}
+    }
+    \caption{Ejemplos de tarjetas de identidad}
+    \label{fig:tarjetas}
+  \end{figure}
+  Las primeras dos no se pueden distinguir,
+  ya que se obtiene la de la figura~\ref{subfig:badge-2}
+  rotando la de~\ref{subfig:badge-1};
+  en cambio,
+  la de~\ref{subfig:badge-3} claramente es diferente de las otras,
+  independiente de si se gira o se da vuelta.
+
+  El grupo que está actuando acá
+  es el grupo \(\mathtt{D}_8\) de ocho simetrías de un cuadrado,%
+    \index{grupo!dihedral}
+  pero interesa el efecto que tiene
+  sobre las \(\binom{9}{2} = 36\) configuraciones de dos agujeros
+  en un cuadrado de \(3 \times 3\),
+  no solo su acción sobre los cuatro vértices.
+  El número de órbitas es el número de tarjetas distinguibles.
+  Hacer esto por la vía de dibujar las \(36\) configuraciones,
+  y analizar lo que ocurre
+  con cada una de ellas con las \(8\) simetrías
+  es bastante trabajo.
+  Por suerte hay maneras mejores.
+
+  Dado un elemento \(\gamma\) del grupo de permutaciones \(G\)
+  definimos:
+  \begin{equation*}
+    F(\gamma) = \{x \in \mathcal{X} \colon \gamma(x) = x\}
+  \end{equation*}
+  Vale decir,
+  \(F(\gamma)\) es el número de puntos fijos de \(\gamma\).
+  Nuestro teorema siguiente relaciona esto con el número de órbitas.
+  Este resultado se conoce bajo el nombre de Burnside,
+  de Cauchy-Frobenius y de Pólya.
+  Burnside lo popularizó en su libro~%
+    \cite{burnside97:_theor_group_finit_order},
+  atribuyéndolo a Frobenius,
+  aunque el resultado lo conocía Cauchy antes.
+  Por esta enredada historia
+  a veces se le llama ``el lema que no es de Burnside''.
+  \begin{theorem}[Lema de Burnside]
+    \label{theo:Burnside}
+    \index{Burnside, lema de}
+    El número de órbitas de \(G\)
+    sobre \(\mathcal{X}\) está dado por:
+    \begin{equation*}
+      \frac{1}{\lvert G \rvert} \,
+	\sum_{\gamma \in G} \lvert F(\gamma) \rvert
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Nuevamente,
+    contar por filas y columnas.
+    Sea:
+    \begin{equation*}
+      E = \{(\gamma, x) \colon \gamma(x) = x\}
+    \end{equation*}
+    Entonces el total por fila \(r_\gamma(E)\)
+    es el número de \(x\) fijados por \(\gamma\),
+    o sea \(\lvert F(\gamma) \rvert\).
+    El total por columna \(c_x(E)\)
+    es el número de \(\gamma\) que tienen \(x\) como punto fijo,
+    \(\lvert G_x \rvert\).
+    Contabilizando \(E\) de ambas formas da:
+    \begin{equation*}
+      \sum_{\gamma \in G} \lvert F(\gamma) \rvert
+	= \sum_{x \in \mathcal{X}} \lvert G_x \rvert
+    \end{equation*}
+    Supongamos que hay \(t\) órbitas,
+    y elijamos \(z \in \mathcal{X}\).
+    Por el teorema~\ref{theo:stabilizer-coset-r},
+    si \(x\) pertenece a la órbita \(G z\)
+    entonces \(\lvert G_x \rvert = \lvert G_z \rvert\).
+    Cada órbita contribuye
+    al lado derecho \(\lvert G z \rvert\) términos,
+    todos \(\lvert G_z \rvert\);
+    la contribución total de la órbita
+    es \(\lvert G z \rvert \cdot \lvert G_z \rvert
+	   = \lvert G \rvert\)
+    por el teorema~\ref{theo:GxG_x=G},
+    lo que lleva a:
+    \begin{equation*}
+      \sum_{\gamma \in G} \lvert F(\gamma) \rvert
+	= t \cdot \lvert G \rvert
+    \end{equation*}
+    que es equivalente a lo que queríamos demostrar.
+  \end{proof}
+
+  Ahora podemos resolver nuestro problema de tarjetas de identidad.
+  Necesitamos calcular el número de configuraciones fijas
+  bajo cada una de las ocho permutaciones.
+  Por ejemplo,
+  cuando \(\gamma\) es la rotación en \(\pi\),
+  hay cuatro configuraciones fijas
+  (ver la figura~\ref{fig:tarjetas-fijas-180}).
+  No hay configuraciones fijas bajo rotaciones de \(\pi / 2\)
+  ni de \(3 \pi / 2\).
+  \begin{figure}[htbp]
+    \centering
+    \subfloat{
+      \pgfimage{images/badge-r2-a}
+      \label{subfig:badge-r2-a}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-r2-b}
+      \label{subfig:badge-r2-b}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-r2-c}
+      \label{subfig:badge-r2-c}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-r2-d}
+      \label{subfig:badge-r2-d}
+    }
+    \caption{Configuraciones fijas bajo rotación en $\pi$}
+    \label{fig:tarjetas-fijas-180}
+  \end{figure}
+  Podemos de la misma forma enumerar las configuraciones fijas
+  bajo una reflexión en la vertical,
+  ver la figura~\ref{fig:tarjetas-fijas-vertical}.
+  Para la reflexión en la horizontal por simetría
+  también tenemos seis configuraciones fijas.
+  \begin{figure}[htbp]
+    \centering
+    \subfloat{
+      \pgfimage{images/badge-v-a}
+      \label{subfig:badge-v-a}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-v-b}
+      \label{subfig:badge-v-b}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-v-c}
+      \label{subfig:badge-v-c}
+    }
+
+    \subfloat{
+      \pgfimage{images/badge-v-d}
+      \label{subfig:badge-v-d}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-v-e}
+      \label{subfig:badge-v-e}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-v-f}
+      \label{subfig:badge-v-f}
+    }
+    \caption{Configuraciones fijas bajo reflexión en la vertical}
+    \label{fig:tarjetas-fijas-vertical}
+  \end{figure}
+  Al enumerar las configuraciones fijas
+  bajo una reflexión en la diagonal de la esquina inferior izquierda
+  a la superior derecha también resultan seis configuraciones
+  (figura~\ref{fig:tarjetas-fijas-diagonal}),
+  y obtenemos otras seis para la reflexión en la otra diagonal.
+  \begin{figure}[htbp]
+    \centering
+    \subfloat{
+      \pgfimage{images/badge-d-a}
+      \label{subfig:badge-d-a}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-d-b}
+      \label{subfig:badge-d-b}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-d-c}
+      \label{subfig:badge-d-c}
+    }
+
+    \subfloat{
+      \pgfimage{images/badge-d-d}
+      \label{subfig:badge-d-d}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-d-e}
+      \label{subfig:badge-d-e}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-d-f}
+      \label{subfig:badge-d-f}
+    }
+    \caption[Configuraciones fijas bajo reflexión en la diagonal]
+	    {Configuraciones fijas bajo reflexión en la diagonal
+	     de izquierda inferior a derecha superior}
+    \label{fig:tarjetas-fijas-diagonal}
+  \end{figure}
+  El cuadro~\ref{tab:simetrias-tarjetas}
+  resume los valores anteriores.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}[c]{|l|>{\(}r<{\)}|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Operación}} &
+	\multicolumn{1}{c|}{\textbf{Fijos}} \\
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+      Identidad				     & 36 \\
+      Rotación en \(\pi / 2\)		     &	0 \\
+      Rotación en \(\pi\)		     &	4 \\
+      Rotación en \(3 \pi / 2\)		     &	0 \\
+      Reflexión en diagonal \(1\;3\)	     &	6 \\
+      Reflexión en diagonal \(2\;4\)	     &	6 \\
+      Reflexión en perpendicular a \(1\;2\)  &	6 \\
+      Reflexión en perpendicular a \(1\;4\)  &	6 \\
+      \hline
+    \end{tabular}
+    \caption{Número de configuraciones de tarjetas
+	     respetadas por cada simetría del cuadrado}
+    \label{tab:simetrias-tarjetas}
+  \end{table}
+  Con estos valores tenemos el lema de Burnside
+  que el número de órbitas es:
+  \begin{equation*}
+    \frac{1}{8} \, (36 + 0 + 4 + 0 + 6 + 6 + 6 + 6) = 8
+  \end{equation*}
+  En este caso es sencillo
+  listar las ocho configuraciones por prueba y error,
+  máxime sabiendo que son ocho
+  (ver la figura~\ref{fig:tarjetas-distinguibles}),
+  \begin{figure}[htbp]
+    \centering
+   \subfloat{
+      \pgfimage{images/badge-a}
+      \label{subfig:badge-a}
+    }%
+    \hspace{2em}%
+    \centering
+    \subfloat{
+      \pgfimage{images/badge-b}
+      \label{subfig:badge-b}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-c}
+      \label{subfig:badge-c}
+    }
+
+    \subfloat{
+      \pgfimage{images/badge-d}
+      \label{subfig:badge-d}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-e}
+      \label{subfig:badge-e}
+    }
+
+    \subfloat{
+      \pgfimage{images/badge-f}
+      \label{subfig:badge-f}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-g}
+      \label{subfig:badge-g}
+    }%
+    \hspace{2em}%
+    \subfloat{
+      \pgfimage{images/badge-h}
+      \label{subfig:badge-h}
+    }
+    \caption{Las ocho tarjetas distinguibles}
+    \label{fig:tarjetas-distinguibles}
+  \end{figure}
+  pero el resultado es aplicable en forma mucho más general.
+
+\section{Índice de ciclos}
+\label{sec:indice-ciclos}
+\index{permutacion@permutación!indice de ciclos@índice de ciclos}
+
+  Definimos el tipo de una permutación%
+    \index{permutacion@permutación!tipo}
+  como
+    \(\left[ 1^{\alpha_1} \, 2^{\alpha_2}
+	\, \dotso \, n^{\alpha_n} \right]\)
+  si tiene \(\alpha_k\) ciclos de largo \(k\)
+  para \(1 \le k \le n\).
+  Una expresión afín asociada a la permutación \(\gamma\) es:
+  \begin{equation*}
+    \zeta_\gamma (x_1, x_2, \dotsc, x_n)
+      = x_1^{\alpha_1} x_2^{\alpha_2} \dotso x_n^{\alpha_n}
+  \end{equation*}
+  Para un grupo \(G\) de permutaciones
+  definimos el \emph{índice de ciclos}:
+  \begin{equation*}
+    \zeta_G (x_1, x_2, \dotsc, x_n)
+      = \frac{1}{\lvert G \rvert} \,
+	  \sum_{\gamma \in G} \zeta_\gamma (x_1, x_2, \dotsc, x_n)
+  \end{equation*}
+  Esto es esencialmente una función generatriz%
+    \index{generatriz}
+  en la que \(x_l\) marca los ciclos de largo \(l\).
+  Esta función tiene muchos usos,
+  algunos los veremos más adelante.
+
+  Interesa calcular el índice de ciclos para diversos grupos
+  de manera de tenerlos a mano más adelante.
+  Consideremos primero los grupos \(\mathtt{C}_n\),%
+    \index{grupo!ciclico@cíclico}
+  que sabemos isomorfos con \(\mathbb{Z}_n\) y la suma.
+  Si consideramos \(a \in \mathbb{Z}_n\),
+  su orden determina el largo de los ciclos,
+  y el número de ciclos es simplemente \(n / \ord(a)\).
+  El orden es el mínimo \(b > 0\)
+  tal que \(a \cdot b \equiv 0 \pmod{n}\).
+  Si \(\gcd(a, n) = 1\),
+  es \(b = n\) y
+  hay \(\phi(n)\) de tales \(a\)
+  que dan \(n / n = 1\) ciclo de largo \(n\).
+  En general,
+  si \(\gcd(a, n) = c\),
+  las posibilidades de \(a\) esencialmente diferentes
+  se restringen a \(n / c\) elementos,
+  y de estos dan orden \(n / c\)
+  exactamente los que tienen \(\gcd(a, n / c) = 1\).
+  Expresarlo de esta forma es incómodo,
+  llamemos \(d = n / c\).
+  Entonces para \(d \mid n\) hay \(\phi(d)\) elementos
+  de orden \(d\),
+  los cuales forman \(n / d\) ciclos de largo \(d\):
+  \begin{equation*}
+    \zeta_{\mathtt{C}_n} (x_1, \dotsc, x_n)
+      = \frac{1}{n} \,
+	  \sum_{d \mid n} \phi(d) \, x_d^{n / d}
+  \end{equation*}
+% Fixme: Relacionar con operador \Cyc() de método simbólico sin rotular
+
+  Veamos ahora el caso \(\mathtt{D}_{2 n}\).%
+    \index{grupo!dihedral}
+  A las simetrías anteriores se añaden \(n\) reflexiones.
+  Si \(n\) es par,
+  hay \(n / 2\) reflexiones a través de vértices opuestos,
+  son \(2\) ciclos de largo \(1\) y \(n - 2\) ciclos de largo \(2\)
+  que aportan \(n x_1^2 x_2^{(n - 2) / 2} / 2\);
+  y \(n / 2\) reflexiones a través de lados opuestos,
+  son \(n / 2\) ciclos de largo \(2\)
+  que aportan \(n x_2^{n / 2} / 2\).
+  Si \(n\) es impar,
+  hay \(n\) reflexiones a través de un vértice y el lado opuesto,
+  o sea un ciclo de largo \(1\)
+  y \((n - 1) / 2\) ciclos de largo \(2\),
+  que aportan \(n x_1 x_2^{(n - 1) / 2}\).
+  En resumen,
+  como en el índice de ciclos
+  aparecen divididos por el orden del grupo,
+  que se duplica a \(2 n\)
+  entre \(\mathtt{C}_n\) y \(\mathtt{D}_{2 n}\):
+  \begin{equation*}
+    \zeta_{\mathtt{D}_{2 n}}
+      = \frac{1}{2} \, \zeta_{\mathtt{C}_n}(x_1, \dotsc, x_n) +
+	   \begin{cases}
+	     \frac{1}{4} \, (x_1^2 x_2^{(n - 2) / 2} + x_2^{n / 2})
+		 & \text{si \(n\) es par} \\[1ex]
+	     \frac{1}{2} \, x_1 x_2^{(n - 1) / 2}
+		 & \text{si \(n\) es impar}
+	   \end{cases}
+  \end{equation*}
+  Así tenemos por ejemplo para el cuadrado:
+  \begin{align*}
+    \zeta_{\mathtt{C}_4} (x_1, x_2, x_3, x_4)
+      &= \frac{1}{4} \, \sum_{d \mid 4} \phi(d) \, x_d^{4 / d} \\
+      &= \frac{1}{4} \, \left(
+			  x_1^4 + x_2^2 + 2 x_4
+			\right) \\
+    \zeta_{\mathtt{D}_8} (x_1, x_2, x_3, x_4)
+      &= \frac{1}{2} \, \zeta_{\mathtt{C}_4} (x_1, x_2, x_3, x_4)
+	   + \frac{1}{4} \, \left(
+			       x_1^2 x_2 + x_2^2
+			    \right) \\
+      &= \frac{1}{8} \, \left(
+			   x_1^4 + 2 x_1^2 x_2 + 3 x_2^2 + 2 x_4
+			\right)
+  \end{align*}
+% Fixme: \Cyc() tal vez?
+
+\section{Número de coloreos distinguibles}
+\label{sec:coloreos-distinguibles}
+
+% Fixme: Discutir grupo de permutaciones de arcos en K_n
+
+% Fixme: Esta discusión es más complicada de lo que se requiere...
+%	 Revisar/clarificar
+%	 Agregar ejemplos de Richard P. Stanley "Topics in Algebraic
+%	 Combinatorics"
+%	 Más ejemplos útiles en William May "Introduction to Pólya
+%	 Enumeration Theory"
+
+  Supongamos un grupo \(G\) de permutaciones
+  de un conjunto \(\mathcal{X}\) de \(n\) elementos,
+  y a cada elemento se le puede asignar uno de \(r\) colores.
+  Si el conjunto de colores es \(\mathcal{K}\),
+  un \emph{coloreo}
+  es una función
+    \(\omega \colon \mathcal{X} \rightarrow \mathcal{K}\).
+  El número total de coloreos es \(r^n\),
+  a este conjunto le llamaremos \(\Omega\).
+  Ahora bien,
+  cada permutación \(g\) en \(G\)
+  induce una permutación \(\widehat{g}\) de \(\Omega\):
+  Para \(\omega\) definimos \(\widehat{g}(\omega)\)
+  como el coloreo en el cual el color asignado a \(x\)
+  es el que \(\omega\) asigna a \(g(x)\),
+  vale decir:
+  \begin{equation*}
+    (\widehat{g}(\omega))(x) = \omega g^{-1}(x)
+  \end{equation*}
+  La inversa aparece porque al aplicar la permutación al coloreo
+  estamos asignando a \(x\)
+  el color que tiene su predecesor vía \(g\).
+  La figura~\ref{fig:g-hat} muestra un ejemplo.
+  \begin{figure}[htbp]
+    \centering
+    \subfloat{
+      \pgfimage{images/g-hat-a}
+    }%
+    \hspace{3em}%
+    \subfloat{
+      \pgfimage{images/g-hat-b}
+    }
+    \caption{Efecto de la permutación $\widehat{g}$
+	     sobre un coloreo $\omega$}
+    \label{fig:g-hat}
+  \end{figure}
+% Fixme: Tomar ejemplo completo p.ej. de R. Stanley
+  La función que lleva \(g\) a \(\widehat{g}\)
+  es una representación del grupo \(G\)
+  en un grupo \(\widehat{G}\) de permutaciones de \(\Omega\).
+  Dos coloreos son indistinguibles
+  si uno puede transformarse en el otro
+  mediante una permutación \(\widehat{g}\);
+  vale decir,
+  si ambas pertenecen a la misma órbita
+  de \(\widehat{G}\) en \(\Omega\).
+  El número de coloreos distinguibles
+  (\emph{inequivalentes})
+  entonces es el número de órbitas de \(\widehat{G}\).
+  Antes de aplicar nuestro teorema para el número de órbitas
+  debemos relacionar \(G\) y \(\widehat{G}\).
+  Supongamos que para dos permutaciones \(g_1\) y \(g_2\)
+  tenemos \(\widehat{g}_1 = \widehat{g}_2\),
+  de forma que
+  \begin{equation*}
+    (\widehat{g}_1(\omega))(x) = (\widehat{g}_2(\omega))(x)
+  \end{equation*}
+  y en consecuencia para todo \(\omega \in \Omega\)
+  y todo \(x \in \mathcal{X}\) debe ser
+  \begin{equation*}
+    \omega(g_1^{-1}(x)) = \omega(g_2^{-1}(x))
+  \end{equation*}
+  Como esto es válido para todo \(\omega\),
+  en particular vale para el coloreo
+  que asigna el color especificado a \(g_1^{-1}(x)\)
+  y otro color a todos los demás miembros de \(\mathcal{X}\).
+  En este caso particular la ecuación
+  dice que \(g_1^{-1}(x) = g_2^{-1}(x)\),
+  con lo que \(g_1 = g_2\),
+  y el grupo de permutaciones \(G\) de \(\mathcal{X}\)
+  y el grupo de permutaciones \(\widehat{G}\)
+  de los coloreos \(\Omega\) son isomorfos.
+
+  Otra manera de entender esta situación
+  es considerar un coloreo que le asigna un color diferente
+  a cada elemento de \(\mathcal{X}\).
+  Una permutación de ese coloreo
+  no es más que una permutación
+  de nuevos ``nombres'' de los elementos de \(\mathcal{X}\),
+  con lo que está claro que ambos grupos de permutaciones
+  están muy relacionados.
+
+  \begin{theorem}
+    \label{theo:coloreos}
+    Si \(G\) es un grupo de permutaciones de \(\mathcal{X}\),
+    y \(\zeta_G(x_1, \dotsc, x_n)\) es su índice de ciclos,
+    el número de coloreos inequivalentes
+    de \(\mathcal{X}\) con \(r\) colores
+    es \(\zeta_G(r, \dotsc, r)\),
+    donde un coloreo de \(\mathcal{X}\)
+    es una función
+      \(\omega \colon \mathcal{X} \rightarrow \mathcal{K}\).
+  \end{theorem}
+  \begin{proof}
+    Interesa el número de órbitas del grupo \(G\)
+    operando sobre coloreos.
+    Hemos demostrado
+    que la representación \(g \rightarrow \widehat{g}\)
+    es una biyección,
+    de forma que \(\lvert G \rvert = \lvert \widehat{G} \rvert\).
+    Además,
+    por el teorema de Burnside
+    el número de órbitas de \(\widehat{G}\) en \(\Omega\) es
+    \begin{equation*}
+      \frac{1}{\lvert \widehat{G} \rvert} \,
+	  \sum_{\widehat{g} \in \widehat{G}}
+	    \lvert F(\widehat{g}) \rvert
+	= \frac{1}{\lvert G \rvert} \,
+	      \sum_{g \in G} \lvert F(\widehat{g}) \rvert
+    \end{equation*}
+    donde \(F(\widehat{g})\)
+    es el conjunto de coloreos fijados por \(\widehat{g}\).
+    Supongamos ahora que \(\omega\)
+    es un coloreo fijado por \(\widehat{g}\),
+    de forma que \(\widehat{g}(\omega) = \omega\),
+    y sea \((x \; y \; z \; \dotso)\) un ciclo cualquiera de \(g\).
+    Tenemos:
+    \begin{equation*}
+      \omega(x)
+	= \omega(g(y))
+	= (\widehat{g}(\omega))(y)
+	= \omega(y)
+    \end{equation*}
+    de forma que \(\omega\) asigna el mismo color a \(x\) e \(y\).
+    Aplicando el mismo razonamiento,
+    este es el color asignado a todo el ciclo.
+    Esto ocurre con cada uno de los ciclos de \(g\).
+    Si \(g\) tiene \(k\) ciclos en total,
+    el número de coloreos posibles es \(r^k\),
+    ya que podemos asignar independientemente
+    cualquiera de los \(r\) colores a cada uno de los \(k\) ciclos.
+    De esta forma,
+    si \(g\) tiene \(\alpha_i\) ciclos de largo \(i\)
+    para (\(1 \le i \le n)\),
+    tenemos \(\alpha_1 + \alpha_2 + \dotsb + \alpha_n = k\) y
+    \begin{equation*}
+      \lvert F(\widehat{g}) \rvert
+	= r^k
+	= r^{\alpha_1 + \alpha_2 + \dotsb + \alpha_n}
+	= \zeta_g(r, r, \dotsc, r)
+    \end{equation*}
+    y el resultado sigue de sumar esto.
+  \end{proof}
+
+  \begin{example}
+    Una tribu de hippies artesanos fabrica pulseras
+    formadas alternadamente por tres arcos y tres cuentas,
+    y tienen arcos y cuentas de cinco colores.
+    Para efectos de simetría
+    pueden considerarse las pulseras como triángulos equiláteros
+    en los cuales se colorean los vértices y las aristas.
+    Por razones que solo ellos entienden las pulseras
+    deben siempre usar tres colores.
+    Interesa saber cuántas pulseras diferentes pueden crear.
+
+    Esta es una aplicación típica
+    del principio de inclusión y exclusión%
+      \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de}
+    (capítulo~\ref{cha:pie}),
+    el teorema~\ref{theo:coloreos} da el número de coloreos
+    con \emph{a lo más} el número de colores dado,
+    pero nos interesan los coloreos
+    con \emph{exactamente} tres colores.
+
+    \begin{table}[ht]
+      \centering
+      \begin{tabular}{|l|>{\(}c<{\)}|>{\(}l<{\)}|}
+	\hline
+	\multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Operación}} &
+	  \multicolumn{1}{c|}{\textbf{Nº}} &
+	  \multicolumn{1}{c|}{\textbf{Término}}				\\
+	\hline
+	\rule[-0.7ex]{0pt}{3ex}%
+	Identidad				      & 1 & x_1^6	\\
+	Rotaciones (en \(2 \pi / 3\) y \(4 \pi / 3\)) & 2 & x_3^2	\\
+	Reflexiones en cada eje			      & 3 & x_1^2 x_2^2 \\
+	\hline
+      \end{tabular}
+      \caption{Elementos del grupo para pulseras}
+      \label{tab:tabla-hippies}
+    \end{table}
+    El cuadro~\ref{tab:tabla-hippies}
+    da los elementos del grupo relevante.
+    Este grupo es de orden \(6\),
+    así que su índice de ciclos es:
+    \begin{equation*}
+      \zeta_G(x_1, x_2, x_3, x_4, x_5, x_6)
+	= \frac{1}{6} \,
+	    \left(
+	      x_1^6
+		+ 3 x_1^2 x_2^2
+		+ 2 x_3^2
+	    \right)
+    \end{equation*}
+
+    Luego aplicamos nuestra receta
+    del principio de inclusión y exclusión.
+    \begin{enumerate}
+    \item
+      El universo \(\Omega\)
+      es el conjunto de coloreos con \(5\) colores.
+      Un coloreo tiene la propiedad \(i\)
+      si el color \(i\) no está presente,
+      e interesa el número
+      de los que tienen exactamente \(2\) propiedades
+      (están presentes los otros \(3\) colores).
+    \item
+      Acá \(N(\supseteq S)\) es el número de coloreos
+      que no consideran los colores en \(S\),
+      vale decir son coloreos
+      tomando a lo más \(5 - \lvert S \rvert\) colores.
+      Por el teorema~\ref{theo:coloreos}:
+      \begin{equation*}
+	N(\supseteq S)
+	  = \zeta_G(5 - \lvert S \rvert,\,
+		    5 - \lvert S \rvert,\,
+		    5 - \lvert S \rvert,\,
+		    5 - \lvert S \rvert,\,
+		    5 - \lvert S \rvert,\,
+		    5 - \lvert S \rvert)
+      \end{equation*}
+    \item
+      Como los \(r\) colores a excluir se eligen de entre los \(5\),
+      y en el número de posibilidades
+      solo influye el número de colores restantes
+      con los que se colorea:
+      \begin{equation*}
+	N_r
+	  = \binom{5}{r} \,
+	     \zeta_G(5 - r,\,
+		     5 - r,\,
+		     5 - r,\,
+		     5 - r,\,
+		     5 - r,\,
+		     5 - r)
+      \end{equation*}
+      En este caso tenemos:
+      \begin{align*}
+	N_0
+	  &= \binom{5}{0}
+	       \, \zeta_G(5, 5, 5, 5, 5, 5) =		2\,925 \\
+	N_1
+	  &= \binom{5}{1}
+	       \, \zeta_G(4, 4, 4, 4, 4, 4) =		4\,080 \\
+	N_2
+	  &= \binom{5}{2}
+	       \, \zeta_G(3, 3, 3, 3, 3, 3) =		1\,650 \\
+	N_3
+	  &= \binom{5}{3}
+	       \, \zeta_G(2, 2, 2, 2, 2, 2) = \phantom{0}\,200 \\
+	N_4
+	  &= \binom{5}{2}
+	       \, \zeta_G(1, 1, 1, 1, 1, 1) = \phantom{000}\,5 \\
+	N_5
+	  &= \binom{5}{5}
+	       \, \zeta_G(0, 0, 0, 0, 0, 0) = \phantom{000}\,0
+      \end{align*}
+      La función generatriz es
+      \begin{equation*}
+	N(z)
+	  = 5 z^4 + 200 z^3 + 1\,650 z^2 + 4\,080 z + 2\,925
+      \end{equation*}
+    \item
+      Nos interesa \(e_2\),
+      que se obtiene de la función generatriz de los \(e_t\),
+      que es \(E(z) = N(z - 1)\):
+      \begin{equation*}
+	E(z) = 5 z^4 + 180 z^3 + 1\,080 z^2 + 1\,360 z + 300
+      \end{equation*}
+      Se pueden formar \(1\,080\) brazaletes de tres colores.
+    \end{enumerate}
+  \end{example}
+
+  Pero podemos hacer algo más.
+  Si hay \(r\) colores,
+  podemos definir variables \(z_i\) para \(1 \le i \le r\)
+  representando los distintos colores.
+  Entonces la función generatriz
+  de los números de nodos de cada color
+  que se pueden asignar a un ciclo de largo \(k\) es simplemente:
+  \begin{equation*}
+    z_1^k + z_2^k + \dotsb + z_r^k
+  \end{equation*}
+  ya que serían \(k\) nodos,
+  todos del mismo color.
+  Si hay \(\alpha_k\) ciclos de largo \(k\),
+  entonces corresponde el factor:
+  \begin{equation*}
+    (z_1^k + z_2^k + \dotsb + z_r^k)^{\alpha_k}
+  \end{equation*}
+  La anterior discusión demuestra el siguiente resultado.
+  \begin{theorem}[Enumeración de Pólya]
+    \label{theo:Pólya}
+    Sea \(G\) un grupo de permutaciones de \(\mathcal{X}\),
+    y \(\zeta_G(x_1, \dotsc, x_n)\) su índice de ciclos.
+    La función generatriz
+    del número de coloreos inequivalentes de \(\mathcal{X}\)
+    en que hay \(n_i\) nodos de color \(i\) para \(1 \le i \le r\),
+    llamémosle \(u_{n_1, n_2, \dotsc, n_r}\),
+    es:
+    \begin{align*}
+      U(z_1, z_2, \dotsc, z_r)
+	&= \sum_{n_1, n_2, \dotsc, n_r}
+	     u_{n_1, n_2, \dotsc, n_r} z_1^{n_1} z_2^{n_2}
+		\dotsm z_r^{n_r} \\
+	&= \zeta_G(z_1 + z_2 + \dotsb + z_r,
+		   z_1^2 + z_2^2 + \dotsb + z_r^2,
+		   \dotsc,
+		   z_1^n + z_2^n + \dotsb + z_r^n)
+    \end{align*}
+  \end{theorem}
+
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|>{\(}c<{\)}|>{\(}l<{\)}|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Operación}} &
+	\multicolumn{1}{c|}{\textbf{Nº}} &
+	\multicolumn{1}{c|}{\textbf{Término}} \\
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+      Identidad					  & 1 & x_1^9	    \\
+      Giro en \(\pi / 2\), \(3 \pi / 2\)	  & 2 & x_1 x_4^2   \\
+      Giro en \(\pi\)				  & 1 & x_1 x_2^4   \\
+      Reflexión horizontal, vertical		  & 2 & x_1^3 x_2^3 \\
+      Reflexión diagonal			  & 2 & x_1^3 x_2^3 \\
+      \hline
+    \end{tabular}
+    \caption{Las operaciones sobre tarjetas y sus tipos}
+    \label{tab:tarjetas-tipos}
+  \end{table}
+  Volviendo a nuestro ejemplo de las tarjetas de identidad,
+  el grupo subyacente es \(\mathtt{D}_8\),%
+    \index{grupo!dihedral}
+  las operaciones y sus tipos
+  (operando sobre los nueve cuadraditos)
+  se resumen en el cuadro~\ref{tab:tarjetas-tipos}.
+  El índice de ciclos del grupo que interesa es:
+  \begin{equation*}
+    \zeta_t (x_1, x_2, x_3, x_4, x_5, x_6, x_7, x_8, x_9)
+      = \frac{1}{8} \,
+	  \left(
+	    x_1^9 + 2 x_1 x_4^2 + x_1 x_2^4 + 4 x_1^3 x_2^3
+	  \right)
+  \end{equation*}
+  El número total de tarjetas distinguibles con dos colores
+  (agujero o no)
+  en cada cuadradito es:
+  \begin{equation*}
+    \zeta_t (2, 2, 2, 2, 2, 2, 2, 2, 2)
+      = 102
+  \end{equation*}
+  Para obtener el número de tarjetas con dos agujeros
+  calculamos:
+  \begin{equation*}
+    \left[ z^2 \right]
+       \zeta_t (1 + z, 1 + z^2, 1 + z^3, 1 + z^4, 1 + z^5, 1 + z^6,
+		1 + z^7, 1 + z^8, 1 + z^9)
+      = 8
+  \end{equation*}
+  Esto ya lo habíamos calculado antes,
+  aunque de forma más trabajosa.
+  Queda de ejercicio calcular del número de collares diferentes
+  que se pueden crear
+  de \(16\)~cuentas con \(3\)~negras de la misma forma.
+
+% Fixme: Completar \Cyc() de método simbólico:
+% A = \Cyc(B) ==>
+%   A(z) = \sum_{k \ge 1} \frac{\phi(k)}{k} \cdot \ln \frac{1}{1 - B(z^k)}
+
+  La teoría de enumeración de Pólya%
+    \index{Polya, teoria de enumeracion de@Pólya, teoría de enumeración de}
+  fue desarrollada en parte para aplicación a la química.
+  Algunos ejemplos de fórmulas químicas
+  se dan en la figura~\ref{fig:aromaticos}.
+  \begin{figure}[htbp]
+    \centering
+    \subfloat[Benceno]{
+      \pgfimage[height=0.25\textwidth]{images/benceno}
+      \label{subfig:benceno}
+    }%
+    \hspace*{3em}%
+    \subfloat[Xyleno]{
+      \pgfimage[height=0.25\textwidth]{images/o-xyleno}
+      \label{subfig:xyleno}
+    }%
+    \hspace*{3em}%
+    \subfloat[Clorotolueno]{
+      \pgfimage[height=0.25\textwidth]{images/clorotolueno}
+      \label{subfig:clorotolueno}
+    }
+    \caption{Algunos compuestos aromáticos}
+    \label{fig:aromaticos}
+  \end{figure}
+  Este tipo de compuestos,
+  derivados del benceno (figura~\ref{subfig:benceno})
+  son hexágonos que pueden girar en el espacio.
+  Hay muchas posibilidades de grupos de átomos
+  que pueden reemplazar los hidrógenos (\(\text{H}\)),
+  como es radicales metilo (\(\text{CH}_3\))
+  o átomos de cloro (\(\text{Cl}\)).
+  Una pregunta obvia entonces
+  es cuántos compuestos distintos pueden crearse
+  con un conjunto de radicales,
+  o cuántos son posibles con un número particular
+  de cada uno de un conjunto de radicales dados.
+  Por ejemplo,
+  hay tres isómeros del xyleno
+  (un anillo de benceno en el cual dos de los hidrógenos
+   se substituyen por metilos),
+  como muestra la figura~\ref{fig:isomeros-xyleno}.
+  \begin{figure}[htbp]
+    \centering
+    \subfloat[Orto-xyleno]{
+      \pgfimage[height=0.25\textwidth]{images/o-xyleno}
+      \label{subfig:o-xyleno}
+    }%
+    \hspace*{3em}%
+    \subfloat[Para-xyleno]{
+      \pgfimage[height=0.25\textwidth]{images/p-xyleno}
+      \label{subfig:p-xyleno}
+    }%
+    \hspace*{3em}%
+    \subfloat[Meta-xyleno]{
+      \pgfimage[height=0.25\textwidth]{images/m-xyleno}
+      \label{subfig:m-xyleno}
+    }
+    \caption{Los tres isómeros del xyleno}
+    \label{fig:isomeros-xyleno}
+  \end{figure}
+
+  El grupo de simetría relevante es \(\mathtt{D}_{12}\),
+  cuyo índice de ciclos podemos calcular como antes:
+  \begin{align*}
+    \zeta_{\mathtt{C}_6} (x_1, x_2, x_3, x_4, x_5, x_6)
+      &= \frac{1}{6} \, \sum_{d \mid 6} \phi(d) x_d^{6 / d} \\
+      &= \frac{1}{6} \, \left(
+			  x_1^6 + x_2^3 + 2 x_3^2 + 2 x_6
+			\right) \\
+    \zeta_{\mathtt{D}_{12}} (x_1, x_2, x_3, x_4, x_5, x_6)
+      &= \frac{1}{2} \, \zeta_{\mathtt{C}_6}
+			  (x_1, x_2, x_3, x_4, x_5, x_6)
+	   + \frac{1}{4} \, \left(
+			      x_1^2 x_2^2 + x_2^3
+			    \right) \\
+      &= \frac{1}{12} \, \left(
+			   x_1^6 + 3 x_1^2 x_2^2
+			     + 4 x_2^3 + 2 x_3^2 + 2 x_6
+			 \right)
+  \end{align*}
+  Hecho el trabajo duro,
+  determinar cuántos compuestos pueden crearse
+  con radicales hidrógeno (\(\text{H}\))
+  y metilo (\(\text{CH}_3\))
+  es fácil:
+  Es colorear los vértices con dos colores,
+  lo que da:
+  \begin{align*}
+    \zeta_{\mathtt{D}_{12}}(2, 2, 2, 2, 2, 2)
+      & = \frac{1}{12} \,
+	     (2^6 + 3 \cdot 2^2 \cdot 2^2
+		  + 4 \cdot 2^3 + 2 \cdot 2) \\
+      & = 13
+  \end{align*}
+
+  Para comprobar cuántos isómeros del xyleno hay,
+  consideramos coloreo de los vértices del hexágono con dos colores
+  (hidrógenos y metilos),
+  y de los últimos hay exactamente dos.
+  Si consideramos que \(z\) marca metilo,
+  la función generatriz que corresponde a un ciclo de largo \(l\)
+  es simplemente \(1 + z^l\)
+  (hay 1 forma de tener 0 metilos en él,
+   lo que aporta \(1 \cdot z^0\),
+   y 1 forma de tener l metilo,
+   lo que aporta \(1 \cdot z^l\)),
+  y al substituir \(x_l = 1 + z^l\) obtenemos:
+  \begin{equation*}
+    \zeta_{\mathtt{D}_{12}}(1 + z, 1 + z^2, 1 + z^3, 1 + z^4,
+			    1 + z^5, 1 + z^6)
+      = z^6 + z^5 + 3 z^4 + 3 z^3 + 3 z^2 + z + 1
+  \end{equation*}
+  Esto confirma que hay tres isómeros en su coeficiente de \(z^2\).
+
+  Si interesa determinar cuántos compuestos distintos tienen
+  2 radicales cloro (\(\text{Cl}\)),
+  2 metilos (\(\text{CH}_3\))
+  y 2 hidrógenos  (\(\text{H}\)),
+  usamos las variables \(u\), \(v\) y \(w\)
+  para estas tres opciones,
+  y el valor buscado es simplemente:
+  \begin{equation*}
+    \left[ u^2 v^2 w^2 \right]
+      \zeta_{\mathtt{D}_6} (u + v + w,
+			    u^2 + v^2 + w^2,
+			    \dotsc,
+			    u^6 + v^6 + w^6)
+	 = 11
+  \end{equation*}
+
+  Por otro lado,
+  un átomo de carbono puede unirse con cuatro otros átomos,
+  dispuestos en los vértices de un tetraedro.%
+    \index{poliedro!regular}%
+    \index{tetraedro}
+  \begin{figure}[htbp]
+    \centering
+    \subfloat[Eje a través de un vértice]{
+      \pgfimage{images/tetraedro-vertice}
+      \label{subfig:tetraedro-vertice}
+    }
+    \vspace*{1em}
+    \subfloat[Eje en el punto medio de aristas]{
+      \pgfimage{images/tetraedro-arista}
+      \label{subfig:tetraedro-arista}
+    }
+    \caption{Operaciones de simetría (rotaciones) de un tetraedro}
+    \label{fig:rotaciones-tetraedro-2}
+  \end{figure}
+  Las operaciones de simetría de un tetraedro en el espacio
+  (solo rotaciones, no reflexiones)
+  son giros alrededor de un eje que pasa por un vértice
+  y el centroide de la cara opuesta
+  (ver la figura~\ref{subfig:tetraedro-vertice})
+  y giros alrededor de un eje
+  que pasa por el punto medio de una arista
+  y el punto medio de la arista opuesta
+  (ver la figura~\ref{subfig:tetraedro-arista}).
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|*{4}{>{\(}l<{\)}|}}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Operación}} &
+	\multicolumn{1}{c|}{\textbf{Ciclos}}  &
+	\multicolumn{1}{c|}{\textbf{Tipo}}    &
+	\multicolumn{1}{c|}{\textbf{Nº}}      &
+	\multicolumn{1}{c|}{\textbf{Término}} \\
+      \hline
+	 \rule[-0.7ex]{0pt}{3ex}%
+      Identidad			 &
+	(1)(2)(3)(4) & [1^4]	  & 1 & x_1^4	  \\
+      Giro en vértice 4 en 1/3	 &
+	(1\;2\;3)(4) & [1 \, 3^1] & 4 & x_1^3 x_3 \\
+      Giro en vértice 4 en 2/3	 &
+	(1\;3\;2)(4) & [1 \, 3^1] & 4 & x_1^3 x_3 \\
+      Giro en arista 1\;2 en 1/2 &
+	(1\;2)(3\;4) & [2^2]	  & 3 & x_2^2	  \\
+      \hline
+    \end{tabular}
+    \caption{Rotaciones de un tetraedro}
+    \label{tab:rotaciones-tetraedro}
+  \end{table}
+  Las simetrías son de los tipos dados
+  en el cuadro~\ref{tab:rotaciones-tetraedro}
+  (resulta que esto no es más
+   que el grupo alternante \(\mathtt{A}_4\)),%
+    \index{grupo!alternante}
+  y en consecuencia el índice de ciclos del grupo es
+  \begin{equation*}
+    \zeta_{\mathtt{A}_4}(x_1, x_2, x_3, x_4)
+      = \frac{1}{12}(x_1^4 + 8 x_1 x_3 + 3 x_2^2)
+  \end{equation*}
+  Así,
+  para dos radicales diferentes
+  hay \(\zeta_{\mathtt{A}_4}(2, 2, 2, 2) = 5\) compuestos posibles,
+  y para cuatro radicales
+  hay \(\zeta_{\mathtt{A}_4}(4, 4, 4, 4) = 36\).
+  Si hay dos tipos de radicales,
+  la función generatriz es:
+  \begin{equation*}
+    \zeta_{\mathtt{A}_4}(u + v,
+		u^2 + v^2,
+		u^3 + v^3,
+		u^4 + v^4)
+      = u^4 + u^3 v + u^2 v^2 + u v^3 + v^4
+  \end{equation*}
+  Vale decir,
+  hay un solo compuesto
+  de cada una de las cinco composiciones posibles.
+
+  Considere árboles binarios completos de altura 2,
+  como en la figura~\ref{fig:arbol-binario-simetria},
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/arbol-simetria}
+    \caption{Un árbol binario completo}
+    \label{fig:arbol-binario-simetria}
+  \end{figure}
+  que se consideran iguales al intercambiar izquierda y derecha
+  (como 3 con 4;
+  pero también 2 con 5,
+  que lleva consigo intercambiar 3 con 6 y 4 con 7).
+  Interesa determinar cuántos árboles hay con 3 nodos azules,
+  si los nodos se pintan de azul,
+  rojo y amarillo.
+
+  Antes de entrar en el tema,
+  es útil obtener información sobre el grupo.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|>{\(}l<{\)}|>{\(}l<{\)}|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Operación}} &
+	\multicolumn{1}{c|}{\textbf{Término}}	\\
+      \hline
+	 \rule[-0.7ex]{0pt}{3ex}%
+      \text{Identidad}	   & x_1^7	  \\
+      (3\;4)		   & x_1^5 x_2	  \\
+      (6\;7)		   & x_1^5 x_2	  \\
+      (3\;4) (6\;7)	   & x_1^3 x_2^2  \\
+      (2\;5) (3\;6) (4\;7) & x_1 x_2^3	  \\
+      (2\;5) (3\;7) (4\;6) & x_1 x_2^3	  \\
+      (2\;5) (3\;6\;4\;7)  & x_1 x_2 x_4  \\
+      (2\;5) (3\;7\;4\;6)  & x_1 x_2 x_4  \\
+      \hline
+    \end{tabular}
+    \caption{El grupo de operaciones del árbol}
+    \label{tab:grupo-arbol}
+  \end{table}
+  Para determinar el orden del grupo,
+  tomamos algún elemento y analizamos su órbita y estabilizador.
+  Tomando 3,
+  su órbita es \(G3 = \{3, 4, 6, 7\}\),
+  mientras su estabilizador es \(G_3 = \{\iota, (6\;7)\}\),
+  con lo que
+  \(\lvert G \rvert
+      = \lvert G3 \rvert \cdot \lvert G_3 \rvert
+      = 4 \cdot 2
+      = 8\).
+  Los elementos del grupo los da el cuadro~\ref{tab:grupo-arbol},
+  el índice de ciclos del grupo resulta ser:
+  \begin{equation*}
+    \zeta_G(x_1, x_2, x_3, x_4, x_5, x_6, x_7)
+      = \frac{1}{8} \,
+	  \left(
+	    x_1^7
+	      + 2 x_1^5 x_2
+	      + x_1^3 x_2^2
+	      + 2 x_1 x_2^3
+	      + x_1 x_2 x_4
+	  \right)
+  \end{equation*}
+  La manera más simple de obtener el resultado buscado
+  es reconocer que la función generatriz%
+    \index{generatriz}
+  para el número de maneras de formar órbitas de \(l\) nodos
+  donde \(u\) marca el número de nodos azules
+  es simplemente \(2 + u^l\)
+  (dos formas de ningún azul,
+   vale decir solo rojos o solo amarillos;
+   y una forma de \(l\) azules),
+  y para aplicar el teorema de Pólya interesa:
+  \begin{align*}
+    \left[ u^3 \right] \zeta_G(2 + u,
+	       &  2 + u^2,
+		  2 + u^3,
+		  2 + u^4,
+		  2 + u^5,
+		  2 + u^6,
+		  2 + u^7) \\
+      &= \left[ u^3 \right] \left(
+		 u^7
+		   +   6 u^6
+		   +  25 u^5
+		   +  68 u^4
+		   + 120 u^3
+		   + 146 u^2
+		   + 105 u
+		   +  42
+		 \right) \\
+       &= 120
+  \end{align*}
+  Obtener esto por prueba y error sería impensable.
+  Nuevamente agradecemos el apoyo algebraico
+  de \texttt{maxima}~%
+    \cite{maxima14b:_computer_algebra}.%
+    \index{maxima@\texttt{maxima}}
+
+  Un dado es un cubo,%
+    \index{poliedro!regular}%
+    \index{cubo}
+  cuyas caras están numeradas de 1 a 6.
+  Interesa saber de cuántas maneras distintas
+  se pueden distribuir los seis números sobre las caras.
+  En este caso,
+  interesan las simetrías rotacionales del cubo en el espacio
+  (las reflexiones corresponden
+   a operaciones imposibles con un sólido).
+  Primeramente calculamos el orden del grupo que nos interesa,
+  que resulta ser el grupo de rotaciones
+  en el espacio de un octaedro
+  y se denomina \(\mathtt{O}\).
+  Sabemos que
+    \(\lvert \mathtt{O} \rvert
+	= \lvert \mathtt{O}_x \rvert
+	    \cdot \lvert \mathtt{O} x \rvert\).
+  Si fijamos una de las caras del cubo,
+  hay 4 operaciones que la mantienen fija
+  (rotaciones alrededor del centroide
+   de esa cara en múltiplos de \(\pi / 2\)),
+  y esta cara puede ocupar cualquiera de las 6 posiciones.
+  Luego \(\lvert \mathtt{O} \rvert = 4 \cdot 6 = 24\).
+  Las operaciones y sus tipos las resume el cuadro~\ref{tab:dado}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|c|>{\(}l<{\)}|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Operación}} &
+	\multicolumn{1}{c|}{\textbf{Nº}} &
+	\multicolumn{1}{c|}{\textbf{Término}} \\
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+      Identidad						      & 1 &
+	 x_1^6 \\
+      Giro alrededor de centro de una cara en \(\pi / 2\)     & 3 &
+	 x_1^2 x_4 \\
+      Giro alrededor de centro de una cara en \(\pi\)	      & 3 &
+	 x_1^2 x_2^2 \\
+      Giro alrededor de centro de una cara en \(3 \pi / 2\)   & 3 &
+	 x_1^2 x_4 \\
+      Giro alrededor del punto medio de una arista en \(\pi\) & 6 &
+	 x_2^3 \\
+      Giro alrededor de un vértice en \(2 \pi / 3\)	      & 4 &
+	 x_3^2 \\
+      Giro alrededor de un vértice en \(4 \pi / 3\)	      & 4 &
+	 x_3^2 \\
+      \hline
+    \end{tabular}
+    \caption{Operaciones de simetría rotacional de caras de un cubo}
+    \label{tab:dado}
+  \end{table}
+  El índice de ciclos del grupo \(\mathtt{O}\) es
+  \begin{equation*}
+    \zeta_{\mathtt{O}}(x_1, x_2, x_3, x_4, x_5, x_6)
+      = \frac{1}{24} \,
+	  \left(
+	    x_1^6 + 6 x_1^2 x_4 + 3 x_1^2 x_2^2 + 6 x_2^3 + 8 x_3^2
+	  \right)
+  \end{equation*}
+  Como interesa saber de cuántas maneras
+  se pueden distribuir los 6~números sobre las 6~caras:
+  \begin{equation*}
+    \left[ z_1 z_2 z_3 z_4 z_5 z_6 \right]
+      \zeta_{\mathtt{O}}(z_1 + \dotsb + z_6,
+	      z_1^2 + \dotsb + z_6^2,
+	      z_1^3 + \dotsb + z_6^3,
+	      z_1^4 + \dotsb + z_6^4,
+	      z_1^5 + \dotsb + z_6^5,
+	      z_1^6 + \dotsb + z_6^6)
+  \end{equation*}
+  Siquiera encontrar el término que interesa en esta expresión
+  ya es toda una tarea.
+  Pero si observamos que la única forma
+  de obtener términos en los que los \(z_i\)
+  entran en la primera potencia vienen de aquellos términos
+  en que solo participa \(x_1\),
+  nuestro problema se reduce a calcular:
+  \begin{align*}
+    \left[ z_1 z_2 z_3 z_4 z_5 z_6 \right]
+	\frac{1}{24} \, (z_1 + z_2 + z_3 + z_4 + z_5 + z_6)^6
+      &= \frac{1}{24} \, \binom{6}{1\;1\;1\;1\;1\;1} \\
+      &= 30
+  \end{align*}
+
+  Si nos interesa contar el número de maneras
+  de numerar las caras del dado
+  respetando la restricción que caras opuestas sumen 7,
+  la situación relevante
+  es considerar las tres caras numeradas 1, 2 y 3.
+  Estas caras serán adyacentes,
+  y por tanto la situación
+  es la que indica la figura~\ref{fig:cubo-vertice},
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/cubo-vertice}
+    \caption{Un cubo visto desde un vértice}
+    \label{fig:cubo-vertice}
+  \end{figure}
+  que muestra las tres caras vistas desde un vértice.
+  Está claro que la simetría es \(\mathtt{C}_3\),
+  un triángulo equilátero rotando en el plano
+  (consideramos los vértices del triángulo
+   como las caras a ser numeradas).
+  Para este grupo el índice de ciclos es:
+  \begin{equation*}
+    \zeta_{\mathtt{C}_3}(x_1, x_2, x_3)
+      = \frac{1}{3} \,
+	  \left(
+	    x_1^3 + 2 x_3
+	  \right)
+  \end{equation*}
+  Nos interesa colorear con tres colores,
+  y que cada uno aparezca exactamente una vez,
+  por Pólya:
+  \begin{equation*}
+    \left[ z_1 z_2 z_3 \right] \zeta_{\mathtt{C}_3}(z_1 + z_2 + z_3,
+			      z_1^2 + z_2^2 + z_3^2,
+			      z_1^3 + z_2^3 + z_3^3)
+  \end{equation*}
+  El único término en que entran los \(z_i\) en la primera potencia
+  es el término de la identidad,
+  y en él nos interesa cada uno en la primera potencia:
+  \begin{align*}
+    \left[ z_1 z_2 z_3 \right] \zeta_{\mathtt{C}_3}(z_1 + z_2 + z_3,
+			      z_1^2 + z_2^2 + z_3^2,
+			      z_1^3 + z_2^3 + z_3^3)
+      &= \frac{1}{3} \, \left[
+			  z_1 z_2 z_3
+			\right] (z_1 + z_2 + z_3)^3 \\
+      &= \frac{1}{3} \, \binom{3}{1\;1\;1} \\
+      &= 2
+  \end{align*}
+  Hay dos maneras diferentes de numerar las caras de un cubo
+  con los números uno a seis tal que caras opuestas sumen siete.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

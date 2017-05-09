@@ -1,0 +1,39 @@
+% biblio.tex
+%
+% Copyright (c) 2013-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\documentclass[czech, english, german, french, latin, spanish, romanian]
+	      {article}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage{icomma}
+\usepackage{fourier}
+\usepackage{amsmath, amsthm, amssymb, amsbsy, mathrsfs}
+\usepackage{complexity}
+\usepackage{relsize}
+\usepackage{babel}
+\usepackage{babelbib, cite}
+
+\title{Bibliografía completa\\
+       Fundamentos de Informática\\
+       {\normalsize Versión \classversion}}
+\author{\href{mailto:vonbrand@inf.utfsm.cl}{Horst H. von Brand}}
+
+\begin{document}
+\selectlanguage{spanish}
+\input{class-version}
+\maketitle
+\thispagestyle{empty}
+\bibliographystyle{babplain-fl}
+
+\nocite{*}
+
+\bibliography{references,rfc,iso,url,necronomicon}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

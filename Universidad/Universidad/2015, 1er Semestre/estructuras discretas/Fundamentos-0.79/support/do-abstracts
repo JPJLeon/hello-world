@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+
+# do-abstracts
+#
+# Copyright (c) 2014 Horst H. von Brand
+# Bajo licencia MIT. Vea LICENSE-MIT para detalles
+
+
+open(my $abstr, ">", "abstracts.tex");
+open(my $head, "<", "support/abstracts-head.tex");
+
+print $abstr $_ while(<$head>);
+
+close($head);
+open($master, "<", "clases.tex");
+while(<$master>) {
+  if(/\\include\{([a-zA-Z0-9-]+)\}/) {
+    unless($1 =~ /prefacio/) {
+      open($cha, "<", "$1.tex");
+      while(<$cha>) {
+	if(/\\section/ || /\\input/) {
+	  last;
+	}
+	s/\\chapter/\\section/;
+	print $abstr $_;
+      }
+      close($cha);
+    }
+  }
+}
+close($master);
+
+open(my $tail, "<", "support/abstracts-tail.tex");
+while(<$tail>) {
+  print $abstr $_;
+}
+close($tail);
+close($abstr);

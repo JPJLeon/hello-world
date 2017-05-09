@@ -1,0 +1,347 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{cancel}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#5\quad Error de Interpolación}}
+
+
+\author{Aldo Berrios Valenzuela}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#5\\Error de Interpolación}
+\date{Martes 16 de Agosto de 2016}
+
+\usepackage{tikz,ifthen}
+\usepackage{pgfplots}
+\usepackage{tikz,ifthen}
+\usetikzlibrary{automata,positioning, babel}
+\usetikzlibrary{calc}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\begin{document}
+\maketitle
+\section{Error de Interpolación}
+La clase pasada vimos como obtener la interpolación dado los pares de puntos $\nparentesis{x_k, f\nparentesis{x_j}}$ con $k\in\llaves{0, \ldots, n}$ que nos daban. Nuestro tema de interés ahora es obtener el error de esas interpolaciones (Figura \ref{05::ErrorEjemplo}).
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=3,
+	ymin=-0.6,
+	ymax=2.3,
+	xtick={0},
+	xticklabels = {},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	
+	\addplot [black!30!blue!90, samples = 100, domain = 0.15:2.4] {ln(2*x+0.8)+0.2} node [xshift = 10] (f) {$f\nparentesis{x}$};
+	\addplot [black!10!red!90, smooth, tension = 0.8] coordinates {(0.2, 0.2) (0.55, 1.3) (0.9, 0.6) (1.2, 1.7) (1.5, 0.8) (1.9, 1.9)} node [yshift = 5pt, xshift = 4pt] (p) {$p\nparentesis{x}$};
+	
+	
+	\draw [fill = black!30] (axis cs:0.257, 0.47) circle (0.7mm);
+	\draw [fill = black!30] (axis cs:0.72, 1) circle (0.7mm);
+	\draw [fill = black!30] (axis cs:1.315, 1.43) circle (0.7mm);
+	\draw [fill = black!30] (axis cs:1.85, 1.7) circle (0.7mm);
+	\draw [fill = black!30] (axis cs:1.85, 1.7) circle (0.7mm);
+	
+	
+	\draw [<->, thick, green!60!black!90] (axis cs:0.888, 1.15) -- (axis cs:0.888, 0.595);
+	\draw [fill = black!30] (axis cs:0.888, 0.595) circle (0.7mm);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{El error está dado por la diferencia entre $p\nparentesis{x}$ y $f\nparentesis{x}$ en cada punto (flecha verde).}
+	\label{05::ErrorEjemplo}
+\end{figure}
+
+
+\begin{teorema}[Rolle]
+	Si $f$ es continua en $\ncorchetes{a, b}$ y tiene derivada continua en $\ncorchetes{a, b}$, si $f\nparentesis{a}=f\nparentesis{b}=0$, hay $x^*\in\nparentesis{a, b}$ tal que $f'\nparentesis{x^*}=0$ (pariente del teorema del valor medio de la derivada).
+\end{teorema}
+
+\begin{teorema}
+	Sea $f\in C^{n+1}\ncorchetes{a, b}$. Sea $Q_n\nparentesis{x}$ el polinomio de grado $n$ que interpola $f$ en los puntos distintos $x_0, \ldots, x_n\in\ncorchetes{a, b}$. Entonces para todo $x\in\ncorchetes{a, b}$ hay $\zeta\in\ncorchetes{a, b}$ tal que
+	\begin{equation}\label{05::Teo2}
+	f\nparentesis{x}-Q_n\nparentesis{x}=\underbrace{\dfrac{1}{\nparentesis{n+1}!}f^{\nparentesis{n+1}}\nparentesis{\zeta}\prod_{0\leq j\leq n}\nparentesis{x-x_j}}_{\text{Error}}
+	\end{equation}
+\end{teorema}
+\begin{proof}
+	Sea
+	\begin{equation}
+	\omega\nparentesis{x}=\prod_{0\leq j\leq n}\nparentesis{x-x_j}
+	\end{equation}
+	Notamos para referencia futura que $\omega\nparentesis{x}$ es mónico\footnote{Para un polinomio de grado $n$, el coeficiente que acompaña a $x^n$ es $1$.}, con lo que $\omega^{\nparentesis{n+1}}\nparentesis{x}=\nparentesis{n+1}!$.
+	
+	Fijemos $x\in\ncorchetes{a, b}$. Si $x=x_j$, entonces $F\nparentesis{x}=0$ sin importar $\lambda$, el lado izquierdo y derecho de \eqref{05::Teo2} se anulan y estamos listos. Sea:
+	\begin{equation}
+	F\nparentesis{y}=f\nparentesis{y}-Q_n\nparentesis{y}-\lambda\omega\nparentesis{y}
+	\end{equation}
+	donde elegimos $\lambda$ tal que $F\nparentesis{x}=0$.
+	
+	La función $F\nparentesis{y}$ está en $C^{n+1}\ncorchetes{a, b}$, y tiene $n+2$ ceros en $\ncorchetes{a, b}$ ($x, x_0, \ldots, x_n$). Por teorema de Rolle, $F'\nparentesis{y}$ tiene $n+1$ ceros en $\ncorchetes{a, b}$, \ldots, $F^{\nparentesis{n+1}}\nparentesis{y}$ tiene un cero en $\ncorchetes{a, b}$, llamémosle $\zeta$. O sea:
+	\begin{align*}
+	F^{\nparentesis{n+1}}\nparentesis{\zeta}&=f^{\nparentesis{n+1}}\nparentesis{\zeta}-\cancelto{\scriptstyle 0}{Q_n^{\nparentesis{n+1}}\nparentesis{\zeta}}-\lambda\quad\cancelto{\scriptstyle\nparentesis{n+1}!}{\omega^{\nparentesis{n+1}}\nparentesis{\zeta}}=0\\
+	\therefore f^{\nparentesis{n+1}}\nparentesis{\zeta}&=\lambda\nparentesis{n+1}!\qquad \rightsquigarrow \lambda =\dfrac{f^{\nparentesis{n+1}}\nparentesis{\zeta}}{\nparentesis{n+1}!}\\
+	\therefore F\nparentesis{y}&=f\nparentesis{y}-Q_n\nparentesis{y}-\dfrac{f^{\nparentesis{n+1}}\nparentesis{\zeta}}{\nparentesis{n+1}!}\omega\nparentesis{x}
+	\end{align*}
+	El error es:
+	\begin{equation*}
+	\dfrac{f^{\nparentesis{n+1}}\nparentesis{\zeta}}{\nparentesis{n+1}!}\omega\nparentesis{x}
+	\end{equation*}
+	Donde $n$ lo elegimos nosotros y corresponde al grado de la interpolación. Es claro que mientras mayor sea el grado de nuestra interpolación, menor será el error (vea en $n$ como denominador).
+\end{proof}
+
+\section{Cuadratura}
+Queremos evaluar:
+\begin{equation}\label{05::Integral}
+\int_{a}^{b}f\nparentesis{x}\mathit{dx}
+\end{equation}
+Supongamos $f$ dado en $x_0, \ldots, x_n$ (aka \textit{puntos de cuadratura}). Para encontrar el valor de \eqref{05::Integral} simplemente interpolamos $f$, e integramos el polinomio interpolante.
+
+\subsection{Caso más simple: Polinomio de grado 0}
+Corresponde a una aproximación con rectángulos (Figura \ref{05::CasoSimple:Cuadratura})
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=3,
+	ymin=-0.6,
+	ymax=2.3,
+	xtick={0.5, 2.0},
+	xticklabels = {$a$, $b$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	
+	\addplot [black!10!red!90, samples = 100, domain = 0.15:2.4] {ln(2*x+0.8)+0.2} node [xshift = 10] (f) {$f\nparentesis{x}$};
+	
+	\draw [blue!60!black!90] (axis cs:0.5, 0) -- (axis cs:0.5, 0.79) -- (axis cs: 0.8, 0.79) -- (axis cs: 0.8, 0);
+	\draw [blue!60!black!90] (axis cs:0.8, 0) -- (axis cs:0.8, 1.07) -- (axis cs: 1.1, 1.07) -- (axis cs: 1.1, 0);
+	\draw [blue!60!black!90] (axis cs:1.1, 0) -- (axis cs: 1.1, 1.3) -- (axis cs: 1.4, 1.3) -- (axis cs: 1.4, 0);
+	\draw [blue!60!black!90] (axis cs:1.4, 0) -- (axis cs: 1.4, 1.48) -- (axis cs: 1.7, 1.48) -- (axis cs: 1.7, 0);
+	\draw [blue!60!black!90] (axis cs:1.7, 0) -- (axis cs: 1.7, 1.63) -- (axis cs: 2.0, 1.63) -- (axis cs: 2.0, 0);
+	
+	\end{axis}
+	\end{tikzpicture}
+	\caption{En tiempos precarios, nos enseñaron que podemos calcular el área bajo una curva usando una aproximación con rectangulitos (integral de Riemann).}
+	\label{05::CasoSimple:Cuadratura}
+\end{figure}
+
+Para ello, usábamos la fórmula:
+\begin{align*}
+\int_{a}^{b}f\nparentesis{x}\mathit{dx}\approx \sum_{0\leq j\leq n}f\nparentesis{x_j}\nparentesis{x_{j+1}-x_j};\qquad\qquad a=x_0, b=x_n
+\end{align*}
+Si son igualmente espaciados, se tiene que $x_{j+1}-x_j=h$ para $0\leq j < n$
+\begin{align*}
+\int_{a}^{b}f\nparentesis{x}\mathit{dx}\approx h\sum_{0\leq j< n}f\nparentesis{x_j}
+\end{align*}
+Consideremos la antiderivada\footnote{Es claro suponer que la antiderivada existe, de lo contrario este cuento no tiene chiste.}:
+\begin{align*}
+F\nparentesis{x}=\int_{a}^{x}f\nparentesis{t}\mathit{dt}
+\end{align*}
+¿podemos obtener un error más pequeño que el caso de la Figura \ref{05::CasoSimple:Cuadratura}?
+
+\subsubsection{Variante del caso simple: punto medio}
+En lugar de considerar una cota como se hizo en el caso de la Figura \ref{05::CasoSimple:Cuadratura}, el punto de evaluación de $f\nparentesis{x}$ será el punto medio de la base del rectángulo (Figura \ref{05::CasoVariado:Cuadratura}).
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=3,
+	ymin=-0.6,
+	ymax=2.3,
+	xtick={0.65, 1.85},
+	xticklabels = {$a+\dfrac{h}{2}$, $x_n+\dfrac{h}{2}$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	
+	\addplot [black!10!red!90, samples = 100, domain = 0.15:2.4] {ln(2*x+0.8)+0.2} node [xshift = 10] (f) {$f\nparentesis{x}$};
+	
+	\draw [blue!60!black!90] (axis cs:0.5, 0) -- (axis cs:0.5, 0.94) -- (axis cs: 0.8, 0.94) -- (axis cs: 0.8, 0);
+	\draw [blue!60!black!90] (axis cs:0.8, 0) -- (axis cs:0.8, 1.2) -- (axis cs: 1.1, 1.2) -- (axis cs: 1.1, 0);
+	\draw [blue!60!black!90] (axis cs:1.1, 0) -- (axis cs: 1.1, 1.39) -- (axis cs: 1.4, 1.39) -- (axis cs: 1.4, 0);
+	\draw [blue!60!black!90] (axis cs:1.4, 0) -- (axis cs: 1.4, 1.56) -- (axis cs: 1.7, 1.56) -- (axis cs: 1.7, 0);
+	\draw [blue!60!black!90] (axis cs:1.7, 0) -- (axis cs: 1.7, 1.7) -- (axis cs: 2.0, 1.7) -- (axis cs: 2.0, 0);
+	
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Tomamos el punto medio en lugar del extremo del rectángulo. Como puede observar, el excedente de \comillas{triangulitos} por sobre $f$ compensan la falta de estos que están bajo $f$.}
+	\label{05::CasoVariado:Cuadratura}
+\end{figure}
+
+Para este caso se tiene que:
+\begin{align*}
+\int_{a}^{b}f\nparentesis{x}\mathit{dx}\approx\nparentesis{b-a}f\nparentesis{\dfrac{a+b}{2}}
+\end{align*}
+Expandimos usando \textit{series de Taylor}:
+\begin{align*}
+F\nparentesis{a+h}&=F\nparentesis{a}+F'\nparentesis{a}h+\dfrac{1}{2}F''\nparentesis{a}h^2+\dfrac{1}{6}F'''\nparentesis{a}h^3+O\nparentesis{h^4}\\
+&=f\nparentesis{a}h+\dfrac{1}{2}f'\nparentesis{a}h^2+\dfrac{1}{6}f''\nparentesis{a}h^3+O\nparentesis{h^4}
+\end{align*}
+Si $b=a+h$, tenemos (expandiendo $f\nparentesis{a+\frac{h}{2}}$) para el error:
+\begin{align*}
+E&=\int_{a}^{a+h}f\nparentesis{x}\mathit{dx}-hf\nparentesis{a+\dfrac{h}{2}}\\
+&=hf\nparentesis{a}+\dfrac{h^2}{2}f'\nparentesis{a}+\dfrac{h^3}{6}f''\nparentesis{a}+O\nparentesis{h^4}-h\nparentesis{f\nparentesis{a}+\dfrac{h}{2}f'\nparentesis{a}+\dfrac{h^2}{8}f''\nparentesis{a}+O\nparentesis{h^3}}\\
+&=hf\nparentesis{a}+\dfrac{h^2}{2}f'\nparentesis{a}+\dfrac{h^3}{6}f''\nparentesis{a}+O\nparentesis{h^4}-\nparentesis{hf\nparentesis{a}+\dfrac{h^2}{2}f\nparentesis{a}+\dfrac{h^3}{8}f''\nparentesis{a}+O\nparentesis{h^4}}\\
+&=\dfrac{1}{24}f''\nparentesis{a}h^3+O\nparentesis{h^4}\numberthis\label{05::ErrrObtenido}
+\end{align*}
+Sorprendentemente, el error es de carácter cúbico. Si nos dan la segunda derivada de $f$ en $a$, estamos listos.
+
+\subsection{Teorema del Valor Intermedio Ad Hoc}
+Considerando el error obtenido en la ecuación \eqref{05::ErrrObtenido}:
+\begin{equation}
+E=\dfrac{1}{24}f''\nparentesis{\zeta}h^3\qquad \text{con }a\leq \zeta \leq a+h
+\end{equation}
+Suponiendo intervalitos $a=x_0, x_1, \ldots, x_n =b$ con $x_{j+1}-x_j=h$, tenemos para cada uno:
+\begin{align*}
+E_j=\dfrac{1}{24}f''\nparentesis{\zeta_j}h^3, \qquad x_j\leq \zeta _j \leq x_{j+1}
+\end{align*}
+Si $m\leq f''\nparentesis{x}\leq M$ en $\ncorchetes{a, b}$
+\begin{align*}
+E=\sum_{j}E_j=\dfrac{h^3}{24}\sum_j f''\nparentesis{\zeta _j}=\dfrac{nh^3}{24}f''\nparentesis{\zeta}
+\end{align*}
+porque
+\begin{align*}
+nm&\leq \sum_j f''\nparentesis{\zeta_j} \leq nM\\
+m&\leq \dfrac{1}{n}\sum_j f''\nparentesis{\zeta_j}\leq M
+\end{align*}
+Lo que nos dice que hay $\zeta \in \ncorchetes{a, b}$ tal que:
+\begin{align*}
+\dfrac{1}{n}\sum_j f''\nparentesis{\zeta_j}=f''\nparentesis{\zeta}
+\end{align*}
+
+
+
+
+
+
+
+
+\end{document}
+

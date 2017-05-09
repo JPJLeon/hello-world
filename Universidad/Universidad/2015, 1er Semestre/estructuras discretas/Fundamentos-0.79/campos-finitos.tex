@@ -1,0 +1,998 @@
+% campos-finitos.tex
+%
+% Copyright (c) 2010, 2012-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Campos finitos}
+\label{cha:campos-finitos}
+\index{campo (algebra)@campo (álgebra)!finito|textbfhy}
+
+  Gran parte de las matemáticas
+  giran alrededor del álgebra abstracta,%
+    \index{algebra abstracta@álgebra abstracta}
+  que hemos conocido en los grupos%
+    \index{grupo}
+  y anillos.%
+    \index{anillo}
+  Pero sin duda las estructuras algebraicas más importantes
+  son los campos,%
+    \index{campo (algebra)@campo (álgebra)}
+  que definimos en el capítulo~\ref{cha:teoria-numeros}
+  como anillos conmutativos en los que todos los elementos
+  (salvo \(0\))
+  tienen inverso multiplicativo.
+  Implícitamente usamos el campo de los reales \(\mathbb{R}\),%
+    \index{R (números reales)@\(\mathbb{R}\) (números reales)}
+  ocasionalmente nos aventuramos a los números complejos \(\mathbb{C}\).%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)}
+  Pero en realidad nuestros cálculos
+  casi siempre son con aproximaciones racionales en \(\mathbb{Q}\).%
+    \index{Q (números racionales)@\(\mathbb{Q}\) (números racionales)}
+  De particular interés son los campos finitos,
+  con una bonita teoría y abundantes aplicaciones prácticas.
+
+\section{Propiedades básicas}
+\label{sec:propiedades-campo}
+
+  El orden aditivo de \(1\) en el campo \(F\)
+  determina en gran medida la estructura del campo,
+  y se le llama la \emph{característica del campo}.%
+    \index{campo (algebra)@campo (álgebra)!caracteristica@característica}
+  Se dice
+  \(\chr(F) = n\) si el orden es \(n\)
+  y \(\chr(F) = 0\) si es infinito.
+
+  Si \(F\) es un campo,
+  y \(K\) es un subcampo de \(F\)%
+    \index{campo (algebra)@campo (álgebra)!subcampo}
+  (cosa que se anota \(K \le F\))
+  se dice que \(F\) es un \emph{campo extensión} de \(K\);%
+    \index{campo (algebra)@campo (álgebra)!extension@extensión}
+  si \(K \ne F\)
+  decimos que \(K\) es un \emph{subcampo propio} de \(F\)%
+    \index{campo (algebra)@campo (álgebra)!subcampo!propio}
+  (se anota \(K < F\) en este caso).
+  Se le llama \emph{subcampo primo} de \(F\)%
+    \index{campo (algebra)@campo (álgebra)!subcampo!primo}
+  a la intersección entre todos los subcampos de \(F\).
+  El subcampo primo no tiene subcampos a su vez.
+  Anotamos \(K \cong F\)
+  si los campos \(K\) y \(F\) son isomorfos%
+    \index{campo (algebra)@campo (álgebra)!isomorfo}
+  \begin{theorem}
+    \label{theo:prime-subfield}
+    Sea \(K\) el subcampo primo de \(F\).
+    Entonces:
+    \begin{enumerate}[label = (\roman*), ref = (\roman*)]
+    \item
+      \label{en:prime-subfield-Q}
+      Si \(F\) tiene característica \(0\),
+      entonces \(K \cong \mathbb{Q}\)
+    \item
+      \label{en:prime-subfield-Zp}
+      Si \(F\) tiene característica \(p\),
+      entonces \(p\) es primo y \(K \cong \mathbb{Z}_p\)
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Llamaremos \(0_K\) y \(1_K\) a los elementos neutros de \(K\).
+    \begin{enumerate}[label = (\roman*), ref = (\roman*)]
+    \item
+      En este caso para \(a \in \mathbb{Z}\)
+      tenemos que \(a \cdot 1_K \in K\),
+      y como \(K\) es un campo para \(b \in \mathbb{N}\)
+      también \((a \cdot 1_K) (b \cdot 1_K)^{-1} \in K\),
+      y esto es isomorfo al campo \(\mathbb{Q}\).
+      Como \(K\) no tiene subcampos,
+      \(K \cong \mathbb{Q}\).
+    \item
+      Nuevamente para \(a \in \mathbb{Z}\)
+      tenemos que \(a \cdot 1_K \in K\),
+      pero \(p \cdot 1_K = 0_K\),
+      con lo que hay un subcampo de \(K\)
+      que es isomorfo a \(\mathbb{Z}_p\),
+      y como \(K\) es mínimo es \(K \cong \mathbb{Z}_p\).
+      Pero \(\mathbb{Z}_p\) es campo si y solo si \(p\) es primo.
+    \qedhere
+    \end{enumerate}
+  \end{proof}
+  Si el campo finito \(F\) no es isomorfo a ningún \(\mathbb{Z}_p\),
+  habrá algún elemento que no pertenece a su subcampo primo \(K\),
+  llamémosle \(\alpha\).
+  Pero en tal caso,
+  los elementos \(\{k \alpha \colon k \in K\}\)
+  deben ser todos distintos entre sí,
+  y salvo \(0\) ninguno pertenece a \(K\).
+  Así tenemos elementos
+    \(\{k_0 + k_1 \alpha \colon k_0, k_1 \in K\}\).
+  Debemos además incluir las potencias de \(\alpha\).
+  Si la primera potencia de \(\alpha\)
+  que pertenece a \(K\) es \(\alpha^m\),
+  tendremos elementos
+    \(k_0 + k_1 \alpha + \dotsb + k_{m - 1} \alpha^{m - 1}\),
+  todos diferentes.
+  Cualquier elemento \(\beta\) aún no considerado
+  dará lugar a una construcción similar sobre los anteriores.
+  Repitiendo este proceso,
+  vemos que hay
+  una colección de \(n\) elementos
+    \(\alpha_i \in F \smallsetminus K\)
+  (elementos como \(\alpha\) y \(\beta\) mencionados arriba,
+   sus potencias,
+   y productos de ellas)
+  tales que eligiendo adecuadamente los \(k_i \in K\)
+  podemos representar cualquier elemento \(f \in F\)
+  mediante la expresión:
+  \begin{equation*}
+    f
+      = \sum_{1 \le i \le n} k_i \alpha_i
+  \end{equation*}
+  Por la construcción anterior,
+  cada elección de los \(k_i\)
+  da lugar a un elemento diferente de \(F\),
+  con lo que concluimos que si la característica del campo es \(p\),
+  y el campo es finito,
+  su orden debe ser \(p^n\) para \(n \in \mathbb{N}\).
+  Para discutir este fenómeno se requieren conceptos adicionales,
+  para mayores detalles véase por ejemplo el texto de Strang~%
+    \cite{strang09:_intr_linear_algebra}.
+
+\input{espacios-vectoriales}
+
+\section{Estructura de los campos finitos}
+\label{sec:estructura-campos-finitos}
+\index{campo (algebra)@campo (álgebra)!finito!estructura|textbfhy}
+
+  Profundizaremos nuestro estudio de los campos finitos,
+  apoyados ahora en lo que sabemos de espacios vectoriales.%
+    \index{espacio vectorial}
+  \begin{lemma}
+    \label{lem:unique-irreductible-root}
+    Sea \(K\) el subcampo primo de \(F\),%
+      \index{campo (algebra)@campo (álgebra)!subcampo!primo}
+    y sea \(\alpha \in F\) el cero de un polinomio en \(K[x]\).
+    Entonces hay un polinomio mónico%
+      \index{polinomio!monico@mónico}
+    único de grado mínimo en \(K[x]\)
+    con \(\alpha\) de cero.
+  \end{lemma}
+  \begin{proof}
+    Es simple
+    demostrar que \(I = \{f \in K[x] \colon f(\alpha) = 0\}\)
+    es un ideal de \(K[x]\).
+    Como \(K[x]\) es un dominio de ideal principal,%
+      \index{dominio de ideal principal}
+    \(I = (h)\) para algún \(h \in K[x]\),
+    donde \(h\) es mónico
+    y de mínimo grado entre los elementos de \(I\),
+    y es único con estas características.
+  \end{proof}
+  Al polinomio \(h\)
+  de la demostración del lema~\ref{lem:unique-irreductible-root}
+  se le llama el \emph{polinomio mínimo de \(\alpha\) sobre \(K\)}.%
+    \index{polinomio!minimo (de un elemento)@mínimo (de un elemento)}
+  Un elemento \(\alpha\) que es cero de un polinomio en \(K[x]\)
+  se dice \emph{algebraico sobre \(K\)}.
+    \index{anillo!elemento algebraico}
+  \begin{theorem}
+    \label{theo:minimal-polynomial-divides}
+    Sea \(\alpha \in F\) el cero de un polinomio en \(K[x]\)
+    y sea \(g\) el polinomio mínimo de \(\alpha\).
+    Entonces
+    \begin{enumerate}[label = (\roman*), ref = (\roman*)]
+    \item
+      \(g\) es irreductible en \(K[x]\)%
+	\index{anillo!elemento irreductible}
+    \item
+      \(f(\alpha) = 0\)
+      si y solo si \(g \mid f\)
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Por turno.
+    \begin{enumerate}[label = (\roman*), ref = (\roman*)]
+    \item
+      Como \(g\) tiene un cero en \(F\),
+      \(\deg(g) \ge 1\).
+      Demostramos que \(g\) es irreductible por contradicción.
+      Supongamos que podemos expresar \(g = h_1 h_2\) en \(K[x]\)
+      con \(1 \le \deg(h_i) < \deg(g)\)
+      para \(i = 1, 2\).
+      Entonces \(g(\alpha) = h_1(\alpha) h_2(\alpha) = 0\),
+      por lo que \(h_1(\alpha) = 0\) o \(h_2(\alpha) = 0\);
+      o sea uno de los polinomios está en el ideal \(I\)%
+	\index{anillo!ideal}
+      de la demostración
+	del lema~\ref{lem:unique-irreductible-root}.
+      Al ser \(K[x]\) un dominio de ideal principal,%
+	\index{dominio de ideal principal}
+      ese ideal es el conjunto de los múltiplos de \(g\),
+      con lo que \(g \mid h_1\) o \(g \mid h_2\),
+      lo que es imposible porque sus grados son menores al de \(g\).
+    \item
+      Esto sigue de la definición de \(g\)
+      como generador del ideal \(I\) del mencionado lema.
+    \qedhere
+    \end{enumerate}
+  \end{proof}
+  Antes de continuar,
+  demostraremos que todos los campos finitos de orden \(q\)
+  son isomorfos
+  (ya sabemos que \(q = p^n\) para un primo \(p\)).
+  De partida:
+  \begin{theorem}[Polinomio universal]
+    \index{polinomio!universal|textbfhy}
+    \label{theo:universal-polynomial}
+    Sea \(F\) un campo finito de orden \(q\).
+    Entonces todos los elementos \(a \in F\)
+    cumplen la ecuación:
+    \begin{equation*}
+      x^q - x = 0
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Por el teorema de Lagrange,%
+      \index{Lagrange, teorema de}
+    si \(a \ne 0\) el orden multiplicativo de \(a\)
+    divide a \(q - 1\);
+    en particular:
+    \begin{equation*}
+      a^{q - 1} - 1
+	= 0
+    \end{equation*}
+    Si multiplicamos esta ecuación por \(a\),
+    resulta que para todo \(a \in F\):
+    \begin{equation*}
+      a^q - a
+	= 0
+      \qedhere
+    \end{equation*}
+  \end{proof}
+  Nótese que el teorema~\ref{theo:universal-polynomial}
+  dice que los elementos del campo finito \(F\)
+  de orden \(q\)
+  son todas los ceros del \emph{polinomio universal} \(x^q - x\).
+  En particular,
+  los polinomios mínimos de los elementos de \(F\)
+  dividen a \(x^q - x\).
+  \begin{theorem}
+    \label{theo:finite-field-unique}
+    Sean \(F\) y \(F'\) campos finitos de orden \(q\).
+    Entonces \(F \cong F'\).
+  \end{theorem}
+  \begin{proof}
+    Sabemos que si \(\lvert F \rvert = \lvert F' \rvert = p^n\),
+    la característica de ambos campos es \(p\),
+    en particular,
+    el campo primo de ambos es isomorfo a \(\mathbb{Z}_p\).
+
+    Sabemos que \(F^\times\) es cíclico
+    (teorema~\ref{theo:F*-ciclico}),
+    elijamos un generador \(\pi\) de \(F^\times\),
+    y sea \(m(x)\) el polinomio mínimo de \(\pi\),
+    que por la observación anterior
+    (teorema~\ref{theo:minimal-polynomial-divides})
+    con \(q = p^n\) en \(F\) cumple:
+    \begin{equation*}
+      m(x) \mid x^{q - 1} - 1
+    \end{equation*}
+    Consideremos el polinomio \(m(x)\) en \(F'\) ahora,
+    donde también divide a \(x^q - x\)
+    (los coeficientes y las operaciones al dividir
+     son estrictamente en el subcampo primo,
+     serán las mismas en \(F\) y \(F'\)).
+    Acá podemos escribir:
+    \begin{equation*}
+      x^{q - 1} - 1
+	= \prod_{a' \in F'^\times} (x - a')
+    \end{equation*}
+    por lo que \(m(x)\) se factoriza completamente en \(F'\):
+    \begin{equation*}
+      m(x)
+	= (x - a_1') (x - a_2') \dotsm (x - a_d')
+    \end{equation*}
+    Elijamos un cero cualquiera de \(m(x)\) en \(F'\),
+    digamos \(\pi' = a_1'\).
+    Observamos primeramente que \(\pi'\) genera \(F'^\times\),
+    ya que si su orden fuera \(d < q - 1\),
+    cumpliría:
+    \begin{equation*}
+      x^d - 1
+	= 0
+    \end{equation*}
+    Pero como \(m(x)\) es un polinomio irreductible,%
+      \index{polinomio!irreductible}
+    debe ser su polinomio mínimo,%
+      \index{polinomio!minimo (de un elemento)@mínimo (de un elemento)}
+    y en \(F'\):
+    \begin{equation*}
+      m(x) \mid x^d - 1
+    \end{equation*}
+    Volviendo a \(F\),
+    esto significa que \(\pi\) también satisface esta ecuación,
+    y tiene orden \(d < q - 1\)
+    (o sea,
+     no sería generador de \(F^\times\)).
+
+    Hay un isomorfismo de grupo obvio%
+      \index{grupo!isomorfo}
+    entre \((F^\times, \cdot)\) y \((F'^\times, \cdot)\):
+    \begin{equation*}
+      \Theta(\pi^k)
+	= \pi'^k
+    \end{equation*}
+    Podemos extenderlo a una biyección entre \(F\) y \(F'\)
+    definiendo:
+    \begin{equation*}
+      \Theta(0)
+	= 0
+    \end{equation*}
+    Resta demostrar que \(\Theta\) es un isomorfismo para la suma.
+    Sean \(a, b \in F\),
+    debemos mostrar que:
+    \begin{equation*}
+      \Theta(a + b)
+	= \Theta(a) + \Theta(b)
+    \end{equation*}
+    Si \(a = 0\) o \(b = 0\),
+    el resultado es inmediato,
+    así que en lo que sigue \(a \ne 0\) y \(b \ne 0\).
+    Debemos considerar los dos casos \(a + b = 0\)
+    y \(a + b \ne 0\).
+    Veamos primero el segundo,
+    más general.
+    Sean:
+    \begin{equation*}
+      a = \pi^i \quad b = \pi^j \quad a + b = \pi^k
+    \end{equation*}
+    Entonces en \(F\):
+    \begin{equation*}
+      \pi^i + \pi^j
+	= \pi^k
+    \end{equation*}
+    Vale decir,
+    \(\pi\) satisface la ecuación:
+    \begin{equation*}
+      x^i + x^j - x^k
+	= 0
+    \end{equation*}
+    Por el teorema~\ref{theo:minimal-polynomial-divides}
+    en \(F\):
+    \begin{equation*}
+      m(x) \mid x^i + x^j - x^k
+    \end{equation*}
+    Pero en tal caso esto también se cumple en \(F'\):
+    \begin{equation*}
+      \pi'^i + \pi'^j
+	= \pi'^k
+    \end{equation*}
+    Esto es precisamente:
+    \begin{equation*}
+      \Theta(a + b)
+	= \Theta(a) + \Theta(b)
+    \end{equation*}
+
+    Resta el caso \(a + b = 0\).
+    Si la característica de los campos es \(2\),
+    esto significa \(a = b\),
+    y en consecuencia como \(\Theta(a) = \Theta(b)\)
+    es:
+    \begin{equation*}
+      \Theta(a + b)
+	= \Theta(0)
+	= 0
+	= \Theta(a) + \Theta(b)
+    \end{equation*}
+    Si la característica de \(F\) es impar,
+    notamos que \(-1\) es el único elemento de orden \(2\),
+    ya que:
+    \begin{equation*}
+      x^2 - 1
+	= (x - 1) (x + 1)
+    \end{equation*}
+    no puede tener más de dos ceros.
+    En efecto,
+    como \(F\) tiene \(q\) elementos
+    (y así \(F^\times\) tiene \(q - 1\) elementos),
+    debe ser:
+    \begin{equation*}
+      -1 = \pi^{\frac{q - 1}{2}}
+    \end{equation*}
+    dado que el elemento al lado derecho tiene el orden correcto.
+    Escribamos \(a = \pi^i\) y \(b = \pi^j\),
+    donde podemos suponer sin pérdida de generalidad que \(i > j\),
+    con lo que:
+    \begin{align*}
+      &\pi^i + \pi^j
+	= 0 \\
+      &\pi^i
+	= - \pi^j \\
+      &\pi^{i - j}
+	= -1 \\
+      &i - j
+	= \frac{q - 1}{2} \\
+      &\pi'^{(i - j)}
+	= -1 \\
+    \intertext{De acá, aplicando lo anterior en reversa en \(F'\):}
+      &\pi'^i + \pi'^j
+	= 0
+    \end{align*}
+    Vale decir:
+    \begin{equation*}
+      \Theta(a + b)
+	= \Theta(a) + \Theta(b)
+    \end{equation*}
+    En resumen,
+    la biyección \(\Theta\) preserva suma y multiplicación,
+    es un isomorfismo entre los campos.
+  \end{proof}
+  Al campo finito de orden \(q\) se le anota \(\mathbb{F}_q\)
+  (en la literatura más antigua se suele encontrar la notación
+   \(\mathrm{GF}(q)\),
+   por la abreviatura de \emph{campo de Galois}%
+     \index{Galois, campo de|see{campo (álgebra)!finito}}%
+     \index{Galois, Evariste}
+   en honor a quien comenzó su estudio).
+  Resulta curioso que todo polinomio irreductible de grado \(n\)
+  da el mismo campo.
+  Resta demostrar que tales campos existen para todo primo \(p\)
+  y todo \(n\).
+
+  Vimos
+  (teorema~\ref{theo:a-invertible})
+  que \(\mathbb{Z}_m = \mathbb{Z} / (m)\)
+  es un campo solo cuando \(m\) es primo.
+  Hay notables similitudes entre el anillo \(\mathbb{Z}\)
+  y los anillos de polinomios \(K[x]\) sobre un campo \(K\)%
+    \index{anillo!polinomios}
+  -- particularmente si \(K\) es finito.
+  Ya vimos un ejemplo de esto:
+  En los números enteros
+  hay infinitos primos,
+  y pueden expresarse en forma esencialmente única
+  como producto de primos
+  (y un signo,
+   vale decir multiplicar por una unidad),
+  el teorema fundamental de la aritmética.%
+    \index{teorema fundamental de la aritmetica@teorema fundamental de la aritmética}
+  Para polinomios
+  tenemos el teorema~\ref{theo:fundamental-arithmetic-polynomials}.%
+    \index{polinomio!teorema fundamental de la aritmetica@teorema fundamental de la aritmética}
+  Los primos en \(\mathbb{Z}\)
+  corresponden a los polinomios mónicos irreductibles en \(K[x]\).
+  Igual que la relación de congruencia entre enteros,%
+    \index{polinomio!congruencia}
+  podemos definirla para polinomios
+  \(f(x), g(x), m(x) \in K[x]\):
+  \begin{equation*}
+    f(x)
+      \equiv g(x) \pmod{m(x)}
+  \end{equation*}
+  siempre que para algún \(q(x) \in K[x]\):
+  \begin{equation*}
+    g(x) - f(x)
+      = m(x) q(x)
+  \end{equation*}
+  Es rutinario verificar que es equivalencia en \(K[x]\),
+  y que las clases de equivalencia
+  forman un anillo \(K[x] / (m(x))\),
+  el \emph{anillo de polinomios sobre \(K\) módulo \(m(x)\)}.
+  Este anillo contiene el campo \(K\)
+  como los polinomios constantes.
+  \begin{theorem}
+    \label{theo:polynomial-ring-modulo-m=field}
+    El anillo cociente \(K[x] / (m(x))\)
+    es un campo si y solo si \(m(x)\) es irreductible.
+  \end{theorem}
+  \begin{proof}
+    Demostramos implicancia en ambas direcciones.
+    Para el directo,
+    sea \(f(x) \in K[x]\) tal que \(m(x) \centernot\mid f(x)\).
+    Sabemos
+    (sección~\ref{sec:dominios-euclidianos})%
+      \index{dominio euclidiano}
+    que los polinomios sobre un campo son un dominio euclidiano,
+    es aplicable la identidad de Bézout
+    y tenemos un inverso de \(f\).%
+      \index{Bezout, identidad de@Bézout, identidad de}
+
+    Para el recíproco,
+    usamos contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Supongamos que \(m(x)\) no es irreductible,
+    vale decir:
+    \begin{equation*}
+      m(x)
+	= a(x) \cdot b(x)
+    \end{equation*}
+    donde \(a(x)\) y \(b(x)\) no son constantes.
+    Las clases de equivalencia correspondientes no son cero,
+    pero:
+    \begin{equation*}
+      [a(z)] \cdot [b(x)]
+	= [a(x) \cdot b(x)]
+	= [m(x)]
+	= 0
+    \end{equation*}
+    Al haber divisores de cero,
+    no es campo.
+  \end{proof}
+  Considerando \(K[x] / (m(x))\) como espacio vectorial,%
+    \index{espacio vectorial}
+  es una extensión de \(K\):%
+    \index{campo (algebra)@campo (álgebra)!extension@extensión}
+  \begin{definition}
+    \label{def:extension-degree}
+    A la dimensión de \(F\) como espacio vectorial sobre \(K\)
+    la anotamos \([F : K]\),
+    y la llamamos el \emph{grado de la extensión}.%
+      \index{campo (algebra)@campo (álgebra)!extension@extensión!grado|textbfhy}
+  \end{definition}
+  \begin{lemma}
+    \label{lem:irreducible-equivalence-classes}
+    Si \(m(x)\) es un polinomio irreductible de grado \(d\),
+    entonces las clases de equivalencia:
+    \begin{equation*}
+      [1], [x], \dotsc, [x^{d - 1}]
+    \end{equation*}
+    forman una base para \(K[x] / (m(x))\).
+    En particular:
+    \begin{equation*}
+      \dim_K K[x] / (m(x)) = \deg m(x)
+    \end{equation*}
+  \end{lemma}
+  \begin{proof}
+    Demostramos por contradicción
+    que las clases son linealmente independientes.%
+      \index{espacio vectorial!independencia lineal}
+    Supongamos:
+    \begin{equation*}
+      c_0 [1] + c_1 [x] + \dotsb + c_{d - 1} [x^{d - 1}]
+	= 0
+    \end{equation*}
+    Esto significa:
+    \begin{equation*}
+      m(x) \mid c_0 + c_1 x + \dotsb + c_{d - 1} x^{d - 1}
+    \end{equation*}
+    Esto solo es posible si todos los \(c_i = 0\),
+    ya que el grado de \(m\) es \(d\).
+
+    Para demostrar que las clases de equivalencia
+    abarcan \(K[x] / (m(x))\),
+    elijamos \(f(x) \in K[x]\) cualquiera.
+    Podemos dividir:%
+      \index{polinomio!algoritmo de division@algoritmo de división}
+    \begin{equation*}
+      f(x) = m(x) \cdot q(x) + r(x)
+      \qquad
+      \deg r(x) < \deg m(x)
+    \end{equation*}
+    Así:
+    \begin{equation*}
+      f(x) \equiv r(x) \pmod{m(x)}
+    \end{equation*}
+    O sea,
+    si:
+    \begin{equation*}
+      r(x)
+	= r_0 + r_1 x + \dotsb + r_{d - 1} x^{d - 1}
+    \end{equation*}
+    entonces:
+    \begin{equation*}
+      [f(x)]
+	= [r(x)]
+	= r_0 [1] + r_1 [x] + \dotsb + r_{d - 1} [x^{d - 1}]
+      \qedhere
+    \end{equation*}
+  \end{proof}
+  \begin{corollary}
+    \label{cor:fielp-p^n}
+    Si \(m(x) \in \mathbb{F}_q [x]\) es irreductible
+    de grado \(n\),
+    entonces \(\mathbb{F}_q[x] / (m(x))\) es de orden \(q^n\).
+  \end{corollary}
+  \begin{proof}
+    Inmediato del teorema~\ref{theo:polynomial-ring-modulo-m=field}:
+    \(\mathbb{F}_q[x] / (m(x))\)
+    es un espacio vectorial de dimensión \(n\)
+    sobre \(\mathbb{F}_q\),
+    con lo que contiene \(q^n\) elementos.
+  \end{proof}
+  En lo anterior construimos un campo \(K[x] / (m(x))\)
+  partiendo de un campo \(K\) y un polinomio irreductible sobre él.
+  Vimos también que todos los campos finitos del mismo orden
+  son isomorfos.
+  Ahora la construcción inversa,
+  buscando la relación entre un campo \(F\) y sus subcampos.
+  \begin{definition}
+    \label{def:extension-field}
+    Sean \(\alpha_1, \alpha_2, \dotsc, \alpha_n \in F\),
+    y sea \(K\) un subcampo de \(F\).
+    Al mínimo subcampo de \(F\)
+    que contiene \(\alpha_1, \alpha_2, \dotsc, \alpha_n\) y \(K\)
+    se anota \(K(\alpha_1, \alpha_2, \dotsc, \alpha_n)\).
+    A tales campos se les llama \emph{extensiones} de \(K\).%
+      \index{campo (algebra)@campo (álgebra)!extension@extensión}
+    Si \(F = K(\alpha)\),
+    se dice que \(F\) es una \emph{extensión simple} de \(K\).%
+      \index{campo (algebra)@campo (álgebra)!extension@extensión!simple}
+  \end{definition}
+  Nótese la similitud entre la definición~\ref{def:extension-field}
+  y la noción de anillos cuadráticos%
+    \index{anillo!cuadratico@cuadrático}
+  vistos en la sección~\ref{sec:anillos-cuadraticos}.
+  Allá usamos la notación \(\mathbb{Z}[\sqrt{2}]\) para el anillo,
+  acá hablamos del campo \(\mathbb{Q}(\sqrt{2})\).
+
+  Por la discusión anterior \(K(\alpha_1, \dotsc, \alpha_n)\)
+  es un espacio vectorial sobre \(K\).%
+    \index{espacio vectorial}
+  \begin{theorem}
+    \label{theo:extension-isomorphic-minimal-polynomial}
+    Sea \(F\) una extensión del campo \(K\),
+    y sea \(\alpha \in F\) el cero de un polinomio en \(K[x]\),
+    con polinomio mínimo \(g\).%
+      \index{anillo!polinomio minimo@polinomio mínimo}
+    Entonces:
+    \begin{enumerate}[label = (\roman*), ref = (\roman*)]
+    \item
+      \label{en:K(alpha)-g-1}
+      \(K(\alpha)\) es isomorfo a \(K[x] / (g(x))\)
+    \item
+      \label{en:K(alpha)-g-2}
+      \([K(\alpha) : K] = \deg(g)\)
+      y \(\{1, \alpha, \alpha^2, \dotsc, \alpha^{n - 1}\}\)
+      es una base de \(K(\alpha)\) sobre \(K\)
+    \item
+      \label{en:K(alpha)-g-3}
+      Si \(\beta \in K(\alpha)\)
+      es el cero de un polinomio en \(K[x]\),
+      el grado del polinomio mínimo de \(\beta\)
+      divide al grado de \(g\)
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Para el punto~\ref{en:K(alpha)-g-1},
+    por el lema~\ref{lem:irreducible-equivalence-classes}
+    la clase \([x]\) de \(K[x] / (g(x))\)
+    satisface la ecuación:
+    \begin{equation*}
+      g(x) = 0
+    \end{equation*}
+    En consecuencia,
+    \(K(\alpha) \cong K[x] / (g(x))\)
+    ya que son campos finitos del mismo orden.
+    El punto~\ref{en:K(alpha)-g-2} es inmediato de lo anterior.
+
+    Para~\ref{en:K(alpha)-g-3},
+    que \(K(\alpha)\) es un espacio vectorial sobre \(K(\beta)\),
+    con lo que el grado
+    del polinomio mínimo de \(\alpha\) sobre \(K(\beta)\)
+    da la condición de divisibilidad prometida.
+  \end{proof}
+  De lo anterior tenemos directamente:
+  \begin{corollary}
+    \label{cor:[H:F]=[H:G][G:F]}
+    Sean \(F \le G \le H\) campos finitos.
+    Entonces:
+    \begin{equation*}
+      [H : F]
+	= [H : G] \cdot [G : F]
+    \end{equation*}
+  \end{corollary}
+
+  Lo anterior muestra un cero de cada polinomio irreductible,
+  pero nos interesan todas los ceros.
+  Al efecto,
+  definimos:
+  \begin{definition}
+    Sea \(f \in K[x]\) un polinomio de grado positivo,
+    y \(F\) una extensión de \(K\).
+    Decimos que \(f\) \emph{se divide} en \(F\)
+    si hay \(a \in K\) y \(\alpha_i \in F\) para \(1 \le i \le n\)
+    tales que podemos escribir:
+    \begin{equation*}
+      f(x)
+	= a (x - \alpha_1) (x - \alpha_2) \dotsm (x - \alpha_n)
+    \end{equation*}
+    El campo \(F\) se llama \emph{campo divisor}
+    de \(f\) sobre \(K\)
+    si \(f\) se divide en \(F\)
+    y además es \(F = K(\alpha_1, \alpha_2, \dotsc, \alpha_n)\).
+  \end{definition}
+
+  El siguiente resultado es una pieza angular
+  de la teoría de campos.
+  \begin{theorem}[Kroneker]
+    \index{Kronecker, teorema de}
+    \index{Kronecker, Leopold}
+    \label{theo:Kroneker}
+    Para todo polinomio irreductible \(f(x)\) sobre el campo \(F\)
+    hay una extensión en la cual \(f(x)\) tiene un cero.
+  \end{theorem}
+  \begin{proof}
+    Sea \(f(x) = a_0 + a_1 x + \dotsb + a_n x^n \in F[x]\)
+      irreductible.
+    Consideremos el elemento \([x]\) en el campo \(F[x] / (f(x))\).
+    Entonces en \(F[x] / (f(x))\):
+    \begin{align*}
+      f([x])
+	&= [a_0] + [a_1] [x] + \dotsb + [a_n] [x^n] \\
+	&= [a_0 + a_1 x + \dotsb + a_n x^n] \\
+	&= 0
+    \end{align*}
+    Así \(F[x] / (f(x))\) es campo divisor,
+    y en el \([x]\) es cero.
+  \end{proof}
+  \noindent
+  Esto parece ser solo jugar con la notación,
+  pero es más profundo:
+  Hay que distinguir entre \(x\)
+  (el símbolo usado para describir polinomios formales)
+  y \([x]\)
+  (la clase de equivalencia del polinomio \(x\) módulo \(f(x)\)
+   sobre \(F\)).
+  Además usamos las definiciones y propiedades
+  de las operaciones entre clases de congruencia.
+  También vemos
+  que al aplicar repetidas veces el teorema de Kroneker
+  obtenemos finalmente el campo divisor de cualquier polinomio.
+
+  \begin{theorem}
+    \index{polinomio!campo divisor}
+    \label{theo:splitting-field-roots}
+    Sea \(F\) un campo,
+    \(f\) un polinomio irreductible sobre el campo \(K\)
+    con ceros \(\alpha, \beta \in F\).
+    Entonces \(K(\alpha) \cong K(\beta)\),
+    con un isomorfismo que mantiene fijos los elementos de \(K\)%
+      \index{campo (algebra)@campo (álgebra)!isomorfo}
+    e intercambia los ceros \(\alpha\) y \(\beta\).
+  \end{theorem}
+  \begin{proof}
+    Por el teorema de Kroneker,
+    ambos son isomorfos a \(K[x] / (f(x))\),
+    dado que el irreductible \(f\)
+    es el polinomio mínimo de \(\alpha\) y \(\beta\).
+    El isomorfismo claramente mantiene fijos los elementos de \(K\),
+    \(\beta\) se expresa
+    como una combinación lineal en \(K(\alpha)\)
+    y similarmente \(\alpha\) en \(K(\beta)\).
+  \end{proof}
+
+  Lo siguiente básicamente recoge resultados previos.
+  \begin{theorem}[Existencia y unicidad del campo divisor]
+    \label{theo:E!-splitting-field}
+    Todo polinomio tiene campo divisor único:
+    \begin{enumerate}[label = (\roman*), ref = (\roman*)]
+    \item
+      Si \(K\) es un campo
+      y \(f\) un polinomio de grado positivo en \(K[x]\),
+      entonces existe un campo divisor de \(f\) sobre \(K\).
+    \item
+      Cualquier par de campos divisores de \(f\) sobre \(K\)
+      son isomorfos bajo un isomorfismo
+      que mantiene fijos los elementos de \(K\)
+      y permuta ceros de \(f\).
+    \end{enumerate}
+  \end{theorem}
+  Así podemos hablar
+  de \emph{el} campo divisor de \(f\) sobre \(K\),
+  que se obtiene
+  adjuntando un número finito de elementos algebraicos a \(K\),
+  y es una extensión finita de \(K\).
+
+  \begin{theorem}[Existencia y unicidad de campos finitos]
+    \label{theo:E!-FF}
+    Para cada primo \(p\) y natural \(n\)
+    hay un campo finito de orden \(p^n\).
+    Todo campo finito de orden \(q = p^n\)
+    es isomorfo al campo divisor
+    de \(x^q - x\) sobre \(\mathbb{Z}_p\).
+  \end{theorem}
+  \begin{proof}
+    Sea \(F\) el campo divisor de \(f(x) = x^q - x\)
+    en \(\mathbb{Z}_p[x]\).
+% Fixme: Traducción de "Splitting field"
+    Como \(f'(x) = q x^{q - 1} - 1 = -1\) sobre \(\mathbb{Z}_p\),
+    por el lema~\ref{lem:repeated-roots}
+    \(f(x)\) no tiene factores repetidos,
+    con lo que \(f(x)\) tiene \(q\) ceros en \(F\),
+    exactamente los \(q\) elementos de \(F\).
+
+    Por el teorema~%
+     \ref{theo:extension-isomorphic-minimal-polynomial},
+    el campo divisor es único.
+  \end{proof}
+  El \emph{polinomio universal} \(U_n (x) = x^{p^n} - x\)%
+    \index{anillo!polinomio universal}
+  tiene como ceros todos los elementos de \(\mathbb{F}_{p^n}\).
+  Resulta que \(U_m (x) \mid U_n (x)\) si y solo si \(m \mid n\),
+  pero curiosamente es más fácil demostrar
+  algo bastante más general:
+  \begin{theorem}
+    \label{theo:U-gcd}
+    Sobre\/ \(\mathbb{F}_p\):
+    \begin{equation*}
+      \gcd(U_m (x), U_n (x))
+	= U_{\gcd(m, n)} (x)
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Si \(m = n\) no hay nada que demostrar.
+    Usamos inducción fuerte sobre \(n\) para \(m < n\).%
+      \index{demostracion@demostración!induccion@inducción}
+    \begin{description}
+    \item[Base:]
+      Cuando \(n = 1\),
+      no hay nada que demostrar.
+    \item[Inducción:]
+      Sea \(r = n - m\)
+      y consideremos:
+      \begin{equation*}
+	\left( U_m (x) \right)^p
+	  = x^{p^{m + 1}} - x^p
+      \end{equation*}
+      ya que al aplicar el teorema del binomio%
+	\index{binomio, teorema del}
+      los términos intermedios
+      se anulan por ser divisibles por \(p\).
+      Aplicando lo anterior \(r\) veces resulta:
+      \begin{align*}
+	\left( U_m (x) \right)^{p^r}
+	  &= x^{p^{m + n - m}} - x^{p^r} \\
+	  & = x^{p^n} - x^{p^r} \\
+	  &= U_n (x) - U_r (x)
+      \end{align*}
+      de lo que obtenemos:
+      \begin{equation*}
+	\gcd(U_m (x), U_n (x))
+	  = \gcd(U_r (x), U_m (x))
+      \end{equation*}
+      Por inducción:
+      \begin{align*}
+	\gcd(U_r (x), U_m (x))
+	  &= U_{\gcd(r, m)} (x) \\
+	  &= U_{\gcd(m, n)} (x)
+      \end{align*}
+      ya que \(\gcd(r, m) = \gcd(n - m, m) = \gcd(m, n)\).
+    \end{description}
+    Por inducción
+    lo prometido vale para todo \(m, n \in \mathbb{N}\).
+  \end{proof}
+  Así:
+  \begin{corollary}
+    \label{cor:U-divides}
+    Sobre\/ \(\mathbb{F}_p\) es
+    \(U_m (x) \mid U_n (x)\) si y solo si \(m \mid n\).
+  \end{corollary}
+  \begin{proof}
+    Recurrimos a una cadena de equivalencias.
+    Es claro que \(U_m (x) \mid U_n (x)\)
+    si y solo si \(\gcd(U_m (x), U_n (x)) = U_m (x)\).
+    Por el teorema~\ref{theo:U-gcd}
+    esto es si y solo si \(\gcd(m, n) = m\),
+    que es si y solo si \(m \mid n\).
+  \end{proof}
+
+  \begin{theorem}
+    \label{theo:finite-field-extension=simple-extension}
+    Sea \(F_q\) un campo finito
+    y \(F_r\) una extensión finita de \(F_q\).
+    Entonces
+    \begin{enumerate}[label = (\roman*), ref = (\roman*)]
+    \item
+      \label{en:tffes-1}
+      \(F_r\) es una extensión simple de \(F_q\),
+      vale decir,
+      hay \(\beta \in F_r\) tal que \(F_r = F_q(\beta)\)
+    \item
+      \label{en:tffes-2}
+      Cualquier elemento primitivo de \(F_r\)
+      sirve como elemento definidor \(\beta\)
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Para~\ref{en:tffes-1},
+    sea \(\alpha\) un elemento primitivo de \(F_r\),
+    con lo que \(F_q(\alpha) \subseteq F_r\).
+    Por otro lado,
+    \(F_q(\alpha)\) contiene a \(0\)
+    y todas las potencias de \(\alpha\),
+    que son los elementos de \(F_r^\times\);
+    con lo que \(F_r \subseteq F_q(\alpha)\).
+    En consecuencia \(F_r = F_q(\alpha)\).
+    El punto~\ref{en:tffes-2} es inmediato de lo anterior.
+  \end{proof}
+  Así tenemos
+  \begin{corollary}
+    \label{cor:E-irreducible-degrees}
+    Para cada primo \(p\)
+    hay polinomios irreductibles
+    de todo grado \(n \ge 1\) sobre \(\mathbb{Z}_p\).
+  \end{corollary}
+  \begin{proof}
+    Por el teorema~%
+      \ref{theo:extension-isomorphic-minimal-polynomial}
+    toda extensión de \(\mathbb{Z}_p\) es isomorfa
+    a algún \(\mathbb{Z}_p(\alpha) \cong \mathbb{Z}_p[x] / (g(x))\)
+    donde \(g(x)\) es el polinomio mínimo de \(\alpha\),
+    por el teorema~\ref{theo:minimal-polynomial-divides}
+    el polinomio mínimo es irreductible.
+    Por el teorema~\ref{theo:E!-FF}
+    hay campos finitos de \(p^n\) elementos
+    para todo primo \(p\) y natural \(n\).
+    En consecuencia,
+    hay polinomios irreductibles
+    de todos los grados sobre \(\mathbb{Z}_p\).
+  \end{proof}
+  Podemos hacer más:
+  \begin{theorem}
+    \index{polinomio!irreductible!numero@número}
+    \label{theo:number-irreducible-polynomials}
+    Sea \(N_n\) el número de polinomios irreductibles de grado \(n\)
+    sobre\/ \(\mathbb{F}_q\).
+    Entonces:
+    \begin{equation}
+      \label{eq:N-irreducible-polynomials-degree-n}
+      N_n
+	= \frac{1}{n} \, \sum_{d \mid n} \mu(n / d)  \, q^d
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    En \(\mathbb{F}_{q^n}\)
+    cada elemento es cero de su polinomio mínimo.
+    Tal polinomio mínimo de grado \(d\)
+    es irreductible sobre \(\mathbb{F}_q\)
+    y tiene \(d\) ceros distintos
+    en \(\mathbb{F}_{q^n}\).
+    Contabilizando los elementos de \(\mathbb{F}_{q^n}\)
+    como los ceros de sus polinomios mínimos:
+    \begin{equation*}
+      \sum_{d \mid n} d N_d
+	= q^n
+    \end{equation*}
+    Aplicando inversión de Möbius%
+      \index{Mobius, inversion de@Möbius, inversión de}
+    (teorema~\ref{theo:Moebius-inversion})
+    obtenemos lo anunciado.
+  \end{proof}
+  Esto da otra demostración
+  de que hay polinomios irreductibles de grado \(n\)
+  sobre \(\mathbb{Z}_q\) para todo \(n \in \mathbb{N}\):
+  Para \(n = 1\),
+  todos los polinomios son irreductibles.
+  Si \(n \ge 2\),
+  en la suma~\eqref{eq:N-irreducible-polynomials-degree-n}
+  el término \(q^n\) es mayor que la suma de los demás,
+  ya que como \(\lvert \mu(x) \rvert \le 1\) podemos acotar:
+  \begin{equation*}
+    \left\lvert
+      \sum_{\substack{
+	      d \mid n \\
+	      d < n
+	   }} \mu(n / d) q^d
+    \right\rvert
+      \le \sum_{\substack{
+		  d \mid n \\
+		  d < n
+	       }} q^d
+      \le \sum_{0 \le d \le n - 1} q^d
+      = \frac{q^n - 1}{q - 1}
+      < q^n
+  \end{equation*}
+  Así la suma en~\eqref{eq:N-irreducible-polynomials-degree-n}
+  nunca se anula si \(n \ge 2\).
+  Uniendo este resultado con el caso \(n = 1\),
+  \(N_n > 0\) para todo \(n \in \mathbb{N}\).
+  En vista del corolario~\ref{cor:U-divides},
+  podemos obtener todos los polinomios irreductibles
+  sobre \(\mathbb{F}_p\)
+  de grado hasta \(n\) como factores de \(U_n(x)\).
+
+\input{codigo-deteccion-errores}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

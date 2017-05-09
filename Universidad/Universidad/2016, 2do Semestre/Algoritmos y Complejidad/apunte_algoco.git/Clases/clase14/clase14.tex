@@ -1,0 +1,235 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{pgf}
+\usepackage{chessboard}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1
+}
+\lstset{style=customc}
+
+\lstloadlanguages{Python, C}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\ccomment}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#14\quad Backtracking}}
+
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#14\\Backtracking}
+\author{Aldo Berrios Valenzuela \and Horst H. von Brand}
+\date{Miércoles 21 de septiembre de 2016}
+
+\begin{document}
+\setchessboard{
+  showmover = false,
+  label = false
+}
+
+\maketitle
+\section{Backtracking}
+Otra estrategia recursiva\ldots La idea es ir construyendo la solución incrementalmente, explorando distintas ramas y volviendo atrás (backtrack) si  resulta que un camino es sin salida.
+
+\begin{ejemplo}[Un clásico]
+  En el ajedrez la reina es la pieza más poderosa.
+  Amenaza los casilleros en su fila y columna,
+  y los ubicados en diagonal.
+  La figura~\ref{fig:reina-amenaza} muestra los casilleros
+  que amenaza una reina en el ajedrez.
+  \begin{figure}[ht]
+    \centering
+    \setchessboard{setpieces = {Qc5}}
+    \chessboard[pgfstyle = {[fill]circle},
+		padding = -1ex,
+		backfields  = {a5, b5, d5, e5, f5, g5, h5,
+			       c1, c2, c3, c4, c6, c7, c8,
+			       a3, b4, d6, e7, f8,
+			       a7, b6, d4, e3, f2, g1}
+	       ]
+    \caption{Los casilleros amenazados por una reina}
+    \label{fig:reina-amenaza}
+  \end{figure}
+  Un problema clásico es determinar
+  si se pueden ubicar ocho reinas en el tablero
+  de manera que ninguna pueda amenzar a otra.
+  Claramente no pueden ser más de ocho,
+  puede haber a lo más una reina por columna.
+
+	Pasos:
+	\begin{itemize}
+		\item Reducir espacio de búsqueda.
+		\begin{itemize}
+			\item [$\rightsquigarrow$] Si son 8 reinas, hay una por columna.
+		\end{itemize}
+		Por lo tanto, llenar por columnas, solución (parcial) indica las filas de las reinas ya ubicadas.
+
+		\item Ordenar avance.
+
+		\item Subproblemas similares.
+	\end{itemize}
+
+	En este caso:
+	\begin{itemize}
+		\item Ubicar reina en columna 1, 2, \ldots
+
+		\item Registrar filas libres (por omitir ocupadas al ubicar la siguiente reina)
+
+		\item Registrar diagonales libres.
+
+		Reina en $i, j$:
+		\begin{align*}
+		y-j&=1\cdot \nparentesis{x-i}\\
+		i-j&=x-y\rightsquigarrow x-y\mathit{cte}\\
+		y-j&=-1\cdot \nparentesis{x-i}\rightsquigarrow x+y\mathit{cte}
+		\end{align*}
+	\end{itemize}
+
+	Por ejemplo,
+	luego de ubicadas las primeras tres reinas
+	en las filas \(1\), \(3\) y \(5\) la configuración resultante
+	es la de la figura~\ref{fig:tres-reinas}.
+	\begin{figure}[ht]
+	  \centering
+	  \setchessboard{setpieces = {Qa1, Qb3, Qc5}}
+	  \chessboard[pgfstyle = {[fill]circle},
+		      padding = -1ex,
+		      backfields  = {a2, a3, a4, a5, a6, a7, a8,
+				       b1, c1, d1, e1, f1, g1, h1,
+				       b2, c3, d4, e5, f6, g7, h8,
+				     b1, b2, b4, b5, b6, b7, b8,
+				       a3, c3, d3, e3, f3, g3, h3,
+				       a2, c4, d5, e6, f7, g8,
+				       a4, c2, d1,
+				     c1, c2, c3, c4, c6, c7, c8,
+					a5, b5, d5, e5, f5, g5, h5,
+					a7, b6, d4, e3, f2, g1,
+					a3, b4, d6, e7, f8
+				    }
+		     ]
+	  \caption{Configuración con tres reinas}
+	  \label{fig:tres-reinas}
+	\end{figure}
+	Vemos que las filas y diagonales amenazadas por estas tres
+	restringen muchísimo las posiciones viables
+	para la cuarta y siguientes.
+	Con estas tres reinas,
+	para la cuarta reina quedan solo \(3\) posibilidades.
+
+	Elegimos Python (!), en Python los arreglos tienen índices desde $0$, rango de $i$, $j$ es $0 \ldots 7$.
+	Interesan los rangos de:
+	\begin{itemize}
+		\item $i-j$: $-7\ldots 7\rightsquigarrow$ sumar 7 para llevar al rango $0\ldots 14$.
+		\item $i+j$: $0\ldots 14$
+	\end{itemize}
+	El programa final es el siguiente:
+	\lstinputlisting[language = Python]{8queens}
+
+	Una de las \(92\)~soluciones posibles
+	se muestra en la figura~\ref{fig:8reinas}.
+	\begin{figure}[ht]
+	  \centering
+	  \setchessboard{setpieces = {Qa1, Qb5, Qc8, Qd6,
+				      Qe3, Qf7, Qg2, Qh4}}
+	  \chessboard
+	  \caption{Una solución para el problema de 8 reinas.}
+	  \label{fig:8reinas}
+	\end{figure}
+\end{ejemplo}
+\end{document}

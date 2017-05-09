@@ -1,0 +1,1273 @@
+% digrafos.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Digrafos, redes, flujos}
+\label{cha:digrafos}
+\index{digrafo|textbfhy}
+\index{grafo!dirigido|see{digrafo}}
+
+  En muchas situaciones que podrían modelarse mediante grafos
+  las conexiones no son bidireccionales.
+  Por ejemplo,
+  están las calles de una sola vía.
+  En un proyecto hay actividades que deben efectuarse en orden,
+  interesa representar estas dependencias
+  y organizarlas de forma de completar el proyecto lo antes posible.
+  Si queremos analizar el flujo a través de una red de tuberías
+  o el flujo de bienes transportados
+  hay una dirección definida.
+  En esto suele interesar la capacidad de transporte de la red.
+  Estas situaciones se modelan por grafos dirigidos rotulados.
+  Generalmente se tratan solo en un capítulo de textos
+  que se concentran en grafos,
+  pero se puede argüir
+  que la importancia práctica de los grafos dirigidos
+  (digrafos, para abreviar)
+  es similar a la de los grafos.
+  Trataremos algunos algoritmos importantes del área
+  con análisis somero de sus rendimientos.
+
+\section{Definiciones básicas}
+\label{sec:definiciones-basicas}
+
+  Nos interesa representar estructuras similares a grafos,
+  solo que los arcos tienen una dirección definida.
+  No está la simetría entre ambos extremos del arco como en grafos.
+  Por ejemplo,
+  si queremos representar las llamadas de funciones en un programa,
+  interesa cuál de las dos es quien llama y cuál es llamada.
+  \begin{definition}
+    Un \emph{digrafo}
+    (o \emph{grafo dirigido})
+    consta de un conjunto finito \(V\) de \emph{vértices},%
+      \index{digrafo!vertice@vértice|textbfhy}
+    y un subconjunto \(A\) de \(V \times V\),
+    cuyos miembros se llaman \emph{arcos}.%
+      \index{digrafo!arco|textbfhy}
+    Anotaremos \(D = (V, A)\)
+    para el digrafo definido de esta forma.
+  \end{definition}
+  Un texto reciente,
+  que cubre desde temas elementales
+  hasta áreas de investigación activa,
+  es el de Bang-Jensen y~Gutin~%
+    \cite{bang-jensen09:_digraphs}.
+
+  Los digrafos se pueden representar gráficamente
+  de forma similar a los grafos,
+  solo que en este caso un arco es un par ordenado \((x, y)\),
+  mientras en el grafo es un par no ordenado \(\{x, y\}\).
+  Si \((x, y)\) es un arco,
+  lo indicamos mediante una flecha de \(x\) a \(y\),
+  si hay un arco \((x, x)\) lo indicamos mediante un ciclo,
+  si hay arcos \((x, y)\) e \((y, x)\)
+  los indicamos por dos flechas.
+  Para simplificar notación,
+  similar al caso de grafos
+  usaremos \(u v\) para indicar el arco \((u, v)\).
+  La figura~\ref{fig:digrafos} muestra ejemplos.
+  \begin{figure}[htbp]
+    \setbox1=\hbox{\pgfimage{images/digrafo-1}}
+    \setbox2=\hbox{\pgfimage{images/digrafo-2}}
+    \centering
+    \subfloat{\raisebox{0.5\ht2-0.5\ht1}{\copy1}}%
+    \hspace{3em}%
+    \subfloat{\copy2}
+    \caption{Ejemplos de digrafos}
+    \label{fig:digrafos}
+  \end{figure}
+  Nuestras representaciones de grafos para uso computacional
+  se aplican con cambios obvios a este caso.%
+    \index{digrafo!representacion@representación}
+  Igualmente,
+  podemos aplicar los algoritmos de recorrido acá.
+  Los algoritmos de Dijkstra,
+  algoritmo~\ref{alg:Dijkstra},%
+    \index{Dijkstra, algoritmo de}
+  de Floyd-Warshall,
+  algoritmo~\ref{alg:Floyd-Warshall}%
+    \index{Floyd-Warshall, algoritmo de}
+  (que en este caso es llamado simplemente algoritmo de Floyd)%
+    \index{Floyd, algoritmo de}
+  y de Bellman-Ford~\ref{alg:Bellman-Ford}%
+    \index{Bellman-Ford, algoritmo de}
+  son aplicables con modificaciones obvias.
+
+  Un digrafo
+  es simplemente otra manera de representar una relación \(R\)%
+    \index{relacion@relación}
+  entre elementos del \emph{mismo} conjunto
+  (un grafo bipartito,
+  por otro lado,
+  representa una relación
+  entre elementos de conjuntos \emph{disjuntos}).
+  Las propiedades de las relaciones pueden fácilmente traducirse
+  en propiedades del digrafo.
+  Por ejemplo,
+  si la relación es simétrica los arcos aparecen en pares
+  (salvo los bucles),
+  \(x y\) es un arco exactamente cuando lo es \(y x\).
+
+  Las definiciones de camino,
+  camino simple,
+  circuito y ciclo en un grafo dirigido
+  son análogas a las para grafos.
+  Un \emph{camino dirigido} en \(D = (V, A)\)%
+    \index{digrafo!camino dirigido|textbfhy}
+  es una secuencia de vértices \(v_1, v_2, \dotsc, v_k\)
+  tal que \(v_i v_{i + 1} \in A\) para \(1 \le i \le k - 1\),
+  un \emph{camino dirigido simple} es un camino dirigido
+  en que todos los vértices son diferentes,
+  un \emph{circuito dirigido}%
+    \index{digrafo!circuito dirigido|textbfhy}
+  es un camino cuyo inicio y fin coinciden,
+  mientras un \emph{ciclo dirigido}%
+    \index{digrafo!ciclo dirigido|textbfhy}
+  es un camino dirigido
+  en que todos los vértices son distintos,
+  solo que el inicial y el final coinciden.
+  Un caso particularmente importante
+  lo ponen los \emph{grafos dirigidos acíclicos}%
+    \index{digrafo!aciclico@acíclico}%
+    \index{grafo dirigido aciclico@grafo dirigido acíclico|see{digrafo!acíclico}}
+  (abreviados comúnmente \emph{DAG},%
+    \index{DAG|see{digrafo!acíclico}}
+   por la frase en inglés
+   \emph{\foreignlanguage{english}{Directed Acyclic Graph}}),
+  de alguna forma análogos a los árboles.
+    \index{grafo!arbol@árbol}
+
+\section{Orden topológico}
+\label{sec:topological-sort}
+\index{digrafo!orden topologico@orden topológico}
+
+  Dado un digrafo \(G = (V, E)\),
+  un \emph{orden topológico}
+  (en inglés,
+   \emph{\foreignlanguage{english}{topological sort}})
+  de los vértices de \(G\)
+  es un ordenamiento de \(V\) tal que para cada arco \(u v \in E\)
+  el vértice \(u\) aparece antes que \(v\).
+  Esto claramente solo puede existir si el digrafo es acíclico.
+
+  La aplicación típica es definir un orden
+  para efectuar un conjunto de tareas
+  que dependen entre sí.
+  Por ejemplo,
+  al vestirse uno debe ponerse los calcetines
+  antes que los zapatos,
+  pero no hay precedencia entre la camisa y los calcetines.
+  La figura~\ref{fig:dressing} ilustra las restricciones.
+  \begin{figure}[ht]
+    \centering
+    \pgfimage{images/vestirse}
+    \caption{Restricciones al vestirse}
+    \label{fig:dressing}
+  \end{figure}
+  Otras aplicaciones aparecen en compiladores,
+  al reordenar instrucciones;%
+    \index{generar codigo@generar código}
+  al definir el orden
+  en que se calculan las celdas en planillas de cálculo;
+  y lo usa \texttt{make(1)}%
+    \index{make@\texttt{make(1)}}
+  para organizar el orden en que se generan los archivos.
+  Unix%
+    \index{Unix}
+  ofrece el comando \texttt{tsort(1)},%
+    \index{tsort@\texttt{tsort(1)}}
+  que toma líneas indicando dependencias
+  y entrega un orden consistente con ellas.
+  Aplicando este último a la tarea de vestirse,
+  sugiere el orden
+  calcetines,
+  camisa,
+  pantalón,
+  jersey,
+  zapatos,
+  cinturón
+  y finalmente chaqueta.
+  Este orden no es único,
+  se ve de la figura que podríamos haber comenzado por la camisa,
+  o haber terminado con los zapatos.
+
+  Algoritmos para hallar un orden topológico
+  se basan en que en un digrafo acíclico
+  habrán vértices que no tienen arcos de entrada
+  (respectivamente de salida).
+  Kahn~\cite{kahn62:_topol_sorting_large_net}
+  publicó el algoritmo clásico~\ref{alg:tsort-Kahn}.%
+    \index{Kahn, algoritmo de}
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+
+    \(L \leftarrow \text{lista vacía}\) \;
+    \(S \leftarrow \text{conjunto de nodos sin arcos entrantes}\) \;
+    \While{\(S \ne \varnothing\)}{
+      Extraiga \(n\) cualquiera de \(S\) \;
+      Agregue \(n\) al final de \(L\) \;
+      \ForEach{nodo \(m\) con arco \(e = (n, m)\)}{
+	Elimine \(e\) del grafo \;
+	\If{\(m\) no tiene más arcos entrantes}{
+	  Inserte \(m\) en \(S\) \;
+	}
+      }
+    }
+    \uIf{quedan arcos en el grafo}{
+      \Return{error} \tcc*{El digrafo tiene ciclos}
+    }
+    \Else{
+      \Return{\(L\)}
+    }
+    \caption{Ordenamiento topológico de Kahn}
+    \label{alg:tsort-Kahn}
+  \end{algorithm}
+  Se basa en la observación que en un digrafo acíclico
+  deben haber vértices sin arcos entrantes,
+  y que cualquiera de ellos puede tomar el primer lugar en el orden.
+
+  El algoritmo~\ref{alg:tsort-Tarjan} es debido a Tarjan~%
+    \cite{tarjan76:_edge_disjoin_spann_trees_depth_first_searc}.%
+    \index{Tarjan, algoritmo de}
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{Visit}{visit}
+
+    \(L \leftarrow \text{lista vacía}\) \;
+    \(S \leftarrow \text{conjunto de todos los nodos sin arcos salientes}\) \;
+    \BlankLine
+    \KwProcedure \Visit{\(n\)} \;
+    \Begin{
+      \If{\(n\) no ha sido visitado}{
+	Marque \(n\) como visitado \;
+	\ForEach{nodo \(m\) con \((m, n) \in E\)}{
+	  \Visit{\(m\)} \;
+	}
+	Agregar \(n\) al final de \(L\) \;
+      }
+    }
+    \BlankLine
+    \ForEach{nodo \(n\) en \(S\)}{
+      \Visit{\(n\)} \;
+    }
+    \Return{L} \;
+    \caption{Ordenamiento topológico de Tarjan}
+    \label{alg:tsort-Tarjan}
+  \end{algorithm}
+  Es una aplicación de búsqueda en profundidad
+  (ver la sección~\ref{sec:DFS}).%
+    \index{grafo!busqueda en profundidad@búsqueda en profundidad}
+  Notar que procesa los vértices desde el final hacia el comienzo
+  (orden inverso al algoritmo de Kahn).
+  Cuidado,
+  como el algoritmo~\ref{alg:tsort-Tarjan}
+  como está escrito falla si el digrafo tiene ciclos.
+% Fixme: Revisar TAoCP1
+
+% Fixme: Agregar más material (p.ej. de tarea sobre digrafos)
+
+\section{Redes y rutas críticas}
+\label{sec:redes-rutas-criticas}
+\index{red}
+
+  Es común que se asocien costos o distancias a los arcos.
+  Con esta idea en mente,
+  llamaremos \emph{red} a un digrafo \(D = (V, A)\)
+  junto con una función \(w \colon A \rightarrow \mathbb{R}\),%
+    \index{red|see{digrafo}}
+  que representa costos de algún tipo
+  o capacidades,
+  según la aplicación.
+
+  Una aplicación típica de redes
+  son las \emph{redes de actividades}.%
+    \index{red de actividades}
+  Suponiendo un gran proyecto,
+  este se subdivide en actividades menores.
+  Las actividades a su vez están relacionadas,
+  en el sentido que algunas no pueden iniciarse
+  antes que terminen otras.
+  Al planificar un proyecto de este tipo
+  se suele usar una red de actividades,
+  con arcos representando actividades
+  y los vértices representando ``eventos'',
+  donde un evento es el fin de una actividad.
+  Es claro que tal digrafo es acíclico,
+  ninguna actividad puede depender directa o indirectamente
+  de sí misma.
+  El peso de un arco es la duración de la actividad,
+  y se busca organizar las actividades
+  de forma de minimizar el tiempo total del proyecto.
+  Técnicas basadas en esta idea son
+  CPM (\foreignlanguage{english}{Critical Path Method})~%
+    \cite{kelley59:_CPM}%
+    \index{Critical Path Method@\emph{\foreignlanguage{english}{Critical Path Method}}}%
+    \index{CPM|see{\emph{\foreignlanguage{english}{Critical Path Method}}}}
+  y PERT (\foreignlanguage{english}
+	  {Project Management and Evaluation Technique})~%
+    \cite{malcolm59:_PERT}.%
+    \index{Project Management and Evaluation Technique@\emph{\foreignlanguage{english}{Project Management and Evaluation Technique}}}%
+    \index{PERT|see{\emph{\foreignlanguage{english}{Project Management and Evaluation Technique}}}}
+
+  Consideremos un ejemplo concreto.
+  El cuadro~\ref{tab:actividades}
+  da las duraciones de las actividades
+  (en meses),
+  y las dependencias entre ellas
+  (qué actividades deben estar completas
+   antes de comenzar la actividad indicada).
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}[c]{|c|l|l|>{\(}c<{\)}|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Act}} &
+	 \multicolumn{1}{c|}{\textbf{Descripción}} &
+	 \multicolumn{1}{c|}{\textbf{Requisitos}} &
+	 \multicolumn{1}{c|}{\textbf{Dur}} \\
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+      \(A\) & Diseño del producto    &			   & 5 \\
+      \(B\) & Análisis de mercado    &			   & 1 \\
+      \(C\) & Análisis de producción & \(A\)		   & 2 \\
+      \(D\) & Prototipo del producto & \(A\)		   & 3 \\
+      \(E\) & Diseño de folleto	     & \(A\)		   & 2 \\
+      \(F\) & Análisis de costos     & \(C\)		   & 3 \\
+      \(G\) & Pruebas del producto   & \(D\)		   & 4 \\
+      \(H\) & Entrenamiento ventas   & \(B\), \(E\)	   & 2 \\
+      \(I\) & Definición de precios  & \(H\)		   & 1 \\
+      \(J\) & Reporte del proyecto   & \(F\), \(G\), \(I\) & 1 \\
+      \hline
+    \end{tabular}
+    \caption{Actividades y dependencias}
+    \label{tab:actividades}
+  \end{table}
+
+  El primer paso es construir la red de actividades,
+  ver figura~\ref{fig:actividades}.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/actividades}
+    \vspace*{2ex}
+
+    \begin{tabular}[c]{l@{\quad}
+		       *{9}{>{\(}c<{\)}@{\hspace{0.75em}}}>{\(}c<{\)}}
+      Actividad:
+	  & A	   & B	    & C	& D
+	  & E	   & F	    & G	& H
+	  & I	   & J \\
+      Arco:
+	  & (1, 2) & (1, 3) & (2, 4) & (2, 5)
+	  & (2, 3) & (4, 7) & (5, 7) & (3, 6)
+	  & (6, 7) & (7, 8) \\
+      Duración:
+	  &	 5 &	  1 &	   2 &	    3
+	  &	 2 &	  3 &	   4 &	    2
+	  &	 1 &	  1
+    \end{tabular}
+    \caption{Una red de actividades}
+    \label{fig:actividades}
+  \end{figure}
+  Los arcos representan actividades,
+  y los vértices sus inicios y finales.
+  Es claro que resulta un digrafo sin ciclos.
+  Para cada evento calcularemos \(E(v)\),
+  el instante más temprano en que ese evento puede tener lugar.
+  Esto corresponde al momento más temprano
+  en que todas las actividades previas a \(v\) han terminado.
+  Iniciamos el proceso con \(E(1) = 0\).
+  Luego está claro que \(E(2) = 5\),
+  ya que la única actividad involucrada es \(A = (1, 2)\).
+  Ahora,
+  como el evento 3 involucra a \(B = (1, 3)\),
+  pero también \(A = (1, 2)\) y \(E = (2, 3)\),
+  \(E(3) = \max \{E(1) + 1, E(2) + 2\}
+	 = \max \{0 + 1, 5 + 2\}
+	 = 7\).
+  Continuando de esta forma,
+  obtenemos los instantes de término
+  dados en el cuadro~\ref{tab:actividades-E},
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}[c]{l*{9}{>{\(}c<{\)}}}
+      \(v\):	  & 1 &	 2 &  3 &  4 &	5 &  6 &  7 &  8 \\
+      \(E(v)\):	  & 0 &	 5 &  7 &  7 &	8 &  9 & 12 & 13 \\
+    \end{tabular}
+    \caption{Términos más tempranos por actividad
+	     para la red de la figura~\ref{fig:actividades}}
+    \label{tab:actividades-E}
+  \end{table}
+  con lo que el plazo mínimo
+  para completar el proyecto es de \(13\) meses.
+
+  Esto es básicamente usar el algoritmo de Dijkstra%
+    \index{Dijkstra, algoritmo de}
+  (ver sección~\ref{sec:Dijkstra}),
+  solo que estamos calculando
+  el camino más \emph{largo} a través de la red.
+  Éste está perfectamente definido en este caso,
+  ya que no hay ciclos.
+  Basta un barrido a lo ancho,
+  al no haber ciclos
+  se obtiene el valor final directamente.
+  En cada vértice visitado calculamos \(E(v)\)
+  partiendo del evento inicial \(s\)
+  (el comienzo del proyecto)
+  mediante la regla:
+  \begin{equation*}
+    E(s) = 0 \qquad E(v) = \max_x \{E(x) + w(x, v)\}
+  \end{equation*}
+  donde el máximo es sobre los vértices \(x\) predecesores de \(v\).
+
+  Esto es parte de la técnica
+  que se conoce como \emph{análisis de camino crítico}.%
+    \index{analisis de camino critico@análisis de camino crítico}
+  El resto de la técnica continúa como sigue:
+  Calculamos \(L(v)\),
+  el último instante en que puede ocurrir el evento \(v\)
+  sin retrasar el proyecto completo
+  de forma similar a como se calcularon los \(E(v)\),
+  pero comenzando del evento final \(t\) y trabajando en reversa:
+  \begin{equation*}
+    L(t) = E(t) \qquad L(v) = \min_x \{L(x) - w(v, x)\}
+  \end{equation*}
+  donde el mínimo es sobre los vértices \(x\) sucesores de \(v\).
+  Aplicando esto al ejemplo de la figura~\ref{fig:actividades}
+  da el cuadro~\ref{tab:actividades-L}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}[c]{l*{9}{>{\(}c<{\)}}}
+      \(v\):	& 1 &  2 &  3 &	 4 &  5 &  6 &	7 &  8 \\
+      \(L(v)\): & 0 &  5 &  9 &	 9 &  8 & 11 & 12 & 13
+    \end{tabular}
+    \caption{Inicio más tardío por actividad
+	     para la red~\ref{fig:actividades}}
+    \label{tab:actividades-L}
+  \end{table}
+
+  Podemos además calcular la \emph{holgura} de cada actividad%
+    \index{analisis de camino critico@análisis de camino crítico!holgura}
+  \(u v\),
+  que representa el máximo retraso
+  que puede sufrir el comienzo de la actividad
+  sin retrasar el fin del proyecto:
+  \begin{equation*}
+    F(u, v) = L(v) - E(u) - w(u, v)
+  \end{equation*}
+  Las actividades sin holgura se dice que son \emph{críticas},
+    \index{analisis de camino critico@análisis de camino crítico!actividad critica@actividad crítica}
+  cualquier retraso en éstas
+  se traduce en un retraso del proyecto completo.
+  Toda red de actividades
+  tiene al menos un camino dirigido entre principio y fin
+  formado únicamente por actividades críticas,
+  tal camino se llama \emph{ruta crítica}.
+    \index{analisis de camino critico@análisis de camino crítico!ruta critica@ruta crítica}
+  Combinando los valores en los cuadros~\ref{tab:actividades-E}
+  y~\ref{tab:actividades-L}
+  obtenemos las holguras
+  dadas en el cuadro~\ref{tab:actividades-F}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}[c]{l@{\hspace{0.5em}}*{10}{@{\hspace{0.75em}}>{\(}c<{\)}}}
+      Actividad:
+	 & A	  & B	   & C	   & D
+	 & E	  & F	   & G	   & H
+	 & I	  & J \\
+      Arco:
+	 & (1, 2) & (1, 3) & (2, 4) & (2, 5)
+	 & (2, 3) & (4, 7) & (5, 7) & (3, 6)
+	 & (6, 7) & (7, 8)  \\
+      Holgura:
+	 &	0 &	 8 &	  2 &	   0
+	 &	2 &	 2 &	  0 &	   2
+	 &	2 &	 0
+    \end{tabular}
+    \caption{Holguras para las actividades
+	     de la figura~\ref{fig:actividades}}
+    \label{tab:actividades-F}
+  \end{table}
+  Son actividades críticas las que no tienen holgura,
+  en nuestro caso
+  \(A\), \(D\), \(G\) y \(J\);
+  y se ve en la figura~\ref{fig:actividades}
+  que forman un camino a través del grafo.
+
+  El procedimiento
+  es fundamentalmente un par de recorridos a lo ancho%
+    \index{grafo!recorrido a lo ancho}
+  del digrafo.
+  Como se discutió para este algoritmo en el caso de grafos
+  en la sección~\ref{sec:BFS+DFS},
+  la complejidad es \(O(\lvert V \rvert + \lvert E \rvert)\).
+
+% Fixme: Discuss PERT a bit, references. Text book!
+
+\section{Redes y flujos}
+\label{sec:redes-flujos}
+\index{red!flujo}
+
+  En lo que sigue interpretaremos los arcos como ``tuberías''
+  por las que puede fluir alguna mercadería.
+  Un  ejemplo claro es el de circuitos eléctricos,%
+    \index{circuito electrico@circuito eléctrico}
+  con corrientes en los distintos conductores.
+  Nótese que a diferencia de la aplicación anterior
+  a redes de actividades
+  acá un ciclo dirigido es perfectamente posible
+  (aunque probablemente ineficiente).
+  Los pesos numéricos representan la capacidad del arco.
+  Además,
+  habrá un vértice \(s\) con la propiedad que todos los arcos
+  que contienen a \(s\) se alejan de él,
+  y otro vértice \(t\)
+  con la propiedad de que todos los arcos que lo contienen
+  se dirigen a él.
+  Al primero se le llama \emph{fuente}%
+    \index{red!fuente}
+    (en inglés \emph{\foreignlanguage{english}{source}}),%
+    \index{red!source@\emph{\foreignlanguage{english}{source}}|see{red!fuente}}
+  al segundo \emph{sumidero}%
+    \index{red!sumidero}
+    (en inglés \emph{\foreignlanguage{english}{sink}}.%
+    \index{red!sink@\emph{\foreignlanguage{english}{sink}}|see{red!sumidero}}
+  En resumen,
+  trataremos con redes que incluyen:
+  \begin{enumerate}[label=(\roman{*})]
+  \item
+    Un digrafo \(D = (V, A)\).
+  \item
+    Una función de capacidad \(c \colon A \rightarrow \mathbb{R}\).
+    Comúnmente haremos referencia a capacidades
+    de enlaces inexistentes,
+    usamos la convención que si \(x y \notin A\)
+    entonces \(c(x y) = 0\).
+  \item
+    Una fuente \(s\) y un sumidero \(t\).
+  \end{enumerate}
+  La figura~\ref{fig:flow-network} muestra una red,
+  con los arcos rotulados con sus capacidades.
+  También describe un flujo en esta red.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/flow-network}
+    \\[2ex]
+    \begin{tabular}[c]{r*{9}{c}}
+      \((x, y)\):  & \((s, a)\) & \((s, b)\) & \((s, c)\) & \((a, d)\)
+		   & \((b, d)\) & \((c, d)\) & \((a, t)\) & \((c, t)\)
+		   & \((d, t)\) \\
+      \(c(x, y)\): &	      5 &	   4 &		3 &	     7
+		   &	      2 &	   7 &		3 &	     5
+		   &	      4 \\
+      \(f(x, y)\): &	      3 &	   2 &		3 &	     1
+		   &	      2 &	   1 &		2 &	     2
+		   &	      4
+    \end{tabular}
+    \caption{Una red, sus capacidades y un flujo en la red}
+    \label{fig:flow-network}
+  \end{figure}
+% Fixme: Notación: Usar u, v en vez de x, y?
+
+  Supongamos que algún material fluye por la red,
+  y sea \(f(x, y)\) el flujo a lo largo del arco \(x y\),
+  de \(x\) a \(y\).
+  Si \(x y\) ni \(y x\) son arcos,
+  por convención \(f(x, y) = 0\).
+  Insistiremos para todos los vértices,
+  salvo para la fuente y el sumidero,
+  en que el flujo que entra al vértice debe ser el flujo que sale
+  (no hay acumulación de material en los vértices).
+
+  \begin{definition}
+    \index{red!flujo|textbfhy}
+    Un \emph{flujo} en una red es una función
+    que asigna un número \(f(x, y)\) a cada arco \(x y\),
+    sujeto a las condiciones:
+    \begin{description}
+    \item[Viabilidad:]
+      El flujo en cada enlace es a lo más su capacidad,
+      \(f(x, y) \le c(x, y)\) para todo arco \(x y \in A\).
+    \item[Simetría torcida:]
+      En inglés \emph{\foreignlanguage{english}{skew symmetry}},
+      una convención de notación:
+      \(f(y, x) = -f(x, y)\) para todo arco \(x y \in A\).
+    \item[Conservación:]
+      Para todo vértice \(y \in V\)
+      que no sea la fuente ni el sumidero de la red
+      requerimos que el flujo neto que entra en él sea cero:
+      \begin{equation*}
+	\sum_{x \in V} f(x, y) = 0
+      \end{equation*}
+    \end{description}
+    El \emph{valor} del flujo es el flujo total que entra a la red:
+    \begin{equation*}
+      \val(f) = \sum_{x \in V} f(s, x)
+    \end{equation*}
+  \end{definition}
+
+  Exploremos un poco las propiedades de la definición.
+  La viabilidad indica únicamente que el flujo
+  no puede exceder la capacidad del enlace.
+  Simetría torcida
+  es simplemente una conveniencia notacional
+  (básicamente,
+   si vamos ``contra la corriente''
+   contabilizamos el flujo como negativo).
+  La conservación indica que el flujo neto
+  que entra a un vértice es nulo,
+  y por simetría el que sale también:
+  \begin{equation*}
+    \sum_{y \in V} f(x, y)
+      = \sum_{y \in V} -f(y, x)
+      = -\sum_{y \in V} f(y, x)
+      = 0
+  \end{equation*}
+  En el caso de circuitos eléctricos,
+  la conservación es lo que se conoce como la ley de Kirchhoff.%
+    \index{Kirchhoff, leyes de}
+  Si no hay arco \(x y\),
+  no puede haber flujo entre ellos,
+  y \(f(x, y) = - f(y, x) = 0\).
+  Como no se permite acumulación en los vértices intermedios,
+  está claro que el flujo que sale de \(s\)
+  debiera ser el flujo que entra en \(t\):
+  \begin{equation*}
+    \val(f) = \sum_{x \in V} f(x, t)
+  \end{equation*}
+  Esto lo demostraremos formalmente más adelante.
+
+  Un problema obvio
+  es obtener el valor máximo del flujo en una red.%
+    \index{red!flujo maximo@flujo máximo}
+  Este problema nos ocupará de ahora en adelante.
+
+  Para conveniencia,
+  definimos los flujos de entrada y salida de un vértice:
+  \begin{align*}
+    \inflow(v)
+      &= \sum_{\mathclap{\substack{
+			   u \in V	\\
+			   f(u, v) > 0
+	      }}} f(u, v) \\
+    \outflow(u)
+      &= \sum_{\mathclap{\substack{
+			   v \in V	 \\
+			   f(u, v) > 0
+	      }}} f(u, v)
+  \end{align*}
+  Algunos autores anotan \(v^{-}\)
+  para lo que llamamos \(\inflow(v)\),
+  y similarmente \(v^{+}\) para \(\outflow(v)\).
+
+  En estos términos,
+  conservación se expresa simplemente
+  como el flujo que entra a un vértice es igual al que sale
+  si el vértice no es la fuente ni el sumidero:
+  \begin{equation*}
+    \inflow(v) = \outflow(v)
+  \end{equation*}
+
+% Fixme: (Paulina Silva <pasilva@alumnos.inf.utfsm.cl>) Agregar monito
+%	 con vértice + flujos,
+%	 vértice con entrantes + vertice con salientes
+
+  Lo indicado en la figura~\ref{fig:flow-network}
+  debe cumplir las condiciones para ser un flujo.
+  La figura no da flujos ``contracorriente'',
+  estamos suponiendo implícitamente
+  que por ejemplo \(f(d, b) = - f(b, d) = -2\).
+  Las condiciones de capacidad se cumplen,
+  ya que por ejemplo \(f(c, d) = 1\) mientras \(c(c, d) = 7\).
+  También debemos verificar conservación,
+  por ejemplo que para el vértice \(d\)
+  la suma de los flujos se anula:
+  \begin{align*}
+    f(a, d) + f(b, d) + f(c, d) + f(t, d)
+      &= 1 + 2 + 1 - 4 \\
+      &= 0
+  \end{align*}
+  El valor de este flujo
+  es la suma de los flujos que salen de la fuente,
+  vale decir:
+  \begin{align*}
+    \val(f)
+      &= f(s, a) + f(s, b) + f(s, c) \\
+      &= 8
+  \end{align*}
+  Resulta también,
+  como esperábamos,
+  que el flujo hacia el sumidero
+  es igual al flujo que sale de la fuente:
+  \begin{equation*}
+    f(a, t) + f(d, t) + f(c, t)
+      = 8
+  \end{equation*}
+  No contabilizamos flujos entre \(s\) y los demás vértices
+  (respectivamente entre los otros vértices y \(t\))
+  ya que no hay conexiones directas entre ellos.
+
+\subsection{Trabajando con flujos}
+\label{sec:trabajando-flujos}
+
+  Usaremos una convención de \emph{suma implícita},%
+    \index{red!suma implicita@suma implícita}
+  en que si mencionamos un conjunto de vértices
+  como argumento a \(f\),
+  estamos considerando la suma de los flujos sobre ese conjunto,
+  y similarmente para \(c\).
+  Por ejemplo,
+  al anotar \(f(X, Y)\),
+  donde \(X\) e \(Y\) son conjuntos de vértices,
+  entenderemos:
+  \begin{equation*}
+    f(X, Y) = \sum_{\substack{
+		      x \in X \\
+		      y \in Y
+		   }} f(x, y)
+  \end{equation*}
+  En estos términos,
+  la condición de conservación
+  se reduce a \(f(V, x) = 0\) para todo \(x \notin \{s, t\}\)
+  (recuérdese que por convención
+   \(s\) es la fuente y \(t\) el sumidero de la red).
+  Además,
+  omitiremos las llaves al restar conjuntos de un solo elemento.
+  Así,
+  en \(f(s, V - s) = f(s, V)\)
+  la notación
+  \(V - s\) significa el conjunto \(V \smallsetminus \{s\}\).
+  Esto simplifica mucho las ecuaciones que involucran flujos.
+  El lema siguiente recoge varias de las identidades más comunes.
+  La demostración queda como ejercicio.
+  \begin{lemma}
+    \label{lem:identidades}
+    Sea \(D = (V, A)\) una red,
+    y sea \(f\) un flujo en \(D\).
+    Entonces:
+    \begin{enumerate}
+    \item
+      Para todo \(X \subseteq V\),
+      se cumple \(f(X, X) = 0\).
+    \item
+      Para todo \(X, Y \subseteq V\)
+      se cumple \(f(X, Y) = - f(Y, X)\).
+    \item
+      Para todo \(X, Y, Z \subseteq V\) siempre que
+      \(X \cap Y = \varnothing\).
+      se cumplen:
+      \begin{align*}
+	f(X \cup Y, Z)
+	  &= f(X, Z) + f(Y, Z) \\
+	f(Z, X \cup Y)
+	  &= f(Z, X) + f(Z, Y)
+      \end{align*}
+    \end{enumerate}
+  \end{lemma}
+
+  Como un ejemplo de uso de la notación
+  y del lema~\ref{lem:identidades},
+  demostraremos que \(\val(f) = f(V, t)\).
+  Intuitivamente,
+  lo que entra a la red por la fuente debe salir por el sumidero,
+  ya que no se permiten acumulaciones entremedio.
+  Formalmente:
+  \begin{align*}
+    f(V, t)
+      & = f(V, V) - f(V, V - t) \\
+      & = -f(V, V - t) \\
+      & = f(V - t, V) \\
+      & = f(s, V) + f(V - s - t, V) \\
+      & = f(s, V) \\
+      &= \val(f)
+  \end{align*}
+  En esto usamos el hecho:
+  \begin{align*}
+    f(V - s - t, V)
+      &= \sum_{x \in V \smallsetminus \{s, t\}} f(x, V) \\
+      &= -\sum_{x \in V \smallsetminus \{s, t\}} f(V, x) \\
+      &= 0
+  \end{align*}
+  que sigue de conservación,
+  ya que cada término de la última suma se anula.
+
+  Las capacidades son los flujos máximos en la dirección indicada.
+  Si hay tuberías de capacidades \(5\) de \(u\) a \(v\)
+  y \(3\) de \(v\) a \(u\),
+  el máximo flujo de \(u\) a \(v\) es \(5\)
+  y el máximo de \(v\) a \(u\) es \(3\).
+  Esto se traduce en que al aplicar la notación a capacidades
+  los términos negativos se omiten.
+
+\subsection{Método de Ford-Fulkerson}
+\label{sec:ford-fulkerson}
+\index{Ford-Fulkerson, metodo de@Ford-Fulkerson, método de}
+
+  Presentaremos ahora una manera de obtener el flujo de máximo valor
+  en una red.
+  No lo llamaremos ``algoritmo'',
+  ya que la estrategia general~%
+    \cite{ford56:_max_flow_networks}
+  puede implementarse de varias formas,
+  con características diferentes.
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+
+    Inicialice \(f\) en \(0\) \;
+    \While{hay un camino aumentable \(p\)}{
+      Aumente el flujo \(f\) a lo largo de \(p\) \;
+    }
+    \caption{El método de Ford-Fulkerson}
+    \label{alg:ford-fulkerson}
+  \end{algorithm}
+  En el proceso introduciremos varias ideas importantes
+  en muchos problemas relacionados con flujos.
+  Supondremos que las capacidades son enteras,
+  de otra forma puede ser que los métodos planteados
+  no terminen nunca
+  (aunque converjan hacia la solución).
+
+  El método de Ford-Fulkerson es iterativo.
+  Comenzamos con \(f(x, y) = 0\) para todo arco \(x y\),
+  con un valor inicial cero.
+  En cada iteración aumentamos el valor del flujo
+  a través de identificar
+  un \emph{camino aumentable}%
+    \index{red!camino aumentable}
+  (\emph{\foreignlanguage{english}{augmenting path}} en inglés,
+   un camino entre \(s\) y \(t\) que no está en su máxima capacidad)
+  y aumentamos el flujo a lo largo de este camino.
+  Continuamos hasta que no se pueda encontrar
+  otro camino aumentable.
+  Por el teorema \emph{\foreignlanguage{english}{Max-Flow Min-Cut}}
+  (teorema~\ref{theo:max-flow=min-cut},
+   que demostraremos más adelante)
+  al finalizar el valor del flujo es máximo.
+  Si las capacidades
+  están dadas por números enteros,
+  los flujos también serán enteros.
+  Los flujos no pueden crecer indefinidamente,
+  los algoritmos terminan.
+
+\subsection{Redes residuales}
+\label{sec:red-residual}
+\index{red!residual|textbfhy}
+
+  Dada una red y un flujo \(f\),
+  habrán arcos que admiten flujo adicional,
+  y estos arcos con sus capacidades sin usar
+  a su vez constituyen una red.
+  Intuitivamente,
+  esta nos dice cuáles son las posibles mejoras del flujo,
+  así interesa analizar la relación entre esta red y la original.
+
+  Más formalmente,
+  supongamos una red \(D = (V, A)\),
+  con capacidades \(c \colon A \rightarrow \mathbb{R^+}\),
+  fuente \(s\) y sumidero \(t\).
+  Sea \(f\) un flujo en \(D\),
+  y consideremos un par de vértices \(x\) e \(y\).
+  El flujo adicional que podemos enviar de \(x\) a \(y\)
+  antes de sobrepasar la capacidad de ese enlace
+  es la \emph{capacidad residual} del enlace \(x y\),
+  que se anota \(c_f(x, y)\).
+  Por ejemplo,
+  si \(c(x, y) = 10\) y \(f(x, y) = 7\),
+  podemos enviar un flujo adicional de \(3\) de \(x\) a \(y\)
+  sin sobrepasar la capacidad de ese enlace,
+  o podemos disminuir ese flujo en \(7\).
+  O sea,
+  para un enlace \(x y\)
+  con flujo positivo \(f(x, y)\)
+  tenemos una capacidad residual
+  de \(c_f(x, y) = c(x, y) - f(x, y)\)
+  de \(x\) a \(y\),
+  y una capacidad residual
+  de \(c_f(y, x) = f(x, y)\) de \(y\) a \(x\).
+  De forma similar,
+  para un enlace \(x y\) con flujo negativo \(f(x, y)\),
+  podemos aumentar el flujo de \(x\) a \(y\)
+  disminuyendo el flujo de \(y\) a \(x\),
+  el máximo aumento posible es dejarlo en cero.
+  La \emph{red residual} \(D_f = (V, A_f)\) inducida por \(f\)
+  es simplemente la red formada por los enlaces
+  y sus capacidades residuales
+  (capacidad libre con la corriente,
+   flujo a través del enlace en contracorriente),
+  o sea \(A_f = \{u v \in V \times V \colon c_f (u, v) > 0\}\).
+  En \(D_f\) todos los arcos pueden admitir flujos mayores a cero,
+  los arcos de \(D_f\) son ya sea arcos de \(D\) o sus reversos.
+
+  Conviene definir la suma de flujos \(f_1\) y \(f_2\):
+  \begin{equation*}
+    (f_1 + f_2)(u, v) = f_1 (u, v) + f_2 (u, v)
+  \end{equation*}
+  Nótese que esto no siempre es un flujo,
+  ya que no necesariamente
+  cumple las restricciones de nuestra definición.
+
+  El siguiente lema relaciona flujos en \(D\) con flujos en \(D_f\).
+  \begin{lemma}
+    \label{lem:suma-flujos}
+    Sea \(D = (V, A)\) una red con fuente \(s\) y sumidero \(t\),
+    y \(f\) un flujo en \(D\).
+    Sea \(D_f = (V, A_f)\) la red residual inducida por \(f\),
+    y \(f'\) un flujo en \(D_f\).
+    Entonces la suma \(f + f'\) es un flujo en \(D\),
+    con valor \(\val(f + f') = \val(f) + \val(f')\).
+  \end{lemma}
+  \begin{proof}
+    Primero,
+    para verificar que es un flujo,
+    debe cumplir las condiciones de la definición.
+    Para simetría torcida tenemos:
+    \begin{align*}
+      (f + f')(x, y)
+	&= f(x, y) + f' (x, y) \\
+	&= -f(y, x) - f' (y, x) \\
+	&= - (f + f')(y, x)
+    \end{align*}
+    Para las restricciones de capacidad,
+    note que \(f' (x, y) \le c_f (x, y)\) para todo \(x, y \in V\)
+    (incluso cuando \(f'(x, y) < 0\),
+     o sea,
+     el arco \(x y\) es contracorriente).
+    Por tanto:
+    \begin{align*}
+      (f + f')(x, y)
+	&= f(x, y) + f' (x, y) \\
+	&\le f(x, y) + (c(x, y) - f(x, y)) \\
+	&= c(x, y)
+    \end{align*}
+    Para conservación,
+    al ser \(f\) y \(f'\) flujos,
+    con \(x \ne s, t\) es \(f(x, V) = f'(x, V) = 0\),
+    y \((f + f')(x, V) = 0\).
+
+    Finalmente:
+    \begin{align*}
+      \val(f + f')
+	&= (f + f')(s, V) \\
+	&= f(s, V) + f' (s, V) \\
+	&= \val(f) + \val(f')
+    \end{align*}
+    Como cumple con nuestra definición y nuestras convenciones,
+    queda demostrado lo que perseguíamos.
+  \end{proof}
+
+\subsection{Caminos aumentables}
+\label{sec:caminos-aumentables}
+\index{red!camino aumentable|textbfhy}
+
+  Dada una red \(D = (V, A)\) y un flujo \(f\),
+  un \emph{camino aumentable}
+  (en inglés \emph{\foreignlanguage{english}{augmenting path}})
+  \(p\)
+  es un camino dirigido entre \(s\) y \(t\)
+  en la red residual \(D_f\).
+  Por la definición de red residual,
+  cada arco \(x y\) a lo largo de \(p\)
+  admite flujo positivo de \(x\) a \(y\)
+  sin violar la restricción de capacidad.
+  Podemos aumentar el flujo a lo largo de \(p\) en:
+  \begin{equation*}
+    c_f(p) = \min_{(x, y) \in p} \{c_f (x, y)\}
+  \end{equation*}
+  sin sobrepasar la capacidad de ningún enlace.
+  A \(c_f(p)\) se le llama la \emph{capacidad residual} de \(p\).
+  Hemos demostrado:
+  \begin{lemma}
+    \label{lem:f_p}
+    Sea \(D = (V, A)\) una red,
+    sea \(f\) un flujo en \(D\),
+    y sea \(p\) un camino aumentable en \(D_f\).
+    Defina la función
+    \(f_p \colon V \times V \rightarrow \mathbb{R}\) mediante:
+    \begin{equation*}
+      f_p (u, v) =
+      \begin{cases}
+	c_f (p)	 & \text{si \(x y\) está en \(p\)} \\
+	-c_f (p) & \text{si \(y x\) está en \(p\)} \\
+	0	 & \text{caso contrario}
+      \end{cases}
+    \end{equation*}
+    Entonces \(f_p\) es un flujo en \(D_f\)
+    con valor\/ \(\val(f_p) = c_f(p) > 0\).
+  \end{lemma}
+
+  De lo anterior tenemos:
+  \begin{corollary}
+    \label{cor:f.prime}
+    Sea \(D = (V, A)\) una red,
+    \(f\) un flujo en \(D\)
+    y \(p\) un camino aumentable en \(D_f\).
+    Sea \(f_p\) como definido en el lema~\ref{lem:f_p},
+    y defina \(f' \colon V \times V \rightarrow \mathbb{R}\)
+    como \(f' = f + f_p\).
+    Entonces \(f'\) es un flujo en \(D\),
+    y su valor es:
+    \begin{equation*}
+      \val(f')
+	= \val(f) + \val(f_p)
+	> \val(f)
+    \end{equation*}
+  \end{corollary}
+  \begin{proof}
+    Inmediata por los lemas~\ref{lem:suma-flujos} y~\ref{lem:f_p}.
+  \end{proof}
+
+  Para clarificar estas ideas,
+  véanse las figuras~\ref{fig:red} y~\ref{fig:red-flujos}.
+  La figura~\ref{fig:red} muestra una red,
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/red}
+    \caption{Una red}
+    \label{fig:red}
+  \end{figure}
+  \begin{figure}[htbp]
+    \centering
+    \subfloat[Un flujo]{
+      \pgfimage{images/red-flujo}
+      \label{subfig:red-flujo}
+    }
+
+    \subfloat[La red residual y un camino aumentable]{
+      \pgfimage{images/red-residual}
+      \label{subfig:red-residual}
+    }
+    \caption{Flujo y red residual
+	     en la red de la figura~\ref{fig:red}}
+    \label{fig:red-flujos}
+  \end{figure}
+  la figura~\ref{subfig:red-flujo}
+  muestra un flujo en la red de la figura~\ref{fig:red}.
+  La figura~\ref{subfig:red-residual}
+  muestra la red residual con ese flujo
+  con un camino aumentable marcado.
+  Hay otros caminos aumentables,
+  como \((s, a, b, c, t)\).
+  Nótese que en la red residual tenemos enlaces contracorriente
+  cuyas capacidades son el flujo actual.
+  Esto significa que podemos enviar hasta ese flujo contracorriente
+  (disminuyendo el flujo actual)
+  a través de ese enlace.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/red-flujo-2}
+    \caption{El flujo aumentado según el camino aumentable
+	     de la figura~\ref{subfig:red-residual}}
+    \label{fig:red-flujo-aumentado}
+  \end{figure}
+  Este camino aumentable tiene capacidad residual~\(4\),
+  y la figura~\ref{fig:red-flujo-aumentado}
+  muestra el resultado de aumentar el flujo.
+
+\subsection{Cortes}
+\label{sec:cortes}
+\index{red!corte}
+
+  La idea del método de Ford-Fulkerson
+  es hallar sucesivamente un camino aumentable
+  y aumentar el flujo a lo largo de él.
+  Cuando este proceso termina
+  por no hallar un camino aumentable,
+  tenemos un flujo de valor máximo.
+  Al discutir estos métodos
+  se restringen las capacidades a números naturales.
+  De partida,
+  capacidades negativas no tienen sentido,
+  y resulta que si las capacidades son irracionales
+  hay casos en que los algoritmos no terminan nunca
+  (convergen hacia la solución,
+   pero nunca la alcanzan).
+
+  La correctitud de estos métodos
+  la garantiza
+  el teorema \foreignlanguage{english}{Max-Flow Min-Cut},%
+    \index{max-flow min-cut, teorema}
+  que es nuestro próximo objetivo.
+  Primeramente consideraremos el concepto de un \emph{corte}
+  (en inglés \emph{\foreignlanguage{english}{cut}})
+  en una red.
+  Un corte \((S, T)\) corresponde simplemente
+  a una partición de los vértices de la red
+  en conjuntos \(S\) y \(T = V \smallsetminus S\)
+  tal que \(s \in S\) y \(t \in T\),
+  véase por ejemplo la figura~\ref{fig:red-cut}.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/red-cut}
+    \caption{Un corte en la red de la figura~\ref{fig:red}
+	     con el flujo de la figura~\ref{subfig:red-flujo}}
+  \label{fig:red-cut}
+  \end{figure}
+  Si \(f\) es un flujo,
+  el \emph{flujo neto} a través del corte \((S, T)\)
+  se define como \(f(S, T)\).
+  En nuestro caso (figura~\ref{fig:red-cut}) el flujo neto
+  es \(9 - 4 + 7 = 12\).
+  La \emph{capacidad} del corte \((S, T)\) es \(c(S, T)\),
+  que en la misma figura correspondería a \(12 + 14 = 26\).
+  También se define un \emph{corte mínimo}
+  (en inglés \emph{\foreignlanguage{english}{minimum cut}})
+  como un corte de capacidad mínima.
+  El flujo neto que cruza el corte incluye flujos de \(S\) a \(T\)
+  (aportes positivos)
+  y flujos de \(T\) a \(S\)
+  (aportes negativos).
+  Por otro lado,
+  en las capacidades se incluyen solo las de arcos de \(S\) a \(T\).
+  El lema siguiente
+  relaciona los flujos
+  con las capacidades a través de cortes de la red.
+  \begin{lemma}
+    \label{lem:flujos-cortes}
+    Sea \(f\) un flujo en la red \(D = (V, A)\)
+    con fuente \(s\) y sumidero \(t\),
+    y sea \((S, T)\) un corte de la red.
+    Entonces el flujo neto a través del corte es el valor del flujo.
+  \end{lemma}
+  \begin{proof}
+    Por conservación de flujo \(f(S - s, V) = 0\),
+    y aplicando el lema~\ref{lem:identidades},
+    tenemos:
+    \begin{align*}
+      f(S, T)
+	&= f(S, V) - f(S, S) \\
+	&= f(S, V) \\
+	&= f(s, V) + f(S - s, V) \\
+	&= f(s, V) \\
+	&= \val(f)
+      \qedhere
+    \end{align*}
+  \end{proof}
+  Un resultado inmediato del lema~\ref{lem:flujos-cortes}
+  es el resultado que demostramos antes,
+  que el flujo al sumidero es el valor del flujo en la red:
+  Basta tomar el corte \((V - t, \{t\})\) para ello.
+
+  Pero también podemos deducir:
+  \begin{corollary}
+    \label{cor:flow<cut}
+    En una red \(D\) con un corte \((S, T)\),
+    el valor de cualquier flujo
+    está acotado por la capacidad del corte.
+  \end{corollary}
+  \begin{proof}
+    Sea \((S, T)\) un corte cualquiera
+    de \(D\) y sea \(f\) un flujo.
+    Por el lema~\ref{lem:flujos-cortes}
+    y las restricciones de capacidad:
+    \begin{align*}
+      \val(f)
+	& =   f(S, T) \\
+	& =   \sum_{x \in S} \sum_{y \in T} f(x, y) \\
+	& \le \sum_{x \in S} \sum_{y \in T} c(x, y) \\
+	& =   c(S, T)
+      \qedhere
+    \end{align*}
+  \end{proof}
+  Una consecuencia inmediata del corolario~\ref{cor:flow<cut}
+  es que el valor de un flujo está acotado
+  por la capacidad de un corte mínimo.
+  El teorema siguiente
+  nos dice que el flujo máximo en realidad es esta cota.
+
+  \begin{theorem}[Max-Flow Min-Cut]
+    \index{max-flow min-cut, teorema|textbfhy}
+    \label{theo:max-flow=min-cut}
+    Si \(f\) es un flujo en la red \(D = (V, A)\)
+    con fuente \(s\) y sumidero \(t\),
+    entonces las siguientes son equivalentes:
+    \begin{enumerate}[label=(\arabic{*})]
+    \item\label{item:mfmc:f-max}
+      \(f\) es un flujo máximo en \(D\).
+    \item\label{item:mfmc:res}
+      La red residual \(D_f\) no contiene
+      caminos aumentables.
+    \item\label{item:mfmc:val=cap}
+      \(\val(f) = c(S, T)\) para algún corte \((S, T)\) de \(D\).
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Demostramos la equivalencia
+    a través de un ciclo de implicancias.%
+      \index{demostracion@demostración!ciclo de implicancias}
+    \begin{description}
+    \item[\boldmath
+	  \ref{item:mfmc:f-max}~\(\implies\)~\ref{item:mfmc:res}:
+	  \unboldmath]
+      Por contradicción.
+      Supongamos en contrario que \(f\) es máximo en \(D\),
+      pero que \(D_f\)
+      tiene un camino aumentable \(p\).
+      Por el corolario~\ref{cor:f.prime}
+      sabemos que \(f + f_p\) es un flujo,
+      cuyo valor es mayor que \(\val(f)\),
+      lo que contradice la suposición de que \(f\) es máximo.
+    \item[\boldmath
+	  \ref{item:mfmc:res}~\(\implies\)~\ref{item:mfmc:val=cap}:
+	  \unboldmath]
+      Supongamos que \(D_f\)
+      no tiene camino aumentable,
+      es decir,
+      no hay camino dirigido de \(s\) a \(t\) en \(D_f\).
+      Definamos:
+      \begin{align*}
+	S & = \{x \in V \colon
+		  \text{\ hay un camino de \(s\) a \(x\)
+			en \(D_f\)\}} \\
+	T & = V \smallsetminus S
+      \end{align*}
+      Entonces \((S, T)\) es un corte de \(D\),
+      ya que obviamente \(s \in S\) y \(t \notin S\)
+      ya que no hay camino de \(s\) a \(t\) en \(D_f\)
+      por suposición.
+      Para cada par de vértices \(x \in S\) e \(y \in T\) tenemos
+      \(f(x, y) = c(x, y)\),
+      dado que de lo contrario \(x y \in A_f\) y habría un camino
+      \(s \rightsquigarrow x \rightarrow y\)
+      y así \(y\) estaría en \(S\).
+      Por el lema~\ref{lem:flujos-cortes} es:
+      \begin{equation*}
+	\val(f)
+	  = f(S, T)
+	  = c(S, T)
+      \end{equation*}
+    \item[\boldmath
+	  \ref{item:mfmc:val=cap}~%
+	     \(\implies\)~\ref{item:mfmc:f-max}:
+	  \unboldmath]
+      Por el corolario~\ref{cor:flow<cut},
+      \(\val(f) \le c(S, T)\) para todo corte \((S, T)\).
+      La condición \(\val(f) = c(S, T)\)
+      entonces asegura que el flujo es máximo.
+    \qedhere
+    \end{description}
+  \end{proof}
+
+  Este teorema sirve para demostrar
+  la validez del método de Ford-Fulkerson:%
+    \index{Ford-Fulkerson, metodo de@Ford-Fulkerson, método de}
+  Si en una iteración
+  no hay un camino aumentable,
+  quiere decir que el flujo actual es máximo.
+  Una manera razonable
+  de buscar un camino aumentable
+  es usar búsqueda a lo ancho en la red residual.
+  A esta forma de implementar el método de Ford-Fulkerson
+  se le conoce como el algoritmo de Edmonds-Karp~%
+    \cite{edmonds72:_theor_improv_algor_effic_networ_flow_probl}.%
+    \index{Edmonds-Karp, algorithmo de}
+  Una discusión detallada del problema,
+  incluyendo historia de los algoritmos,
+  presenta Wilf~\cite[capítulo~3]{wilf03:_algor_compl}.
+
+% Fixme: Agregar un ejemplo completo (p.ej. de ayudantía)
+% Sugerido por Franco Castro <fcastro@alumnos.inf.utfsm.cl>
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

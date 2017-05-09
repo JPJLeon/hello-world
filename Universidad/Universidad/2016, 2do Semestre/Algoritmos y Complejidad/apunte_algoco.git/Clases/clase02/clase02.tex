@@ -1,0 +1,292 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 3.0cm, right = 2.5cm]{geometry}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{2mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit]{titlesec}
+\titleformat{\section}
+{\normalfont\sffamily\Large\bfseries}
+{\llap{\setlength{\arrayrulewidth}{.11em}\begin{tabular}{c|}
+			\hline
+			\hspace{1em}\thesection.
+		\end{tabular} \hspace{0.6em}}}
+{0em}{#1}
+
+\titleformat{\subsection}
+{\normalfont\sffamily\large\bfseries}
+{\llap{{\makebox[3em][r]  {\thesubsection.}}\hspace{1em}}}
+{0em}{#1}
+
+\titleformat{\subsubsection}
+{\bfseries\sffamily\raggedright}
+{\llap{{\makebox[3em][r]  {\thesubsubsection.}}\hspace{1em}}}
+{0em}{#1}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+\newcommand{\definicion}[1]{\textit{\underline{\smash{#1}}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=0.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=0.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\definecolor{newGreenNew}{HTML}{F2F9EC}
+\newcolumntype{?}{!{\color[HTML]{009933}\vrule width 4pt}}
+\newcolumntype{b}{>{\columncolor{newGreenNew}}p{.967\textwidth}}
+\newenvironment{newquote}{\renewcommand{\arraystretch}{1.8}\color[HTML]{009933}\begin{longtable}{?b}}{\end{longtable}\renewcommand{\arraystretch}{1.3}}
+%================================
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#2\quad Análisis de Convergencia}}
+\renewcommand{\headrulewidth}{2pt}
+
+
+
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#2\\Análisis de Convergencia}
+\author{Aldo Berrios Valenzuela}
+\date{Miércoles 3 de Agosto de 2016}
+
+\usepackage{tikz,ifthen}
+\usepackage{pgfplots}
+\usepgfplotslibrary{fillbetween}
+\usepackage{tikz,ifthen}
+\usetikzlibrary{automata,positioning, babel}
+\usetikzlibrary{calc}
+
+\begin{document}
+\maketitle
+\section{Análisis de Convergencia}
+Sea $f\nparentesis{x}$ la función que buscamos el cero $x^*$:
+\begin{equation*}
+f\nparentesis{x^*}=0
+\end{equation*}
+Suponiendo $f\nparentesis{x}$ continua, que puede derivarse dos veces en un entorno de $x^*$, por \textit{teorema de Taylor}:
+\begin{align*}
+f\nparentesis{x}&=f\nparentesis{x^*}+f'\nparentesis{x^*}\underbrace{\nparentesis{x-x^*}}_{e_n}+\dfrac{1}{2}f''\nparentesis{x^*}\nparentesis{x-x^*}^2+O\nparentesis{\nparentesis{x-x^*}^3}\\
+&=f'\nparentesis{x^*}\nparentesis{x-x^*}\nparentesis{1+M\nparentesis{x-x^*}+O\nparentesis{\nparentesis{x-x^*}^3}}
+\end{align*}
+con
+\begin{equation*}
+M=\dfrac{f''\nparentesis{x^*}}{2f'\nparentesis{x^*}}
+\end{equation*}
+\textbf{Forma de Lagrange del residuo:}
+\begin{equation}
+\dfrac{1}{3!}f'''\nparentesis{\zeta}\nparentesis{x-x^*}^3
+\end{equation}
+donde $x\leq \zeta \leq x^*$.
+\begin{equation}
+e_n=x_n-x^*
+\end{equation}
+donde $n$ es el número de la iteración correspondiente.
+
+\subsubsection{Regula Falsi}
+Para \textit{regula falsi}, recordemos que:
+\begin{equation}
+x_{n+1}=x_n-f\nparentesis{x_n}\cdot \dfrac{x_n-x_0}{f\nparentesis{x_n}-f\nparentesis{x_0}}
+\end{equation}
+entonces, el error es:
+\begin{align*}
+e_{n+1}&=e_n-f\nparentesis{x_n}\cdot \dfrac{x_0-x_n}{f\nparentesis{x_0}-f\nparentesis{x_n}}\\
+&\approx e_n-f'\nparentesis{x^*}e_n\cdot \dfrac{x_0-x^*}{f\nparentesis{x_0}}\\
+&=e_n\nparentesis{1-f'\nparentesis{x^*}\dfrac{x_0-x^*}{f\nparentesis{x_0}}}
+\end{align*}
+Como $e_{n+1}\approx C e_n$, convergencia lineal. Ojo, esto es sólo para regula falsi. Si queremos encontrar el error de otro método, por ejemplo bisección, tendremos que realizar todo el análisis que hicimos anteriormente para encontrar el $e_{n+1}$.
+
+
+
+\subsubsection{Método de Newton}
+Considere la Figura \ref{02::newton:grafico}:
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=2,
+	ymin=-0.6,
+	ymax=2,
+	xtick={0.535, 0.88375},
+	xticklabels = {$x_n$, $x_{n+1}$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	\addplot [black!70!blue!80, samples = 100, smooth, tension = 0.8] coordinates {(0.3, 1.3) (0.6, 0.5) (1.3, -0.2) (1.8, -0.3)};
+	\addplot [domain = 0.2:1.1, red!80!black, samples = 100] {-1.72043*x+1.52043};
+	
+	\draw [dashed, blue] (axis cs:0.535, 0) -- (axis cs:0.535, 0.6);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Una tangente de la curva $f$ en el punto $x_n$ corta al eje $x$ en el punto $x_{n+1}$.}
+	\label{02::newton:grafico}
+\end{figure}
+
+donde:
+\begin{equation}
+x_{n+1}=x_n-\dfrac{f\nparentesis{x_n}}{f'\nparentesis{x_n}}
+\end{equation}
+
+Considere nuevamente a \textit{forma de Lagrange del residuo}, entonces:
+\begin{align*}
+	e_{n+1}&=e_n-\dfrac{f\nparentesis{x_n}}{f'\nparentesis{x_n}}\\
+	&\approx e_n-\dfrac{f'\nparentesis{x^*}e_n\nparentesis{1+Me_n}}{f'\nparentesis{x^*}}\\
+	&=-Me_n^2=-\dfrac{f''\nparentesis{x^*}}{2f'\nparentesis{x^*}}\cdot e_n^2
+\end{align*}
+En el fondo, el \textit{método de Newton} duplica el número de cifras correctas en cada iteración.
+
+\subsubsection{Método de la Secante}
+Considere la Figura \ref{02::secante:grafico}, 
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=2,
+	ymin=-0.6,
+	ymax=2,
+	xtick={0.345, 0.835, 0.988125},
+	xticklabels = {\tiny$x_n$, \tiny$x_{n+1}$, \tiny$x_{n+2}$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	\addplot [black!70!blue!80, samples = 100, smooth, tension = 0.8] coordinates {(0.3, 1.3) (0.6, 0.5) (1.4, -0.05) (1.9, -0.12)};
+	\addplot [domain = 0.2:1.2, red!80!black, samples = 100] {-1.72043*x+1.7};
+	
+	\draw [dashed, blue] (axis cs:0.345, 0) -- (axis cs:.345, 1.11);
+	\draw [dashed, blue] (axis cs:0.835, 0) -- (axis cs:0.835, 0.27);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Una secante corta a la curva $f$ en los puntos $x_n$ y $x_{n+1}$. El intercepto con el eje $x$ corta en $x_{n+2}$. Luego, se evalúa $f$ en $x_{n+2}$ y se obtiene una nueva secante que una los puntos $f\nparentesis{x_{n+1}}$ y $f\nparentesis{x_{n+2}}$. Finalmente, repetir el proceso hasta encontrar el valor de convergencia.}
+	\label{02::secante:grafico}
+\end{figure}
+donde:
+\begin{equation}
+x_{n+2} = x_{n+1}-f\nparentesis{x_{n+1}}\cdot \dfrac{x_{n+1}-x_n}{f\nparentesis{x_{n+1}}-f\nparentesis{x_n}}
+\end{equation}
+Considere nuevamente la forma de Lagrange del residuo, entonces:
+\begin{align*}
+x_{n+2}&=x_{n+1}-f\nparentesis{x_{n+1}}\dfrac{x_{n+1}-x_n}{f\nparentesis{x_{n+1}}-f\nparentesis{x_n}}\\
+&=\dfrac{x_nf\nparentesis{x_{n+1}}-x_{n+1}f\nparentesis{x_n}}{f\nparentesis{x_{n+1}}-f\nparentesis{x_n}}\\
+e_{n+2}&=\dfrac{e_nf'\nparentesis{x^*}e_{n+1}\nparentesis{1+Me_{n+1}}-e_{n+1}f'\nparentesis{x^*}e_n\nparentesis{1+Me_n}}{f'\nparentesis{x^*}\nparentesis{e_{n+1}-e_n}}\\
+&\approx \dfrac{e_ne_{n+1}\nparentesis{1+Me_{n+1}-1-Me_n}}{e_{n+1}-e_n}\\
+&=Me_ne_{n+1}
+\end{align*}
+
+Supongamos:
+\begin{align*}
+\nabsoluto{e_{n+1}}&=C\nabsoluto{e_n}^p\\
+\nabsoluto{e_{n+2}}&=C\nabsoluto{e_{n+1}}^p\\
+&=C\nparentesis{C\nabsoluto{e_n}^p}^p\\
+&=C^{p+1}\nabsoluto{e_n}^{p^2}
+\end{align*}
+Por lo tanto, para la secante:
+\begin{equation}
+C^{p+1}\nabsoluto{e_n}^{p^2}=MC\nabsoluto{e_n}^{p+1}
+\end{equation}
+Entonces:
+\begin{equation}
+p^2=p+1\rightsquigarrow p=\tau\approx 1.618
+\end{equation}
+Por lo tanto, el método de la secante es \textit{superlineal}.
+
+\begin{newquote}
+	El número $\tau$ viene de:
+	\begin{equation*}
+	p^2-p-1=0\rightsquigarrow p=\dfrac{1\pm \sqrt{1+4}}{2}=\dfrac{1\pm \sqrt{5}}{2}
+	\end{equation*}	
+\end{newquote}
+
+
+\end{document}

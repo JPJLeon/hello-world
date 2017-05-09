@@ -1,0 +1,909 @@
+% permutaciones.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Permutaciones}
+\label{cha:permutaciones}
+
+  Informalmente,
+  una permutación es un reordenamiento de un conjunto de objetos.
+  Las permutaciones aparecen,
+  en forma más o menos prominente,
+  en casi todos los ámbitos de las matemáticas.
+  Al tratar con conjuntos finitos es común estar interesados
+  en las distintas formas de ordenarlos,
+  posiblemente simplemente para considerar equivalentes
+  los distintos órdenes.
+  En el análisis de muchos algoritmos,
+  particularmente los de ordenamiento,
+  son características de las permutaciones
+  lo que determina su rendimiento.
+
+\section{Definiciones básicas}
+\label{sec:permutaciones-def}
+
+% Fixme: Revisar el material este en Shoup, GKP, TAoCP, Biggs.
+% ¡Citarlos!
+% Fixme: Aplicar teoría a análisis de algoritmos de ordenamiento
+% simples
+
+  Al reordenar elementos de un conjunto estamos definiendo
+  una biyección entre la posición original y la nueva.
+  Nos interesa estudiar estas biyecciones.
+  \begin{definition}
+    \index{permutacion@permutación|textbfhy}
+    Una \emph{permutación} de un conjunto finito \(\mathcal{X}\)
+    es una biyección de \(\mathcal{X}\) a \(\mathcal{X}\).
+  \end{definition}
+  Comúnmente usaremos \(\mathcal{X} = \{1, 2, \dotsc, n\}\)
+  para concretar.
+  Por ejemplo,
+  una permutación típica de \(\{1, 2, \dotsc, 5\}\) es
+  la función \(\alpha\) definida por la tabla:
+
+  \begin{center}
+    \begin{tabular}[c]{>{\(}l<{\)}@{\hspace{0.7em}}
+		       *{4}{>{\(}c<{\)}@{\hspace{0.5em}}}>{\(}c<{\)}}
+      & 1 & 2 & 3 & 4 & 5 \\
+      \alpha & \downarrow & \downarrow & \downarrow & \downarrow
+	     & \downarrow \\
+      & 2 & 4 & 5 & 1 & 3
+    \end{tabular}
+  \end{center}
+  Para abreviar,
+  anotaremos una permutación dando
+  el elemento al que va el de la posición indicada,
+  o sea en este caso particular:
+  \begin{equation*}
+    \alpha
+      = (2\;4\;5\;1\;3)
+  \end{equation*}
+  Viene a ser simplemente la última línea en lo anterior.
+
+  Hay \(n!\)~permutaciones
+  de un conjunto de \(n\) elementos%
+    \index{permutacion@permutación!numero@número}
+  (para crear la permutación \(\pi\)
+   el valor de \(\pi(1)\) puede elegirse de \(n\) maneras,
+   una vez elegido este
+   quedan solo \(n - 1\) opciones para \(\pi(2)\),
+   y así sucesivamente,
+   y finalmente queda solo una opción para \(\pi(n)\)).
+
+  Tomemos la anterior permutación \(\alpha\)
+  y la permutación \(\beta = (3\;5\;1\;4\;2)\).
+  La composición \(\beta \alpha\) se obtiene de aplicar \(\alpha\),
+  luego \(\beta\),
+  y resulta:
+  \begin{equation*}
+    \beta \alpha
+      = (5\;4\;2\;3\;1)
+  \end{equation*}
+  En general,
+  la composición no es conmutativa,
+  en nuestro caso:
+  \begin{equation*}
+    \alpha \beta
+      = (5\;3\;2\;1\;4)
+  \end{equation*}
+  y claramente \(\alpha \beta \ne \beta \alpha\).
+  Cuidado,
+  la convención general
+  al operar con permutaciones es que las operaciones
+  se efectúan de izquierda a derecha,
+  no de derecha a izquierda como correspondería
+  dado que la operación es composición de funciones.
+  O sea,
+  \(\alpha \beta \gamma\)
+  se interpreta como \((\alpha \beta) \gamma\).
+  En todo caso,
+  dado que esto es un grupo,
+  la operación es asociativa.%
+    \index{operacion@operación!asociativa}
+
+  \begin{theorem}
+    \label{theo:permutaciones-grupo}
+    \index{grupo}
+    \index{permutacion@permutación!grupo}
+    Las permutaciones cumplen las siguientes:
+    \begin{enumerate}[label = (\roman*), ref = (\roman*)]
+    \item
+      \label{en:pg-1}
+      Si \(\pi\) y \(\sigma\)
+      son permutaciones de un conjunto de \(n\) elementos,
+      lo es también \(\pi \sigma\).
+    \item
+      \label{en:pg-2}
+      Para todas permutaciones \(\pi\), \(\sigma\), \(\tau\)
+      de un conjunto,
+      se cumple:
+      \begin{equation*}
+	(\pi \sigma) \tau = \pi (\sigma \tau)
+      \end{equation*}
+    \item
+      \label{en:pg-3}
+      La función identidad,
+      que llamaremos \(\iota\),
+      definida por \(\iota(r) = r\),
+      es una permutación,
+      y tenemos para toda permutación \(\sigma\):
+      \begin{equation*}
+	\iota \sigma = \sigma \iota = \sigma
+      \end{equation*}
+    \item
+      \label{en:pg-4}
+      Para toda permutación \(\pi\) de un conjunto dado
+      hay una permutación inversa
+      \(\pi^{-1}\) tal que:
+      \begin{equation*}
+	\pi \pi^{-1} = \pi^{-1} \pi = \iota
+      \end{equation*}
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    La propiedad~\ref{en:pg-1}
+    sigue directamente de que la composición de biyecciones
+    es una biyección,~%
+    \ref{en:pg-2}
+    es una propiedad básica de la composición de funciones,~%
+    \ref{en:pg-3} es obvio,
+    y~\ref{en:pg-4}
+    es simplemente que toda biyección tiene una inversa.
+  \end{proof}
+
+  El teorema~\ref{theo:permutaciones-grupo}
+  equivale a decir que las permutaciones forman un grupo
+  con la operación de composición.
+  Al grupo de permutaciones de \(n\) elementos
+  se le llama el \emph{grupo simétrico de orden \(n\)},%
+    \index{grupo!simetrico@simétrico|textbfhy}
+  que se anota \(\mathtt{S}_n\).
+  Note eso sí que el orden de \(\mathtt{S}_n\) es \(n!\),%
+    \index{grupo!orden}
+  a diferencia de lo que parece indicar su nombre.
+
+  Es conveniente una notación compacta
+  para permutaciones individuales.
+  Consideremos nuevamente la permutación \(\alpha\).
+  Es \(\alpha(1) = 2\), \(\alpha(2) = 4\), \(\alpha(4) = 1\).
+  Esto forma un \emph{ciclo}
+  (\(1 \rightarrow 2 \rightarrow 4 \rightarrow 1\))
+  de largo \(3\).
+  Similarmente,
+  \(3\) y \(5\) forman un ciclo de largo \(2\),
+  y podemos escribir \(\alpha\) en \emph{notación de ciclos}
+  como \(\alpha = (1\;2\;4) (3\;5)\).
+
+  Toda permutación \(\pi\) se puede escribir
+  en notación de ciclos mediante el siguiente algoritmo:%
+    \index{permutacion@permutación!notacion ciclo@notación ciclo|textbfhy}
+  \begin{itemize}
+  \item
+    Comience con algún símbolo
+    (digamos \(1\)),
+    y trace el efecto de \(\pi\) sobre él y sus sucesores
+    hasta que nuevamente encontremos \(1\),
+    así tenemos un ciclo.
+  \item
+    Tome un símbolo cualquiera que no haya sido considerado aún,
+    y construya el ciclo que lo contiene de la misma forma.
+  \item
+    Continúe de la misma forma
+    hasta haber dado cuenta de todos los símbolos.
+  \end{itemize}
+  Podemos elegir cualquiera de los elementos
+  de cada ciclo como primero --
+  por ejemplo,
+  \((7\;8\;2\;1\;3)\) es lo mismo que \((1\;3\;7\;8\;2)\).
+  Por otro lado,
+  podemos reordenar los ciclos --
+  por ejemplo,
+  \((1\;2\;4)(3\;5)\) y \((3\;5) (1\;2\;4)\)
+  corresponden a la misma permutación,
+  ya que al operar los ciclos en esta representación
+  sobre elementos diferentes los ciclos conmutan.
+  Lo importante son el número de ciclos,
+  sus largos,
+  y la disposición de sus elementos.
+  Se adopta la convención
+  de comenzar cada ciclo con su mínimo elemento,
+  y luego ordenar los ciclos en orden de elemento mínimo.
+
+  Para ver que la representación es única,
+  debemos mostrar una biyección entre permutaciones y ciclos.
+  Si anotamos los ciclos siempre con el máximo elemento al comienzo,
+  y listamos los ciclos en orden de máximo elemento creciente,
+  tomamos una permutación cualquiera
+  podemos interpretarla como escrita en notación de ciclos:
+  Los comienzos de cada ciclo son los máximos hasta ese punto.
+  Esto constituye una biyección,%
+    \index{biyeccion@biyección}
+  y toda permutación puede escribirse en ciclos de una única forma.
+
+  Por ejemplo,
+  para la permutación \(\beta\) dada anteriormente,
+  la notación de ciclos es \(\beta = (1\;3) (2\;5) (4)\).
+  Acá 4 forma un ciclo ``degenerado'' por sí mismo,
+  ya que \(\beta(4) = 4\).
+  Simplemente omitiremos estos ciclos de largo \(1\),
+  ya que corresponden a símbolos
+  que no son afectados por la permutación.
+  En todo caso,
+  es mejor no omitirlos
+  hasta que uno se haya familiarizado con la notación.
+  Puede considerarse la notación de ciclos
+  como el producto de las permutaciones con esos ciclos
+  (los demás elementos permanecen fijos).
+  O sea, en nuestro caso:
+  \begin{equation*}
+    \beta
+      = (1\;3) (2) (4) (5) \cdot (1) (2\;5) (3) (4)
+  \end{equation*}
+  Esto es consistente
+  con la convención de omitir ciclos de largo uno.
+
+  \begin{example}
+    Se tienen cartas numeradas \(1\) a \(12\),
+    que se reparten en filas
+    como muestra la figura~\ref{subfig:cartas-1}.
+    \begin{figure}[htbp]
+      \centering
+      \subfloat[Original]{
+	\begin{tabular}[c]{*{3}{>{\(}r<{\)}}}
+	   1 &	2 &  3 \\
+	   4 &	5 &  6 \\
+	   7 &	8 &  9 \\
+	  10 & 11 & 12
+	\end{tabular}
+	\label{subfig:cartas-1}
+      }%
+      \qquad%
+      \subfloat[Columnas]{
+	\begin{tabular}[c]{*{3}{>{\(}r<{\)}}}
+	   1 &	4 &  7 \\
+	  10 &	2 &  5 \\
+	   8 & 11 &  3 \\
+	   6 &	9 & 12
+	\end{tabular}
+	\label{subfig:cartas-2}
+      }
+      \caption{Ordenamiento de cartas}
+      \label{fig:cartas}
+    \end{figure}
+    Luego se toman las cartas por filas
+    y se distribuyen en columnas,
+    quedando como lo muestra la figura~\ref{subfig:cartas-2}.
+    ¿Cuántas veces hay que repetir esta operación
+    hasta obtener nuevamente el orden original?
+
+    Sea \(\pi\) la permutación que corresponde a esta operación,
+    lo que buscamos es el orden de \(\pi\) en \(\mathtt{S}_{12}\).
+    Esta manera de verlo
+    nos dice que el problema tiene solución,
+    cosa que no es obvia:
+    Perfectamente podría ocurrir
+    que saliendo de la configuración inicial
+    ya no haya manera de volver a ella.
+    En notación de ciclos
+    tenemos \(\pi = (1) (2\;4\;10\;6\;5) (3\;7\;8\;11\;9) (12)\).
+    Las cartas \(1\) y \(12\) no cambian de posición,
+    las demás forman dos ciclos de largo \(5\).
+    Al repetir esta operación \(5\) veces
+    todas las cartas quedan en sus posiciones originales.
+  \end{example}
+
+  \begin{example}
+    En la Prisión de Dunwich hay \(100\)~prisioneros.
+    En su aburrimiento al alcaide se le ocurre un jueguito:
+    Toma \(100\)~cajas,
+    las rotula con los números de los prisioneros
+    y en cada una coloca un número de prisionero al azar.
+    Luego ofrece a los prisioneros lo siguiente:
+    Cada uno puede elegir \(50\)~de las cajas,
+    si alguno no encuentra su número
+    los llevará a todos a un paseo a las colinas de Vermont.
+
+    Si se considera que cada prisionero abre \(50\)~cajas al azar,
+    es claro que hallará su número la mitad de las veces,
+    y por tanto la probabilidad que todos encuentren los suyos
+    es \(2^{-100}\),
+    verdaderamente microscópico.
+
+    Sin embargo,
+    hay un algoritmo que asegura una razonable probabilidad
+    de evitar una suerte horrorosa:
+    Cada cual abre la caja con su número,
+    luego la caja con el número que halló en la primera,
+    y así sucesivamente hasta agotar las~\(50\) o hallar el suyo.
+    Lo que está haciendo cada prisionero
+    es trazar un ciclo de la permutación,
+    interesa entonces saber
+    cuántas permutaciones de \(100\)~elementos
+    tienen ciclos de largo mayor a~\(50\).
+    Como son \(100\)~prisioneros,
+    una permutación
+    puede tener a lo más un ciclo de los largos de interés,
+    por lo que contar el número de permutaciones con estos ciclos
+    es simplemente contar el número total de tales ciclos
+    en permutaciones de \(100\) elementos.
+    Si consideramos un ciclo de \(r\) elementos,
+    estos podemos elegirlos
+    de \(\binom{100}{r}\)~maneras entre los 100,
+    y podemos ordenarlos de \((r - 1)!\)~formas en un ciclo.
+    Los \(100 - r\)~elementos restantes
+    se pueden organizar de \((100 - r)!\)~maneras,
+    con lo que el número de permutaciones
+    con un ciclo de largo \(r\) son:
+    \begin{equation*}
+      \binom{100}{r} (r - 1)! (100 - r)!
+	= \frac{100!}{r}
+    \end{equation*}
+    Vale decir,
+    exactamente \(1\) en \(r\)
+    permutaciones tienen un ciclo de largo \(r\)
+    cuando \(r > 50\).
+    Nos interesa entonces la proporción:
+    \begin{equation*}
+      \sum_{51 \le r \le 100} \frac{1}{r}
+	= H_{100} - H_{50}
+	\approx 0,6882
+    \end{equation*}
+    Tienen un poco más de \(31\)\% de probabilidades
+    de salvarse.
+  \end{example}
+
+  Si un ciclo se compone consigo mismo,
+  el primer elemento del ciclo termina en el tercer lugar,
+  y así sucesivamente.
+  Para que el primer elemento de un ciclo de largo \(k\)
+  vuelva a su posición original
+  debe elevarse a la potencia \(k\).
+  Para que todos los elementos de una permutación
+  de tipo \([1^{\alpha_1} 2^{\alpha_2} \dotso n^{\alpha_n}]\)
+  vuelvan por primera vez a sus posiciones originales
+  (lo que determina el orden de la permutación)%
+    \index{permutacion@permutación!orden}
+  deben volver a sus posiciones originales
+  todos los elementos de todos los ciclos.
+  Esto es el mínimo común múltiplo de los largos de los ciclos.
+  No importa cuántos ciclos de cada largo hay,
+  solo si de los largos respectivos hay o no ciclos.
+
+  \begin{definition}
+    \index{permutacion@permutación!involucion@involución}
+    \index{involucion@involución|see{permutación!involución}}
+    Una permutación \(\tau\)
+    que es su propio inverso se llama \emph{involución}.
+    \index{involucion@involución|textbfhy}
+  \end{definition}
+
+  Las involuciones son aquellas permutaciones que solo tienen ciclos
+  de largo \(1\) y \(2\),
+  quedan representadas
+  por \(\MSet(\Cyc_{\le 2}(\mathcal{Z}))\).%
+    \index{metodo simbolico@método simbólico}
+  Como la función generatriz exponencial de un ciclo de largo \(r\)
+  es simplemente \(z^r / r\),
+  la función generatriz exponencial \(\widehat{I}(z)\)
+  para el número de involuciones de \(n\) elementos es:
+  \begin{equation}
+    \label{eq:involution-egf}
+    \index{involucion@involución!funcion generatriz@función generatriz}
+    \widehat{I}(z)
+      = \exp\left(
+	      z + z^2 / 2
+	    \right)
+  \end{equation}
+  Prácticamente indoloro.
+
+  Un desarreglo%
+    \index{desarreglo}
+  (ver sección~\ref{sec:desarreglos}
+   y también el capítulo~\ref{cha:pie})
+  es simplemente una permutación
+  que no tiene ciclos de largo uno.
+  La expresión simbólica correspondiente%
+    \index{metodo simbolico@método simbólico}
+  es \(\MSet(\Cyc_{\ge 2}(\mathcal{Z}))\),
+  que podemos expresar
+    \(\MSet(\Cyc(\mathcal{Z}) - \Cyc_{= 1}(\mathcal{Z}))\),
+  la función generatriz exponencial que resulta es:%
+    \index{generatriz!exponencial}
+  \begin{equation*}
+    \widehat{D}(z)
+      = \exp ( -\ln (1 - z) - z )
+      = \frac{\mathrm{e}^{-z}}{1 - z}
+  \end{equation*}
+  De acá nuevamente obtenemos
+  el número de desarreglos de \(n\) elementos
+  como \(D_n = n! \exp\lvert_n (-1)\).
+
+  En el ejemplo de la prisión de Dunwich
+  buscábamos el número de permutaciones
+  con ciclos de largo mayor a \(50\).
+  Este tipo de problemas puede atacarse
+  marcando las subestructuras de interés.%
+    \index{metodo simbolico@método simbólico}
+  Usamos la clase \(\mathcal{U}\) para marcar,
+  con un único elemento \(\upsilon\) de tamaño uno,
+  y usamos la letra \(u\) en funciones generatrices.
+  Si queremos saber cuántos ciclos de largo \(r\) hay en total
+  en permutaciones de \(n\) elementos,
+  consideraremos:
+  \begin{equation*}
+    \MSet(\Cyc_{\ne r}(\mathcal{Z})
+	      + \mathcal{U} \times \Cyc_{= r}(\mathcal{Z}))
+  \end{equation*}
+  Abusando de la notación,
+  escribimos:
+  \begin{equation*}
+    \MSet(\Cyc_{\ne r}(\mathcal{Z})
+	      + u \Cyc_{= r}(\mathcal{Z}))
+      = \MSet(\Cyc(\mathcal{Z}) + (u - 1) \Cyc_{= r}(\mathcal{Z}))
+  \end{equation*}
+  Tenemos directamente:
+  \begin{equation*}
+    C_r(z, u)
+      = \exp \left( - \ln (1 - z) + (u - 1) \, \frac{z^r}{r}\right)
+      = \frac{\mathrm{e}^{(u - 1) z^r / r}}{1 - z}
+  \end{equation*}
+  El número de ciclos de largo \(r\) es el exponente de \(u\),
+  que podemos extraer derivando y haciendo \(u = 1\),
+  lo que da la función generatriz exponencial
+  para el número total de ciclos de largo \(r\)
+  en permutaciones de \(n\) elementos:
+  \begin{equation*}
+    C_r(z)
+      = \left.
+	  \frac{\partial}{\partial u} \, C_r(z, u)
+	\right\rvert_{u = 1}
+      = \frac{z^r}{r} \, \frac{1}{1 - z}
+  \end{equation*}
+  De acá podemos obtener el número promedio de ciclos de largo \(r\)
+  en las permutaciones de \(n\)~elementos,
+  al haber \(n!\)~permutaciones
+  y ser una función generatriz exponencial
+  es directamente el coeficiente de \(z^n\):
+  \begin{equation*}
+    [ z^n ] \frac{z^r}{r} \, \frac{1}{1 - z}
+      = \frac{1}{r}
+  \end{equation*}
+  Esto ya lo habíamos obtenido en el ejemplo,
+  y al discutir desarreglos en el capítulo~\ref{cha:pie}%
+    \index{desarreglo}
+  vimos que para \(r = 1\) es \(1\),
+  pero esta técnica es mucho más general.
+% Fixme: ¿Análisis p.ej.de bubblesort, selección?
+
+  A cada permutación \(\pi\) en \(\mathtt{S}_n\)
+  corresponde una partición de los \(n\) elementos
+  en los elementos de sus ciclos.
+  Al número de ciclos de cada largo de la permutación
+  le llamaremos su \emph{tipo}.%
+    \index{permutacion@permutación!tipo|textbfhy}
+  O sea,
+  si \(\pi\) tiene \(\alpha_i\) ciclos de largo \(i\)
+  (\(1 \le i \le n\)),
+  el tipo de \(\pi\) lo anotamos
+  \([1^{\alpha_1} 2^{\alpha_2} \dotso n^{\alpha_n}]\).
+  Generalmente omitiremos los factores con \(\alpha_i = 0\)
+  (largos para los cuales no hay ciclos).
+
+  \begin{definition}
+    \label{def:permutacion-conjugada}
+    \index{permutacion@permutación!conjugada|textbfhy}
+    Si hay una permutación \(\sigma\)
+    tal que \(\sigma \alpha \sigma^{-1} = \beta\)
+    se dice que \(\beta\) es \emph{conjugada} de \(\alpha\).
+  \end{definition}
+  El teorema siguiente es básico
+  en la teoría algebraica de permutaciones.
+  \begin{theorem}
+    Dos permutaciones \(\alpha\) y \(\beta\) son conjugadas
+    si y solo si tienen el mismo tipo.
+  \end{theorem}
+  \begin{proof}
+    Demostramos implicancias en ambas direcciones.
+
+    Si \(\alpha\) y \(\beta\) son permutaciones conjugadas,
+    hay \(\sigma\)
+    tal que podemos escribir \(\sigma \alpha \sigma^{-1} = \beta\).
+    Tomemos un ciclo \((x_1, x_2, \dotsc, x_r)\) de \(\alpha\),
+    vale decir,
+    \(\alpha(x_1) = x_2\),
+    \(\alpha(x_2) = x_3\), \ldots,
+    \(\alpha(x_{r - 1}) = x_r\), \(\alpha(x_r) = x_1\).
+    Definamos \(y_i = \sigma(x_i)\) para \(1 \le i \le r\).
+    Tenemos,
+    tomando los índices módulo \(r\):
+    \begin{equation*}
+      \beta(y_i)
+	= \sigma \alpha \sigma^{-1}(\sigma(x_i))
+	= \sigma \alpha (x_i)
+	= \sigma(x_{i + 1})
+	= y_{i + 1}
+    \end{equation*}
+    Esto es una biyección entre el ciclo de \(\alpha\)
+    que contiene a \(x_1\)
+    y el ciclo de \(\beta\) que contiene a \(y_1\),
+    y habrán biyecciones similares
+    entre los demás ciclos de \(\alpha\) y \(\beta\),
+    que así tienen el mismo tipo.
+
+    Por otro lado,
+    supongamos que \(\alpha\) y \(\beta\) tienen el mismo tipo.
+    Como tienen el mismo número de ciclos de cada uno de los largos,
+    podemos construir una biyección
+    entre ciclos del mismo largo de \(\alpha\) y \(\beta\),
+    digamos \((x_1, x_2, \dotsc, x_r)\) en \(\alpha\)
+    corresponde a \((y_1, y_2, \dotsc, y_r)\) en \(\beta\).
+    Definiendo \(\sigma(x_i) = y_i\) para este ciclo,
+    y de forma similar para los demás ciclos,
+    tenemos \(\sigma \alpha \sigma^{-1} = \beta\) ya que
+    (considerando los índices módulo el largo del ciclo)
+    tenemos:
+    \begin{equation*}
+      \sigma \alpha \sigma^{-1}(y_i)
+	= \sigma \alpha (x_i)
+	= \sigma (x_{i + 1})
+	= y_{i + 1}
+	= \beta(y_i)
+      \qedhere
+    \end{equation*}
+  \end{proof}
+
+  Una manera fundamental de clasificar permutaciones%
+    \index{permutacion@permutación!clasificacion@clasificación}
+  viene de considerarlas como composición de \emph{transposiciones},
+  que son permutaciones que solo intercambian dos elementos.%
+    \index{permutacion@permutación!transposicion@transposición|textbfhy}
+    \index{transposicion@transposición|see{permutación!transposición}}%
+    \glossary{Transposición}
+	     {Una permutación que solo intercambia dos elementos}
+
+  Una permutación es una transposición
+  si es del tipo \([1^{n - 2} 2^1]\)
+  (tiene \(n - 2\) ciclos de largo \(1\) y un ciclo de largo \(2\)).
+  Ahora bien,
+  el ciclo \((x_1 \, x_2 \dotso x_r)\),
+  transforma \((x_1 \, x_2 \dotso x_r)\)
+  en \((x_2 \, x_3 \dotso x_r \, x_1)\),
+  y este mismo efecto se logra intercambiando \(x_1\) con \(x_2\),
+  luego \(x_2\)
+  (que ahora está en la posición \(x_1\))
+  con \(x_3\),
+  y así sucesivamente.
+  Así podemos escribir
+  \((x_1 \, x_2 \dotso x_r)
+      = (x_1 \, x_r) \dotso (x_1 \, x_3) (x_1 \, x_2)\).
+  Como toda permutación se puede descomponer en ciclos,
+  toda permutación puede expresarse en términos de transposiciones.
+  Por ejemplo,
+  aplicando la idea indicada arriba a cada uno de los ciclos:
+  \begin{equation*}
+    (1\;3\;6)(2\;4\;5\;7) = (1\;6) (1\;3) (2\;7) (2\;5) (2\;4)
+  \end{equation*}
+  Las transposiciones se pueden traslapar,
+  un elemento puede moverse más de una vez.
+  Esta representación no es única,
+  además de reordenar las transposiciones
+  podemos usar un conjunto completamente diferente de estas,
+  como:
+  \begin{equation*}
+    (1\;3\;6)(2\;4\;5\;7)
+      = (1\;5) (3\;5) (3\;6) (5\;7) (1\;4) (2\;7) (1\;2)
+  \end{equation*}
+  Sin embargo,
+  hay una característica común entre estas descomposiciones.
+  Sea \(c(\pi)\) al número total de ciclos de \(\pi\).
+  Si \(\pi\)
+  es de tipo \([1^{\alpha_1} 2^{\alpha_2} \dotso n^{\alpha_n}]\),
+  entonces \(c(\pi) = \alpha_1 + \alpha_2 + \dotsb + \alpha_n\).
+  Si combinamos \(\pi\) con una transposición \(\tau\),
+  dando \(\tau \pi\),
+  interesa determinar
+  la relación entre \(c(\pi)\) y \(c(\tau \pi)\).
+  Si \(\tau\) intercambia \(a\) con  \(b\),
+  tenemos \(\tau(a) = b\), \(\tau(b) = a\)
+  y \(\tau(k) = k\) si \(k \ne a, b\).
+  Cuando \(a\) y \(b\) están en el mismo ciclo de \(\pi\),
+  podemos escribir:
+  \begin{equation*}
+    \pi = (a \, x \dotso y \, b \dotso z) \text{\ y otros ciclos}
+  \end{equation*}
+  Veamos \(\tau \pi\).
+  Como \(\tau\) intercambia \(a\) con \(b\),
+  los ciclos de \(\pi\) que no los incluyen no cambian.
+  Sean \(\pi(a) = x\), \(\pi(y) = b\), \(\pi(z) = a\);
+  con lo que
+  \(\tau \pi(a) = \tau(x) = x\) y \(\tau \pi(y) = \tau(b) = a\).
+  De la misma forma \(\tau \pi(b) = \pi(b)\), \ldots,
+		\(\tau \pi(z) = \tau(a) = b\).
+  Se corta el ciclo y resulta:
+  \begin{equation*}
+    \tau \pi
+      = (a \, x \dotso y) (b \dotso z) \text{\ y los otros ciclos}
+  \end{equation*}
+  con lo que \(c(\tau \pi) = c(\pi) + 1\).
+  Por otro lado,
+  si \(a\) y \(b\) pertenecen a ciclos distintos,
+  o sea podemos escribir:
+  \begin{equation*}
+    \pi
+      = (a \, x \dotso y) (b \dotso z) \text{\ y otros ciclos}
+  \end{equation*}
+  vemos que
+    \(\tau \pi(y) = \tau(a) = b\) y \(\tau \pi(z) = \tau(b) = a\),
+  los ciclos se funden:
+  \begin{equation*}
+    \tau \pi
+      = (a \, x \dotso y \, b \dotso z) \text{\ y los otros ciclos}
+  \end{equation*}
+  con lo que \(c(\tau \pi) = c(\pi) - 1\).
+  En resumen,
+  seguir una permutación por una transposición
+  cambia el número de ciclos en \(1\),
+  y tenemos:
+  \begin{theorem}
+    \label{theo:permutations-transposiciones}
+    Supóngase que la permutación \(\pi\) de \(\mathtt{S}_n\)
+    puede escribirse como la composición de \(r\) transposiciones
+    y también como la composición de \(r'\) transposiciones.
+    Entonces \(r\) y \(r'\) son ambos pares o ambos impares.
+  \end{theorem}
+  \begin{proof}
+    Sea \(\pi = \tau_r \tau_{r - 1} \dotso \tau_1\),
+    con \(\tau_i\) (\(1 \le i \le r\)) una transposición.
+    Como \(\tau_1\) es un ciclo de largo \(2\)
+    y \(n - 2\) ciclos de largo \(1\),
+    es \(c(\tau_1) = 1 + (n - 2) = n - 1\).
+    Combinando \(\tau_1\)
+    con \(\tau_2\), \(\tau_3\), \ldots, \(\tau_r\)
+    finalmente se obtiene \(\pi\).
+    En cada paso \(c\) aumenta o disminuye en \(1\).
+    Sea \(g\) el número de veces que aumenta
+    y \(h\) el número de veces que disminuye,
+    El número final de ciclos será \(c(\pi) = (n - 1) + g - h\).
+    Pero tenemos \(g + h = r - 1\),
+    con lo que:
+    \begin{align*}
+      r &= 1 + g + h \\
+	&= 1 + g + (n - 1 + g - c(\pi)) \\
+	&= n - c(\pi) + 2 g
+    \end{align*}
+    De la misma forma,
+    para cualquier otra manera de expresar \(\pi\)
+    como producto de \(r'\) transposiciones
+    hay un entero \(g'\) tal que \(r' = n - c(\pi) + 2 g'\),
+    y \(r - r' = 2 (g - g')\),
+    que es par.
+  \end{proof}
+  En vista del teorema~\ref{theo:permutations-transposiciones}
+  podemos clasificar las permutaciones
+  en \emph{pares} o \emph{impares}%
+    \index{permutacion@permutación!par}%
+    \index{permutacion@permutación!impar}
+  dependiendo del número de transposiciones que las conforman.
+  Definimos el \emph{signo} de la permutación \(\rho\),%
+    \index{permutacion@permutación!signo}
+  escrito \(\sgn \rho\),
+  como	\(+1\) si \(\rho\) es par,
+  y \(-1\) si es impar:
+  \begin{equation*}
+    \sgn \rho = (-1)^r
+  \end{equation*}
+  donde \(\rho\) es la composición de \(r\) transposiciones.
+  En particular,
+  \(\sgn \iota = (-1)^0 = +1\).
+  Claramente,
+  si \(\rho\) se puede descomponer en \(r\) transposiciones
+  y \(\sigma\) se puede descomponer en \(s\) transposiciones,
+  entonces \(\rho \sigma\)
+  se puede descomponer en \(r + s\) transposiciones:
+  \begin{align*}
+    \sgn (\rho \sigma)
+       &= (-1)^{r + s} \\
+       &= (-1)^r \cdot (-1)^s \\
+       &= \sgn \rho \cdot \sgn \sigma
+  \end{align*}
+  Como \(\rho \rho^{-1} = \iota\),
+  resulta \(\sgn \rho = \sgn \rho^{-1}\).
+
+  Recordando nuestra técnica para escribir
+  un ciclo de largo \(k\) como \(k - 1\) transposiciones,
+  tenemos un algoritmo simple
+  para determinar el signo de una permutación:
+  Descompóngala en ciclos,
+  la paridad de la permutación
+  es simplemente la del número de ciclos de largo par.%
+    \index{permutacion@permutación!signo!determinar}
+
+  \begin{theorem}
+    Para todo entero \(n \ge 2\)
+    exactamente la mitad
+    de las permutaciones de \(\mathtt{S}_n\) son pares
+    y la otra mitad impares.
+  \end{theorem}
+  \begin{proof}
+    Sea \(\pi_1\), \(\pi_2\), \ldots, \(\pi_k\)
+    la lista de permutaciones pares
+    en \(\mathtt{S}_n\).
+    Esta lista no es vacía,
+    ya que \(\iota\) es par.
+
+    Sea \(\tau\) una transposición cualquiera en \(S_n\),
+    por ejemplo \(\tau = (1\;2)\).
+    Entonces \(\tau \pi_1\), \(\tau \pi_2\), \ldots, \(\tau \pi_k\)
+    son todas distintas,
+    ya que si \(\tau \pi_i = \tau \pi_j\)
+    por asociatividad e inverso en el grupo:
+    \begin{equation*}
+      \pi_i = (\tau^{-1} \tau) \pi_i
+	    = \tau^{-1} (\tau \pi_i)
+	    = \tau^{-1} (\tau \pi_j)
+	    = (\tau^{-1} \tau) \pi_j
+	    = \pi_j
+    \end{equation*}
+    Aún más,
+    todas estas permutaciones son impares,
+    ya que:
+    \begin{equation*}
+      \sgn (\tau \pi_i)
+	 = \sgn \tau \cdot \sgn \pi_i
+	 = (-1) \cdot (+1)
+	 = -1
+    \end{equation*}
+    Finalmente,
+    toda permutación impar \(\rho\)
+    es de una de las \(\tau \pi_i\) (\(1 \le i \le k\)),
+    ya que:
+    \begin{equation*}
+      \sgn (\tau^{-1} \rho)
+	 = \sgn \tau^{-1} \cdot \sgn \rho
+	 = (-1) \cdot (-1)
+	 = +1
+    \end{equation*}
+    con lo que \(\tau^{-1} \rho\) es par,
+    y debe ser \(\pi_i\)
+    para algún \(i\) en el rango \(1 \le i \le k\),
+    y así \(\rho = \tau \pi_i\).
+    Con esto tenemos una biyección
+    entre las permutaciones pares e impares.
+  \end{proof}
+  El conjunto de permutaciones pares
+  es un subgrupo de \(\mathtt{S}_n\)
+  (\(\mathtt{S}_n\) es finito,
+   y este subconjunto es cerrado respecto de la composición),
+  se le llama el \emph{grupo alternante}
+  y se anota \(\mathtt{A}_n\).%
+    \index{grupo!alternante|textbfhy}
+
+  Esto tiene aplicación en muchas áreas,
+  por ejemplo en ``matemáticas recreativas''.
+  \begin{example}
+    Ocho bloques marcados \(1\) a \(8\) se disponen
+    en un marco cuadrado
+    como se indica en la figura~\ref{subfig:bloques-1}.
+    \begin{figure}[htbp]
+      \centering
+      \subfloat[Inicial]{
+	\setlength{\tabcolsep}{3pt}
+	\begin{tabular}{|*{3}{>{\(}c<{\)}|}}
+	  \hline
+	    \rule[-0.7ex]{0pt}{3ex}%
+	  1 & 2 & 3 \\
+	  \hline
+	    \rule[-0.7ex]{0pt}{3ex}%
+	  4 & 5 & 6 \\
+	  \hline
+	    \rule[-0.7ex]{0pt}{3ex}%
+	  7 & 8 &   \\
+	  \hline
+	\end{tabular}
+	\label{subfig:bloques-1}
+      }%
+      \qquad%
+      \subfloat[Final]{
+	\setlength{\tabcolsep}{3pt}
+	\begin{tabular}{|*{3}{>{\(}c<{\)}|}}
+	  \hline
+	    \rule[-0.7ex]{0pt}{3ex}%
+	  8 & 5 & 2 \\
+	  \hline
+	    \rule[-0.7ex]{0pt}{3ex}%
+	  7 & 4 & 1 \\
+	  \hline
+	    \rule[-0.7ex]{0pt}{3ex}%
+	  6 & 3 &   \\
+	  \hline
+	\end{tabular}
+	\label{subfig:bloques-2}
+      }
+      \caption{¿Puede hacerse?}
+      \label{fig:bloques}
+    \end{figure}
+    Una movida legal
+    corresponde a deslizar un bloque al espacio vacío.
+    Determine si es posible
+    lograr la configuración de~\ref{subfig:bloques-2}.
+
+    Si anotamos \(\openbox\) para el espacio,
+    la configuración inicial
+    es \(1\;2\;3\;4\;5\;6\;7\;8\;\openbox\),
+    y la final solicitada es \(8\;5\;2\;7\;4\;1\;6\;3\;\openbox\).
+    Claramente toda movida legal es una transposición.
+    Como el espacio solo puede moverse en vertical u horizontal,
+    para regresar a su posición original
+    debe hacer un número par de movidas en cada dirección,
+    y el número total de movidas es par.
+    Luego la permutación que lleva de la configuración inicial
+    a otra configuración posible bajo las reglas
+    en la que \(\openbox\)
+    está nuevamente en la esquina inferior derecha
+    está conformada por un número par de transposiciones,
+    o sea es par.
+    La permutación entre la configuración final solicitada
+    y la inicial es \((1\;8\;3\;2\;5\;4\;7\;6)(\openbox)\);
+    el ciclo de largo \(8\) que aparece acá es impar,
+    por lo que esto no puede hacerse.
+
+    Nótese que esto sirve
+    para demostrar lo que \emph{no} puede hacerse,
+    no significa que todas las permutaciones pares puedan lograrse
+    con estas restricciones.
+  \end{example}
+
+  Es simple contabilizar las permutaciones de un tipo particular.%
+    \index{permutacion@permutación!tipo!numero@número}
+  Supongamos,
+  por ejemplo,
+  que nos interesa saber cuántos elementos de \(\mathtt{S}_{14}\)
+  tienen tipo \([2^2 3^2 4^1]\).
+  Esto corresponde a poner
+  los símbolos \(1\), \(2\), \ldots, \(14\) en el patrón:
+  \begin{equation*}
+    (.\;.) (.\;.) (.\;.\;.) (.\;.\;.) (.\;.\;.\;.)
+  \end{equation*}
+  y hay \(14!\)~formas
+  de distribuir los \(14\) símbolos en las \(14\) posiciones.
+  Sin embargo,
+  muchas de estas dan la misma permutación.
+  Considerando cada ciclo,
+  podemos elegir el primer elemento de él
+  y el resto quedará determinado por la permutación.
+  Así hay \(2\)~maneras de obtener cada \(2\)\nobreakdash-ciclo,
+  \(3\)~maneras de obtener cada \(3\)\nobreakdash-ciclo,
+  y \(4\)~maneras de obtener cada \(4\)\nobreakdash-ciclo.
+  El ordenamiento interno de cada ciclo se puede llevar a cabo
+  de \(2^2 \cdot 3^2 \cdot 4\) formas en este caso.
+  En general,
+  si el tipo es \([1^{\alpha_1} 2^{\alpha_2} \dotso n^{\alpha_n}]\),
+  habrán \(1^{\alpha_1} \cdot 2^{\alpha_2}
+	     \cdot \dotsm \cdot n^{\alpha_n}\)~%
+  ordenamientos internos equivalentes.
+  Por otro lado,
+  el orden de los ciclos del mismo largo es arbitrario,
+  por lo que el número de reordenamientos en el caso general será~%
+  \(\alpha_1 ! \, \alpha_2 ! \dotso \alpha_n !\),
+  y el número de permutaciones
+  de tipo \([1^{\alpha_1} 2^{\alpha_2} \dotso n^{\alpha_n}]\) es:
+  \begin{equation*}
+    \frac{n!}{1^{\alpha_1} 2^{\alpha_2} \dotso n^{\alpha_n} \,
+	      \alpha_1 ! \, \alpha_2 ! \dotso \alpha_n !}
+  \end{equation*}
+  Esto se ve seductoramente similar a un término multinomial,
+  pero debe recordarse que acá la condición es:
+  \begin{equation*}
+    \sum_k k \alpha_k = n
+  \end{equation*}
+
+% Fixme: Paulina Silva <pasilva@alumnos.inf.utfsm.cl>
+%	 pide un ejemplo más aplicado
+
+% Fixme: Análisis somero de bubblesort/inserción
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

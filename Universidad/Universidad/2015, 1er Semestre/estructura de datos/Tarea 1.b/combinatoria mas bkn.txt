@@ -1,0 +1,64 @@
+// Example program
+// Example program
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+vector<int> v_global;
+int booleano=0;
+int funcion_combinatoria(int arreglo[],int size,int tam_caset,vector<int> v_aux){
+    if (size!=1){
+        int fijo=arreglo[0];        //fijo el primer valor, por ejemplo "a" de {a,b,c,d}
+
+        for(int i=1;i<size;i++){
+            if(fijo+arreglo[i]==tam_caset){
+                v_aux.push_back(arreglo[i]);          //evaluo si mi valor fijo "a" me da   
+                 v_global=v_aux;
+                booleano=1;                     //el tamaño deseado al sumarle el segundo valor "b",
+                break;
+            }                                    
+        
+            int a_aux[size-1];
+            a_aux[0]=fijo+arreglo[i];       //se crea un arreglo auxiliar que
+                                            //tendra la estructura {a+b,c,d}
+            for(int j=1;j<size-1;j++){
+                if(j>=i){
+                    a_aux[j]=arreglo[j+1];
+                }
+                else{
+                    a_aux[j]=arreglo[j];
+                }
+            }
+            if(booleano==0){
+                v_aux.push_back(arreglo[i]);
+                funcion_combinatoria(a_aux,size-1,tam_caset,v_aux);
+                if(booleano==0){
+                    v_aux.pop_back();
+                }
+            }
+            if(booleano!=0){
+                break;
+            }
+        }
+    }
+   ;
+    return 0;
+}
+
+int main(){
+    int numeros[4]={3,2,3,4};
+    int tam_n=(sizeof(numeros)/sizeof(*numeros));
+    int caset=10;
+
+    v_global.push_back(numeros[0]);
+    funcion_combinatoria(numeros,tam_n,caset,v_global);
+    
+    if(booleano!=0){
+        for (unsigned el=0; el<v_global.size(); el++){
+				    cout << v_global[el]<< " ";
+			    }
+    }
+    
+    
+    return 0;
+}

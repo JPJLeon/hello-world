@@ -1,0 +1,1064 @@
+% anillos-polinomios.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Anillos de polinomios}
+\label{cha:anillos-polinomios}
+\index{anillo!polinomios|textbfhy}
+
+  Los polinomios se cuentan entre las funciones más importantes,
+  dada su simplicidad.
+  Estudiarlos desde un punto de vista algebraico,
+  tanto para determinar propiedades de sus ceros
+  y su factorización
+  como desde el punto de vista más abstracto como ejemplo de anillo,
+  es fructífero.
+  En particular,
+  el estudio de anillos de polinomios lleva naturalmente
+  a anillos de series formales,
+  que nos ocuparán intensamente más adelante.
+
+\section{Algunas herramientas}
+\label{sec:algunas-herramientas-poly}
+
+% Fixme: Agregar ejemplos/ejercicios para aterrizar
+% (Iván Lazo <ilazo@alumnos.inf.utfsm.cl> 20130813)
+
+  Un paquete de álgebra simbólica,%
+    \index{algebra simbolica@álgebra simbólica}
+  como \texttt{maxima}~\cite{maxima14b:_computer_algebra},%
+    \index{maxima@\texttt{maxima}}
+  ayuda bastante con la operatoria.
+  El paquete \texttt{PARI/GP}~\cite{PARI:2.7.2}%
+    \index{PARI/GP@\texttt{PARI/GP}}
+  incluye extenso soporte para trabajar con polinomios.
+  La biblioteca GiNaC~%
+    \cite{bauer02:_ginac_fram_symbol_comput, GiNaC:1.6.2}%
+    \index{GiNaC@\texttt{GiNaC}}
+  permite manipular expresiones simbólicas y numéricas
+  directamente en \cplusplus~%
+    \cite{ISO11:_C++, stroustrup00:_C++_progr_languag}.%
+    \index{C++ (lenguaje de programacion)@\cplusplus{} (lenguaje de programación)}
+  \begin{definition}
+    \index{polinomio|textbfhy}
+    \label{def:ring-polynomials}
+    Sea \((R, +, \cdot)\) un anillo,
+    y \(x\) un \emph{símbolo}
+    (también llamado \emph{indeterminada} o \emph{variable}).
+    Definimos \(R[x]\),
+    los \emph{polinomios sobre \(R\)},
+    como el conjunto de las expresiones:
+    \begin{equation*}
+      f(x)
+	= a_n \cdot x^n + a_{n - 1} \cdot x^{n - 1} + \dotsb + a_0
+    \end{equation*}
+    El \emph{grado} de \(f\) es la máxima potencia de \(x\)
+      \index{polinomio!grado|textbfhy}
+    que aparece multiplicada por un coeficiente no cero,
+    se anota \(\deg(f)\).
+    Al polinomio con todos los coeficientes cero
+    (el \emph{polinomio cero})
+      \index{polinomio!cero|textbfhy}
+    se le asigna el grado \(-\infty\).
+    Si solo el término constante (\(a_0\)) es diferente de cero,
+    el grado del polinomio es cero,
+    y se dice que es un \emph{polinomio constante}.%
+      \index{polinomio!constante|textbfhy}
+    A polinomios de grado \(1\) se les llama \emph{lineales},%
+      \index{polinomio!lineal|textbfhy}
+    a los de grado \(2\) \emph{cuadráticos}%
+      \index{polinomio!cuadratico@cuadrático|textbfhy}
+    y a los de grado \(3\) \emph{cúbicos}.%
+      \index{polinomio!cubico@cúbico|textbfhy}
+    Se habla del \emph{coeficiente principal}%
+      \index{polinomio!coeficiente principal|textbfhy}
+    para referirse al coeficiente
+    de la máxima potencia de \(x\) en el polinomio.
+    Si el coeficiente principal es \(1\),
+    el polinomio se llama \emph{mónico}.%
+      \index{polinomio!monico@mónico|textbfhy}
+  \end{definition}
+  Nótese que algunos autores
+  simplemente no le asignan grado al polinomio cero.
+
+  No asignamos significado a \(x\) ni a sus potencias.
+  Podemos desarrollar toda la teoría
+  hablando únicamente de tuplas de coeficientes.
+  La notación es sugestiva,
+  y más adelante sí consideraremos
+  los polinomios como definiendo funciones.
+
+  \begin{definition}
+    \index{operacion@operación!polinomios}
+    Para polinomios \(f, g \in R[x]\),
+    definimos la suma y producto entre ellos
+    (bajo el supuesto
+     que es una secuencia infinita de coeficientes \(0\)
+     a partir de un cierto punto para simplificar)
+    como si tratáramos con expresiones en \(R\),
+    solo que \(x^k\) conmuta con los elementos de \(R\)
+    y se cumple \(x^i x^j = x^{i + j}\):
+    \begin{align}
+      f(x)
+	 &= a_0 + a_1 \cdot x + a_2 \cdot x^2 + \dotsb
+	   \label{eq:poly-f} \\
+      g(x)
+	 &= b_0 + b_1 \cdot x + b_2 \cdot x^2 + \dotsb
+	   \label{eq:poly-g}
+    \end{align}
+    \begin{align}
+      f(x) + g(x)
+	 &= (a_0 + b_0)
+	      + (a_1 + b_1) \cdot x
+	      + \dotsb
+	      + (a_k + b_k) \cdot x^k
+	      + \dotsb \notag \\
+	 &= \sum_{k  \ge 0} (a_ k + b_k) x^k \label{eq:poly-f+g}
+    \end{align}
+    \begin{align}
+      f(x) \cdot g(x)
+	 &= a_0 \cdot b_0
+	      + (a_1 b_0 + a_0 b_1) \cdot x
+	      + (a_2 b_0 + a_1 b_1 + a_0 b_2) \cdot x^2
+	      + \dotsb \notag \\
+	 &= \sum_{\substack{0 \le i \le m \\
+			    0 \le j \le n
+		 }} a_i b_j x^{i + j} \notag \\
+	 &= \sum_{k \ge 0}
+	      \left(
+		\sum_{0 \le i \le k} a_{k - i} b_i
+	      \right) \cdot x^k \label{eq:poly-f*g}
+    \end{align}
+  \end{definition}
+  Resulta que \(R[x]\) con las operaciones
+  definidas por~\eqref{eq:poly-f+g} y~\eqref{eq:poly-f*g}
+  es un anillo.%
+    \index{anillo}
+  Es cómodo considerar \(\alpha \in R\)
+  como el polinomio constante \(\alpha \in R[x]\).
+  Las unidades de \(R[x]\) son los polinomios constantes
+  \(\alpha \in R^\times\).
+  Es fácil ver que:
+  \begin{align}
+    \deg(f + g)
+      &\le \max\{\deg(f), \deg(g)\} \label{eq:poly-deg-f+g} \\
+    \deg(f \cdot g)
+      &\le \deg(f) + \deg(g)	    \label{eq:poly-deg-f*g}
+  \end{align}
+  Por esto resulta útil definir el grado del polinomio \(0\)
+  como \(-\infty\),
+  evita requerir casos especiales.
+
+  En caso que no hayan divisores de cero
+  diferentes de cero en \(R\),
+  en~\eqref{eq:poly-deg-f*g} es igualdad.
+  Si \(R\) es un dominio integral
+    \index{dominio integral}
+  (un anillo conmutativo sin divisores de cero distintos de cero),
+  \(R[x]\) también es un dominio integral
+  (el coeficiente del término de mayor grado
+   del producto \(f(x) \cdot g(x)\)
+   no es cero si ambos polinomios son diferentes de cero).
+
+  Definimos la \emph{derivada formal}%
+    \index{polinomio!derivada formal}
+  de un polinomio mediante:
+  \begin{align*}
+    f(x)
+      &= \sum_{0 \le k \le n} a_k x^k \\
+    \mathrm{D} f(x)
+      &= \sum_{0 \le k \le n - 1} (k + 1 ) a_{k + 1} x^k
+  \end{align*}
+  Anotaremos alternativamente:
+  \begin{equation*}
+    f'(x)
+      = \mathrm{D} f(x)
+  \end{equation*}
+  Es fácil verificar que se cumplen las propiedades conocidas
+  de las derivadas:
+  \begin{theorem}
+    \label{theo:polynomial-derivative}
+    Sean \(f(x)\) y \(g(x)\) polinomios
+    sobre el dominio integral \(R\),
+    \(\alpha\) y \(\beta\) elementos de \(R\).
+    Entonces:
+    \begin{align*}
+      \mathrm{D} (\alpha f(x) + \beta g(x))
+	&= \alpha f'(x) + \beta g'(x) \\
+      \mathrm{D} (f(x) \cdot g(x))
+	&= f'(x) g(x) + f(x) g'(x) \\
+      \mathrm{D} (f(x)^m)
+	&= m f(x)^{m - 1} f'(x)
+    \end{align*}
+  \end{theorem}
+  \begin{proof}
+    Definamos:
+    \begin{align*}
+      f(x)
+	&= \sum_{0 \le k \le m} f_k x^k \\
+      g(x)
+	&= \sum_{0 \le k \le n} g_k x^k
+    \end{align*}
+    Por comodidad,
+    anotaremos sumas infinitas
+    bajo el entendido que los términos son todos cero
+    desde un índice en adelante.
+
+    Para la primera parte,
+    tenemos que:
+    \begin{align*}
+      \alpha f(x) + \beta g(x)
+	&= \sum_{k \ge 0} (\alpha f_k + \beta g_k) x^k \\
+      \mathrm{D} (\alpha f(x) + \beta g(x))
+	&= \sum_{k \ge 0} (k + 1)
+	     (\alpha f_{k + 1} + \beta g_{k + 1}) x^k \\
+	&= \alpha \sum_{k \ge 0} (k + 1) f_{k + 1} x^k
+	     + \beta \sum_{k \ge 0} (k + 1) g_{k + 1} x^k \\
+	&= \alpha f'(x) + \beta g'(x)
+    \end{align*}
+    Acá usamos el que para \(k \in \mathbb{N}\) y \(a, b \in R\):
+    \begin{align*}
+      k (a b)
+	&= a b + a b + \dotsb + a b \\
+	&= a (b + b + \dotsb + b) \\
+	&= a (k b)
+    \end{align*}
+
+    Para la segunda parte:
+    \begin{align*}
+      (\mathrm{D} f(x)) g(x) &+ f(x) (\mathrm{D} g'(x)) \\
+	&= \sum_{k \ge 0}
+	     \left(
+	       \sum_{0 \le j \le k} (j + 1) f_{j + 1} g_{k - j}
+		  + \sum_{0 \le j \le k}
+		      (k + 1 - j) f_j g_{k + 1 - j}
+	     \right) x^k \\
+	&= \sum_{k \ge 0}
+	     \left(
+	       \sum_{0 \le j \le k + 1} j f_j g_{k + 1 - j}
+		  + \sum_{0 \le j \le k + 1}
+		      (k + 1 - j) f_j g_{k + 1 - j}
+	     \right) x^k \\
+	&= \sum_{k \ge 0}
+	      (k + 1)
+	      \left(
+		\sum_{0 \le j \le k + 1} f_j g_{k + 1 - j}
+	      \right) x^k \\
+	&= \mathrm{D} (f(x) g(x))
+    \end{align*}
+
+    Para la tercera parte,
+    usamos inducción sobre \(m\).%
+      \index{demostracion@demostración!induccion@inducción}
+    \begin{description}
+    \item[Base:]
+      Cuando \(m = 1\)
+      lo aseverado ciertamente se cumple.
+    \item[Inducción:]
+      Suponiendo que vale para \(m\),
+      demostramos que vale para \(m + 1\):
+      \begin{align*}
+	\mathrm{D} (f(x)^{m + 1})
+	  &= \mathrm{D} (f(x)^m f(x)) \\
+	  &= m f(x)^{m - 1} f'(x) f(x) + f(x)^m f'(x) \\
+	  &= (m + 1) f(x)^m f'(x)
+      \end{align*}
+      Acá usamos la conmutatividad de \(R[x]\).
+    \end{description}
+    Por inducción,
+    vale para todo \(m \in \mathbb{N}\).
+  \end{proof}
+
+  Los anillos de polinomios tienen varias propiedades interesantes,
+  por ejemplo un algoritmo de división afín al de los enteros:%
+    \index{algoritmo de division@algoritmo de división!polinomios}
+  \begin{theorem}
+    \label{theo:F[x]:division-algorithm}
+    Sean \(a(x)\), \(b(x)\) polinomios sobre un campo \(F\),
+    con \(b(x) \ne 0\).
+    Entonces existen polinomios únicos \(q(x)\), \(r(x)\)
+    tales que:
+    \begin{equation*}
+      a(x) = b(x) \cdot q(x) + r(x)
+    \end{equation*}
+    con \(\deg(r) < \deg(b)\)
+  \end{theorem}
+  \begin{proof}
+    Consideremos el conjunto:
+    \begin{equation*}
+      \mathcal{R}
+	= \{a(x) - c(x) \cdot b(x) \colon c(x) \in F[x]\}
+    \end{equation*}
+    Elijamos un elemento \(r\) de \(\mathcal{R}\) de grado mínimo.
+    Entonces \(\deg(r) < \deg(b)\),
+    ya que en caso contrario
+    podríamos restar un múltiplo de \(b(x)\)
+    que anule el término de grado mayor en \(r(x)\)
+    y así obtener uno de grado menor.
+
+    Demostramos que son únicos por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Supongamos que hay dos pares diferentes,
+    o sea:
+    \begin{equation*}
+      a = b q' + r' \qquad
+      a = b q'' + r''
+    \end{equation*}
+    Sin pérdida de generalidad
+    podemos suponer que \(\deg(r') \le \deg(r'')\).
+    Como \(F[x]\) es un anillo,
+    con \(F\) un campo:
+    \begin{align}
+      r'' - r'
+	&= b (q' - q'') \notag \\
+      \deg(r'' - r')
+	&= \deg(b (q' - q'')) \notag \\
+	&= \deg(b) + \deg(q' - q'') \label{eq:deg(b(q2-q1))} \\
+    \intertext{Pero:}
+      \deg(r')
+	&\le \deg(r'') < \deg(b) \notag \\
+      \deg(r'' - r')
+	&\le \deg(r'') < \deg(b) \label{eq:deg(r2-r1)}
+    \end{align}
+    En vista de~\eqref{eq:deg(r2-r1)}
+    la única posibilidad en~\eqref{eq:deg(b(q2-q1))}
+    es \(\deg(r'' - r') = \deg(q' - q'') = -\infty\),
+    vale decir,
+    \(q' = q''\) y \(r' = r''\).
+    Esto contradice nuestra elección de dos pares diferentes.
+  \end{proof}
+  Vale la pena comparar esta demostración
+  con la del algoritmo de división entre enteros,
+  teorema~\ref{theo:division}.
+
+\input{dominios-euclidianos}
+
+\section{Factorización de polinomios}
+\label{sec:factorizacion-polinomios}
+\index{polinomio!factorizacion@factorización}
+
+  Vimos que el conjunto de polinomios \(F[x]\)
+  sobre el campo \(F\) es un dominio euclidiano,%
+    \index{dominio euclidiano}
+  el grado del polinomio sirve de función euclidiana.
+  Podemos elegir el polinomio mónico
+  como el representante de la clase de asociados,
+  con lo que tenemos:%
+    \index{polinomio!teorema fundamental de la aritmetica@teorema fundamental de la aritmética}
+  \begin{theorem}[Teorema fundamental de la aritmética]
+    \label{theo:fundamental-arithmetic-polynomials}
+    Todo polinomio en \(F[x]\)
+    es una unidad
+    o el producto de una unidad y polinomios mónicos irreductibles.
+    Esta factorización es única
+    (salvo el orden de los factores).
+  \end{theorem}
+  Podemos caracterizar polinomios con ceros repetidos:
+  \begin{lemma}
+    \index{polinomio!ceros repetidos}
+    \label{lem:repeated-roots}
+    Si \(\alpha\) es un cero repetido
+    del polinomio \(f(x) \in F[x]\),
+    es cero común de \(f(x)\) y \(f'(x)\).
+  \end{lemma}
+  \begin{proof}
+    Consideremos \(f(x) = (x - \alpha)^m g(x)\),
+    donde \((x - \alpha) \centernot\mid g(x)\) y \(m > 1\).
+    Tenemos:
+    \begin{equation*}
+      f'(x)
+	= m (x - \alpha)^{m - 1} g(x) + (x - \alpha)^m g'(x)
+	= (x - \alpha)^{m - 1} (m g(x) + (x - \alpha) g(x))
+    \end{equation*}
+    Como \(m > 1\),
+    esto siempre es divisible por \(x - \alpha\).
+  \end{proof}
+  Tenemos también:
+  \begin{theorem}[Euclides]
+    \label{theo:Euclides-polynomials}
+    Hay infinitos polinomios irreductibles sobre el campo \(F\).
+  \end{theorem}
+  \begin{proof}
+    Por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Supongamos que hay finitos irreductibles
+    \(p_1(x)\) a \(p_n(x)\).
+    Entonces \(p_1(x) \dotsm p_n(x) + 1\)
+    no es divisible por ningún \(p_i(x)\).
+  \end{proof}
+  Sobre un campo infinito no da nada nuevo
+  (los polinomios lineales son todos irreductibles),
+  pero sobre un campo finito sí es interesante.
+
+  Consideremos ahora los polinomios como funciones,
+  substituyendo elementos del campo por \(x\).
+
+  \begin{corollary}
+    \label{cor:polinomio-raiz-factor}
+    Sea \(F\) un campo,
+    y \(f(x) = a_n x^n + a_{n - 1} x^{n - 1} + \dotsb + a_0\)
+    un polinomio de grado \(n\) sobre \(F\),
+    y \(\alpha \in F\).
+    Entonces \(f(\alpha) = 0\)
+    si y solo si \(f(x) = (x - \alpha) g(x)\)
+    para algún polinomio \(g \in F[x]\).
+  \end{corollary}
+  \begin{proof}
+    Demostramos implicancia en ambas direcciones.
+
+    Primeramente,
+    si \(f(x) = (x - \alpha) g(x)\),
+    claramente \(f(\alpha) = 0 \cdot g(\alpha) = 0\).
+
+    Por el algoritmo de división podemos escribir
+    \(f(x) = q(x) \cdot (x - \alpha) + r(x)\),
+    donde \(\deg(r) < 1\)
+    con lo que \(r(x)\) es constante.
+    Ahora bien,
+    \(f(\alpha)
+       = q(\alpha) \cdot (\alpha - \alpha) + r(\alpha) = 0\),
+    con lo que al ser constante
+      \(r(x)\) es \(r(x) = r(\alpha) = 0\).
+    Así \(f(x) = q(x) \cdot (x - \alpha)\),
+    y llamando \(g(x) = q(x)\) completa la demostración.
+  \end{proof}
+  Con esta herramienta básica podemos demostrar
+  el resultado siguiente:
+  \begin{corollary}
+    \index{polinomio!numero de ceros@número de ceros}
+    \label{cor:numero-raices-polinomio}
+    Si \(f(x) \in F[x]\) es un polinomio de grado \(n \ge 0\),
+    entonces \(f(x)\) tiene a lo más \(n\) ceros en \(F\).
+  \end{corollary}
+  \begin{proof}
+    Por inducción.%
+      \index{demostracion@demostración!induccion@inducción}
+    \begin{description}
+    \item[Bases:]
+      Para \(n = 0\),
+      no hay ceros.
+
+      Para \(n = 1\),
+      tenemos:
+      \begin{align*}
+	&a_1 \cdot x + a_0
+	  = 0 \\
+	&x
+	  = - a_1^{-1} \cdot a_0
+      \end{align*}
+      que claramente es única.
+    \item[Inducción:]
+      Suponiendo ahora que todos los polinomios de grado \(n\)
+      tienen a lo más \(n\) ceros,
+      consideremos un polinomio \(f(x)\) de grado \(n + 1\).
+      Si no hay \(\alpha\) tal que \(f(\alpha) = 0\),
+      \(f(x)\) tiene 0 ceros y estamos listos.
+      Si tiene un cero \(\alpha\),
+      por el corolario~\ref{cor:polinomio-raiz-factor}
+      podemos escribir \(f(x) = (x - \alpha) \cdot g(x)\)
+      con \(\deg(g) = n\).
+      Por inducción,
+      \(g(x)\) tiene a lo más \(n\) ceros,
+      y \(f(x)\) tiene a lo más \(n + 1\) ceros.
+    \end{description}
+    Por inducción vale lo enunciado.
+  \end{proof}
+
+  Suelen ser útiles los términos más fáciles de calcular
+  del polinomio
+  con ceros \(\alpha_1\), \(\alpha_2\), \ldots, \(\alpha_m\);
+  o sea,
+  los coeficientes en el producto:%
+    \index{Vieta, formulas de@Vieta, fórmulas de}
+  \begin{equation}
+    \label{eq:poly-coeficientes-ceros}
+    (x - \alpha_1) \dotsm (x - \alpha_m)
+       = x^m
+	 - (\alpha_1 + \alpha_2 + \dotsb + \alpha_m) x^{m - 1}
+	 + \dotsb
+	 + (-1)^m \alpha_1 \cdot \alpha_2 \dotsm \alpha_m
+  \end{equation}
+  El coeficiente de \(x^{m - 1}\)
+  es el negativo de la suma de los ceros,
+  y el término constante es su producto
+  con signo que depende de si \(m\) es par o impar.
+  Las expresiones~\eqref{eq:poly-coeficientes-ceros}
+  son casos particulares de las fórmulas de Vieta:
+  Para el polinomio
+    \(a_n x^n + a_{n - 1} x^{n - 1} + \dotsb + a_0\),
+  los ceros \(\alpha_1, \alpha_2, \dotsc, \alpha_n\) cumplen:
+  \begin{equation}
+    \label{eq:Vieta-formulas}
+    \sum_{1 \le i_1 \le i_2 \le \dotsb \le i_k \le n}
+       \alpha_{i_1} \alpha_{i_2} \dotsm \alpha_{i_k}
+       = (-1)^k \, \frac{a_{n - k}}{a_n}
+  \end{equation}
+  La suma en~\eqref{eq:Vieta-formulas} es simplemente
+  sobre todos los conjuntos de \(k\) de las ceros.
+  Por ejemplo:
+  \begin{equation*}
+    a x^3 + b x^2 + c x + d
+      = a (x - \alpha_1) (x - \alpha_2) (x - \alpha_3)
+  \end{equation*}
+  resulta en las siguientes tres expresiones:
+  \begin{align*}
+    \alpha_1 + \alpha_2 + \alpha_3
+      &= - \frac{b}{a} \\
+    \alpha_1 \alpha_2 + \alpha_1 \alpha_3 + \alpha_2 \alpha_3
+      &= \frac{c}{a} \\
+    \alpha_1 \alpha_2 \alpha_3
+      &= - \frac{d}{a}
+  \end{align*}
+
+  \begin{theorem}
+    \label{theo:F*-ciclico}
+    Sea \(F\) un campo finito,%
+      \index{campo (algebra)@campo (álgebra)}
+    y \(F^\times\) su grupo de unidades.%
+      \index{anillo!grupo de unidades}
+    Entonces \(F^\times\) es cíclico.%
+      \index{grupo!ciclico@cíclico}
+  \end{theorem}
+  \begin{proof}
+    Sea \(e\) el \emph{exponente} de \(F^\times\),%
+      \index{grupo!exponente|textbfhy}
+    vale decir,
+    el mínimo natural
+    tal que \(a^e = 1\) para todo \(a \in F^\times\).
+    Esto es el mínimo común múltiplo
+    de los órdenes de los elementos de \(F^\times\).
+    Por el teorema de Lagrange%
+      \index{Lagrange, teorema de}
+    todos ellos son factores de \(\lvert F^\times \rvert\),
+    con lo que \(e\) es factor de \(\lvert F^\times \rvert\)
+    y \(e \le \lvert F^\times \rvert\).
+
+    Por otro lado,
+    todos los elementos de \(F^\times\) cumplen:
+    \begin{equation*}
+      x^e - 1
+	= 0
+    \end{equation*}
+    En el campo \(F\)
+    este polinomio puede tener a lo más \(e\) ceros,
+    o sea \(e \ge \lvert F^\times \rvert\),
+    con lo que \(e = \lvert F^\times \rvert\).
+    Siendo \(e\) el mínimo común múltiplo
+    de los órdenes en \(F^\times\),
+    debe haber un elemento de orden \(e\)
+    y \(F^\times\) es cíclico.
+  \end{proof}
+
+  \begin{corollary}
+    \label{cor:Un-ciclico}
+    Si \(p\) es primo,
+    \(\mathbb{Z}^\times_p\) es cíclico.
+  \end{corollary}
+  \begin{proof}
+    \(\mathbb{Z}_p\) es un campo finito,
+    y \(\mathbb{Z}^\times_p\) es su grupo de unidades.
+  \end{proof}
+
+  Esto implica el curioso resultado:
+  \begin{theorem}[Wilson]
+    \index{Wilson, teorema de}
+    \label{theo:Wilson}
+    \((n - 1)! \equiv -1 \pmod{n}\) si y solo si \(n\) es primo.
+  \end{theorem}
+  \begin{proof}
+    Demostramos implicancia en ambas direcciones.
+    Si \(n\) es primo,
+    \(\mathbb{Z}_n\) es un campo,
+    y por la demostración del teorema~\ref{theo:F*-ciclico}
+    sabemos que:
+    \begin{equation*}
+      x^{n - 1} - 1
+       = \prod_{1 \le k \le n - 1} (x - k)
+    \end{equation*}
+    La fórmula de Vieta~\eqref{eq:Vieta-formulas}%
+      \index{Vieta, formulas de@Vieta, fórmulas de}
+    da para el término constante:
+    \begin{equation*}
+      (-1)^{n - 1} (n - 1)! \equiv -1 \pmod{n}
+    \end{equation*}
+    Si \(n = 2\),
+    es \((-1)^{n - 1} = -1\) y \(1 \equiv -1 \pmod{n}\);
+    si \(n\) es un primo impar,
+    \((-1)^{n - 1} = 1\).
+    De cualquier forma,
+    \((n - 1)! \equiv -1 \pmod{n}\).
+
+    Para el recíproco,
+    demostramos el contrapositivo:
+    Si \(n\) no es primo,
+    \((n - 1)! \centernot\equiv -1 \pmod{n}\).
+    Hay varios casos:
+    Si \(n = 4\)
+    es \(3! = 6 \equiv 2 \centernot\equiv -1 \pmod{4}\),
+    y se cumple lo enunciado.
+    Sea ahora \(n > 4\) compuesto.
+    En tal caso podemos escribir \(n = a \cdot b\),
+    con \(2 \le a, b < n - 1\).
+    De ser \(a \ne b\),
+    ambos factores aparecen en \((n - 1)!\),
+    y por tanto \(n \mid (n - 1)!\).
+    Si es \(n = a^2\),
+    será \(a > 2\),
+    y entre los factores de \((n - 1)!\)
+    estarán \(a\) y \(2 a\),
+    con lo que nuevamente \(n \mid (n - 1)!\).
+    En estas dos situaciones tenemos \((n - 1)! \equiv 0 \pmod{n}\),
+    y obtenemos lo enunciado.
+  \end{proof}
+  Este resultado no es útil para computación,
+  y de uso teórico bastante limitado.
+
+  Una demostración alternativa es considerar un primo impar \(p\),
+  y parear cada \(a \in \mathbb{Z}_p\) con su inverso.
+  Los únicos elementos
+  que no tienen pareja en esto son \(1\) y \(-1\)
+  (son sus propios inversos,
+   en el campo \(\mathbb{Z}_p\)
+   la ecuación \(x^2 - 1 = 0\) puede tener
+   a lo más dos raíces),
+  por lo que el producto de todos ellos es \(-1\).
+
+\section{Raíces primitivas}
+\label{sec:raices-primitivas}
+\index{raiz primitiva@raíz primitiva|textbfhy}
+
+  Cuando \(R^\times\) es cíclico,%
+    \index{grupo!ciclico@cíclico}
+  a un generador de \(R^\times\)
+  se le llama \emph{elemento primitivo} de \(R\).%
+    \index{anillo!elemento primitivo}
+  En el caso de \(\mathbb{Z}_n\)
+  se le llama una \emph{raíz primitiva} módulo \(n\)
+  (porque todo elemento de \(\mathbb{Z}^\times_n\)
+   puede escribirse como potencia del generador).
+  Lo anterior demuestra que todo primo \(p\)
+  tiene raíces primitivas.
+  Una pregunta obvia es qué valores de \(n\)
+  tienen raíces primitivas
+  (o sea,
+   cuándo es cíclico \(\mathbb{Z}^\times_n\)).
+
+  Consideremos \(n = 8\),
+  con \(\phi(8) = 4\).
+  Por cálculo directo tenemos los órdenes
+  de los elementos de \(\mathbb{Z}^\times_8\)
+  dados en el cuadro~\ref{tab:ordenes-U8}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}[htbp]{|c|c|}
+      \hline
+      \multicolumn{1}{|c|}
+	  {\rule[-0.7ex]{0pt}{3ex}\(\boldsymbol{k}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{\ord_8(k)}\)} \\
+      \hline\rule[-0.7ex]{0pt}{3ex}%
+      1 & 1 \\
+      3 & 2 \\
+      5 & 2 \\
+      7 & 2 \\
+      \hline
+    \end{tabular}
+    \caption{Órdenes de los elementos en $\mathbb{Z}^\times_8$}
+    \label{tab:ordenes-U8}
+  \end{table}
+  Se aprecia que no hay elementos de orden \(4\),
+  y \(8\) no tiene raíces primitivas.
+
+  Por otro lado,
+  para \(n = 2\) tenemos \(\phi(2) = 1\)
+  y claramente 1 es raíz primitiva módulo 2.
+  Para \(n = 4\) tenemos \(\phi(4) = 2\),
+  y \(3\) es raíz primitiva módulo \(4\).
+
+  Más generalmente,
+  tenemos:
+  \begin{theorem}
+    \label{theo:raices-primitivas-2k}
+    No hay raíces primitivas módulo \(2^m\) si \(m \ge 3\).
+  \end{theorem}
+  \begin{proof}
+    Demostraremos esto por inducción.%
+      \index{demostracion@demostración!induccion@inducción}
+    \begin{description}
+    \item[Base:]
+      Cuando \(m = 3\),
+      vimos antes que \(2^m = 8\) no tiene raíces primitivas.
+    \item[Inducción:]
+      Suponemos que la aseveración vale para \(m - 1\).
+      Como \mbox{\(\phi(2^m) = 2^{m - 1}\)}
+      y el único divisor de \(2^{m - 1}\) es \(2\),
+      basta demostrar
+      que el orden de todo elemento en \(\mathbb{Z}_{2^m}\)
+      es divisor de \(2^{m - 2}\).
+      Consideremos \(a\) cualquiera relativamente primo a \(2^m\).
+      Por inducción
+      sabemos que \(a\) no es raíz primitiva de \(2^{m - 1}\),
+      que expresado en los términos anteriores es:
+      \begin{align}
+	a^{2^{m - 3}}
+	  &\equiv 1 \pmod{2^{m - 1}} \notag \\
+	a^{2^{m - 3}}
+	  &= c \cdot 2^{m - 1} + 1   \notag \\
+      \intertext{Elevando al cuadrado:}
+	a^{2^{m - 2}}
+	  &= \left(a^{2^{m - 3}}\right)^2 \notag \\
+	  &= c^2 \cdot 2^m + 2 \cdot c \cdot 2^{m - 1} + 1 \notag \\
+	  &= (c^2 + c) \cdot 2^m + 1 \notag \\
+	  &\equiv 1 \pmod{2^m} \label{eq:a^(2^(m-2))=1}
+      \end{align}
+    \end{description}
+    Por~\eqref{eq:a^(2^(m-2))=1}
+    el orden de \(a\) módulo \(2^m\)
+    es a lo más \(2^{m - 2} < 2^{m - 1} = \phi(2^m)\),
+    y \(a\) no es raíz primitiva.
+  \end{proof}
+  Esto da un conjunto infinito de enteros sin raíces primitivas.
+  Pero aún más:
+  \begin{theorem}
+    \label{theo:raices-primitivas-mn}
+    No hay raíces primitivas módulo \(m n\)
+    si \(m\) y \(n\) son enteros impares relativamente primos
+    mayores que \(2\).
+  \end{theorem}
+  \begin{proof}
+    Como \(m\) y \(n\) son impares y mayores que \(2\),
+    sabemos que \(2\)
+    es un factor común entre \(\phi(m)\) y \(\phi(n)\)
+    (un primo impar \(p\)
+     aporta \(p^{k - 1} (p - 1)\) a \(\phi(\cdot)\)).
+    Para cualquier \(a\) tal que \(\gcd(a, m n) = 1\),
+    por el teorema de Euler:
+    \begin{align}
+      a^{\phi(m) \phi(n) / 2}
+	&\equiv \left(a^{\phi(m)}\right)^{\phi(n) / 2}
+	   \equiv 1^{\phi(n) / 2}
+	   \equiv 1 \pmod{m}  \label{eq:a^phiphi/2-m} \\
+      a^{\phi(m) \phi(n) / 2}
+	&\equiv \left(a^{\phi(n)}\right)^{\phi(m) / 2}
+	   \equiv 1^{\phi(m) / 2}
+	   \equiv 1 \pmod{n} \label{eq:a^phiphi/2-n}
+    \end{align}
+    Combinando~\eqref{eq:a^phiphi/2-m} con~\eqref{eq:a^phiphi/2-n}
+    mediante el teorema~\ref{theo:congruencia-mn}
+    resulta:
+    \begin{equation}
+      \label{eq:a^phiphi/2-mn}
+      a^{\phi(m) \phi(n) / 2} \equiv 1 \pmod{m n}
+    \end{equation}
+    Por~\eqref{eq:a^phiphi/2-mn}
+    el orden de \(a\) divide a \(\phi(m n) / 2\),
+    y \(a\) no es raíz primitiva de \(m n\).
+    Pero \(a\) es arbitrario,
+    con lo que \(m n\) no tiene raíces primitivas.
+  \end{proof}
+
+  Lo anterior excluye \(2^k\) para \(k \ge 3\),
+  y los números compuestos impares con factores primos distintos.
+  Analicemos los restantes.
+  \begin{theorem}
+    \label{theo:raiz-primitiva-p2}
+    Sea \(p\) un primo impar,
+    entonces hay una raíz primitiva módulo \(p^2\)
+  \end{theorem}
+  \begin{proof}
+    Sea \(r\) una raíz primitiva de \(p\),
+    o sea \(\ord_p (r) = p - 1\).
+    Sabemos que si \(n = \ord_{p^2}(r)\)
+    entonces \(n \mid \phi(p^2)\),
+    vale decir \(n \mid p (p - 1)\).
+    Sabemos que si \(r^n \equiv 1 \pmod{p^2}\)
+    entonces \(r^n \equiv 1 \pmod{p}\),
+    de forma que \(\phi(p) \mid n\).
+    Pero si \(p - 1 \mid n\) y \(n \mid p (p - 1)\),
+    entonces \(n = p (p - 1)\) o \(n = p - 1\).
+    En el primer caso,
+    tenemos que \(r\) es raíz primitiva de \(p^2\),
+    y estamos listos.
+
+    En el segundo caso,
+    consideremos el elemento \(r + p\),
+    que sigue siendo raíz primitiva módulo \(p\),
+    con lo que su orden es \(p - 1\) o \(p (p - 1)\) módulo \(p^2\).
+    Calculamos:
+    \begin{equation}
+      \label{eq:(r+p)^(p-1)}
+      (r + p)^{p - 1}
+	= r^{p - 1}
+	   + \binom{p - 1}{1} p r^{p - 2}
+	   + \sum_{2 \le k \le p - 1}
+	       \binom{p - 1}{k} p^k r^{p - 1 - k}
+    \end{equation}
+    Todos los elementos de la sumatoria en~\eqref{eq:(r+p)^(p-1)}
+    son divisibles por \(p^2\).
+    Como estamos suponiendo
+    que el orden de \(r\) módulo \(p^2\) es \(p - 1\),
+    y sabemos que:
+    \begin{equation*}
+      (p - 1) p r^{p - 2}
+	\equiv - p r^{p - 2}
+	\centernot\equiv 0 \pmod{p^2}
+    \end{equation*}
+    (ya que \(\gcd(r, p) = 1\)
+     también es \(\gcd(r^{p - 2}, p) = 1\)),
+    y queda:
+    \begin{equation*}
+      (r + p)^{p - 1}
+	\equiv 1 - p r^{p - 2}
+	\centernot\equiv 1 \pmod{p^2} \\
+    \end{equation*}
+    y \(r + p\) es raíz primitiva módulo \(p^2\).
+  \end{proof}
+  Esto parece ser solo un paso al ir de \(p\) a \(p^2\),
+  pero resulta ser todo lo que se requiere.
+  Antes de seguir,
+  un lema técnico.
+  \begin{lemma}
+    \label{lem:raiz-primitiva-p2-orden-pk}
+    Sea \(p\) un primo impar,
+    \(r\) una raíz primitiva módulo \(p^2\).
+    Entonces para \(m \ge 2\):
+    \begin{equation}
+      \label{eq:r^(p^(m-2)(p-1))<>1}
+      r^{p^{m - 2} (p - 1)}
+	\centernot\equiv 1 \pmod{p^m}
+    \end{equation}
+  \end{lemma}
+  \begin{proof}
+    La demostración es por inducción desde \(m = 2\).%
+      \index{demostracion@demostración!induccion@inducción}
+    De partida,
+    si \(r\) es raíz primitiva módulo \(p^2\),
+    lo es módulo \(p\) y \(\gcd(r, p) = 1\).
+    \begin{description}
+    \item[Base:]
+      Para \(m = 2\)
+      el orden de la raíz primitiva \(r\) de \(p^2\)
+      es \(\phi(p^2) = p (p - 1)\),
+      por lo que:
+      \begin{equation}
+	\label{eq:r^(p-1)<>1}
+	r^{p - 1}
+	  \centernot\equiv 1 \pmod{p^2}
+      \end{equation}
+    \item[Inducción:]
+      Supongamos que el resultado vale para \(m - 1\).
+      Del teorema de Euler%
+	\index{Euler, teorema de}
+      tenemos:
+      \begin{align}
+	r^{\phi(p^{m - 2})}
+	  &\equiv 1 \pmod{p^{m - 2}} \notag \\
+	r^{p^{m - 3} (p - 1)}
+	  &=	  1 + c \cdot p^{m - 2} \label{eq:r^(p^(m-3)(p-1))}
+      \end{align}
+      Nótese que \(p \centernot\mid c\),
+      ya que de lo contrario tendríamos:
+      \begin{equation}
+	\label{eq:r^(p^(m-3)(p-1))=1}
+	r^{p^{m - 3} (p - 1)}
+	  \equiv 1 \pmod{p^{m - 1}}
+      \end{equation}
+      y esto contradice
+      nuestra hipótesis de inducción~\eqref{eq:r^(p^(m-2)(p-1))<>1}.
+      Elevando~\eqref{eq:r^(p^(m-3)(p-1))=1} a la potencia \(p\),
+      queda:
+      \begin{align}
+	r^{p^{m - 2} (p - 1)}
+	  &= \left(1 + c p^{m - 2}\right)^p \notag \\
+	  &= 1 + c p^{m - 1}
+	      + \sum_{2 \le k \le p} \binom{p}{k} c^k p^{k (m - 2)}
+	  \label{eq:r^(p^(m-2)(p-1))}
+      \end{align}
+      Interesa demostrar
+      que cada término de la sumatoria~\eqref{eq:r^(p^(m-2)(p-1))}
+      es divisible por \(p^m\).
+      En ellos aparece el factor \(p^{k (m - 2) + 1}\)
+      (incluyendo \(p\) del coeficiente binomial).%
+	\index{coeficiente binomial}
+      Interesa acotar el exponente \(k (m - 2) + 1\),
+      con \(k \ge 2\) y \(m \ge 3\).
+      Es \(m - 2 \ge 1\),
+      el mínimo exponente se da para \(k = 2\)
+      y tenemos \(k (m - 2) + 1 \ge 2 m - 3 \ge m\).
+      En consecuencia:
+      \begin{align*}
+	r^{p^{m - 2} (p - 1)}
+	  &\equiv     1 + c p^{m - 1} \pmod{p^m} \\
+	  &\centernot\equiv 1 \pmod{p^m}
+      \end{align*}
+      como queríamos probar.
+      \qedhere
+    \end{description}
+  \end{proof}
+  \begin{theorem}
+    \label{theo:raiz-primitiva-pk}
+    Toda raíz primitiva módulo \(p^2\) para un primo impar \(p\)
+    es raíz primitiva módulo \(p^m\) con \(m \ge 2\)
+  \end{theorem}
+  \begin{proof}
+    Sea \(r\) raíz primitiva módulo \(p^2\),
+    con lo que \(\ord_{p^2} (r) = p (p - 1)\)
+    ya que \(\phi(p^2) = p (p - 1)\),
+    y llamemos \(n = \ord_{p^m} (r)\).
+    Como antes,
+    por el teorema de Euler sabemos que:
+    \begin{equation*}
+      r^{\phi(p^m)}
+	\equiv r^{p^{m - 1} (p - 1)} \equiv 1 \pmod{p^m}
+    \end{equation*}
+    con lo que:
+    \begin{equation*}
+      n \mid p^{m - 1} (p - 1)
+    \end{equation*}
+    Pero también:
+    \begin{equation*}
+      r^n
+	\equiv 1 \pmod{p^m}
+    \end{equation*}
+    implica:
+    \begin{equation*}
+      r^n
+	\equiv 1 \pmod{p^2}
+    \end{equation*}
+    con lo que \(p (p - 1) \mid n\),
+    y \(n = p^k (p - 1)\) para algún \(1 \le k \le m - 1\).
+    Por el lema~\ref{lem:raiz-primitiva-p2-orden-pk} sabemos que:
+    \begin{equation*}
+      r^{p^{m - 2} (p - 1)}
+	\centernot\equiv 1 \pmod{p^m}
+    \end{equation*}
+    con lo que \(k = m - 1\),
+    y \(r\) es raíz primitiva módulo \(p^m\).
+  \end{proof}
+
+  Resta el caso \(2 p^m\),
+  donde por el corolario~\ref{cor:isomorfismo-anillo-Zm} resulta
+  \(\mathbb{Z}_{2 p^m} \cong \mathbb{Z}_2 \oplus \mathbb{Z}_{p^m}\),
+  y \(\mathbb{Z}^\times_{2 p^m}
+	\cong \mathbb{Z}^\times_2 \oplus \mathbb{Z}^\times_{p^m}
+	\cong \mathbb{Z}^\times_{p^m}\),
+  y hay una raíz primitiva.
+  En resumen,
+  obtenemos el curioso resultado:
+  \begin{theorem}
+    \label{theo:raices-primitivas}
+    Hay raíces primitivas módulo \(n\) si y solo si
+    \(n = 2, 4, p^m, 2 p^m\),
+    donde \(p\) es un primo impar y \(m \ge 1\).
+  \end{theorem}
+
+  Igual resulta interesante hallar el máximo orden módulo \(n\),
+  al que llamaremos \(\lambda(n)\).%
+    \index{\(\lambda(m)\) (maximo orden modulo \(m\))@\(\lambda(m)\) (máximo orden módulo \(m\))|textbfhy}
+  En algunos casos
+  lo conocemos por el teorema~\ref{theo:raices-primitivas},
+  falta completarlo para los demás valores de \(n\).
+
+  \begin{lemma}
+    \label{lem:lambda-2^e}
+    El máximo orden en \(\mathbb{Z}_{2^e}\) con \(e \ge 3\)
+    es \(\lambda(2^e) = 2^{e - 2}\)
+  \end{lemma}
+  \begin{proof}
+    Consideremos \(a\) impar.
+    Entonces uno de \(a \pm 1\) es divisible por \(4\),
+    y tenemos para algún \(f \ge 2\) y un \(c\):
+    \begin{align*}
+      a
+	&\equiv 2^f \pm 1 \pmod{2^{f + 1}} \\
+	&=	c \cdot 2^{f + 1} + 2^f \pm 1  \\
+      a^2
+	&=	c^2 \cdot 2^{2 (f + 1)} + 2^{2 f} + 1
+		  + 2 \cdot c \cdot 2^{2 f + 1}
+		  \pm 2 \cdot c \cdot 2^{f + 1}
+		  \pm 2 \cdot 2^f		 \\
+	&\equiv 2^{f + 1} + 1 \pmod{2^{f + 2}}
+    \end{align*}
+    Continuando de la misma forma,
+    concluimos que para \(r \ge 1\):
+    \begin{equation}
+      \label{eq:a^(2^r)}
+      a^{2^r}
+	\equiv 2^{f + r} + 1 \pmod{2^{f + r + 1}}
+    \end{equation}
+    Cuando \(f + r + 1 = e\),
+    la ecuación~\eqref{eq:a^(2^r)} lleva a:
+    \begin{align*}
+      a^{2^{e - f - 1}}
+	&\equiv		  2^{e - 1} + 1 \pmod{2^e} \\
+	&\centernot\equiv 1		\pmod{2^e} \\
+      a^{2^{e - f}}
+	&\equiv	    2^e + 1 \pmod{2^{e + 1}} \\
+	&\equiv	    1	    \pmod{2^e}
+    \end{align*}
+    O sea,
+    \(\ord_{2^e} (a) = 2^{e - f}\),
+    donde \(f\) es el valor determinado anteriormente.
+    El mínimo valor posible de \(f\) es \(2\),
+    y siempre podemos elegir \(a = 4 - 1 = 3\) que da \(f = 2\),
+    así \(\lambda(2^e) = 2^{e - 2}\).
+  \end{proof}
+  Incidentalmente,
+  hemos hallado una manera simple de calcular \(\ord_{2^e}(a)\).
+  \begin{theorem}
+    \label{theo:max-orden-Z*}
+    El máximo orden está dado por:
+    \begin{align*}
+      \lambda(2) = 1, \qquad
+	&\lambda(4) = 2,
+	  \qquad \lambda(2^e) = 2^{e - 2} \text{\ si\ } e \ge 3 \\
+      \lambda(p^e)
+	&= p^{e - 1} (p - 1) \text{\ si el primo\ } p > 2 \\
+      \lambda(p_1^{e_1} p_2^{e_2} \dotsm p_r^{e_r}&)
+	 = \lcm(\lambda(p_1^{e_1}), \lambda(p_2^{e_2}), \dotsc,
+		\lambda(p_r^{e_r}))
+	   \text{\ si \(p_1, \dotsc, p_r\) son primos}
+    \end{align*}
+  \end{theorem}
+  \begin{proof}
+    Los casos \(2\) y \(4\) son obvios.
+    El caso \(2^e\) es el tema del lema~\ref{lem:lambda-2^e},
+    el caso \(p^e\)
+    es inmediato del teorema~\ref{theo:raices-primitivas}
+    y \(\phi(p^e) = p^{e - 1} (p - 1)\).
+
+    Ahora,
+    para \(\gcd(m, n) = 1\)
+    sabemos del teorema chino de los residuos%
+      \index{residuo!teorema chino de los}
+    (en realidad,
+     del corolario~\ref{cor:isomorfismo-anillo-Zm})%
+       \index{anillo!isomorfismo}
+    que \(\mathbb{Z}^\times_{m n}
+	    \cong \mathbb{Z}^\times_m \times \mathbb{Z}^\times_n\).
+    El orden de un elemento \(a \in \mathbb{Z}^\times_{m n}\),
+    que podemos descomponer en \(u v\)
+    con \(u \in \mathbb{Z}^\times_m\)
+    y \(v \in \mathbb{Z}^\times_n\),
+    es \(\lcm(\ord_m(u), \ord_n(v))\).
+    Si elegimos elementos de orden máximo para \(u\) y \(v\),
+    \(a\) será de orden máximo,
+    su orden es \(\lambda(m n) = \lcm(\lambda(m), \lambda(n))\),
+    y el resultado sigue.
+  \end{proof}
+
+  Algunos algoritmos
+  requieren usar raíces primitivas de un primo grande \(p\),%
+    \index{raiz primitiva@raíz primitiva!numero@número}
+  y los anteriores no dan muchas luces de cómo encontrar una.
+  Por suerte son relativamente numerosas:
+  Si tomamos una raíz primitiva \(r\),
+  todos los elementos \(r^k\) con \(\gcd(k, p - 1) = 1\)
+  también tendrán orden \(p - 1\) y son raíces primitivas.
+  Vale decir,
+  hay \(\phi(p - 1)\) raíces primitivas del primo \(p\).
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

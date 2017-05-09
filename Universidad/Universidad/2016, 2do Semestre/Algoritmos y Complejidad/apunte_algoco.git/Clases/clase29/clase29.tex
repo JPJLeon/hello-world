@@ -1,0 +1,193 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{red!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+\renewcommand{\lstlistingname}{Listado}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#29\quad Algoritmos Aleatorizados}}
+
+
+\author{Aldo Berrios Valenzuela}
+
+
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]
+Clase \#29\\
+Algoritmos Aleatorizados}
+
+\date{Miércoles 23 de noviembre de 2016}
+
+\begin{document}
+\maketitle
+
+\section{Algoritmos Aleatorizados}
+\paragraph{Idea:} El altoritmo toma decisiones según valores aleatorios. Por lo tanto, la ejecución varía, incluso con los mismos datos de entrada.
+
+\emph{Clasificación}:
+\begin{itemize}
+	\item Monte Carlo: Tiempo de ejecución fijo, puede fallar.
+	
+	\item Las Vegas: Tiempo de ejecución variable; no falla.
+\end{itemize}
+
+\emph{Paradigmas:}
+\begin{itemize}
+	\item Frustrar a un adversario.
+	\item Muestreo.
+	\item Abundancia de testigos.
+	\item Huellas digitales.
+	\item Reordenar.
+	\item Balance de carga.
+	\item Quebrar simetrías.
+\end{itemize}
+
+\begin{ejemplo}[Balance de Carga]
+	Sitio social, 24000 peticiones por 10 minutos. Cada petición se procesa en promedio $1/4\ncorchetes{s}$, máximo $1\ncorchetes{s}$. Unidad de trabajo: $1\ncorchetes{s}$ entonces son 6000 unidades por 10 minutos, en 10 minutos un servidor puede hacer 600, esto es, 10 servidores al $100\%$. ¿Cuántos más?, Chernoff al rescate\ldots 
+	
+	Acotamos la probabilidad de que el servidor $1$ (de $m$) se sobrecargue. Si son $m$ servidores, y la carga se distribuye por igual, la carga promedio de $1$ es
+	\newcommand{\pr}[1]{\mathrm{Pr}\ncorchetes{#1}}
+	\newcommand{\esperanza}[1]{\mathbb{E}\ncorchetes{#1}}
+	\begin{equation*}
+	\dfrac{10}{m}\cdot 600
+	\end{equation*}
+	Nos interesa la probabilidad que la carga del servidor $1$ sea mayor que $600$. Definimos $0<t_i\leq 1$ (recuerde que una tarea demora a lo más 1 segundo) el tiempo dedicado por el servidor $1$ a la tarea $i$. Sea:
+	\begin{equation*}
+	T=\sum_{1\leq i \leq 24000} t_i\qquad\qquad \esperanza{T}=\dfrac{6000}{m} = \dfrac{10}{m}\cdot 600; \qquad c = \dfrac{10}{m}
+	\end{equation*}
+	Entonces:
+	\begin{align*}
+	\pr{\text{servidor 1 se sobrecarga}} &= \pr{T \geq 600}\\
+	&= \pr{T \geq \esperanza{T}}\\
+	&\leq e^{-\beta \nparentesis{c}\cdot \frac{6000}{m}}
+	\end{align*}
+	Por lo tanto:
+	\begin{align*}
+	\pr{\text{algún servidor se cae}} &\leq \sum_{1 \leq k \leq m} \pr{\text{servidor $k$ se cae}}\\
+	&=m \pr{\text{servidor 1 se cae}}\\
+	&\leq m e^{-\beta\nparentesis{c}\cdot \frac{6000}{m}}
+	\end{align*}
+	Algunos valores de la cantidad de servidores que necesitamos se pueden ver en el Cuadro \ref{29::TablaProbabilidad}.
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{c|c}
+			Valor de $m$ & Probabilidad de que al menos 1 servidor se caiga\\
+			\hline
+			$11$ & $0.784\ldots$\\
+			$12$ & $0.000999\ldots$\\
+			$13$ & $0.0000000760\ldots$
+		\end{tabular}
+		\caption{Tabla de probabilidades de que al menos 1 servidor se caiga con una cantidad de $m$ servidores.}
+		\label{29::TablaProbabilidad}
+	\end{table}
+	
+\end{ejemplo}
+
+
+
+
+
+\end{document}

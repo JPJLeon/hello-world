@@ -1,0 +1,1686 @@
+% numeros-combinatorios.tex
+%
+% Copyright (c) 2011-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Números combinatorios}
+\label{cha:numeros-combinatorios}
+\index{combinatoria}
+
+  Las funciones generatrices tienen muchas aplicaciones en combinatoria,%
+    \index{generatriz}
+  por las razones que quedarán claras
+  a través de variados ejemplos.
+  En muchos casos es directo obtener recurrencias
+  para los números que interesan,
+  y funciones generatrices
+  dan entonces forma de llegar a expresiones explícitas
+  o relaciones adicionales.
+  Aplicamos el método simbólico
+  (desarrollado en el capítulo~\ref{cha:metodo-simbolico})
+  donde es posible,
+  dado que simplifica inmensamente los desarrollos.
+
+\section{Subconjuntos y multiconjuntos}
+\label{sec:sub+multi-conjuntos}
+
+  Para obtener el número de subconjuntos%
+    \index{conjunto!subconjunto}
+  de \(k\) elementos tomados entre \(n\),
+  podemos razonar en forma afín a la demostración
+  del teorema~\ref{theo:ms-OGF} para conjuntos:
+  Cada elemento aporta \(0\) o \(1\) al tamaño de un subconjunto,
+  por lo que la función generatriz
+  para los subconjuntos de un conjunto de \(n\) elementos no es más que:
+  \begin{equation*}
+    (1 + z)^n
+  \end{equation*}
+  y el número de interés es entonces directamente:
+  \begin{equation*}
+    \binom{n}{k}
+      = \left[ z^k \right] (1 + z)^n
+  \end{equation*}
+  como ya sabíamos.
+
+  Otra situación interesante son los multiconjuntos.%
+    \index{multiconjunto!subconjunto}
+  Siguiendo nuevamente el razonamiento de la demostración
+  del teorema~\ref{theo:ms-OGF},
+  el aporte de cada elemento es:
+  \begin{equation*}
+    1 + z + z^2 + \dotsb
+      = \frac{1}{1 - z}
+  \end{equation*}
+  con lo que el número de multiconjuntos
+  de \(k\) elementos tomados entre \(n\)
+  es simplemente:
+  \begin{equation*}
+    \multiset{n}{k}
+      = \left[ z^k \right] \, \left( \frac{1}{1 - z} \right)^n
+      = (-1)^k \, \binom{-n}{k}
+      = \binom{n + k - 1}{n - 1}
+  \end{equation*}
+
+\section[¿Cuántas secuencias
+	   de \texorpdfstring{$2 n$ }{}paréntesis balanceados hay?]
+	{\protect\boldmath
+	   ¿Cuántas secuencias
+	   de \texorpdfstring{$2 n$ }{}paréntesis balanceados
+	   hay?%
+       \protect\unboldmath}
+\label{sec:Catalan}
+\index{Catalan, numeros de@Catalan, números de}
+\index{parentesis balanceados@paréntesis balanceados|see{Catalan, números de}}
+
+  Llamemos \(C_n\)
+  al número de secuencias
+  de \(2 n\) paréntesis balanceados.
+  Los primeros valores son:
+  \begin{align*}
+    1 & \quad \epsilon \\
+    1 & \quad () \\
+    2 & \quad () \quad (()) \\
+    5 & \quad ()()() \quad ()(()) \quad (())() \quad (()()) \quad ((()))
+  \end{align*}
+
+  Toda secuencia
+  de paréntesis balanceados se puede dividir en dos partes:
+  El \(2 k\)\nobreakdash-ésimo paréntesis
+  cierra el primer paréntesis (\(1 \le k \le n\)),
+  y el resto.
+  Marcando este comienzo en rojo
+  está la secuencia
+  \textcolor{red}{(()())}(()(()))()(()()()).
+  Llamamos \emph{perfecta} a una secuencia
+  con \(n = k\).
+  Hay \(C_{n - 1}\) secuencias perfectas
+  de largo \(2 n\),
+  como muestra la siguiente biyección:
+  \begin{itemize}
+  \item
+    Tomar una secuencia balanceada cualquiera
+    de largo \(2 n - 2\),
+    y encerrarla entre paréntesis
+    da una secuencia perfecta de largo \(2 n\).
+  \item
+    Tomar una secuencia perfecta,
+    y eliminar los paréntesis de más afuera
+    da una secuencia balanceada.
+  \end{itemize}
+
+  Si llamamos \(\mathcal{C}\)
+  la clase de secuencias de paréntesis balanceados,
+  tenemos la relación simbólica:%
+    \index{metodo simbolico@método simbólico}
+  \begin{equation*}
+    \mathcal{C}
+      = \mathcal{E} + ( \mathcal{C} ) \mathcal{C}
+  \end{equation*}
+  Al usar \(z\) para marcar un par de paréntesis
+  (sus posiciones exactas realmente no interesan),
+  esto da:
+  \begin{equation}
+    \label{eq:Catalan}
+    C(z)
+      = 1 + z C^2(z)
+  \end{equation}
+  Ya nos habíamos tropezado con la ecuación~\eqref{eq:Catalan}
+  al derivar la función generatriz para el número de árboles binarios
+  en el método simbólico en el capítulo~\ref{cha:metodo-simbolico},
+  y vimos que los \(C_n\)
+  son los números de Catalan~\eqref{eq:Catalan-numbers}:
+    \index{Catalan, numeros de@Catalan, números de}%
+    \index{Catalan, numeros de@Catalan, números de!formula@fórmula}
+  \begin{equation*}
+    C_n
+      = \frac{1}{n + 1} \, \binom{2 n}{n}
+  \end{equation*}
+  Expandiendo la serie:
+  \begin{equation*}
+    C(z)
+      = 1 + z + 2 z^2 + 5 z^3 + 14 z^4 + 42 z^5 + 132 z^6
+	  + 429 z^7 + 1\,430 z^8 + 4\,862  z^9 + 16\,796 z^{10} + \dotsb
+  \end{equation*}
+
+  Consideremos ahora la manera de dividir un polígono convexo
+  (vale decir,
+   toda diagonal cae completamente en su interior)
+  en triángulos mediante diagonales.%
+    \index{poligono@polígono!triangulacion@triangulación}
+  La figura~\ref{fig:triangulations-pentagon}
+  muestra que para el pentágono hay cinco triangulaciones.
+  \begin{figure}[ht]
+    \centering
+    \subfloat{\pgfimage{images/triangulation-1}}
+    \hspace{2em}
+    \subfloat{\pgfimage{images/triangulation-2}}
+    \hspace{2em}
+    \subfloat{\pgfimage{images/triangulation-3}}
+    \\
+    \subfloat{\pgfimage{images/triangulation-4}}
+    \hspace{2em}
+    \subfloat{\pgfimage{images/triangulation-5}}
+    \caption{División del pentágono en triángulos}
+    \label{fig:triangulations-pentagon}
+  \end{figure}
+  Podemos considerar un polígono convexo triangulado
+  como un polígono triangulado,
+  un triángulo y otro polígono triangulado.
+  El caso extremo es el ``polígono'' con dos vértices
+  (una línea)
+  que tiene una única triangulación
+  (en cero triángulos).
+  Si representamos la clase de triangulaciones por \(\mathcal{T}\)
+  y los triángulos por \(\mathcal{Z}\),
+  tenemos la expresión simbólica:%
+    \index{metodo simbolico@método simbólico}
+  \begin{equation}
+    \label{eq:triangulation-se}
+    \mathcal{T}
+      = \mathcal{E} + \mathcal{T} \times \mathcal{Z} \times \mathcal{T}
+  \end{equation}
+  con la correspondiente ecuación funcional:
+  \begin{equation}
+    \label{eq:triangulation-fe}
+    T(z)
+      = 1 + z T^2(z)
+  \end{equation}
+  La solución es nuevamente los números de Catalan;%
+    \index{Catalan, numeros de@Catalan, números de}
+  solo que expresa el número de triangulaciones
+  en términos del número de triángulos,
+  no de lados del polígono.
+  Vemos que un polígono de \(n\) lados se divide en \(n - 2\) triángulos,
+  con lo que finalmente el número de triangulaciones
+  de un polígono de \(n\)~lados es \(C_{n - 2}\).
+
+\section{Números de Motzkin}
+\label{sec:numeros-motzkin}
+\index{Motzkin, numeros de@Motzkin, números de|textbfhy}
+
+  Donaghey y Shapiro~\cite{donaghey77:_motzkin_numbers}
+  indican una estrecha relación entre los números de Motzkin
+  y los de Catalan,
+    \index{Catalan, numeros de@Catalan, números de}%
+  por lo que debieran aparecer con frecuencia similar.
+  Una de las tantas estructuras que cuentan
+  es el número de maneras en que pueden dibujarse cuerdas
+  entre puntos sobre una circunferencia
+  de manera que no se intersecten al interior ni sobre la circunferencia.
+  La figura~\ref{fig:Motzkin} muestra que \(m_5 = 21\).
+  \begin{figure}[ht]
+    \centering
+    \subfloat{\pgfimage{images/Motzkin-01}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-02}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-03}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-04}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-05}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-06}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-07}}
+    \\
+    \subfloat{\pgfimage{images/Motzkin-08}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-09}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-10}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-11}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-12}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-13}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-14}}
+    \\
+    \subfloat{\pgfimage{images/Motzkin-15}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-16}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-17}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-18}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-19}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-20}}
+    \hspace{1em}
+    \subfloat{\pgfimage{images/Motzkin-21}}
+    \caption{Cuerdas entre cinco puntos sobre la circunferencia}
+    \label{fig:Motzkin}
+  \end{figure}
+  Analizando la situación de la figura~\ref{fig:Motzkin}
+  podemos construir una recurrencia para \(m_n\).
+  Si elegimos uno de los \(n\) puntos
+  este puede participar en alguna cuerda o no.
+  Si no participa,
+  es como si no existiera,
+  esa situación aporta \(m_{n - 1}\) casos.
+  Si ese punto participa en una cuerda,
+  sus dos extremos quedan excluidos,
+  y quedan por tender cuerdas entre los demás \(n - 2\) puntos,
+  de forma que no crucen la cuerda entre manos.
+  Vale decir,
+  la cuerda corta el círculo en dos,
+  una parte de \(k\) nodos y otra de \(n - k - 2\) nodos,
+  las formas de tender cuerdas entre ellas se pueden combinar a gusto:%
+    \index{recurrencia}
+  \begin{equation*}
+    m_n
+      = m_{n - 1} + \sum_{0 \le k \le n - 2} m_k m_{n - k - 2}
+  \end{equation*}
+  Como condiciones de contorno tenemos \(m_0 = m_1 = 1\)
+  (con la recurrencia entregan los valores conocidos
+   \(m_2 = 2\) y \(m_3 = 4\)).
+  Resulta:
+  \begin{equation}
+    \label{eq:Motzkin-recurrence}
+    m_{n + 2}
+      = m_{n + 1} + \sum_{0 \le k \le n} m_k m_{n - k}
+    \qquad m_0 = m_1 = 1
+  \end{equation}
+  Aplicando las reglas con la función generatriz ordinaria \(M(z)\)
+  y simplificando queda:%
+    \index{generatriz}
+  \begin{equation}
+    \label{eq:Motzkin-fuctional}
+    M(z)
+      = 1 + z M(z) + z^2 M^2(z)
+  \end{equation}
+  de donde:
+  \begin{equation}
+    \label{eq:Motzkin-gf}
+    M(z)
+      = \frac{1 - z - \sqrt{1 - 2 z - 3 z^2}}{2 z^2}
+  \end{equation}
+  (elegimos el signo negativo ya que \(M(0) = m_0 = 1\)).
+  Expandiendo en serie:
+  \begin{equation*}
+    M(z)
+      = 1 + z + 2 z^2 + 4 z^3 + 9 z^4 + 21 z^5 + 51 z^6 + 127 z^8
+	  + 323 z^8 + 835 z^9 + 2\,188 z^{10} + \dotsb
+  \end{equation*}
+
+  Alternativamente,
+  si \(\mathcal{M}\) es la clase de las maneras de tender cuerdas,%
+    \index{metodo simbolico@método simbólico}
+  podemos descomponerla
+  en ningún punto
+  (aporta \(\mathcal{E}\));
+  agregar un punto que no participa en ninguna cuerda
+  (aporta \( \mathcal{Z} \times \mathcal{M}\)
+  y tender una cuerda,
+  lo que da cuenta de dos puntos y divide en dos conjuntos de puntos
+  entre los cuales tender cuerdas
+  (aporta
+     \(\mathcal{Z} \times \mathcal{Z} \times \mathcal{M} \times \mathcal{M}\)).
+  En total:
+  \begin{equation}
+    \label{eq:Motzkin-se}
+    \mathcal{M}
+      = \mathcal{E}
+	  + \mathcal{Z} \times \mathcal{M}
+	  + \mathcal{Z} \times \mathcal{Z}
+	      \times \mathcal{M} \times \mathcal{M}
+  \end{equation}
+  Esto lleva nuevamente a la ecuación funcional~(\ref{eq:Motzkin-fuctional}).
+
+\section{Números de Schröder}
+\label{sec:numeros-Schroeder}
+\index{Schroder, numeros de@Schröder, números de|textbfhy}
+
+  De interés ocasional son los números de Schröder,
+  quien los planteó como el segundo de sus cuatro problemas~%
+    \cite{schroeder70:_vier_probleme},
+  ver también a Stanley~\cite{stanley97:_hippar_plutar_schroed_hough}.
+  Tenemos \(n\) símbolos
+  (por ejemplo, \(x\))
+  e interesa saber de cuántas formas se pueden ``parentizar'',
+  donde la regla es más fácil de explicar recursivamente:
+  \(x\) mismo es una parentización;
+  y si lo son \(\sigma_1\) a \(\sigma_k\) con \(k \ge 2\),
+  también lo es \((\sigma_1 \sigma_2 \dotsm \sigma_k)\).
+  Por ejemplo,
+  \((((x x) x (x x x)) (x x))\)
+  es una parentización de \(x x x x x x x x\).
+  El método simbólico aplicado a esta descripción recursiva
+  lleva a:%
+    \index{metodo simbolico@método simbólico}
+  \begin{equation}
+    \label{eq:Schroeder-symbolic}
+    \mathcal{S}
+      = \mathcal{Z} + \Seq_{\ge 2}(\mathcal{S})
+  \end{equation}
+  y a la ecuación funcional:
+  \begin{equation*}
+    S(z)
+      = z + \frac{S^2(z)}{1 - S(z)}
+  \end{equation*}
+  No es aplicable directamente la fórmula de inversión de Lagrange,%
+    \index{Lagrange, inversion de@Lagrange, inversión de}
+  pero podemos resolver la cuadrática:
+  \begin{equation}
+    \label{eq:Schroeder-functional}
+    2 S^2(z) - (z + 1) S(z) + z
+      = 0
+  \end{equation}
+  lo que al descartar la solución espuria da:
+  \begin{equation}
+    \label{eq:Schroeder-gf}
+    S(z)
+      = \frac{1}{4} \, \left( 1 + z - \sqrt{1 - 6 z + z^2} \right)
+  \end{equation}
+  Expandiendo en serie:
+  \begin{equation*}
+    S(z)
+      = z + z^2 + 3 z^3 + 11 z^4 + 45 z^5 + 197 z^6 + 903 z^7
+	  + 4\,279 z^8 + 20\,793 z^9 + 103\,049 z^{10} + \dotsb
+  \end{equation*}
+
+  La ecuación~\eqref{eq:Schroeder-gf} es incómoda.
+  Derivando~\eqref{eq:Schroeder-functional}
+  y despejando \(S'(z)\):
+  \begin{equation}
+    \label{eq:Schroeder-differential}
+    S'(z)
+      = \frac{S(z) - 1}{4 S(z) - z - 1}
+  \end{equation}
+  Observamos de~\eqref{eq:Schroeder-gf} que:
+  \begin{equation*}
+    4 S(z) - z - 1
+      = \sqrt{1 - 6 z + z^2}
+  \end{equation*}
+  Amplificando la fracción en~\eqref{eq:Schroeder-differential} por esto,
+  substituyendo el resultado de despejar \(S^2(z)\)
+  de~\eqref{eq:Schroeder-functional}
+  y simplificando:
+  \begin{equation}
+    \label{eq:Schroeder-differential-2}
+    (z^2 - 6 z + 1) S'(z) - (z - 3) S(z)
+      = -z + 1
+  \end{equation}
+  Substituyendo la serie de potencias \(S(z)\)
+  en~\eqref{eq:Schroeder-differential-2}
+  e igualando coeficientes de \(z^n\)
+  resulta la recurrencia para \(n \ge 1\)
+  (esto permite evitar las situaciones especiales
+   que introduce el lado derecho de~\eqref{eq:Schroeder-differential-2}):
+  \begin{equation}
+    \label{eq:Schroeder-recurrence}
+    (n + 2) s_{n + 2} - 3 (2 n + 1) s_{n + 1} + (n - 1) s_n
+      = 0
+  \end{equation}
+  Expandiendo~\eqref{eq:Schroeder-gf} tenemos \(s_1 = s_2 = 1\)
+  como puntos de partida.
+
+  Acá obtuvimos una ecuación diferencial lineal%
+    \index{ecuacion diferencial@ecuación diferencial}
+  manipulando la ecuación funcional para la función generatriz,
+  y de ella extrajimos una recurrencia,
+  más cómoda para calcular los coeficientes que la función generatriz.
+  Esto puede extenderse
+  al caso general de ecuaciones funcionales algebraicas,
+  como muestra Bostan, Chyzak, Salvy, Lecerf y Schost~%
+    \cite{bostan07:_differ_equat_algeb_funct}.
+
+  Otra opción es el camino siguiente:
+  \begin{align*}
+    \frac{S(z)}{z}
+      &= 1 + \frac{S(z)}{z} \, \frac{S(z)}{1 - S(z)} \\
+    \intertext{Despejando \(S / z\) resulta:}
+    S(z)
+      &= z \, \frac{1 - S(z)}{1 - 2 S(z)}
+  \end{align*}
+  donde sí es aplicable inversión de Lagrange.
+  El resultado es complicado,
+  y lo omitiremos.
+
+\section{Números de Stirling de segunda especie}
+\label{sec:Stirling-2}
+\index{Stirling, numeros de@Stirling, números de!segunda especie|textbfhy}
+
+% Fixme: Agregar más manipulación, identidades, manipulación (GKP, TAoCP)
+
+  Interesa el número de maneras
+  de dividir el conjunto \(\{1, 2, 3, 4\}\) en dos clases,
+  como ilustra el cuadro~\ref{tab:S-4-2}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{*{2}{>{\(}l<{\)}}}
+      \{1\}	  & \{2, 3, 4\} \\
+      \{1, 2\}	  & \{3, 4\}	\\
+      \{1, 3\}	  & \{2, 4\}	\\
+      \{1, 4\}	  & \{2, 4\}	\\
+      \{1, 2, 3\} & \{4\}	\\
+      \{1, 2, 4\} & \{3\}	\\
+      \{1, 3, 4\} & \{2\}
+    \end{tabular}
+    \caption{Las 7 particiones de 4 elementos en 2 clases}
+    \label{tab:S-4-2}
+  \end{table}
+  Esto muestra que hay 7 particiones de 4 elementos en 2 clases.
+  El número de maneras de dividir un conjunto en clases
+  lo da el \emph{número de Stirling de segunda especie},
+  se anota \(\classes{n}{k}\) para el número de formas
+  de dividir un conjunto de \(n\) elementos en \(k\) particiones.
+  Cabe hacer notar que esta notación,
+  originada por Karamata~%
+    \cite{karamata35:_sommab_exp},
+  es relativamente común
+  (uno de sus campeones es Knuth,%
+     \index{Knuth, Donald E.}
+   por ejemplo~\cite{graham94:_concr_mathem, knuth92:_two_notes_notat}),
+  aunque hay una gran variedad de notaciones,
+  algunas con signo.
+  Claramente para los números de Bell%
+    \index{Bell, Eric Temple}%
+    \index{Bell, numeros de@Bell, números de}
+  vistos en la sección~\ref{sec:rotulados}:
+  \begin{equation}
+    \label{eq:Bell-Stirling}
+    B_n
+      = \sum_{1 \le k \le n} \classes{n}{k}
+  \end{equation}
+
+  Una aplicación es
+  contar el número de funciones sobre de \([n]\) a \([k]\):%
+    \index{funcion@función!sobreyectiva!numero@número}
+  Corresponde
+  a particionar el dominio en las preimágenes de cada elemento del rango,
+  y podemos asignar valores de la función
+  a cada una de las \(k\)~particiones
+  de \(k!\)~maneras,
+  con lo que \(\classes{n}{k} k!\) es el valor buscado.
+
+  Para obtener \(\classes{n}{k}\),
+  consideremos dos grupos de particiones:%
+    \index{Stirling, numeros de@Stirling, números de!segunda especie!recurrencia}
+  \begin{description}
+  \item[\boldmath Aquellas en que \(n\) está solo:\unboldmath]
+    Corresponden a tomar \(k - 1\) particiones
+    de los demás \(n - 1\) elementos,
+    hay \(\classes{n - 1}{k - 1}\) de estas.
+  \item[\boldmath Aquellas en que \(n\) está con otros elementos:\unboldmath]
+    Se construyen en base a \(k\) clases
+    de los restantes \(n - 1\) elementos
+    vía agregar \(n\) a cada clase,
+    hay \(k \cdot \classes{n - 1}{k}\) de estas.
+  \end{description}
+  Estas dos opciones son excluyentes y exhaustivas,
+  y:
+  \begin{equation}
+    \label{eq:recurrence-Stirling-2}
+    \classes{n}{k} = \classes{n - 1}{k - 1} + k \classes{n - 1}{k}
+  \end{equation}
+  Donde:
+  \begin{equation*}
+    \classes{n}{0}
+      = [n = 0]
+    \qquad
+    \classes{n}{n}
+      = 1
+  \end{equation*}
+  Si además decretamos:
+  \begin{equation*}
+    \classes{n}{k} =
+      \begin{cases}
+	0 & n < 0 \\
+	0 & k < 0 \\
+	0 & k > n
+      \end{cases}
+  \end{equation*}
+  la recurrencia \emph{siempre} se cumple.
+  Una tabla de los números de Stirling de segunda especie
+  en forma de triángulo
+  (como el triángulo de Pascal del cuadro~\ref{tab:triangulo-Pascal})
+  comienza como ilustra el cuadro~\ref{tab:triangulo-Stirling-2}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{>{\(}r<{\)}*{12}{>{\(}c<{\)}@{\hspace{1ex}}}>{\(}c<{\)}}
+      n=0:& \phantom{00}
+		& \phantom{00}
+		    & \phantom{00}
+			& \phantom{00}
+			    & \phantom{00}
+				 & \phantom{00}
+				      & 1 \\
+	 \noalign{\smallskip\smallskip}
+      n=1:&	&   &	&   &	 &  0 & \phantom{00}
+					  &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=2:&	&   &	&   &  0 &    &	 1 & \phantom{00}
+					       &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=3:&	&   &	& 0 &	 &  1 &	   &  3 & \phantom{00}
+						    &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=4:&	&   & 0 &   &  1 &    &	 7 &	&  6 & \phantom{00}
+							 &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=5:&	& 0 &	& 1 &	 & 15 &	   & 25 &    & 10 & \phantom{00}
+							      &	 1
+	      & \phantom{00} \\
+	 \noalign{\smallskip\smallskip}
+      n=6:& 0 &	  & 1 &	  & 31 &    & 90 &	& 65 &	  & 15 & \phantom{00}
+								    &  1 \\
+	 \noalign{\smallskip\smallskip}
+    \end{tabular}
+    \caption{Números de Stirling de segunda especie}
+    \label{tab:triangulo-Stirling-2}
+    \index{Stirling, numeros de@Stirling, números de!segunda especie!cuadro}
+  \end{table}
+  Podemos optar entre tres funciones generatrices:
+  Multiplicar por \(u^k\) y sumar sobre \(k\),
+  multiplicar por \(z^n\) y sumar sobre \(n\)
+  o multiplicar por \(u^k z^n\) sumar sobre ambos índices.
+  Al sumar sobre \(k\) el factor \(k\) resulta en una derivada,
+  se optaría por sumar solo sobre \(n\),
+  que da ecuaciones más simples de tratar.
+  Resulta eso sí una recurrencia para la función generatriz del caso.
+  El desarrollo es largo,
+  y lo omitiremos,
+  vea el texto de Wilf~\cite{wilf06:_gfology}.
+
+  Es más simple aplicar el método simbólico.%
+    \index{metodo simbolico@método simbólico}
+  Para obtener el número de particiones de \(n\) elementos en \(k\) clases
+  partimos de la expresión simbólica:
+  \begin{equation*}
+    \mathcal{S}
+      = \MSet(\mathcal{U} \times \MSet_{\ge 1}(\mathcal{Z}))
+  \end{equation*}
+  en la que \(\mathcal{U}\) contiene un único elemento de tamaño uno
+  (usado para contabilizar el número de clases
+   asociándolo a la variable \(u\),
+   mientras \(z\) cuenta el número de elementos total),
+  lo que lleva a la función generatriz mixta%
+    \index{generatriz!multivariada}
+  (exponencial en \(z\),
+   los elementos están rotulados;
+   y ordinaria en \(u\),
+   las clases no lo están):
+  \begin{equation}
+    \label{eq:Stirling-2-EGF}
+    \index{Stirling, numeros de@Stirling, números de!segunda especie!funcion generatriz@función generatriz}
+    S(z, u)
+      = \mathrm{e}^{u (\mathrm{e}^z - 1)}
+  \end{equation}
+  De acá:
+  \begin{align}
+    \classes{n}{k}
+      &= n! \left[ z^n u^k \right] S(u, z) \notag \\
+      &= n! \left[ z^n \right] \, \frac{(\mathrm{e}^z - 1)^k}{k!} \notag \\
+      &= \frac{n!}{k!} \left[ z^n \right] \,
+	    \sum_{0 \le r \le k} (-1)^{k - r} \,
+	       \binom{k}{r} \, \mathrm{e}^{r z} \notag \\
+      &= \frac{n!}{k!}
+	    \sum_{0 \le r \le k} (-1)^{k - r} \, \binom{k}{r} \, \frac{r^n}{n!}
+		\notag \\
+      &= \sum_{0 \le r \le k} \frac{(-1)^{k - r} r^n}{r! (k - r)!}
+		\label{eq:Stirling-2-explicit}
+  \end{align}
+
+\section{Números de Stirling de primera especie}
+\label{sec:Stirling-1}
+\index{Stirling, numeros de@Stirling, números de!primera especie|textbfhy}
+
+  Interesa el número de maneras
+  de organizar \(n\) elementos en \(k\) ciclos.
+  Esto queda representado por la expresión simbólica:%
+    \index{metodo simbolico@método simbólico}
+  \begin{equation*}
+    \mathcal{C}
+      = \MSet(\mathcal{U} \times \Cyc(\mathcal{Z}))
+  \end{equation*}
+  de donde el método simbólico entrega directamente
+  la función generatriz mixta%
+    \index{generatriz!multivariada}
+  (exponencial en \(z\),
+   los elementos están rotulados;
+   y ordinaria en \(u\),
+   los ciclos no lo están):
+  \begin{equation}
+    \label{eq:Stirling-1-EGF}
+    \index{Stirling, numeros de@Stirling, números de!primera especie!funcion generatriz@función generatriz}
+    C(z, u)
+      = \exp \left( u \ln \frac{1}{1 - z} \right)
+      = (1 - z)^{-u}
+  \end{equation}
+  Los coeficientes
+  se conocen como \emph{números de Stirling de primera especie}
+  y se anota \(\cycle{n}{k}\)
+  (nuevamente notación impulsada por Knuth~%
+    \index{Knuth, Donald E.}%
+    \cite{knuth92:_two_notes_notat}).
+  Se lee ``\(n\) ciclo \(k\)''
+  (en inglés
+   se expresa \emph{\(n\) \foreignlanguage{english}{cycle} \(k\)}).
+
+  Para derivar una recurrencia para ellos,%
+    \index{Stirling, numeros de@Stirling, números de!primera especie!recurrencia}
+  consideremos cómo podemos construir
+  una organización de \(n\) objetos con \(k\) ciclos
+  a partir de \(n - 1\) objetos.
+  Al agregar el nuevo objeto,
+  podemos ponerlo en un ciclo por sí mismo,
+  lo que puede hacer de una única manera
+  partiendo
+  de cada una de las \(\cycle{n - 1}{k - 1}\) organizaciones
+  de \(n - 1\) elementos con \(k - 1\) ciclos.
+  La otra opción
+  es insertarlo en alguno de los \(k\) ciclos ya existentes.
+  Si suponemos \(n - 1\) elementos y \(k\) ciclos:
+  \begin{equation*}
+    (a_1 \, a_2 \dotso a_{j_1})
+    (a_{j_1 + 1} \, a_{j_1 + 2} \dotso a_{j_2})
+    \dotso
+    (a_{j_{k - 1} + 1} \, a_{j_{k - 1} + 2} \dotso a_{n - 1})
+  \end{equation*}
+  En ella podemos insertar el nuevo elemento antes de cada elemento,
+  agregándolo al ciclo al que este pertenece;
+  insertar el elemento al final del ciclo
+  es lo mismo que ubicarlo al comienzo de éste,
+  por lo que esto no aporta nuevas opciones.
+  De esta forma para cada caso
+  hay \(n - 1\) posibilidades de insertar el nuevo elemento:
+  \begin{equation}
+    \label{eq:recurrence-Stirling-1}
+    \cycle{n}{k}
+      = (n - 1) \cycle{n - 1}{k} + \cycle{n - 1}{k - 1}
+  \end{equation}
+  Para condiciones de contorno,
+  tenemos:
+  \begin{equation*}
+    \cycle{n}{0}
+      = [n = 0]
+    \qquad
+    \cycle{n}{n}
+      = 1
+  \end{equation*}
+  Si además decretamos:
+  \begin{equation*}
+    \cycle{n}{k} =
+      \begin{cases}
+	0 & n < 0 \\
+	0 & k < 0 \\
+	0 & k > n
+      \end{cases}
+  \end{equation*}
+  la recurrencia \emph{siempre} se cumple.
+
+  En forma de triángulo à la Pascal
+  tenemos el cuadro~\ref{tab:triangulo-Stirling-1}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{>{\(}r<{\)}*{12}{>{\(}c<{\)}@{\hspace{1ex}}}>{\(}c<{\)}}
+      n=0:& \phantom{000}
+		  & \phantom{000}
+		       & \phantom{000}
+			    & \phantom{000}
+				 & \phantom{000}
+				      & \phantom{000}
+					   &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=1:&	  &    &    &	 &    &	 0 & \phantom{000}
+						&  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=2:&	  &    &    &	 &  0 &	   &  1 & \phantom{000}
+						     &	1 \\
+	 \noalign{\smallskip\smallskip}
+      n=3:&	  &    &    &  0 &    &	 2 &	&  3 & \phantom{000}
+							  &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=4:&	  &    &  0 &	 &  6 &	   & 11 &    &	6 & \phantom{000}
+							       &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=5:&	  &  0 &    & 24 &    & 50 &	& 35 &	  & 10 & \phantom{000}
+								    &  1
+	       & \phantom{000} \\
+	 \noalign{\smallskip\smallskip}
+      n=6:& 0	  &    &120 &	 &274 &	   &225 &    & 85 &    & 15
+	       & \phantom{000} &  1 \\
+	 \noalign{\smallskip\smallskip}
+    \end{tabular}
+    \caption{Números de Stirling de primera especie}
+    \label{tab:triangulo-Stirling-1}
+    \index{Stirling, numeros de@Stirling, números de!primera especie!cuadro}
+  \end{table}
+  Hay fórmulas explícitas,
+  pero son complicadas y las omitiremos.
+
+\section{Números de Lah}
+\label{sec:numeros-lah}
+\index{Lah, numeros de@Lah, números de|textbfhy}
+\index{Stirling, numeros de@Stirling, números de!tercera especie|see{ Lah, números de}}
+
+  Los números de Lah~%
+    \cite{lah54:_new_kind_number}
+  cuentan el número de maneras
+  de ordenar \(n\) elementos en \(k\) secuencias.
+  Se les ha llamado ``números de Stirling de tercera especie''
+  por analogía a los anteriores,
+  y Petkovšek y Pisanski~%
+    \cite{petko02:_combin_lah_stirling}
+  les dan la notación \(\lah{n}{k}\) que usaremos.
+  También es común \(L_{n, k}\).
+  Queda representado por la expresión simbólica:%
+    \index{metodo simbolico@método simbólico}
+  \begin{equation*}
+    \mathcal{L}
+      = \MSet(\mathcal{U} \times \Seq_{\ge 1}(\mathcal{Z}))
+  \end{equation*}
+  y el método simbólico da la función generatriz mixta%
+    \index{generatriz!multivariada}
+  (elementos rotulados,
+   secuencias sin rotular):
+  \begin{equation}
+    \label{eq:Lah-EGF}
+    L(z, u)
+      = \mathrm{e}^{u ((1 - z)^{-1} - 1)}
+      = \mathrm{e}^{u z (1 - z)^{-1}}
+  \end{equation}
+  Podemos extraer una fórmula explícita de~\eqref{eq:Lah-EGF}:%
+    \index{Lah, numeros de@Lah, números de!formula@fórmula}
+  \begin{align}
+    \lah{n}{k}
+      &= n! \left[ u^k z^n \right]
+	      \, \exp \left( u z (1 - z)^{-1} \right) \\
+      &= n! \left[ z^n \right] \, \frac{z^k (1 - z)^{-k}}{k!} \\
+      &= \frac{n!}{k!} \, \left[ z^{n - k} \right] (1 - z)^{-k} \\
+      &= \frac{n!}{k!} \, (-1)^{n - k} \binom{-k}{n - k} \\
+      &= \frac{n!}{k!} \, \binom{n - 1}{k - 1}
+  \end{align}
+
+  Para derivar una recurrencia para estos números,%
+    \index{Lah, numeros de@Lah, números de!recurrencia}
+  usamos la misma técnica anterior.
+  Veamos cómo podemos construir
+  \(k\) secuencias tomadas entre \(n\) elementos
+  partiendo con las configuraciones de \(n - 1\) elementos.
+  Hay dos posibilidades exhaustivas y excluyentes:
+  \(n\) forma una secuencia por sí solo,
+  cosa que puede hacerse de una única forma
+  partiendo
+  con cada una de las \(\lah{n - 1}{k - 1}\) configuraciones
+  con \(n - 1\) elementos y \(k - 1\) secuencias;
+  o podemos agregar \(n\) a alguna de \(k\) secuencias
+  en configuraciones de \(n - 1\) elementos.
+  Podemos agregar un nuevo elemento a una secuencia de largo \(e\)
+  de \(e + 1\) formas
+  (antes del primero,
+   o después de cada uno de los \(e\) elementos).
+  Como los largos de las secuencias suman \(n - 1\),
+  en total
+  creamos \((n + k - 1) \lah{n - 1}{k}\) nuevas configuraciones.
+  Resulta:
+  \begin{equation}
+    \label{eq:recurrence-Lah}
+    \lah{n}{k}
+      = (n + k - 1) \lah{n - 1}{k} + \lah{n - 1}{k - 1}
+  \end{equation}
+  Para condiciones de contorno tenemos:
+  \begin{equation*}
+    \lah{n}{0}
+      = [n = 0]
+    \qquad
+    \lah{n}{n}
+      = 1
+  \end{equation*}
+  Si además decretamos:
+  \begin{equation*}
+    \lah{n}{k} =
+      \begin{cases}
+	0 & n < 0 \\
+	0 & k < 0 \\
+	0 & k > n
+      \end{cases}
+  \end{equation*}
+  la recurrencia \emph{siempre} se cumple.
+
+  Al estilo del triángulo de Pascal
+  tenemos el cuadro~\ref{tab:triangulo-Lah}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{>{\(}r<{\)}*{12}{>{\(}c<{\)}@{\hspace{1ex}}}>{\(}c<{\)}}
+      n=0:& \phantom{0000}
+		  & \phantom{0000}
+		       & \phantom{0000}
+			    & \phantom{0000}
+				 & \phantom{0000}
+				      & \phantom{0000}
+					   &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=1:&	  &    &     &	  &	 &   0 & \phantom{0000} &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=2:&	  &    &     &	  &    0 &     &  1 & \phantom{0000} &	 1 \\
+	 \noalign{\smallskip\smallskip}
+      n=3:&	  &    &     &	 0 &	 &   6 &	 &   6
+	       & \phantom{0000} &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=4:&	  &    &   0 &	  &   24 &     & 36 &	  & 12
+	       & \phantom{0000} &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=5:&	  &  0 &     & 120 &	 & 240 &	  & 120 &    &	20
+	       & \phantom{0000} & 1 & \phantom{0000} \\
+	 \noalign{\smallskip\smallskip}
+      n=6:& 0	  &    & 720 &	   &1800 &	   &1200 &    & 300 &	 & 30
+	       & \phantom{0000} &  1 \\
+	 \noalign{\smallskip\smallskip}
+    \end{tabular}
+    \caption{Números de Lah}
+    \label{tab:triangulo-Lah}
+    \index{Lah, numeros de@Lah, números de!cuadro}
+  \end{table}
+
+\section{Potencias, números de Stirling y de Lah}
+\label{sec:potencias-Stirling-Lah}
+\index{Stirling, numeros de@Stirling, números de!y potencias}
+\index{Lah, numeros de@Lah, números de!y potencias}
+
+  Las potencias factoriales aparecen con bastante regularidad%
+    \index{potencia!factorial}
+  al calcular con diferencias finitas,%
+    \index{diferencias finitas}
+  como muestran entre otros Graham, Knuth y~Patashnik~%
+    \cite{graham94:_concr_mathem}.
+  Como vimos
+  en la sección~\ref{sec:preliminares-potencias-factoriales}
+  hay paralelos entre las diferencias finitas
+  y la derivada,
+  y entre la sumatoria y la integral.
+  Este tipo de relaciones se explotan en el cálculo umbral~%
+    \cite{roman78:_umbral_calculus}.%
+    \index{calculo umbral@cálculo umbral}
+
+  Interesa expresar la potencia \(z^n\)
+  en términos de los \(z^{\underline{k}}\),
+  o sea obtener los coeficientes \(S(n, k)\)
+  en la expansión siguiente:
+  \begin{equation*}
+    z^n = \sum_{0 \le k \le n} S(n, k) z^{\underline{k}}
+  \end{equation*}
+  Cuando \(k < 0\) o \(k > n\) debe ser \(S(n, k) = 0\),
+  con lo que los límites en realidad son superfluos.
+  Además,
+  para \(n = 0\)
+  resulta \(S(0, 0) = 1\),
+  es \(S(n, 0) = 0\) si \(n > 0\)
+  y es claro que \(S(n, n) = 1\).
+
+  Escribamos:
+  \begin{align*}
+    z^{n + 1}
+      &= \sum_k S(n, k) z^{\underline{k}} \cdot z \\
+      &= \sum_k
+	   S(n, k) (z^{\underline{k + 1}} + k z^{\underline{k}}) \\
+      &= \sum_k (S(n, k - 1) + k S(n, k)) z^{\underline{k}}
+  \end{align*}
+  Comparando coeficientes de esto con la expansión de \(z^{n + 1}\):
+  \begin{equation*}
+    S(n + 1, k) = k S(n, k) + S(n, k - 1)
+  \end{equation*}
+  Tenemos las condiciones de contorno:
+  \begin{equation*}
+    S(n, 0)
+      = [n = 0]
+    \qquad
+    S(n, n)
+      = 1
+  \end{equation*}
+  El lector astuto reconocerá esto
+  como la recurrencia~\eqref{eq:recurrence-Stirling-2}
+  que obtuvimos para los números de Stirling de segunda especie,
+  tenemos:
+  \begin{equation}
+    \label{eq:Stirling-2-down}
+    z^n = \sum_k \classes{n}{k} z^{\underline{k}}
+  \end{equation}
+
+  Veamos ahora los coeficientes \(C(n, k)\) en:
+  \begin{equation*}
+    z^{\overline{n}}
+      = \sum_k C(n, k) z^k
+  \end{equation*}
+  Con esto:
+  \begin{align*}
+    z^{\overline{n + 1}}
+      &= \sum_k C(n, k) z^k (z + n) \\
+      &= \sum_k (C(n, k) z^{k + 1} + n C(n, k) z^k) \\
+      &= \sum_k (C(n, k - 1) + n C(n, k)) z^k
+  \end{align*}
+  Comparando coeficientes
+  con la expansión de \(z^{\overline{n + 1}}\):
+  \begin{equation*}
+    C(n + 1, k)
+      = n C(n, k) + C(n, k - 1)
+  \end{equation*}
+  con condiciones de contorno:
+  \begin{equation*}
+    C(n, 0) = [n = 0] \qquad C(n, n) = 1
+  \end{equation*}
+  Esto coincide con los números de Stirling de primera especie,
+  o sea es:%
+    \index{potencia!factorial}
+  \begin{equation}
+    \label{eq:Stirling-1-up}
+    z^{\overline{n}}
+      = \sum_k \cycle{n}{k} z^k
+  \end{equation}
+
+  En vista que nos ha ido tan bien con esto,
+  consideremos los coeficientes \(L(n, k)\) en:
+  \begin{equation*}
+    z^{\overline{n}}
+      = \sum_k L(n, k) z^{\underline{k}}
+  \end{equation*}
+  Aplicando la misma estrategia:
+  \begin{align*}
+    z^{\overline{n + 1}}
+      &= \sum_k L(n, k) z^{\underline{k}} (z + n) \\
+      &= \sum_k L(n, k) (z^{\underline{k + 1}} + n + k) \\
+      &= \sum_k (L(n, k - 1) + (n + k) L(n, k)) z^{\underline{k}}
+  \end{align*}
+  Comparar coeficientes da:
+  \begin{equation*}
+    L(n + 1, k)
+      = (n + k) L(n, k) + L(n, k - 1)
+  \end{equation*}
+  con condiciones de borde:
+  \begin{equation*}
+    L(n, 0) = [n = 0] \qquad L(n, n) = 1
+  \end{equation*}
+  Esta es la recurrencia~\eqref{eq:recurrence-Lah}
+  de los números de Lah:
+  \begin{equation}
+    \label{eq:Lah-up}
+    z^{\overline{n}}
+      = \sum_k \lah{n}{k} z^{\underline{k}}
+  \end{equation}
+
+  Podemos usar
+  la identidad \((-z)^{\underline{m}} = (-1)^m z^{\overline{m}}\)
+  y viceversa para obtener de~\eqref{eq:Stirling-2-down},
+  \eqref{eq:Stirling-1-up}
+  y~\eqref{eq:Lah-up}:
+  \begin{align}
+    z^n
+      &= \sum_k (-1)^{n - k} \classes{n}{k} z^{\overline{k}}
+	      \label{eq:Stirling-2-up} \\
+    z^{\underline{n}}
+      &= \sum_k (-1)^{n - k} \cycle{n}{k} z^k
+	      \label{eq:Stirling-1-down} \\
+    z^{\underline{n}}
+      &= \sum_k (-1)^{n - k} \lah{n}{k} z^{\overline{k}}
+	      \label{eq:Lah-down}
+  \end{align}
+
+  La impresionante colección de identidades~%
+    \eqref{eq:Stirling-2-down},
+    \eqref{eq:Stirling-1-up},
+    \eqref{eq:Lah-up},
+    \eqref{eq:Stirling-2-up},
+    \eqref{eq:Stirling-1-down}
+    y \eqref{eq:Lah-down}
+  cumple la promesa dada por el título.
+
+\section{Desarreglos}
+\label{sec:desarreglos}
+\index{desarreglo}
+
+  Ya calculamos el número de desarreglos
+  (permutaciones sin puntos fijos)
+  como ejemplo del uso del principio de inclusión y exclusión
+  en el capítulo~\ref{cha:pie}
+  y como ejemplo del método simbólico
+  en la sección~\ref{sec:rotulados}.
+  Acá veremos técnicas alternativas.
+
+  Llamamos \(D_n\) al número de desarreglos
+  de \(n\) elementos.
+  Valores de \(D_n\) para \(n\) pequeños son interesantes
+  para contrastar nuestros resultados luego:
+  \(D_0 = 1\)
+  (hay una única manera de ordenar cero elementos,
+   y en esa ningún elemento está en su posición),
+  \(D_1 = 0\)
+  (un elemento puede ordenarse de una manera solamente,
+   y ese siempre está en su posición),
+  \(D_2 = 1\)
+  (solo \((2\,1)\)),
+  \(D_3 = 2\)
+  (son \((3\,1\,2)\) y \((2\,3\,1)\)).
+
+  Interesa obtener una recurrencia para los \(D_n\).%
+    \index{desarreglo!recurrencia}
+  Comenzaremos considerando una permutación de 7 elementos
+  como \((2 \; 6 \; \mathbf{3} \; \mathbf{4} \; 1 \; 5 \; \mathbf{7})\).
+  Esta permutación tiene tres puntos fijos
+  (marcados con negrilla):
+  El \(3\) está en la posición \(3\),
+  el \(4\) en la posición \(4\)
+  y el \(7\) en la posición \(7\).
+  Hay \(D_{7 - 3}\) formas
+  de ordenar los demás \(4 = 7 - 3\) elementos
+  sin introducir puntos fijos adicionales
+  (debemos dejarlos desordenados
+   con respecto a sus posiciones propias,
+   que estas se llamen \(1, 2, 3, 4\) o \(1, 2, 5, 6\) da lo mismo);
+  a su vez los \(3\) elementos fijos
+  se pueden elegir de \(\binom{7}{3}\) formas.
+  O sea,
+  hay un total de \(\binom{7}{3} \cdot D_{7 - 3}\) permutaciones
+  de \(7\) elementos con \(3\) puntos fijos.
+
+  En general,
+  si hay \(k\) puntos fijos en una permutación de \(n\) elementos,
+  estos pueden elegirse de \(\binom{n}{k}\) maneras;
+  por lo tanto
+  hay exactamente \(\binom{n}{k} \cdot D_{n - k}\) permutaciones
+  con \(k\) puntos fijos.
+  Toda permutación tiene puntos fijos (\(0, 1, \dotsc, n\) de ellos)
+  y hay un total de \(n!\)~permutaciones,
+  por lo que concluimos:
+  \begin{equation}
+    \label{eq:relacion-desarreglos}
+    n! = \sum_{0 \le k \le n} \binom{n}{k} \cdot D_{n - k}
+  \end{equation}
+  Esta relación es válida para \(n \ge 0\).
+
+  En la recurrencia~\eqref{eq:relacion-desarreglos}
+  se observa que el lado derecho
+  es la convolución binomial
+  de la secuencia \(\left\langle 1 \right\rangle_{n \ge 0}\)
+  con la secuencia \(\left\langle D_n \right\rangle_{n \ge 0}\).
+  En consecuencia definimos:
+  \begin{equation*}
+    \widehat{D}(z)
+      = \sum_{n \ge 0} D_n \, \frac{z^n}{n!}
+  \end{equation*}
+  Aplicamos las propiedades de funciones generatrices exponenciales%
+    \index{generatriz!exponencial}
+  a~\eqref{eq:relacion-desarreglos}.
+  Al lado izquierdo queda una suma geométrica
+  al simplificarse los factoriales:
+  \begin{align}
+    \frac{1}{1 - z}
+      &= \mathrm{e}^z \cdot \widehat{D}(z) \notag \\
+    \widehat{D}(z)
+      &= \frac{\mathrm{e}^{-z}}{1 - z}
+	\label{eq:EGF-desarreglos}
+	\index{desarreglo!funcion generatriz@función generatriz}
+  \end{align}
+  De~\eqref{eq:EGF-desarreglos}:
+  \begin{align*}
+    D_n
+      &= n! \left[ z^n \right] \widehat{D}(z) \\
+      &= n! \sum_{0 \le k \le n} \! \frac{(-1)^k}{k!}
+  \end{align*}
+  En términos de la exponencial truncada
+  definida por~\eqref{eq:exp-truncada}
+  resulta~\eqref{eq:n-derangements}:%
+    \index{desarreglo!expresion@expresión}
+  \begin{equation*}
+    D_n
+      = n! \cdot \exp \rvert_n (-1)
+  \end{equation*}
+  Tenemos:
+  \begin{equation*}
+    \widehat{D}(z)
+      = 1 + \frac{1}{2!} z^2 + \frac{2}{3!} z^3
+	  + \frac{9}{4!} z^4 + \frac{44}{5!} z^5
+	  + \frac{265}{6!} z^6 + \frac{1\,854}{7!} z^7
+	  + \frac{14\,833}{8!} z^8 + \frac{133\,496}{9!} z^9
+	  + \dotsb
+  \end{equation*}
+
+  Otra forma de resolver esto es partir derivando directamente
+  una recurrencia para los \(D_n\).%
+    \index{desarreglo!recurrencia}
+  Consideremos \(n\) personas
+  que eligen entre \(n\) sombreros
+  de manera que ninguna se lleva el suyo.
+  Numeramos a las personas
+  y los respectivos sombreros de~\(1\) a~\(n\).
+  La persona~\(n\)
+  puede elegir el sombrero equivocado de~\(n - 1\) maneras,
+  supongamos que elige el sombrero~\(k\).
+  Ahora hay dos posibilidades:
+  Si la persona~\(k\) toma el sombrero~\(n\),
+  podemos eliminar los sombreros
+  (y las personas)~\(n\) y~\(k\) de consideración,
+  y el problema se reduce a distribuir
+  los~\(n - 2\) sombreros restantes
+  entre las otras~\(n - 2\) personas.
+  Si la persona~\(k\) no toma el sombrero~\(n\),
+  podemos renombrar ese como~\(k\)
+  (no lo toma~\(k\) porque ahora le corresponde)
+  y quedan por distribuir los \(n - 1\) sombreros restantes
+  sin que a nadie le toque el suyo.
+  Al revés,
+  de un par de desarreglos de \(n - 1\) y \(n - 2\) elementos
+  podemos construir \(n - 1\) desarreglos de \(n\) elementos
+  (podemos elegir \(k\) arriba de \(n - 1\) maneras en ambos casos).
+  Obtenemos:
+  \begin{equation}
+    \label{eq:recurrence-desarreglos}
+    D_n
+      = (n - 1) (D_{n - 1} + D_{n - 2})
+    \quad (n \ge 2)
+    \qquad \text{\(D_0 = 1\), \(D_1 = 0\)}
+    \index{desarreglo!recurrencia}
+  \end{equation}
+
+  Para resolver la recurrencia~\eqref{eq:recurrence-desarreglos},
+  definimos una función generatriz exponencial.%
+    \index{generatriz!exponencial}
+  La razón de intentar una función generatriz exponencial
+  en este caso
+  es que el factor \(n - 1\)
+  se compensa parcialmente con \((n - 1)!\) en el denominador.
+  Para \(n \ge 1\) podemos escribir:
+  \begin{equation}
+    \label{eq:recurrence-desarreglos-1}
+    D_{n + 1}
+      = n D_n + n D_{n - 1}
+  \end{equation}
+  Las propiedades de las funciones generatrices exponenciales
+  dan:
+  \begin{align*}
+    \widehat{D}'(z)
+      &\egf \left\langle D_{n + 1} \right\rangle_{n \ge 0} \\
+    z \widehat{D}'(z)
+      &\egf \left\langle n D_n \right\rangle_{n \ge 0}
+  \end{align*}
+  Falta el segundo término del lado derecho
+  de~\eqref{eq:recurrence-desarreglos-1}:
+  \begin{equation*}
+    \sum_{n \ge 1} n D_{n - 1} \, \frac{z^n}{n!}
+      = z \sum_{n \ge 1} D_{n - 1} \, \frac{z^{n - 1}}{(n - 1)!}
+      = z \widehat{D}(z)
+  \end{equation*}
+  Otra forma de ver esto
+  es que la secuencia
+    \(\left\langle D_{n - 1} \right\rangle_{n \ge 0}\)
+  corresponde a la antiderivada de \(\widehat{D}(z)\)
+  (correr una posición a la derecha),
+  y al multiplicar por \(n\)
+  (que corresponde al operador \(z \mathrm{D}\))
+  la derivada y la antiderivada se cancelan.
+  Combinando las anteriores:
+  \begin{align*}
+    \widehat{D}'(z)
+      &= z \widehat{D}'(z) + z \widehat{D}(z)
+	   \qquad \widehat{D}(0) = D_0 = 1 \\
+    \frac{\widehat{D}'(z)}{\widehat{D}(z)}
+      &= \frac{z}{1 - z} \\
+  \end{align*}
+  La solución de esta ecuación diferencial es:%
+    \index{ecuacion diferencial@ecuación diferencial}
+  \begin{equation*}
+    \widehat{D}(z)
+      = \frac{\mathrm{e}^{-z}}{1 - z}
+  \end{equation*}
+  Con esto nuevamente tenemos~\eqref{eq:n-derangements}:
+  \begin{equation*}
+    D_n
+      = n! \cdot  \exp \rvert_n (-1)
+  \end{equation*}
+
+  Aún otra manera de enfrentar este problema
+  es masajear la recurrencia~\eqref{eq:recurrence-desarreglos-1}
+  para obtener una recurrencia más simple de resolver:%
+    \index{desarreglo!recurrencia}
+  \begin{align}
+    D_n - n D_{n - 1}
+      &= - D_{n - 1} + (n - 1) D_{n - 2} \notag \\
+      &= - \left( D_{n - 1} - (n - 1) D_{n - 2} \right) \notag \\
+    (-1)^n \left( D_n - n D_{n - 1} \right)
+      &= (-1)^{n - 1} \left( D_{n - 1} - (n - 1) D_{n - 2} \right)
+	\label{eq:identity-derangements}
+  \end{align}
+  Lo que dice~\eqref{eq:identity-derangements}
+  es que la expresión indicada es independiente de \(n\).
+  Sabemos que \(D_0 = 1\) y \(D_1 = 0\),
+  evaluándola para \(n = 1\) obtenemos:
+  \begin{equation}
+    \label{eq:identity-derangements-value}
+    (-1)^1 \left( D_1 - 1 \cdot D_0 \right)
+      = 1
+  \end{equation}
+  Esto nos da la recurrencia:
+  \begin{equation}
+    \label{eq:recurrence-derangements-3}
+    \index{recurrencia!desarreglo}
+    D_n
+      = n D_{n - 1} + (-1)^n
+    \qquad D_0 = 1
+  \end{equation}
+  Esta es una recurrencia lineal de primer orden.
+  Nuevamente el factor \(n\)
+  sugiere una función generatriz exponencial.%
+    \index{generatriz!exponencial}
+  Multiplicando por \(z^n / n!\) y sumando:
+  \begin{align*}
+    \sum_{n \ge 1} D_n \, \frac{z^n}{n!}
+      &= \sum_{n \ge 1} n D_{n - 1} \, \frac{z}{n!}
+	   + \sum_{n \ge 1} (-1)^n \, \frac{z^n}{n!} \\
+    \widehat{D}(z) - D_0
+      &= z \sum_{n \ge 1} D_{n - 1} \, \frac{z^{n - 1}}{(n - 1)!}
+	   + \mathrm{e}^{-z} - 1 \\
+  \intertext{Como \(D_0 = 1\):}
+    \widehat{D}(z)
+      &= z \widehat{D}(z) + \mathrm{e}^{-z} \\
+    \widehat{D}(z)
+      &= \frac{\mathrm{e}^{-z}}{1 - z}
+  \end{align*}
+  Esta es nuevamente~\eqref{eq:EGF-desarreglos},
+  y tenemos~\eqref{eq:n-derangements} una vez más.
+
+  Queda de ejercicio intentar las anteriores
+  con una función generatriz ordinaria.
+
+\section{Resultados de competencias con empate}
+\label{sec:campeonatos-empate}
+\index{Bell, numeros de (ordenados)@Bell, números de (ordenados)|textbfhy}
+
+  Interesa saber cuántos resultados finales
+  pueden producirse en un campeonato entre \(n\) participantes
+  si pueden producirse empates,
+  vale decir pueden haber varios primeros puestos,
+  y en general varios en cada puesto.
+  No hay puestos vacantes,
+  si hay participantes en el puesto \(j\),
+  los hay en todos los puestos \(1 \le i \le j\).
+  A estos números se les llama \emph{números de Bell ordenados},
+  como los números de Bell
+  vistos en la sección~\ref{sec:rotulados}%
+    \index{Bell, numeros de@Bell, números de}
+  cuentan el número total de particiones
+  sin especificar el orden de las mismas,
+  acá las estamos ordenando.
+  Good~\cite{good75:_number_orders_cand_ties_permit}
+  trata estos números en gran detalle.
+
+  Llamemos \(R_n\) al número de posibilidades indicado.
+  Claramente \(R_0 = 1\), \(R_1 = 1\), \(R_2 = 3\).
+
+  Si hay \(k\) en primer lugar,
+  habrán \(n - k\) que se distribuyen de la misma forma
+  desde el segundo lugar,
+  o sea,
+  hay \(R_{n - k}\) distribuciones de los demás.
+  Como a los \(k\) campeones los estamos eligiendo entre los \(n\),
+  y pueden haber de \(1\) a \(n\) en primer lugar,
+  resulta la recurrencia:%
+    \index{Bell, numeros de (ordenados)@Bell, números de (ordenados)!recurrencia}
+  \begin{equation}
+    \label{eq:ranking-recurrence-1}
+    R_n
+      = \sum_{ 1 \le k \le n} \binom{n}{k} \, R_{n - k}
+  \end{equation}
+  Para \(n \ge 1\)
+  podemos completar la suma en~\eqref{eq:ranking-recurrence-1}:
+  \begin{equation*}
+    2 R_n
+      = \sum_{0 \le k \le n} \binom{n}{k} \, R_{n - k}
+  \end{equation*}
+  Para \(n = 0\) tenemos:
+  \begin{equation*}
+    \sum_{0 \le k \le 0} \binom{0}{k} \, R_{0 - k}
+      = R_0
+  \end{equation*}
+  En vista de esto,
+  como \(R_0 = 1\),
+  la recurrencia completa,
+  válida para \(n \ge 0\),
+  es:
+  \begin{equation}
+    \label{eq:ranking-recurrence-2}
+    2 R_n
+      = [n = 0] + \sum_{0 \le k \le n} \binom{n}{k} \, R_{n - k}
+  \end{equation}
+  Como la sumatoria en~\eqref{eq:ranking-recurrence-2}
+  es la convolución binomial
+  de las secuencias \(\langle 1 \rangle_{n \ge 0}\)
+  y \(\langle R_n \rangle_{n \ge 0}\),
+  definimos la función generatriz exponencial:%
+    \index{generatriz!exponencial}
+  \begin{equation}
+    \label{eq:ranking-gf-def}
+    \widehat{R}(z)
+       = \sum_{n \ge 0} R_n \, \frac{z^n}{n!}
+  \end{equation}
+  Con~\eqref{eq:ranking-recurrence-2} tenemos así:
+  \begin{align}
+    2 \widehat{R}(z)
+      &= 1 + \widehat{R}(z) \mathrm{e}^z \notag \\
+    \widehat{R}(z)
+      &= \frac{1}{2 - \mathrm{e}^z}
+	    \label{eq:ranking-gf}
+  \end{align}
+  Expandiendo en serie:
+  \begin{equation*}
+    \widehat{R}(z)
+      = 1 + z + \frac{3}{2!} z^2 + \frac{13}{3!} z^3
+	  + \frac{75}{4!} z^4 + \frac{541}{5!} z^5
+	  + \frac{4\,683}{6!} z^6 + \frac{47\,293}{7!} z^7
+	  + \frac{545\,835}{8!} z^8
+	  + \dotsb
+  \end{equation*}
+
+  Alternativamente,
+  por el método simbólico:%
+    \index{metodo simbolico@método simbólico}
+  \begin{equation*}
+    \mathcal{R}
+      = \Seq(\Set_{\ge 1}(\mathcal{Z}))
+  \end{equation*}
+  y directamente:
+  \begin{equation*}
+    \widehat{R}(z)
+      = \frac{1}{2 - \mathrm{e}^z}
+  \end{equation*}
+
+  Podemos expandir~\eqref{eq:ranking-gf} como serie geométrica:
+  \begin{align*}
+    \widehat{R}(z)
+      &= \frac{1}{2} \, \sum_{k \ge 0}
+			  \frac{\mathrm{e}^{k z}}{2^k} \\
+      &= \frac{1}{2} \, \sum_{k \ge 0}
+			  \frac{1}{2^k} \,
+			     \left(
+			       \sum_{n \ge 0} \frac{(k z)^n}{n!}
+			     \right) \\
+      &= \sum_{n \ge 0}
+	   \frac{z^n}{n!} \,
+	   \sum_{k \ge 0}
+	     \frac{k^n}{2^{k + 1}}
+  \end{align*}
+  De acá tenemos:
+  \begin{equation}
+    \label{eq:ranking-explicit}
+    R_n
+      = \sum_{k \ge 0} \frac{k^n}{2^{k + 1}}
+  \end{equation}
+  Difícilmente habríamos adivinado esta expresión
+  vía calcular valores
+  (con la idea de demostrarla luego por inducción).%
+    \index{demostracion@demostración!induccion@inducción}
+
+\section{Particiones de enteros}
+\label{sec:funciones-generatrices:particiones}
+\index{numero natural@número natural!particion@partición}
+
+  En el siglo~XX
+  tema de investigaciones importantes en teoría de números
+  involucraban la teoría de las particiones de enteros,
+  un área en la que Euler fue pionero.
+  Acá veremos solo un par de resultados curiosos,
+  que ya demostró Euler.
+
+\subsection{Particiones en general}
+\label{sec:particiones-generales}
+
+  Sea \(p(n)\) el número de formas de escribir \(n\) como suma.
+  Tenemos:
+  \begin{align*}
+    p(1)
+      &= 1 \qquad 1 \\
+    p(2)
+      &= 2 \qquad 2 = 1 + 1 \\
+    p(3)
+      &= 3 \qquad 3 = 1 + 1 + 1 = 2 + 1 \\
+    p(4)
+      &= 4 \qquad 4 = 1 + 1 + 1 + 1 = 2 + 1 + 1 = 2 + 2 = 3 + 1 \\
+    \vdots
+  \end{align*}
+  Tratamos esto mediante el método simbólico,
+  una partición de \(n\)
+  corresponde a un multiconjunto de \(\mathbb{N}\),
+  o sea nos interesa \(\MSet(\mathbb{N})\).
+  Cada número aparece una vez en \(\mathbb{N}\),
+  así:
+  \begin{equation}
+    \label{eq:partition-gf}
+    P(z)
+      = \sum_{n \ge 1} p(n) z^n
+      = \prod_{n \ge 1} \frac{1}{1 - z^n}
+  \end{equation}
+
+\subsection{Sumandos diferentes e impares}
+\label{sec:particiones-diferentes}
+
+  Poniendo como condición
+  que los sumandos no se pueden repetir
+  tenemos subconjuntos de \(\mathbb{N}\),
+  interesa \(\Set(\mathbb{N})\).
+  Anotamos \(p_d(n)\) para el número de estas particiones,
+  por \emph{\foreignlanguage{english}{different}} en inglés,
+  y distinguimos así la función generatriz también:
+  \begin{align}
+    P_d(z)
+      &= \sum_{n \ge 0} p_d (n) z^n \notag \\
+      &= \prod_{n \ge 1} (1 + z^n)
+	    \label{eq:partition-different-gf}
+  \end{align}
+  Este producto podemos expresarlo de otra forma:
+  \begin{align}
+    P_d(z)
+      &= \prod_{n \ge 1} \frac{1 - z^{2 n}}{1 - z^n} \notag \\
+      &= \prod_{n \ge 0} \frac{1}{1 - z^{2 n + 1}}
+	    \label{eq:partition-odd-gf}
+  \end{align}
+  Este producto corresponde a sumandos impares,
+  si escribimos \(p_o(n)\)
+  por el número de particiones en sumandos impares
+  (de \emph{\foreignlanguage{english}{odd}} en inglés),
+  tenemos:
+  \begin{equation}
+    \label{eq:partition-odd=different}
+    p_d(n) = p_o(n)
+  \end{equation}
+  Curioso resultado~\eqref{eq:partition-odd=different},
+  obtenido únicamente
+  considerando las funciones generatrices del caso.
+  Y ni siquiera evaluamos ninguna de~\eqref{eq:partition-gf},
+  \eqref{eq:partition-different-gf} o~\eqref{eq:partition-odd-gf}.
+
+\subsection{Un problema de Moser y Lambek}
+\label{sec:Moser-Lambek}
+
+  En 1959,
+  Leo Moser y Joe Lambek plantearon~%
+    \cite{novakovic07:_gener_func}:
+  \begin{theorem}
+    \label{theo:Moser-Lambek}
+    Hay una única forma de particionar \(\mathbb{N}_0\)
+    en conjuntos \(\mathcal{A}\) y \(\mathcal{B}\)
+    tales que el número de maneras
+    en que se puede representar \(n \in \mathbb{N}_0\)
+    como sumas \(n = a_1 + a_2\)
+    con \(a_1 \ne a_2\) y \(a_1, a_2 \in \mathcal{A}\)
+    es igual al número de representaciones como
+    \(n = b_1 + b_2\)
+    con \(b_1 \ne b_2\) y \(b_1, b_2 \in \mathcal{B}\).
+  \end{theorem}
+  \begin{proof}
+    Definamos funciones generatrices:%
+      \index{generatriz}
+    \begin{equation*}
+      A(z)
+	= \sum_{a \in \mathcal{A}} z^a \qquad
+      B(z)
+	= \sum_{b \in \mathcal{B}} z^b
+    \end{equation*}
+    Como \(\mathcal{A}\) y \(\mathcal{B}\)
+    particionan \(\mathbb{N}_0\),
+    los coeficientes son \(0\) o \(1\):
+    \begin{equation*}
+      A(z) + B(z)
+	= \frac{1}{1 - z}
+    \end{equation*}
+    Para las maneras en que se puede escribir \(n\)
+    como suma de dos \(\mathcal{A}\) distintos:
+    \begin{equation*}
+      \sum_{\substack{
+	      a_1 \ne a_2 \\
+	      a_1, a_2 \in A
+	   }}
+	     z^{a_1 + a_2}
+	= \frac{1}{2} \, \left( A^2(z) - A(z^2) \right)
+    \end{equation*}
+    De la misma forma podemos expresar el caso de \(\mathcal{B}\),
+    e interesa que sean las mismas:
+    \begin{align*}
+      A^2(z) - A(z^2)
+	&= B^2(z) - B(z^2) \\
+      A(z^2) - B(z^2)
+	&= A^2(z) - B^2(z) \\
+	&= (A(z) - B(z)) \cdot (A(z) + B(z)) \\
+	&= \frac{A(z) - B(z)}{1 - z}
+    \end{align*}
+    O equivalentemente:
+    \begin{equation*}
+      A(z) - B(z)
+	= \left( A(z^2) - B(z^2) \right) (1 - z)
+    \end{equation*}
+    Substituyendo
+      \(z \rightsquigarrow z^2, z^4, \dotsc, z^{2^{n - 1}}\)
+    obtenemos:
+    \begin{equation}
+      \label{eq:Moser-Lambek-recurrence}
+      A(z) - B(z)
+	= \left( A(z^{2^n}) - B(z^{2^n}) \right)
+	    \prod_{0 \le k \le n - 1} \left( 1 - z^{2^k} \right)
+    \end{equation}
+    lo que indica:
+    \begin{equation}
+      \label{eq:Moser-Lambek}
+      A(z) - B(z)
+	= \prod_{k \ge 0} \left( 1 - z^{2^k} \right)
+    \end{equation}
+    Como series formales
+    (ver la sección~\ref{sec:series-secuencias})%
+      \index{serie formal!convergencia}
+    la secuencia
+    al lado derecho de~\eqref{eq:Moser-Lambek-recurrence}
+    converge a la expresión~\eqref{eq:Moser-Lambek}.
+
+    Los términos del lado derecho de~\eqref{eq:Moser-Lambek}
+    tienen coeficientes \(\pm 1\),
+    con lo que determinan en forma única
+    los coeficientes de \(A(z)\) y \(B(z)\),
+    que son cero o uno.
+    El conjunto \(\mathcal{A}\)
+    son los que tienen un número par de unos
+    en su expansión binaria.
+  \end{proof}
+
+\section{Contando secuencias}
+\label{sec:ejemplos-secuencias}
+\index{secuencia}
+
+  Muchas situaciones
+  llevan a enfrentar problemas de contar secuencias
+  con ciertas restricciones.
+  Veremos algunos ejemplos representativos.
+
+  ¿Cuántas palabras de largo \(n\)
+  formadas únicamente por las \(5\) vocales
+  pueden formarse,
+  si deben contener un número par de vocales fuertes
+  (`a', `e' y `o')?
+
+  De las solicitadas podemos formar \(1\) de largo \(0\),
+  \(2\) de largo \(1\),
+  \(2 \cdot 2 + 3 \cdot 3 = 13\) de largo \(2\).
+  Estos valores sirven para verificar luego.
+
+  Definamos las clases \(\mathcal{U}\)
+  para palabras con un número par
+  de vocales fuertes,
+  y \(\mathcal{V}\) si tienen un número impar,
+  con las respectivas funciones generatrices \(U(z)\) y \(V(z)\)
+  donde \(z\) cuenta el número de vocales.
+  Podemos definir el sistema de ecuaciones simbólicas:
+  \begin{align*}
+    \mathcal{U}
+      &= \mathcal{E}
+	    + \{i, u\} \times \mathcal{U}
+	    + \{a, e, o\} \times \mathcal{V} \\
+    \mathcal{V}
+      &= \{a, e, o\} \times \mathcal{U}
+	    + \{i, u\} \times \mathcal{V}
+  \end{align*}
+  El método simbólico entrega:%
+    \index{metodo simbolico@método simbólico}
+  \begin{align*}
+    U(z)
+      &= 1 + 2 z U(z) + 3 z V(z) \\
+    V(z)
+      &= 3 z U(z) + 2 z V(z)
+  \end{align*}
+  Resolvemos el sistema de ecuaciones para \(U(z)\),
+  que es lo único que realmente interesa,
+  y descomponemos en fracciones parciales:
+  \begin{equation*}
+    U(z)
+      = \frac{1}{2} \cdot \frac{1}{1 - 5 z}
+	  + \frac{1}{2} \cdot \frac{1}{1 + z}
+  \end{equation*}
+  Podemos leer los \(u_n\) de esto último,
+  que son simplemente dos series geométricas:
+  \begin{equation*}
+    u_n = \frac{1}{2} \,\left( 5^n + (-1)^n \right)
+  \end{equation*}
+  Esto coincide con los valores obtenidos antes.
+
+  Volvamos nuevamente
+  a la situación de las secuencias de unos y ceros
+  sin ceros seguidos,
+  pero ahora interesa contar no solo el largo
+  sino simultáneamente el número de unos.
+  Para la clase \(\mathcal{S}\) de tales secuencias obtuvimos:
+  \begin{equation*}
+    \mathcal{S}
+      = \mathcal{E} + \{0\} + \mathcal{S} \times \{1, 10\}
+  \end{equation*}
+  Si usamos \(x\) para marcar los ceros,
+  e \(y\) para el número total de símbolos,
+  obtenemos para la función generatriz \(S(x, y)\):%
+    \index{generatriz!multivariada}
+  \begin{equation*}
+    S(x, y)
+      = 1 + y + (x y + x y^2) S(x, y)
+  \end{equation*}
+  Despejando:
+  \begin{equation*}
+    S(x, y)
+      = \frac{1 + y}{1 - x (y + y^2)}
+  \end{equation*}
+  Podemos expandir como serie geométrica en \(x (y + y^2)\):
+  \begin{equation*}
+    S(x, y)
+      = \sum_{r \ge 0} x^r y^r (1 + y)^{r + 1}
+  \end{equation*}
+  El número de estas secuencias de largo \(n\) con \(k\) unos es:
+  \begin{align*}
+    \left[ x^k y^n \right] \sum_{r \ge 0} x^r y^r (1 + y)^{r + 1}
+      &= \left[ y^n \right] y^k (1 + y)^{k + 1} \\
+      &= \left[ y^{n - k} \right] (1 + y)^{k + 1} \\
+      &= \binom{k + 1}{n - k}
+  \end{align*}
+  Pero \(n - k\) es el número de ceros.
+  Podemos interpretar esto
+  como diciendo que debemos distribuir \(n - k\) ceros
+  en las \(k + 1\) posiciones separadas por los \(k\) unos.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

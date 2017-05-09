@@ -1,0 +1,29 @@
+#!/usr/bin/python3
+
+queen = [0 for i in range(8)]		# Row of queen in column i
+rfree = [True for i in range(8)]	# Row i is free
+dufree = [True for i in range(15)]	# Up diagonal through i + 7 - j free
+ddfree = [True for i in range(15)]	# Down diagonal through i + j free
+
+def solve(n):
+    global solutions
+
+    if n == 8:
+        solutions += 1
+        print(solutions, end = ": ")
+        for i in range(8):
+            print(queen[i] + 1, end = " ")
+        print()
+    else:
+        for i in range(8):
+            if rfree[i] and ddfree[n + i] and dufree[n + 7 - i]:
+                queen[n] = i
+                rfree[i] = ddfree[n + i] = dufree[n + 7 - i] = False
+                solve(n + 1)
+                rfree[i] = ddfree[n + i] = dufree[n + 7 - i] = True
+
+solutions = 0
+solve(0)
+
+print()
+print(solutions, "solutions")

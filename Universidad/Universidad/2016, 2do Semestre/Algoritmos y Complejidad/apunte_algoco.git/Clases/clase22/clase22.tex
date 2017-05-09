@@ -1,0 +1,207 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{red!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+\renewcommand{\lstlistingname}{Listado}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#22\quad Métodos de Ordenamiento III}}
+
+
+\author{Aldo Berrios Valenzuela}
+
+\title{INF221 -- Algorimtos y Complejidad\\[.4\baselineskip]
+	Clase \#22\\
+	Métodos de Ordenamiento III}
+
+\begin{document}
+\maketitle
+\section{QuickSort}
+\textbf{Idea:}
+\begin{center}
+	\comentarioc{Dibujo}
+\end{center}
+Supuestos:
+\begin{itemize}
+	\item Elementos distintos.
+	\item Todas las permutaciones igualmente probables.
+	\item Medidas de costos son comparaciones entre elementos.
+	\item Dado lo anterior, particionar compara cada elemento con el pivote. Esto es, $n-1$ comparaciones.
+	\item Partición depende del pivote. Obtener \emph{promedio}.
+	\item Dado el pivote, una vez particionado quedan \comillas{en desorden} a cada lado. \comentarioc{consideremos los peores casos: no ordenamos casi nada}
+	
+	\begin{center}
+		\comentarioc{dibujo}
+	\end{center}
+\end{itemize}
+Sea $C\nparentesis{n}:$ el número promedio de comparaciones al ordenar $n$ elementos. Luego, el pivote puede ser cualquiera de los elementos $\ncorchetes{1, \ldots, n}$, todos son igualmente probables:
+\begin{equation}
+C\nparentesis{n} = n-1+\dfrac{1}{n}\sum_{1\leq k \leq n}\nparentesis{C\nparentesis{k-1}+C\nparentesis{n-k-1}},\qquad C\nparentesis{0}=0
+\end{equation}
+Hacemos un ajuste con los índices \comentarioc{el C de la izquierda va en subida y el de la derecha va en bajada (ambos dentro de la sumatoria)}:
+\begin{align*}
+n C \nparentesis{n} &= n\nparentesis{n-1} + 2\sum_{0 \leq k \leq n-1}C\nparentesis{k}\\
+\nparentesis{n+1} C\nparentesis{n+1} &= \nparentesis{n+1}n + 2\sum_{0 \leq k \leq n} C\nparentesis{k}
+\end{align*}
+Sea:
+\begin{equation*}
+C\nparentesis{z} = \sum_{n \geq 0} C\nparentesis{n} z^n
+\end{equation*}
+Por propiedades de funciones generatrices ordinarias:
+\begin{align*}
+\nparentesis{zD + 1}\dfrac{C\nparentesis{z} - C\nparentesis{0}}{z} = \sum_{n \geq 0} n\nparentesis{n+1} z^n + 2\dfrac{C\nparentesis{z}}{1-z}
+\end{align*}
+Resolvemos la serie de la ecuación anterior:
+\begin{align*}
+\sum_{n \geq 0} n\nparentesis{n+1} z^n &= zD \nparentesis{zD + 1} \dfrac{1}{1-z}
+\end{align*}
+Efectuando las operaciones:
+\begin{equation}
+C'\nparentesis{z} = \dfrac{2C\nparentesis{z}}{1-z} + \dfrac{2z}{\nparentesis{1-z}^3},\qquad C\nparentesis{0} = C'\nparentesis{0}  = 0
+\end{equation}
+Finalmente, la solución de la función generatriz es:
+\begin{equation}
+C\nparentesis{z} = -2\cdot  \dfrac{\ln \nparentesis{1-z}}{\nparentesis{1-z}^2} - \dfrac{2z}{\nparentesis{1-z} ^3}
+\end{equation}
+Coeficientes son, por inspección:
+\begin{equation*}
+C\nparentesis{n} = 2 \sum_{1 \leq k \leq n} H_n - 2 \binom{n}{1}
+\end{equation*}
+Buceando en el apunte de fundamentos:
+\begin{equation*}
+\sum_{1 \leq k \leq n} H_n = \nparentesis{n+1} \nparentesis{H_{n+1} - 1}
+\end{equation*}
+(vía G.F, o sumas por partes / suma de Abel)
+
+Finalmente:
+\begin{equation}
+C\nparentesis{n} = 2\nparentesis{n + 1} H _n  - 4n
+\end{equation}
+Como:
+\begin{align*}
+H_n &= \ln\nparentesis{n} + \gamma + O \nparentesis{\dfrac{1}{n}}\\
+C\nparentesis{n} &= 2n \ln \nparentesis{n} + O\nparentesis{n}
+\end{align*}
+\comentarioc{Caso promedio de QuickSort es $n\log n$}
+
+\subsection{Consideraciones prácticas}
+\begin{itemize}
+	\item Mediana de 3.
+	\item Cortar antes, terminar con inserción $\rightsquigarrow$ $\pm$ 10 a 30.
+	\item Conviene pasar sobre elementos $=p$ (si no, terminamos con el pivote en un extremo si son todos iguales \ldots )
+	
+	\item \comillas{Fat partitioning}:
+	\begin{center}
+		\comentarioc{dibujo: juntamos todos los elementos que sean iguales al pivote en lugar de usar un único elemento.}		
+	\end{center}
+	Dutch national Hag.
+\end{itemize}
+
+
+
+
+\end{document}

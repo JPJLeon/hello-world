@@ -1,0 +1,961 @@
+% criptografia.tex
+%
+% Copyright (c) 2009-2015 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Criptología}
+\label{cha:criptografia}
+\index{criptologia@criptología|textbfhy}
+
+  Debe distinguirse entre \emph{sistema criptográfico},%
+    \index{sistema criptografico@sistema criptográfico|textbfhy}
+  un conjunto de algoritmos diseñados para proteger secretos;
+  la \emph{criptografía},%
+    \index{criptografia@criptografía|textbfhy}
+  el trabajo hecho para crear sistemas criptográficos;
+  y finalmente \emph{criptoanálisis}%
+    \index{criptoanalisis@criptoanálisis|textbfhy},
+  trabajo hecho para burlar las protecciones de sistemas criptográficos.
+  Se habla de \emph{criptología}%
+    \index{criptologia@criptología|textbfhy}
+  para referirse a la unión de criptografía y criptoanálisis.
+  Es común que se confundan los términos \emph{criptografía}
+  y \emph{criptología},
+  nos preocuparemos de usar los términos precisos.
+
+  La importancia práctica actual de la teoría de números%
+    \index{teoria de numeros@teoría de números}
+  está en sus aplicaciones a la criptografía,
+  algunas de las cuales describiremos acá.
+  Las técnicas mismas
+  y los métodos que se han usado para romperlas
+  hacen uso intensivo de conceptos de álgebra abstracta.
+  Rutinariamente se hace necesario trabajar
+  con enteros de cientos o miles de bits,
+  o con elementos de grupos%
+    \index{grupo}
+  o campos finitos%
+    \index{campo (algebra)@campo (álgebra)!finito}
+  con números de elementos de similar envergadura.
+
+\section{Referencias adicionales}
+\label{sec:referencias-adicionales}
+
+  Esta es un área muy amplia,
+  hay algunos detalles adicionales sobre la teoría
+  (y mucho sobre las aplicaciones prácticas)
+  en el clásico de Anderson~\cite{anderson08:_secur_engin}.
+  Sinkov~\cite{sinkov09:_elemen_crypt}
+  describe métodos criptográficos elementales
+  y cómo quebrarlos.
+  Matt Curtin~\cite{curtin98:_snake_oil_warnin_signs}
+  discute signos de alerta sobre criptografía poco confiable.
+  Bernstein, Lange y Schwabe~%
+    \cite{bernstein12:_sec_impact_new_crypt_lib}
+  describen una biblioteca simple de usar
+  para criptografía práctica,
+  y discuten algunos de los ataques recientes
+  basados en la operación de programas criptográficos.
+
+  Las aplicaciones de criptología
+  suelen discutirse en términos de personajes
+  \(A\) (también llamada \foreignlanguage{english}{Alice})%
+    \index{criptologia@criptología!Alice}
+  y \(B\) (apodado \foreignlanguage{english}{Bob})%
+    \index{criptologia@criptología!Bob}
+  que desean intercambiar mensajes.%
+    \index{mensaje}
+  A veces aparecen otros actores,
+  como \(C\) (alias \foreignlanguage{english}{Charlie})%
+    \index{criptologia@criptología!Charlie}
+  o \(E\) (\foreignlanguage{english}{Eve}),%
+    \index{criptologia@criptología!Eve}
+  quien desea interceptar el tráfico
+  o intervenirlo de alguna forma
+  (\emph{\foreignlanguage{english}{eavesdrop}}, en inglés),
+  por ejemplo inyectando mensajes falsificados
+  o modificando mensajes.
+  Alice y Bob fueron presentados públicamente
+  por Rivest, Shamir y Adleman~\cite{rivest83:_RSA},
+  John Gordon~%
+    \cite{gordon84:_alice_bob_after_dinner_speech}
+  dio sus bibliografías definitivas.
+  Schneier~\cite{schneier96:_applied_crypt}
+  presenta una larga lista de otros personajes que suelen aparecer.
+
+  No entraremos en más detalles en este amplio y complejo campo,
+  nuestro interés
+  es solo mostrar aplicaciones de la teoría de números
+  vista hasta acá.
+  Una referencia básica es el manual de Menezes y otros~%
+    \cite{menezes96:_handb_applied_crypt},
+  el texto de Anderson~%
+    \cite{anderson08:_secur_engin}
+  trata seguridad desde el punto de vista de ingeniería
+  e incluye un capítulo accesible sobre el tema,
+  mientras Schneier y coautores
+  se concentran en aplicaciones prácticas~%
+    \cite{ferguson10:_crypt_engin, schneier96:_applied_crypt}.
+
+  Debe tenerse cuidado,
+  se suele confundir la criptografía con seguridad.%
+    \index{criptologia@criptología!y seguridad}
+  La criptografía moderna es indispensable en muchas aplicaciones,
+  pero es solo una de una variedad de herramientas
+  requeridas para la seguridad computacional.
+
+\section{Nomenclatura}
+\label{sec:criptologia:nomenclatura}
+\index{criptologia@criptología!nomenclatura|textbfhy}
+
+  Si solo el destino previsto puede extraer el significado del mensaje
+  se habla de \emph{confidencialidad}%
+    \index{criptología!confidencialidad}.
+  La \emph{integridad} del mensaje%
+    \index{criptologia@criptología!integridad}
+  se refiere a que el receptor puede asegurarse
+  que el mensaje no ha sido alterado,
+  \emph{autenticación}%
+    \index{criptologia@criptología!autenticacion@autenticación}
+  es que el receptor puede verificar la identidad de quien originó el mensaje,
+  mientras \emph{no repudiación}%
+    \index{criptologia@criptología!no repudiacion@no repudiación}
+  asegura que el origen no pueda negar que envió el mensaje.
+
+  Se habla de un mensaje en \emph{texto claro}%
+    \index{criptologia@criptología!texto claro|textbfhy}
+  (en inglés \emph{\foreignlanguage{english}{plaintext}})%
+    \index{plaintext@\emph{\foreignlanguage{english}{plaintext}}|see{criptología!texto claro}}
+  y su versión en \emph{texto cifrado}%
+    \index{criptologia@criptología!texto cifrado|textbfhy}
+  (en inglés \emph{\foreignlanguage{english}{cyphertext}}).%
+    \index{ciphertext@\emph{\foreignlanguage{english}{ciphertext}}|see{criptología!texto cifrado}}
+  Para nuestros efectos,
+  podemos considerar los textos como números grandes
+  (por ejemplo,
+   tomando el texto claro codificado en UTF\nobreakdash-8),%
+     \index{UTF-8@\texttt{UTF-8}}
+  posiblemente dividido en \emph{bloques} de tamaño cómodo.
+  La transformación de texto claro a texto cifrado se lleva a cabo
+  mediante una \emph{función de cifrado} \(C\),%
+    \index{criptologia@criptología!funcion de cifrado@función de cifrado|textbfhy}
+  que toma el texto claro \(m\) y una \emph{clave} \(k\)%
+    \index{criptologia@criptología!clave|textbfhy}
+  para producir el respectivo texto cifrado \(c\):
+  \begin{equation*}
+    c = C_k(m)
+  \end{equation*}
+  Para descifrar el texto
+  se usa la \emph{función de descifrado} \(D\)%
+    \index{criptologia@criptología!funcion de descifrado@función de descifrado|textbfhy}
+  con clave \(k'\):
+  \begin{equation*}
+    m = D_{k'}(c)
+  \end{equation*}
+  En el caso que \(k = k'\),
+  se habla de un sistema \emph{simétrico}%
+    \index{criptologia@criptología!sistema simetrico@sistema simétrico|see{criptología!clave privada}}
+  o \emph{de clave privada}%
+    \index{criptologia@criptología!clave privada|textbfhy}
+  (claramente,
+   en esta situación debe mantenerse secreta la clave).
+  En el caso que \(k \ne k'\),
+  obviamente habrá una relación entre las dos claves.
+  Particularmente interesante
+  es el caso en el que conociendo una de las dos
+  es muy difícil obtener la otra.
+  En tal caso,
+  es perfectamente posible publicar \(k\),
+  manteniendo secreta \(k'\).
+  A estos sistemas se les llama \emph{de clave pública}.%
+    \index{criptologia@criptología!clave publica@clave pública|textbfhy}
+  Una aplicación interesante de sistemas de clave pública
+  es \emph{firmas digitales}:%
+    \index{criptologia@criptología!firma digital|textbfhy}%
+    \index{criptologia@criptología!autenticacion@autenticación}
+  Dado un mensaje \(m\),
+  se calcula una función de \emph{\emph{\foreignlanguage{english}{hash}}}%
+    \index{criptologia@criptología!funcion de hash@función de \emph{hash}}
+  \(h(m)\) del mensaje,
+  y se envía \(m\) junto con \(f = D_{k'}(h(m))\);
+  quien lo recibe puede aplicar \(C_k(f)\),
+  y comprobar que obtiene \(h(m)\).
+  Si la función de \emph{\emph{\foreignlanguage{english}{hash}}}
+  es tal que sea muy difícil construir un mensaje distinto
+  que dé el mismo valor de la función,
+  esto certifica
+  que únicamente quien conoce \(k'\) puede originar la firma.
+
+  El gran problema con los sistemas simétricos
+  es que las partes deben tener algún canal de comunicación seguro
+  mediante el cual distribuir las claves.%
+    \index{criptologia@criptología!distribuir claves}
+  Los sistemas de clave pública no tienen esta dificultad,
+  pero por otro lado son muchísimo más demandantes en computación
+  que los sistemas simétricos tradicionales.
+  Luego lo que se hace normalmente
+  es generar una clave para un sistema simétrico tradicional
+  al azar,
+  y luego usar un sistema de clave pública
+  para enviarle esta clave al receptor.%
+    \index{criptologia@criptología!sistemas hibridos@sistemas híbridos}
+
+\section{Protocolo Diffie-Hellman de intercambio de claves}
+\label{sec:Diffie-Hellman}
+\index{Diffie-Hellman, algoritmo de|textbfhy}
+
+  En rigor,
+  el protocolo no sirve para intercambiar claves
+  sino para acordar una clave entre las partes,
+  pero el nombre es el tradicional.
+  El algoritmo que discutiremos es de amplio uso~%
+    \cite{carts01:_review_diffie_hellman},
+  forma la base de mucho de lo que es seguridad en Internet.%
+    \index{Internet}
+
+  Supongamos que \foreignlanguage{english}{Alice}%
+    \index{criptologia@criptología!Alice}
+  y \foreignlanguage{english}{Bob}%
+    \index{criptologia@criptología!Bob}
+  desean acordar una clave \(K\),
+  usando un medio de comunicación que no es seguro.
+  La idea básica
+  es que \foreignlanguage{english}{Alice} elige un primo \(p\)
+  y una raíz primitiva \(g\) módulo \(p\).%
+    \index{raiz primitiva@raíz primitiva}
+  Ambos valores puede incluso publicarlos,
+  mantenerlos en secreto
+  no es necesario para la seguridad del esquema
+  y pueden perfectamente reutilizarse muchas veces.
+  Para generar una clave,
+  \foreignlanguage{english}{Alice} elige un valor \(a\)
+  (que mantiene en secreto),
+  y envía \(A = g^a \bmod p\) a \foreignlanguage{english}{Bob}.
+  A su vez,
+  \foreignlanguage{english}{Bob} elige \(b\)
+  (que también mantiene en secreto),
+  y envía  \(B = g^b \bmod p\) a \foreignlanguage{english}{Alice}.
+  \foreignlanguage{english}{Alice}
+  calcula \(K = B^a \bmod p = g^{a b} \bmod p\),
+  y \foreignlanguage{english}{Bob} obtiene \(K = A^b \bmod p\).
+  Este valor puede usarse como clave por una sesión%
+    \index{criptologia@criptología!clave de sesion@clave de sesión}
+  y descartarse después.
+  El punto es que con los algoritmos conocidos actualmente
+  si \(p\) es un primo de unos \(300\)~dígitos,
+  y \(a\) y \(b\) son números de \(100\)~dígitos
+  es imposible hallar \(a\)
+  si solo se conocen \(p\), \(g\) y \(g^a \bmod p\).
+  Hay que tener cuidado con primos
+  tales que \(p - 1\) tiene solo factores primos chicos,
+  para ese caso hay algoritmos razonablemente eficientes
+  que dan \(a\).
+  Por esta razón suele elegirse un primo de Sophie Germain,%
+    \index{Sophie Germain, primo de}%
+    \glossary{Primo de Sophie Germain}
+	     {Primo de la forma \(2 q + 1\), con \(q\) primo.}%
+    \index{Germain, Sophie}
+  vale decir,
+  uno de la forma \(2 q + 1\) con \(q\) primo a su vez.
+  Conviene trabajar en el subgrupo de orden \(q\),
+  dado que de otra forma el valor de \(g^a \bmod p\)
+  revela el último bit de \(a\)
+  (hay formas eficientes de determinar
+   si un número es o no un cuadrado
+   en \(\mathbb{Z}_p\)).
+  Está claro que exactamente lo mismo puede hacerse
+  si \(g\) es un generador de algún otro grupo cíclico.
+  La seguridad del esquema
+  depende de la dificultad de calcular logaritmos discretos,%
+    \index{logaritmo discreto}
+  vale decir,
+  dados \(g\) y \(g^a\) calcular \(a\).
+
+  Sabemos
+  (ver sección~\ref{sec:raices-primitivas})%
+    \index{raiz primitiva@raíz primitiva}
+  que hay \(\phi(p - 1)\) raíces primitivas módulo \(p\),
+  con lo que son relativamente numerosas
+  y es razonable buscar una raíz primitiva
+  vía intentar valores al azar.
+  Para un ejemplo numérico,
+  tomemos \(p = 601\),
+  con lo que \(p - 1 = 2^3 \cdot 3 \cdot 5^2\),
+  y hay \(\phi(p - 1) = 160\) raíces primitivas.
+  Una raíz primitiva \(g\) deberá cumplir:
+  \begin{alignat*}{3}
+    g^{\sfrac{600}{2}}
+      &\centernot\equiv 1 \pmod{601}
+    &
+    g^{\sfrac{600}{3}}
+      &\centernot\equiv 1 \pmod{601}
+    &
+    g^{\sfrac{600}{5}}
+      &\centernot\equiv 1 \pmod{601} \\
+  \intertext{Intentando con 31 tenemos:}
+    31^{300}
+      &\equiv 600 \pmod{601}
+    \qquad&
+    31^{200}
+      &\equiv \phantom{00}1 \pmod{601}
+    \qquad&
+    31^{120}
+      &\equiv 432 \pmod{601}
+  \end{alignat*}
+  La teoría anterior dice que aún requerimos algún valor \(u\)
+  tal que \(u^{200} \centernot\equiv 1 \pmod{601}\)
+  (ya tenemos cubiertas las potencias de \(2\) y \(5\),
+   falta \(3\)),
+  algunos intentos dan:
+  \begin{equation*}
+    357^{200}
+      \equiv 576 \pmod{601}
+  \end{equation*}
+  con lo que \(g = 31 \cdot 357 \bmod 601 = 249\)
+  es una raíz primitiva módulo \(p = 601\).
+
+  Si ahora \foreignlanguage{english}{Alice} elige \(a = 17\),
+  envía \(249^{17} \bmod 601 = 73\)
+  a \foreignlanguage{english}{Bob},
+  quien a su vez elige \(b = 58\)
+  y envía \(249^{58} \bmod 601 = 149\)
+  a \foreignlanguage{english}{Alice}.
+  Ambos están ahora en condiciones de calcular \(K\):
+  \foreignlanguage{english}{Alice}
+  calcula \(149^{17} \bmod 601 = 366\),
+  y \foreignlanguage{english}{Bob}
+  obtiene \(73^{58} \bmod 601 = 366\).
+
+  Este ejemplo muestra
+  que se requiere la factorización completa de \(p - 1\)
+  para obtener \(g\),
+  razón por la que es imprescindible poder reusar estos valores.
+
+\section{Sistema de clave pública de Rivest,
+       Shamir y Adleman (RSA)}
+\label{sec:RSA}
+\index{criptologia@criptología!RSA}
+
+  Es el sistema de clave pública más usado en la actualidad~%
+     \cite{rivest78:_RSA}.
+  Se eligen dos números primos \(p\) y \(q\),
+  y se calcula el módulo \(n = p q\).
+  Se elige además un exponente \(e\),
+  y la clave pública es el par \((n, e)\).
+  Para cifrar con RSA se usa:
+  \begin{equation*}
+    c = m^e \bmod n
+  \end{equation*}
+  Conociendo \(p\) y \(q\)
+  podemos generar la correspondiente clave privada \((n, d)\)
+  tal que:
+  \begin{equation*}
+    c^d \bmod n
+      = \left(m^e\right)^d \bmod n
+      = m
+  \end{equation*}
+  Por el teorema de Euler,
+  si \(\gcd(m, n) = 1\)
+  es \(m^{\phi(n)} \equiv 1 \pmod{n}\).
+  Si \(d e \equiv 1 \pmod{\phi(n)}\),
+  entonces \(c^d \equiv m^{d e} \equiv m \pmod{n}\).
+  Más adelante discutiremos cómo elegir los parámetros del caso.
+
+  Podemos elegir el exponente \(e\)
+  como un número relativamente pequeño
+  (recuérdese que estamos interesados en módulos grandes;
+   hoy se recomienda usar módulos de \(4\,096\)~bits,
+   unos \(1\,300\)~dígitos decimales)
+  de forma que sea cómodo elevar a esa potencia al cifrar,%
+    \index{algoritmo!potencia}
+  pero el exponente de descifrado
+  resultará ser un número muy grande.
+  Por el teorema chino de los residuos%
+    \index{residuo!teorema chino de los}
+  podemos calcular módulos \(p\) y \(q\),
+  o sea tenemos realmente:
+  \begin{align*}
+    c &\equiv m^e \pmod{p} \\
+    c &\equiv m^e \pmod{q}
+  \end{align*}
+  Con esto requerimos que el exponente de descifrado \(d\) cumpla:
+  \begin{align*}
+    e d
+      &\equiv 1 \pmod{(p - 1)} \\
+    e d
+      &\equiv 1 \pmod{(q - 1)}
+  \end{align*}
+  Para cumplir con ambas,
+  por el teorema~\ref{theo:congruencia-mn}
+  basta que:
+  \begin{equation*}
+    e d \equiv 1 \pmod{\lcm(p - 1, q - 1)}
+  \end{equation*}
+
+  Hoy típicamente se usan claves (módulos) de \(4\,096\) bits.
+  Los primos \(p\) y \(q\)
+  deben elegirse de forma de no ser demasiado cercanos,
+  y ninguno de \(p - 1\), \(q - 1\), \(p + 1\) y \(q + 1\)
+  debe tener muchos factores primos chicos,
+  ya que de ser así \(n\) resulta relativamente fácil de factorizar.
+  Puede demostrarse además
+  (ver a Wiener~%
+    \cite{wiener90:_crypt_short_rsa_secret_exp})
+  que si \(d < n^{\sfrac{1}{4}} / 3\)
+  es muy fácil recuperar \(d\) conociendo solo \(n\) y \(e\).
+
+  Para elegir \(e\),
+  una consideración importante es que sea relativamente pequeño
+  y que su representación binaria tenga pocos unos,
+  de forma que el cálculo de la potencia resulte simple
+  (ver el algoritmo~\ref{alg:power}).
+  Originalmente se recomendaba \(e = 3\),
+  pero exponentes chicos hacen posibles
+  ciertos ataques que consideraremos luego.
+  Hoy se recomienda \(e = 2^{16} + 1 = 65\,537\)
+  (un primo de Fermat,%
+   \index{Fermat, primo de}%
+   \glossary{Primo de Fermat}
+	    {Primo de la forma \(2^{2^k} + 1\).}
+   de la forma \(2^{2^k} + 1\)).
+  Además de ser primo,
+  este exponente tiene la virtud
+  de tener solo dos unos en su expansión binaria;%
+    \index{algoritmo!potencia}
+  elevar a esta potencia involucra \(5\)~multiplicaciones,
+  \(4\)~veces elevar al cuadrado
+  y una multiplicación adicional por la base
+
+  No hay similar control sobre \(d\),
+  el exponente para descifrar.
+  Usar el mínimo común múltiplo%
+    \index{minimo comun multiplo@mínimo común múltiplo}
+   \(\lcm(p - 1, q - 1)\) en vez de \(\phi(n)\)
+  disminuye el valor,
+  pero no significativamente.
+  Podemos acelerar el proceso
+  usando el teorema chino de los residuos,%
+    \index{residuo!teorema chino de los}
+  teorema~\ref{theo:chino-residuos}.
+  Precalculamos valores \(d_1\), \(d_2\), \(q'\)
+  (así, la clave privada es realmente \((p, q, d_1, d_2, q')\)),
+  donde se cumplen las siguientes relaciones:
+  \begin{equation*}
+    e d_1
+      \equiv 1 \pmod{(p - 1)}
+    \hspace{3em}
+    e d_2
+      \equiv 1 \pmod{(q - 1)}
+    \hspace{3em}
+    q q'
+      \equiv 1 \pmod{p}
+  \end{equation*}
+  Dado el mensaje cifrado \(c\)
+  se obtiene el mensaje \(m\) mediante:
+  \begin{align*}
+    m_1
+      &= c^{d_1} \bmod p \\
+    m_2
+      &= c^{d_2} \bmod q \\
+    h
+      &= ((m_1 - m_2) \cdot q') \bmod p \\
+    m
+      &= m_2 + q h
+  \end{align*}
+  Los cálculos de \(m_1\) y \(m_2\) se pueden efectuar en paralelo,
+  e involucran exponentes y módulos mucho menores
+  que en la formulación original,
+  lo que hace más rápido el cálculo aún si es secuencial.
+
+  Está claro que exactamente la misma idea es aplicable a módulos
+  que son productos de más de dos primos,
+  aunque en la práctica se usan solo dos
+  (mientras menos factores tenga el módulo,
+   más difícil es factorizarlo).
+
+  La seguridad del sistema
+  se basa en lo complejo que resulta factorizar números grandes,
+  aunque hay algunas otras consideraciones~%
+    \cite{boneh99:_twenty_years_attack_RSA,
+	  durfee02:_crypt_rsa_using_algeb_lattice_method,
+	  salah06:_mathem_attac_rsa_crypt}.
+  El récord actual
+  (a comienzos del 2012)
+% http://www.crypto-world.com/FactorRecords.html
+% http://www.loria.fr/~zimmerma/records/factor.html
+  de factorización de números generales%
+    \index{algoritmo de factorizacion@algoritmo de factorización!record@récord}
+  es RSA\nobreakdash-\(768\)~\cite{cryptoeprint:2010:006},
+  un número de \(768\)~bits
+  (\(232\)~dígitos decimales)
+  consumiendo el equivalente aproximado
+  de \(2\,000\)~años de procesamiento
+  en un Opteron a \(2,2\)\,GHz.
+
+  Resulta que conocer \(d\)
+  da una manera eficiente de factorizar \(n\).
+  Podemos calcular \(k = d e - 1 = 2^s r\)
+  con \(r\) impar y \(s > 0\).
+  Entonces \(a^k \equiv 1 \pmod{n}\) para todo \(a\),
+  y \(a^{k / 2}\) es raíz cuadrada de 1 módulo \(n\).
+  Por el teorema chino de los residuos,
+  \(1\) tiene cuatro raíces cuadradas módulo \(n = p q\):
+  son \(x = u v\)
+  donde \(u \equiv \pm 1 \pmod{p}\) y \(v \equiv \mp 1 \pmod{q}\).
+  Como en la prueba de primalidad de Miller-Rabin,%
+    \index{Miller-Rabin, prueba de}
+  eligiendo \(a\) al azar e intentando
+  \(a^r \bmod n\), \(a^{2r} \bmod n\), \ldots, \(a^{k / 2} \bmod n\)
+  rápidamente hallaremos una raíz cuadrada \(x\) no trivial de 1,
+  y obtenemos una factorización vía \(\gcd(x - 1, n)\).
+
+  Un uso típico de RSA es enviar el mismo mensaje \(m\)
+  a un grupo de \(k\) personas,
+  donde la persona \(i\) usa clave pública \((n_i, e_i)\).
+  Por simplicidad,
+  supongamos \(e_i = 3\).
+  Además,
+  los \(n_i\) son relativamente primos a pares
+  (en caso contrario,
+   factorizar algunos es trivial).
+  Recolectando tres mensajes cifrados \(c_i = m^3 \bmod n_i\),
+  vía el teorema chino de los residuos podemos calcular
+  \(c' \equiv m^3 \pmod{n_1 n_2 n_3}\),
+  y como \(m < n_i\) esto da \(c' = m^3\) en \(\mathbb{Z}\),
+  y basta calcular una raíz cúbica.
+  Un ataque afín,
+  debido a Franklin y Reiter~%
+     \cite{franklin95:_linear_protoc_failure_rsa_exp_three},
+  funciona si se tienen varios mensajes
+  relacionados por una función lineal conocida
+  (por ejemplo,
+   si se ``rellena'' un mensaje corto
+   agregando bits fijos o conocidos)
+  cifrados con el mismo exponente.
+  La complejidad del ataque es cuadrático en \(e\) y \(\log n\).
+  Otro ataque,
+  debido a Coppersmith, Franklin, Patarin y Reiter~%
+    \cite{coppersmith96:_low_exp_rsa_relat_mesgs},
+  es aplicable cuando se conocen \(e\) mensajes cifrados
+  con el mismo módulo
+  relacionados por polinomios conocidos.
+  Por esto se sugiere usar \(e = 2^{16} + 1 = 65\,537\)
+  (un primo de Fermat).
+
+\subsection{Firma digital usando RSA}
+\label{sec:firma-digital-RSA}
+\index{criptologia@criptología!firma digital!RSA}
+
+  Para firmar un mensaje usando RSA,
+  se elige
+  una función
+    de \emph{\foreignlanguage{english}{hash}} criptográfica \(h\).
+  Se envía el mensaje \(m\) junto con \(h(m)^d \bmod n\),
+  cosa que solo puede hacer
+  quien conozca el exponente secreto \(d\).
+  Quien recibe el mensaje puede verificar la firma
+  elevando al exponente público \(e\) módulo \(n\)
+  y confirmando que el resultado coincide con el valor de \(h(m)\).
+
+\section{El estándar de firma digital (DSS)}
+\label{sec:DSS}
+\index{criptologia@criptología!firma digital!DSA}
+\index{criptologia@criptología!firma digital!DSS}
+
+  El \emph{\foreignlanguage{english}{Digital Signature Algorithm}}
+  (DSA)
+  es un estándar del gobierno federal
+  de Estados Unidos de Norteamérica
+  para firmas digitales,
+  a ser usado en el
+  \emph{\foreignlanguage{english}{Digital Signature Standard}}
+  (DSS),
+  estándar FIPS~186~\cite{FIPS-186},
+  adoptado en 1993.
+  Es una modificación del esquema de ElGamal~%
+    \cite{elgamal85:_public_key_crypt_signat_schem},
+  Anderson y Vaudenay~\cite{anderson96:_minding_your_p_and_q}
+  discuten algo de su diseño y algunos ataques.
+  Hubo una revisión menor en 1996 como FIPS~186-1~\cite{FIPS-186-1},
+  fue expandido en 2000
+  (FIPS~186-2)
+  y se rehizo completo en 2009,
+  especificando algoritmos adicionales
+  (FIPS~186-3~\cite{FIPS-186-3}).
+  La versión actual data de 2013
+  (FIPS~186-4~\cite{FIPS-186-4}).
+  El algoritmo DSA tiene dos fases,
+  en la primera se eligen los parámetros del algoritmo,
+  que pueden compartirse entre diferentes usuarios;
+  mientras la segunda calcula claves públicas y privadas
+  para un usuario individual.
+  Con la clave privada se firma un documento,
+  y con la correspondiente clave pública
+  se verifica que la firma es genuina.
+
+\subsection{Selección de parámetros}
+\label{sec:DSA-parametros}
+
+  Se efectúan las siguientes operaciones:
+  \begin{itemize}
+  \item
+    Se elige
+    una función
+    de \emph{\foreignlanguage{english}{hash}} criptográfica aprobada \(H\)
+    (la versión original de DSA usaba SHA\nobreakdash-\(1\),
+     actualmente también se especifica SHA\nobreakdash-\(2\)~%
+       \cite{FIPS-180-3}).
+    La salida de \(H\) puede truncarse al largo de la clave.
+  \item
+    Decida largo de clave,
+    el par \((L, N)\),
+    determinante para la seguridad del esquema.
+    La versión actual~%
+      \cite{FIPS-186-3}
+    especifica pares
+    \((1024, 224)\), \((2048, 224)\), \((2048, 256)\)
+    y \((3072, 256)\).
+  \item
+    Elija un primo \(q\) de \(N\) bits.
+    Nótese que \(N\) debe ser menor o igual
+    al largo de la salida de \(H\).
+  \item
+    Elija un primo \(p\) de \(L\) bits
+    tal que \(p - 1\) es múltiplo de \(q\).
+  \item
+    Elija \(g\),
+    un número cuyo orden multiplicativo módulo \(p\) es \(q\).
+    Esto se obtiene fácilmente como \(h^{(p - 1) / q}\)
+    para \(1 < h < p - 1\) arbitrario,
+    intentando nuevamente si el resultado es 1.
+    La mayoría de los \(h\) producen lo buscado,
+    suele simplemente usarse \(h = 2\).
+  \end{itemize}
+  Los parámetros \((p, q, g)\) pueden compartirse.
+
+\subsection{Generar claves para un usuario}
+\label{sec:DSA-claves}
+
+  Dado un conjunto de parámetros,
+  se calculan las claves pública y privada para un usuario.
+  \begin{itemize}
+  \item
+    Elija \(x\) al azar,
+    donde \(0 < x < q\).
+  \item
+    Calcule \(y = g^x \bmod p\).
+  \end{itemize}
+  La clave pública es \((p, q, g, y)\),
+  la clave privada es \(x\).
+
+\subsection{Firmar y verificar firma}
+\label{sec:DSA-firmar}
+
+  Sea \(m\) el mensaje.
+  Para firmarlo,
+  se procede como sigue:
+  \begin{itemize}
+  \item
+    Genere un valor \(k\) al azar para este mensaje,
+    donde \(0 < k < q\)
+  \item
+    Calcule \(r = (g^k \bmod p) \bmod q\),
+    en el improbable caso que resulte \(r = 0\)
+    elija un nuevo valor de \(k\)
+  \item
+    Calcule \(s = (k^{-1} \cdot (H(m) + x \cdot r)) \bmod q\).
+    En el improbable caso que \(s = 0\),
+    elija un nuevo valor de \(k\)
+  \end{itemize}
+  La firma es \((r, s)\).
+
+  Para verificar la firma,
+  se procede como sigue.
+  Si no se cumplen \(0 < r < q\) y \(0 < s < q\),
+  la firma se rechaza.
+  Enseguida:
+  \begin{itemize}
+  \item
+    Calcule \(w = s^{-1} \bmod q\)
+  \item
+    Calcule \(u_1 = H(m) \cdot w \bmod q\)
+    y \(u_2 = r \cdot w \bmod q\)
+  \item
+    Calcule \(v = ((g^{u_1} \cdot y^{u_2} \bmod p) \bmod q)\)
+  \end{itemize}
+  La firma es válida si \(v = r\).
+
+\subsection{Correctitud del algoritmo}
+\label{sec:DSA-correcto}
+
+  El algoritmo es correcto,
+  en el sentido que quien verifica siempre acepta una firma válida.
+
+  Primeramente,
+  por el teorema de Fermat
+  \(g^q \equiv h^{p - 1} \equiv 1 \pmod{p}\);
+  como \(g > 1\) y \(q\) es primo,
+  el orden de \(g\) es \(q\).
+  Al firmar se calcula:
+  \begin{equation*}
+    s = k^{-1} \cdot (H(m) + x r) \bmod q
+  \end{equation*}
+  por lo que:
+  \begin{align*}
+    k
+      &\equiv H(m) \cdot s^{-1} + x r s^{-1} \\
+      &\equiv H(m) \cdot w + x r w \pmod{q}
+  \end{align*}
+  Como \(g\) es de orden \(q\) módulo \(p\),
+  tenemos:
+  \begin{align*}
+    g^k
+      &\equiv g^{H(m) w} y^{r w} \\
+      &\equiv g^{u_1} y^{u_2} \pmod{p}
+  \end{align*}
+  y finalmente:
+  \begin{equation*}
+    r
+      = (g^k \bmod p) \bmod q
+      = (g^{u_1} y^{u_2} \pmod p) \bmod q
+      = v
+  \end{equation*}
+
+\subsection{Ataques a DSS}
+\label{sec:ataques-DSS}
+
+  Lawson~\cite{lawson10:_dsa_req_random_value}
+  indica que si tenemos dos firmas efectuadas con el mismo \(k\),
+  en \(\mathbb{Z}_q\):
+  \begin{align}
+    r
+      &= g^k \bmod p \label{eq:DSA:r} \\
+    S_a
+      &= k^{-1} (H(M_a) + x \cdot r) \label{eq:DSA:Sa} \\
+    S_b
+      &= k^{-1} (H(M_b) + x \cdot r) \label{eq:DSA:Sb}
+  \end{align}
+  De hallar dos firmas con el mismo \(r\),
+  sabemos que se repitió \(k\);
+  con \(r\) de~\eqref{eq:DSA:Sa} y~\eqref{eq:DSA:Sb}
+  podemos despejar \(k\) y en consecuencia calcular \(x\).
+  Un ataque similar
+  es aplicable si se conocen algunos bits de \(k\),
+  usando más firmas.
+
+  El requerimiento de que \(k\) se elija al azar es crítico.
+  Por ejemplo,
+  el ampliamente publicitado problema de seguridad en Debian
+  restringió el número de posibles \(k\) a \(32\,767\),
+  lo que hace viable intentarlos todos para recuperar la clave.
+  Nótese que esto no depende
+  de lo seguro que haya sido el proceso de generarla,
+  un único uso descuidado la revela.
+
+% Fixme: Otros algoritmos: El Gamal
+%	 Ataques a RSA ~~-> paper del caso
+%	 Firmas digitales, ...
+
+% Fixme: Recalcar que el algoritmo _no_ es todo (citar p.ej. Anderson)
+
+\section{Otras consideraciones}
+\label{sec:consideraciones-modulos}
+\index{criptologia@criptología!consideraciones}
+
+  Los algoritmos criptográficos basados en teoría de números
+  usan números primos como partes de sus claves.
+  En el caso de Diffie-Hellman,
+  el primo usado puede publicarse,
+  en caso de RSA
+  es clave que los factores del módulo permanezcan secretos
+  (deben generarse al azar,
+   haciendo que sea difícil adivinarlos).
+  Sin embargo,
+  estudios recientes~%
+    \cite{cryptoeprint:2012:064,
+	  heninger12:_mining_your_ps_qs}
+  han mostrado que una fracción no despreciable
+  de las claves usadas en la práctica comparten factores,
+  lo que las hace vulnerables.
+
+  Para determinar factores comunes entre las claves,
+  estos trabajos usan un truco debido a Dan Bernstein~%
+    \cite{bernstein05:_factor_compr_essen_linear_time},
+  quien luego da una versión mejorada~%
+    \cite{bernstein04:_faster_factorization_coprimes}.
+  Supongamos el conjunto de módulos
+  \(m_1\), \(m_2\), \ldots, \(m_n\).
+  En el caso de~\cite{cryptoeprint:2012:064}
+  son \(4,7\)~millones de módulos de \(1\,024\)~bits,
+  y calcular los máximos comunes divisores de todos los pares
+  para detectar factores comunes está fuera de cuestión.
+  Pero se puede proceder
+  calculando primero \(M = m_1 \cdot m_2 \dotsm m_n\),
+  y luego para cada \(m_i\) calcular
+  \(\gcd(m_i, M \bmod m_i^2)\).
+  Esto involucra un cálculo largo inicial para calcular \(M\),
+  luego una operación costosa al calcular \(M \bmod m_i^2\)
+  y determinar un máximo común divisor
+  para cada módulo en el conjunto.
+  Estas operaciones son razonablemente rápidas de efectuar
+  en un computador común.
+
+\section{Criptografía de curvas elípticas}
+\label{sec:EC-criptography}
+\index{criptologia@criptología!curvas elipticas@curvas elípticas}
+
+  Recientemente se han introducido variantes
+  de algunos métodos criptográficos
+  que en vez de trabajar en el grupo \(\mathbb{Z}_p^\times\)
+  usan el grupo de una curva elíptica~%
+    \cite{hankerson04:_guide_ellip_curve_crypt}.
+  La razón de usar curvas elípticas
+  es que el problema de obtener \(k\) dados \(Q = k P\) y \(P\)
+  en el grupo de una curva elíptica
+  parece ser mucho más difícil de resolver
+  que el problema equivalente en \(\mathbb{Z}_p^\times\).
+  Eso sí que la selección de la curva
+  y los demás parámetros no son triviales,
+  por lo que hay curvas sugeridas~%
+    \cite{secg09:_sec1,
+	  secg10:_sec2,
+	  NIST99:_recom_ellip_curves_feder_gover_use},
+  mientras paranoicos terminales
+  generarán sus propias curvas y parámetros.
+  Para determinar el orden del grupo
+  hay un algoritmo razonablemente eficiente
+  ideado por Schoof~%
+    \cite{schoof95:_count_point_ellip_curves_finit_field},
+  con mejoras de Elkies y Atkin que solo circulan como borradores,
+  Dewaghe~%
+    \cite{dewaghe98:_remar_schoof_elkies_atkin_algor}
+  describe la versión usada en la práctica.
+  En~\cite{brainpool05:_stand_curves_curve_gener}
+  se describe el proceso para generar curvas en detalle
+  (y se dan curvas alternativas para uso criptográfico).
+  En 1997 Certicom publicó una colección de desafíos~%
+    \cite{certicom97:_ecc_chall},
+  discusión de algoritmos relevantes
+  y estimaciones del trabajo para resolverlos se dan en~%
+    \cite{bailey09:_ecc2x},
+  avances concretos
+  respecto del menor problema
+  aún sin resolver en 2012 se discuten en~%
+    \cite{bailey09:_break_ecc2k-130}.
+
+  Los algoritmos que siguen
+  suponen que se acuerdan parámetros de dominio:
+  El campo \(F\),
+  los parámetros \(a\) y \(b\) de la curva,
+  un generador \(g\) del grupo,
+  el orden \(n\) de \(g\)
+  (generalmente elegido como un primo),
+  y el cofactor \(h\)
+  (el orden del grupo de la curva dividido por el orden de \(g\),
+   conviene que sea pequeño,
+   menor a \(4\) y ojalá \(1\)).
+
+\subsection{Intercambio de claves}
+\label{sec:ECDH}
+
+  Es usar la idea de Diffie-Hellman
+  (ver la sección~\ref{sec:Diffie-Hellman})
+  en una curva elíptica.
+  En inglés
+  le llaman
+   \emph{\foreignlanguage{english}{Elliptic Curve Diffie-Hellman}},
+  abreviado \emph{ECDH}.
+  El funcionamiento es similar al algoritmo clásico.
+  Para generar una clave compartida
+  entre \foreignlanguage{english}{Alice}
+  y \foreignlanguage{english}{Bob}
+  proceden como sigue:
+  \begin{enumerate}
+  \item
+    \foreignlanguage{english}{Alice}
+    y \foreignlanguage{english}{Bob} tienen
+    claves privadas \(d_A\) y \(d_B\)
+    (enteros en el rango \(1\) a \(n - 1\)),
+    y calculan \(Q_A = d_A g\) y \(Q_B = d_b g\)
+  \item
+    Intercambian \(Q_A\) y \(Q_B\) a través del medio inseguro
+  \item
+    \foreignlanguage{english}{Alice} calcula \(K = d_A Q_B\),
+    mientras \foreignlanguage{english}{Bob}
+    obtiene este valor como \(K = d_B Q_A\).
+    Dado \(K = (x_k, y_k)\),
+    la mayoría de los protocolos
+    usan \(x_k\) para derivar la clave a ser usada.
+  \end{enumerate}
+
+  Una variante resistente a ciertos ataques es FHMQV~%
+    \cite{cryptoeprint:2009:408}.
+
+\subsection{Firmas digitales}
+\label{sec:ECDSA}
+
+  Esta es una variante del algoritmo DSA
+  (sección~\ref{sec:DSS}).
+  \foreignlanguage{english}{Alice} tiene una clave privada \(d_A\)
+  (un entero al azar en el rango \(1\) a \(n - 1\))
+  y su clave pública \(Q_A = d_A g\).
+  Sea \(L_n\) el largo en bits del orden \(n\) del grupo.
+
+  Si \foreignlanguage{english}{Alice}
+  quiere enviar un mensaje \(m\)
+  firmado a \foreignlanguage{english}{Bob},
+  procede como sigue:
+  \begin{enumerate}
+  \item
+    Calcula \(e = h(m)\),
+    donde \(h\)
+    es una función de \emph{\foreignlanguage{english}{hash}} criptográfica,
+    y sea \(z\) los \(L_n\) bits más significativos de \(e\)
+  \item
+    Elija un entero \(k\) al azar entre \(1\) y \(n - 1\)
+  \item
+    Calcule \(r = x_1 \bmod n\),
+    donde \((x_1, y_1) = k g\).
+    Si \(r = 0\),
+    vuelva al punto 2.
+  \item
+    Calcule \(s \equiv k^{-1}(z + r d_A) \pmod{n}\).
+    Si \(s = 0\),
+    vuelva al punto 2.
+  \end{enumerate}
+  La firma es el par \((r, s)\) resultante.
+
+  Para verificar la firma,
+  \foreignlanguage{english}{Bob}
+  primero verifica la clave pública
+  de \foreignlanguage{english}{Alice}:
+  \begin{enumerate}
+  \item
+    Verifica que \(Q_A \ne 0\)
+    y que sus coordenadas son válidas
+  \item
+    Verifica que \(Q_A\) está en la curva
+  \item
+    Verifica que \(n Q_A = 0\)
+  \end{enumerate}
+  Enseguida,
+  para verificar la firma del mensaje \(m\),
+  repite el cálculo que lleva a \(z\),
+  luego:
+  \begin{enumerate}
+  \item
+    Verifica que \(r\) y \(s\) estén en el rango \(1\) a \(n - 1\).
+    En caso contrario,
+    la firma no es válida.
+  \item
+    Calcula \(w = s^{-1}\) módulo \(n\),
+    luego \(u_1 = z w \bmod n\) y \(u_2 = r w \bmod n\).
+    Con esto determina \((x_1, y_1) = u_1 g + u_2 Q_A\).
+  \end{enumerate}
+  La firma es válida si \(r \equiv x_1 \pmod{n}\),
+  en caso contrario no es válida.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

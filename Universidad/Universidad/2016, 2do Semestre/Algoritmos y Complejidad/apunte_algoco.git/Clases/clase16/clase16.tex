@@ -1,0 +1,489 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage{babelbib}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#16\quad Dividir y Conquistar}}
+
+
+\author{Aldo Berrios Valenzuela \and Horst H. von Brand}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#16\\Dividir y Conquistar}
+
+\date{Martes 4 de octubre de 2016}
+
+\begin{document}
+\bibliographystyle{babplain-fl}
+\maketitle
+
+\section{Dividir y Conquistar}
+Una de las mejores estrategias para diseñar algoritmos.
+
+\paragraph{Idea:} Dado un problema grande, reducirlo a varios problemas menores del mismo tipo, y combinar resultados.
+
+\begin{ejemplo}[Merge Sort]
+	Para ordenar $N$ elementos:
+	\begin{itemize}
+		\item Dividir en \comillas{mitades} de $\left\lfloor \frac{N}{2} \right\rfloor$ y $\left\lceil \frac{N}{2}\right\rceil$
+		\item Ordenarlas recursivamente.
+		\item Intercalar resultados.
+	\end{itemize}
+\end{ejemplo}
+
+\begin{ejemplo}[Búsqueda binaria]
+	Un arreglo ordenado de $N$ elementos, y una clave a buscar. Obtener el elemento en la posición $\left\lfloor \frac{N}{2} \right\rfloor$, buscar en la mitad que tiene que contener la clave
+\end{ejemplo}
+
+\begin{ejemplo}[Multiplicación de Karatsuba]
+  Para multiplicar números de $2n$ dígitos,
+  dividimos ambos en mitades~%
+    \cite{karatsuba62:_multiplication}:
+	\begin{align*}
+	A&=10^na+b\\
+	B&=10^nc+d
+	\end{align*}
+	con $a, b, c, d < 10^n$.
+	
+	Además:
+	\begin{equation}\label{16::Primero}
+	A\cdot B = 10^{2n}ac + 10^n\nparentesis{ad+bc} + bd
+	\end{equation}
+	Notando que:
+	\begin{equation*}
+	\nparentesis{a+b}\cdot \nparentesis{c+d} = ac + ad + bc + bd - \nparentesis{ad + bc} + ac + bd
+	\end{equation*}
+	Podemos calcular los coeficientes de \eqref{16::Primero} con 3 (no 4) multiplicaciones:
+	\begin{align*}
+	  &a c \\
+          &b d \\
+          &(a + b) (c + d) - a c - b d
+	\end{align*}
+\end{ejemplo}
+\begin{ejemplo}
+  Otro ejemplo de esta estrategia es el algoritmo de Strassen~%
+  \cite{strassen69:_matrix_multiplication}
+  para multiplicar matrices.
+  Consideremos primeramente el producto de
+  dos matrices de \(2 \times 2\):
+  \begin{equation*}
+    \begin{pmatrix}
+      c_{1 1} & c_{1 2} \\
+      c_{2 1} & c_{2 2}
+    \end{pmatrix}
+    = \begin{pmatrix}
+      a_{1 1} & a_{1 2} \\
+      a_{2 1} & a_{2 2}
+    \end{pmatrix}
+    \cdot
+    \begin{pmatrix}
+      b_{1 1} & b_{1 2} \\
+      b_{2 1} & b_{2 2}
+    \end{pmatrix}
+  \end{equation*}
+  Sabemos que:
+  \begin{equation*}
+    \begin{array}{l@{\qquad}l}
+      c_{1 1}
+        = a_{1 1} b_{1 1} + a_{1 2} b_{2 1} &
+      c_{1 2}
+        = a_{1 1} b_{1 2} + a_{1 2} b_{2 2} \\
+      c_{2 1}
+        = a_{2 1} b_{1 1} + a_{2 2} b_{2 1} &
+      c_{2 2}
+        = a_{2 1} b_{1 2} + a_{2 2} b_{2 2}
+    \end{array}
+  \end{equation*}
+  Esto corresponde a \(8\) multiplicaciones.
+  Definamos los siguientes productos:
+  \begin{equation*}
+    \begin{array}{l@{\qquad}l}
+      m_1
+        = (a_{1 1} + a_{2 2}) \, (b_{1 1} + b_{2 2}) &
+      m_2
+        = (a_{2 1} + a_{2 2}) \, b_{1 1} \\
+      m_3
+        = a_{1 1} \, (b_{1 2} - b_{2 2}) &
+      m_4
+        = a_{2 2} \, (b_{2 1} - b_{1 1}) \\
+      m_5
+        = (a_{1 1} + a_{1 2}) \, b_{2 2} &
+      m_6
+        = (a_{2 1} - a_{1 1}) \, (b_{1 1} + b_{1 2}) \\
+      m_7
+        = (a_{1 2} - a_{2 2}) \, (b_{2 1} + b_{2 2})
+    \end{array}
+  \end{equation*}
+  Entonces podemos expresar:
+  \begin{align*}
+    \begin{array}{l@{\qquad}l}
+      c_{1 1}
+        = m_1 + m_4 - m_5 + m_7 &
+      c_{1 2}
+        = m_3 + m_5 \\
+      c_{2 1}
+        = m_2 + m_4 &
+      c_{2 2}
+        = m_1 - m_2 + m_3 + m_6
+    \end{array}
+  \end{align*}
+  Con estas fórmulas se usan \(7\) multiplicaciones
+  para evaluar el producto de dos matrices.
+  Cabe hacer notar que estas fórmulas no hacen uso de conmutatividad,
+  por lo que son aplicables también
+  para multiplicar matrices de \(2 \times 2\)
+  cuyos elementos son a su vez matrices.
+  Podemos usar esta fórmula recursivamente
+  para multiplicar matrices de \(2^n \times 2^n\).
+\end{ejemplo}
+
+\subsection{Estructura común}
+\label{sec:estructura-comun}
+
+	Un problema de tamaño $nb$ se reduce a $a$ problemas de tamaño $n$, que se resuelven recursivamente y las soluciones se combinan. Si el trabajo para resolver una instancia de tamaño $n$ la llamamos $t\nparentesis{n}$, y el trabajo para reducir y combinar soluciones lo llamamos $f$:
+	\begin{equation}
+	t\nparentesis{nb}=at\nparentesis{n}+f\nparentesis{n},\qquad t\nparentesis{1}=t_1
+	\end{equation}
+        Buscamos resolver esta recurrencia.
+	Suponiendo que $n$ es una potencia de $b$
+	\begin{align*}
+	n &= b^k \qquad t\nparentesis{b ^k} = T\nparentesis{k}\qquad\nparentesis{k = \log_b\nparentesis{n}}\\
+	T\nparentesis{k + 1} &= a T\nparentesis{k} + f\nparentesis{b^ k}
+	\end{align*}
+	En la mayoría de los casos de interés, $f\nparentesis{n} = cn^d$
+	\begin{equation*}
+	T\nparentesis{k + 1} = aT\nparentesis{k} + cb^{kd}\qquad T\nparentesis{0}= t_1
+	\end{equation*}
+	Definimos:
+	\begin{equation*}
+	g\nparentesis{z} = \sum_{k \geq 0} T\nparentesis{k} z^k
+	\end{equation*}
+	Por propiedades:
+	\begin{equation*}
+	\dfrac{g\nparentesis{z} - t_1}{z} = a g\nparentesis{z} + \dfrac{c}{1 - b^d z}
+	\end{equation*}
+	Entonces, por propiedades:
+	\begin{equation*}
+	g\nparentesis{z} = \dfrac{t_1 - \nparentesis{b^d t_1 - c}z}{\nparentesis{1-b^d z}\nparentesis{1-az}}
+	\end{equation*}
+	Hay que distinguir los casos en que los factores del denominador son iguales o distintos.
+	
+	Caso $a=b^d$:
+	\begin{align*}
+	g\nparentesis{z} &= \dfrac{t_1 - \nparentesis{at_1-c}z}{\nparentesis{1-az}^2}\\
+	&= \dfrac{c}{a} \cdot \dfrac{1}{\nparentesis{1-az}^2} + \dfrac{at_1 - c}{a}\cdot \dfrac{1}{1-az}\\
+	&=\dfrac{c}{a} \sum_{k \geq 0}\binom{-2}{k}
+	a^kz^k + \dfrac{at_1 -c}{a}\cdot \sum_{k \geq 0}a ^k z^k\\
+	&=\dfrac{c}{a} \cdot \sum_{k \geq 0}\binom{k + 1}{1}
+	a^k z^k+ \dfrac{at_1-c}{a}\cdot \sum_{k \geq 0}a^kz^k\\
+	\ncorchetes{z^k} g\nparentesis{z} &= \dfrac{c}{a} \nparentesis{k+1} a^k + \dfrac{at_1-c}{a}\cdot a^k\\
+	T\nparentesis{k} &= \dfrac{c}{a} k a^k + t_1 \cdot a^k\\
+	& \sim \dfrac{c}{a} k a^k\\
+	t\nparentesis{n} &\sim \dfrac{c}{a} a^{\log_b n} \cdot \log_b n
+	\end{align*}
+	Pero: 
+	\begin{align*}
+	a^{\log_b n} &= \nparentesis{b^{\log_b a}}^{\log_b n}\\
+	&= \nparentesis{b^{\log_b n}}^{\log_b a}\\
+	&= n^{\log_b a}= n^d
+	\end{align*}
+	\begin{align*}
+	t\nparentesis{n}&\sim \dfrac{c}{a} n^{\log_b a}\log_b n\\
+	&\sim \dfrac{c}{a}n^d \log_b n
+	\end{align*}
+	
+	Caso $a \ne b^d$:
+	\begin{align*}
+	g\nparentesis{z} &= \dfrac{c}{b^d -a}\cdot \dfrac{1}{1-b^d z} + \dfrac{\nparentesis{b^d -a} t_1 - c}{b^d -a} \cdot \dfrac{1}{1-az}\\
+	T\nparentesis{k}&=\dfrac{c}{b^d -a} \cdot b^{kd} + \dfrac{\nparentesis{b^d -a}t_1 - c}{b^d -a} \cdot a^k
+	\end{align*}
+	Si $a > b^d$:
+	\begin{align*}
+	T\nparentesis{k} &\sim \dfrac{\nparentesis{b^d - a}t_1 - c}{b^d -a} \cdot a^k\\
+	t\nparentesis{n} &\sim  \dfrac{\nparentesis{b^d - a}t_1 -c}{b^d -a} \cdot n^{\log_b a}
+	\end{align*}
+	Si $a < b^d$:
+	\begin{align*}
+	T\nparentesis{k} & \sim \dfrac{c}{b^d -a} \cdot b^{kd}\\
+	t\nparentesis{n} &\sim \dfrac{c}{b^d -a}\cdot n^d
+	\end{align*}
+	Resumiendo (\comillas{Teorema Maestro}):
+        Al dividir un problema de tamaño \(n b\)
+        en \(a\) problemas de tamaño \(n\),
+        que se resuelven recursivamente,
+        donde el trabajo que se hace al dividir y luego combinar soluciones
+        está dado por \(c n^d\),
+        resulta la recurrencia:
+        \begin{equation*}
+          t\nparentesis{nb}= at\nparentesis{n} + cn^d
+          \quad t(1) = t_1
+        \end{equation*}
+        cuya solución es:
+        \begin{align*}
+          t(n)
+            \sim \begin{cases}
+                   \dfrac{c}{b^d - a} \cdot n^d  & a < b^d \\[1em]
+                   \dfrac{c}{a} n^d \log_b n     & a = b^d \\[1em]
+                   \dfrac{(b^d - a) t_1 - c}{a} \cdot n^{\log_n a}
+                                                & a > b^d
+                 \end{cases}
+        \end{align*}
+    Donde:
+    \begin{itemize}
+    	\item $nb$: tamaño del problema original.
+    	\item $a$: cantidad de subproblemas originados luego de hacer la división.
+    	\item $b$: tamaño relativo de los subproblemas respecto al problema grande.
+    	\item $c$: constante determinada que nos dice lo que \comillas{nos cuesta} hacer la división. 
+    	\item $d$: costo extra (volver a compaginar la solución completa)
+    	\item $n$: tamaño de los subproblemas originados luego de hacer la división.
+    	\item $t\nparentesis{n}$: trabajo necesario para resolver una instancia de tamaño $n$ del problema en cuestión.
+    \end{itemize}
+        
+
+	Nuestros ejemplos se resumen en el cuadro~\ref{tab:complejidades}.
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{l*{5}{|l}}
+			&$a$ &$b$ &$c$ & $d$ & $t\nparentesis{n}$\\ \hline
+			Mergesort & $2$ & $2$ & & $1$ & $\Theta\nparentesis{n \log n}$\\ \hline
+			Búsqueda binaria & $1$ & $2$ & & $0$ & $\Theta\nparentesis{\log n}$\\ \hline
+			Karatsuba & 3 & 2 & & 1 & $\Theta\nparentesis{n^{\log _2 3}}$\\
+			\hline
+			Strassen & 7 & 2 & & 2 & $\Theta\nparentesis{n^{\log_2 7}}$
+		\end{tabular}
+                \caption{Complejidad de nuestros ejemplos}
+                \label{tab:complejidades}
+	\end{table}
+
+  Una variante de esto es el teorema de Akra-Bazzi,
+  del que reportamos la variante de Leighton~%
+    \cite{leighton96:_notes_better_master_theo}.
+  \begin{teorema}[Akra-Bazzi]
+    \index{Akra-Bazzi, teorema de|textbfhy}
+    \label{theo:Akra-Bazzi}
+    Sea una recurrencia de la forma:
+    \begin{equation*}
+      T(z)
+	= g(z) + \sum_{1 \le k \le n} a_k T(b_k z + h_k(z))
+	   \quad \text{para \(z \ge z_0\)}
+    \end{equation*}
+    donde \(z_0\), \(a_k\) y \(b_k\) son constantes,
+    sujeta a las siguientes condiciones:
+    \begin{itemize}
+    \item
+      Hay suficientes casos base.
+    \item
+      Para todo \(k\) se cumplen \(a_k > 0\) y \(0 < b_k < 1\).
+    \item
+      Hay una constante \(c\)
+      tal que \(\lvert g(z) \rvert = O(z^c)\).
+    \item
+      Para todo \(k\)
+      se cumple \(\lvert h_k(z) \rvert = O(z / (\log z)^2)\).
+    \end{itemize}
+    Entonces,
+    si \(p\) es tal que:
+    \begin{equation*}
+      \sum_{1 \le k \le n} a_k b_k^p
+	= 1
+    \end{equation*}
+    la solución a la recurrencia cumple:
+    \begin{equation*}
+      T(z)
+	= \Theta
+	    \left(
+	      z^p \left(
+		     1 + \int_1^z \frac{g(u)}{u^{p + 1}}
+			   \, \mathrm{d} u
+		  \right)
+	    \right)
+    \end{equation*}
+  \end{teorema}
+  Frente a nuestro tratamiento tiene la ventaja
+  de manejar divisiones desiguales
+  (\(b_k\) diferentes),
+  y explícitamente
+  considera pequeñas perturbaciones en los términos,
+  como lo son aplicar pisos o techos,
+  a través de los \(h_k(z)\).
+  Diferencias con pisos y techos están acotados por una constante,
+  mientras la cota del teorema permite que crezcan.
+  Por ejemplo,
+  la recurrencia correcta para el número de comparaciones
+  en ordenamiento por intercalación es:
+  \begin{equation*}
+    T(n)
+      = T(\lfloor n / 2 \rfloor) + T(\lceil n / 2 \rceil) + n - 1
+  \end{equation*}
+  El teorema de Akra-Bazzi es aplicable.
+  La recurrencia es:
+  \begin{equation*}
+    T(n)
+      = T(n / 2 + h_{+}(n)) + T(n / 2 + h_{-}(n)) + n - 1
+  \end{equation*}
+  Acá \(\lvert h_{\pm}(n) \rvert \le 1/2\),
+  además \(a_{\pm} = 1\) y \(b_{\pm} = 1/2\).
+  Estos cumplen las condiciones del teorema,
+  de:
+  \begin{equation*}
+    \sum_{1 \le k \le 2} a_k b_k^p = 1
+  \end{equation*}
+  resulta \(p = 1\),
+  y tenemos la cota:
+  \begin{equation*}
+    T(z)
+      = \Theta
+	  \left(
+	    z \left(
+	  1 + \int_1^z \frac{u - 1}{u^2} \, \mathrm{d} u
+	      \right)
+	  \right)
+      = \Theta
+	  \left(
+	    z \ln z + 1
+	  \right)
+      = \Theta(z \log z)
+  \end{equation*}
+  Otro ejemplo son los árboles de búsqueda aleatorizados
+  (\emph{\foreignlanguage{english}{Randomized Search Trees}},
+   ver por ejemplo Aragon y Seidel~%
+     \cite{aragon89:_random_search_tree},
+   Martínez y Roura~%
+     \cite{martinez98:_random_binar_searc_trees}
+   y Seidel y Aragon~%
+     \cite{seidel96:_random_search_trees})
+  en uno de ellos de tamaño~\(n\)
+  una búsqueda toma tiempo aproximado:
+  \begin{equation*}
+    T(n)
+      = \frac{1}{4} \, T(n / 4) + \frac{3}{4} \, T(3 n / 4) + 1
+  \end{equation*}
+  Nuevamente es aplicable el teorema~\ref{theo:Akra-Bazzi},
+  de:
+  \begin{equation*}
+    \frac{1}{4} \, \left(\frac{1}{4}\right)^p
+	+ \frac{3}{4} \left(\frac{3}{4}\right)^p
+      = 1
+  \end{equation*}
+  obtenemos \(p = 0\),
+  y por tanto la cota
+  \begin{equation*}
+    T(z)
+      = \Theta \left(
+	  z^0 \left( 1 + \int_1^z \frac{\mathrm{d} u}{u} \right)
+	\right)
+      = \Theta ( \log z )
+  \end{equation*}
+
+  Una variante útil,
+  pero bastante engorrosa,
+  del teorema maestro
+  es la que presenta Yap~%
+    \cite{yap11:_elemen_approach_master_recurrences}.
+
+\bibliography{../referencias}
+\end{document}
+

@@ -1,0 +1,1238 @@
+% estimaciones-asintoticas.tex
+%
+% Copyright (c) 2013-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Estimaciones asintóticas}
+\label{cha:estim-asint}
+\index{asintotica@asintótica}
+
+  Es común requerir una estimación ajustada de alguna cantidad,
+  como una suma
+  o el valor aproximado del coeficiente de una serie horrible.
+  Hay una variedad de técnicas disponibles para esta tarea,
+  desde simples a complejas.
+  Interesan estimaciones asintóticas
+  que entreguen resultados numéricos precisos y simples
+  para el número de estructuras combinatorias,
+  generalmente en el ámbito de rendimiento de algoritmos
+  con el objetivo de comparar alternativas
+  o estimar los recursos requeridos para resolver un problema particular.
+  Describiremos sólo algunos de los métodos más importantes.
+  Resúmenes detallados de las principales técnicas
+  ofrecen Odlyzko~\cite{odlyzko95:_asympt_enum_method}
+  y Flajolet y Sedgewick~\cite{flajolet09:_analy_combin}.
+
+\section{Estimar sumas}
+\label{sec:estimar-sumas}
+\index{asintotica@asintótica!suma}
+
+  Primero una técnica simple,
+  que ya habíamos visto
+  (capítulo~\ref{cha:euler-maclaurin}).%
+    \index{Euler-Maclaurin, formula de@Euler-Maclaurin, fórmula de}
+  \begin{theorem}
+    \label{theo:sum-integral}
+    Sea \(f(x)\) una función continua y monótona.
+    Entonces:
+    \begin{equation*}
+      \sum_{0 \le k \le n} f(n)
+	\approx \int_0^n f(x) d x
+	    + \frac{f(0) + f(n)}{2}
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Si \(f(x)\) es monótona creciente:
+    \begin{alignat*}{2}
+      f(\lfloor x \rfloor)
+	&\le f(x)
+	&&\le f(\lceil x \rceil) \\
+     \int_0^n f(\lfloor x \rfloor) d x
+	&\le \int_0^n f(x) d x
+	&&\le \int_0^n f(\lceil x \rceil) d x \\
+     \sum_{0 \le k \le n - 1} f(k)
+	&\le \int_0^n f(x) d x
+	&&\le \sum_{0 \le k \le n - 1} f(k + 1) d x \\
+     \sum_{0 \le k \le n} f(k) - f(n)
+	&\le \int_0^n f(x) d x
+	&&\le \sum_{0 \le k \le n} f(k) - f(0)
+    \end{alignat*}
+    y directamente:
+    \begin{equation*}
+      \int_0^n f(x) d x + f(0)
+	\le \sum_{0 \le k \le n} f(n)
+	\le \int_0^n f(x) d x + f(n)
+    \end{equation*}
+    Si \(f(x)\) es monótona decreciente,
+    se intercambian \(f(0)\) y \(f(n)\) en este último resultado.
+  \end{proof}
+
+%% Partly filched from aspnes14:_notes_discr_mathem
+  Otras estimaciones simples resultan de acotar usando sumas conocidas.
+  Si tenemos una suma finita de términos positivos,
+  y la suma infinita correspondiente converge,
+  tenemos una cota obvia.
+  Suelen ser útiles como cotas
+  la suma de secuencias geométricas
+  (teorema~\ref{theo:suma-geometrica}):
+  \begin{align}
+    \sum_{k \ge 0} a^k
+      &= \frac{1}{1 - a} \label{eq:suma-geometrica} \\
+    \sum_{0 \le k \le n} a^k
+      &= \frac{1 - a^{n + 1}}{1 - a} \label{eq:suma-geometrica-finita}
+  \end{align}
+  También es común la suma de secuencias aritméticas:%
+     \index{suma!aritmetica@aritmética}
+  \begin{equation}
+    \label{eq:suma-aritmetica}
+    \sum_{0 \le k \le n} k
+      = \frac{n (n + 1)}{2}
+  \end{equation}
+  Ocasionalmente aparecen números harmónicos
+  (sección~\ref{sec:numeros-harmonicos}):%
+     \index{numeros harmonicos@números harmónicos}
+  \begin{equation}
+    \label{eq:3}
+    \sum_{1 \le k \le n} \frac{1}{k}
+      = H_n
+      = \ln n + \gamma + O\left( \frac{1}{n} \right)
+  \end{equation}
+
+  Una técnica simple es acotar parte de la suma.
+  Por ejemplo,
+  sabemos cómo derivar una fórmula para la suma de los primeros cubos,
+  pero podemos obtener cotas sencillas mediante las siguientes observaciones:
+  \begin{align*}
+    \sum_{1 \le k \le n} k^3
+      &\le \sum_{1 \le k \le n} n^3 \\
+      &=   n^4 \\
+    \sum_{1 \le k \le n} k^3
+      &\ge \sum_{n / 2 \le k \le n} k^3 \\
+      &\ge \sum_{n / 2 \le k \le n} \left( \frac{n}{2} \right)^3 \\
+      &=   \frac{n^4}{8}
+  \end{align*}
+  O sea:
+  \begin{equation*}
+    \sum_{1 \le k \le n} k^3
+      = \Theta(n^4)
+  \end{equation*}
+
+\section{Estimar coeficientes}
+\label{sec:estimar-coeficientes}
+\index{asintotica@asintótica!coeficiente}
+
+  Hay diferentes técnicas aplicables en este caso,
+  de diferentes grados de complejidad.
+  Discutiremos algunos de aplicabilidad general,
+  el lector interesado
+  podrá hallar referencias a técnicas adicionales.
+
+\subsection{Cota trivial}
+\label{sec:trivial-sum-bound}
+
+  Hay una cota bastante trivial,
+  que resulta sorprendentemente ajustada en muchos casos.
+  Típicamente el error cometido es de un factor de \(n^{1/2}\).
+  Si consideramos la secuencia \(\langle a_n \rangle_{n \ge 0}\),
+  donde en aplicaciones combinatorias los \(a_n\) no son negativos:
+  \begin{equation}
+    \label{eq:example-gf}
+    A(z)
+      = \sum_{n \ge 0} a_n z^n
+  \end{equation}
+  Es claro que para \(u\) positivo:
+  \begin{equation*}
+    a_n u^n
+      \le A(u)
+  \end{equation*}
+  de donde tenemos la cota:
+  \begin{equation}
+    \label{eq:trivial-bound}
+    a_n
+      \le \min_{u \ge 0} \left( \frac{A(u)}{u^n} \right)
+  \end{equation}
+
+\subsection{Singularidades dominantes}
+\label{sec:dominating-singularities}
+\index{asintotica@asintótica!coeficiente!singularidad}
+
+  Sabemos
+  (ver capítulo~\ref{cha:analisis-complejo},%
+    \index{analisis complejo@análisis complejo}
+   particularmente el teorema~\ref{theo:complex-f1+f2-singularity})
+  que una función meromorfa cerca de una singularidad
+  queda representada por la suma de una función entera
+  y una función holomorfa
+  en un disco perforado centrado en la singularidad.
+  Esta segunda función
+  (básicamente la parte principal
+   de la serie de Laurent de la función)%
+    \index{Laurent, serie de}
+  domina la expansión en serie,
+  o,
+  lo que es lo mismo,
+  pone la mayor parte de los coeficientes de la serie de potencias.
+  Un ejemplo de esto
+  ya lo vimos en la sección~\ref{sec:d&c:division-fija},
+  donde vimos que el cero del denominador más cercano al origen
+  da los términos dominantes.
+  Considerando únicamente un polo simple \(z_0\)
+  como singularidad más cercana al origen,
+  estamos aproximando:
+  \begin{equation*}
+    A(z)
+      = \sum_{n \ge 0} a_n z^n
+  \end{equation*}
+  mediante:
+  \begin{equation*}
+    A(z)
+      \approx \res(A, z_0) \, \frac{1}{z - z_0}
+      =	      - \res(A, z_0) \, \frac{1}{z_0 (1 - z / z_0)}
+  \end{equation*}
+  lo que se traduce en:
+  \begin{equation}
+    \label{eq:ae:dominating-single-pole-approximation}
+    a_n
+      \approx - \res(A, z_0) \, \frac{1}{z_0^{n + 1}}
+  \end{equation}
+  Incluir singularidades adicionales
+  significa añadir términos similares para ellas.
+  En detalle,
+  tenemos:
+  \begin{theorem}
+    \label{theo:poles-approximation}
+    Sea \(f\) meromorfa en la región \(D\) que contiene el origen.
+    Sea \(R > 0\) el módulo de los polos de mínimo módulo,
+    y sean \(z_0, \dotsc, z_s\) estos polos.
+    Sea \(R' > R\) el módulo de los polos de siguiente módulo mayor,
+    y sea \(\epsilon > 0\) dado.
+    Entonces:
+    \begin{equation}
+      \label{eq:poles-approximation}
+      \left[ z^n  \right] f(z)
+	= \left[ z^n \right] \,
+	    \left( \sum_{0 \le k \le s} \pp(f; z_k) \right)
+	    + O \, \left( \left( \frac{1}{R'}
+	    + \epsilon \right)^n \right)
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    Basta demostrar que
+    al restar las partes principales de \(f\) indicadas
+    de \(f\) el resultado
+    es una función que es holomorfa en el disco
+    \(D_{R'}(0)\),
+    la cota para el error
+    es esencialmente el corolario~\ref{cor:ratio-test}.
+    Por el teorema~\ref{theo:complex-f1+f2-singularity},
+    la función \(f(z) - \pp(f; z_0)\) es holomorfa en \(z_0\),
+    y debemos demostrar que su parte principal en \(z_1\)
+    es la misma que la de \(f\):
+    \begin{align*}
+      \pp(f - \pp(f; z_0); z_1)
+	&= \pp(f; z_1) - \pp(\pp(f; z_0); z_1) \\
+	&= \pp(f; z_1)
+    \end{align*}
+    ya que \(\pp(f; z_0)\) es holomorfa en \(z_1\).
+    Podemos ir aplicando esto polo a polo
+    hasta demostrar
+    que restando las partes principales indicadas de \(f\)
+    obtenemos una función holomorfa
+    en el disco de radio \(R'\) indicado.
+  \end{proof}
+
+  Para un ejemplo,
+  vimos
+  (sección~\ref{sec:desarreglos})
+  que la función generatriz exponencial
+  de los números de desarreglos está dada por:%
+    \index{desarreglo!asintotica@asintótica}
+  \begin{equation}
+    \label{eq:ae:egf-derangements}
+    \widehat{D}(z)
+      = \frac{\mathrm{e}^{-z}}{1 - z}
+  \end{equation}
+  Esta función generatriz tiene un polo simple en \(z = 1\),
+  con residuo \(- \mathrm{e}^{-1}\).
+  Obtenemos directamente
+  la aproximación~\eqref{eq:n-derangements-approx}.
+  Sabemos también que la función:
+  \begin{equation}
+    \label{eq:ae:derangements-error}
+    d(z)
+      = \frac{\mathrm{e}^{-z}}{1 - z}
+	  - \frac{\mathrm{e}^{-1}}{1 - z}
+      = \frac{\mathrm{e}^{-z} - \mathrm{e}^{-1}}{1 - z}
+  \end{equation}
+  es entera
+  (tiene una singularidad removible en \(z = 1\)),
+  sus coeficientes son el error que comete la aproximación.
+  Como el radio de convergencia
+  para una función entera es \(R = \infty\),
+  nuestra cota~\eqref{eq:poles-approximation} es:
+  \begin{equation}
+    \label{eq:ae:derangements-approximation}
+    D_n
+      = n! \mathrm{e}^{-1} + O(n! \epsilon^n)
+  \end{equation}
+
+  Otro caso es el número de resultados de competencias con empate
+  (números de Bell ordenados).%
+    \index{Bell, numeros de (ordenados)@Bell, números de (ordenados)!asintotica@asintótica}
+  En la sección~\ref{sec:campeonatos-empate} llegamos a:
+  \begin{equation}
+    \label{eq:ae:ranking-gf}
+    R(z)
+      = \frac{1}{2 - \mathrm{e}^z}
+  \end{equation}
+  Esto tiene singularidades cuando \(\mathrm{e}^z = 2\),
+  o sea en los puntos para \(k \in \mathbb{Z}\):
+  \begin{equation}
+    \label{eq:ae:ranking-gf-sigularities}
+    \log 2
+      = \ln 2 + 2 k \pi \mathrm{i}
+  \end{equation}
+  Domina la singularidad en \(\ln 2\),
+  podemos refinar el resultado incluyendo singularidades adicionales
+  en orden de cercanía de \(0\)
+  (\(\ln 2\),
+   \(\ln 2 \pm 2 \pi \mathrm{i}\),
+   \(\ln 2 \pm 4 \pi \mathrm{i}\),
+   \ldots).
+  Si escribimos \(z = \log 2 + u\)
+  y expandimos la exponencial en serie:
+  \begin{equation*}
+    R(z)
+      = \frac{1}{2 - 2 \mathrm{e}^u}
+      = \frac{1}{2} \, \frac{1}{1 - \mathrm{e}^u}
+  \end{equation*}
+  Las singularidades son todas polos simples,
+  sus residuos son:%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!residuo}
+  \begin{equation}
+    \label{eq:R-residues}
+    \res \left( \frac{1}{2 - \mathrm{e}^z},
+		\ln 2 + 2 k \pi \mathrm{i} \right)
+      = \lim_{z \rightarrow \ln 2 + 2 k \pi \mathrm{i}}
+	  \frac{1}{- \mathrm{e}^z}
+      = - \frac{1}{2}
+  \end{equation}
+  El polo más cercano al origen es \(\ln 2\),
+  los demás polos están en \(\ln 2 \pm 2 \pi \mathrm{i}\),
+  de módulo \(\sqrt{\ln 2 + 4 \pi^2} = 6,32\).
+  En consecuencia,
+  de~\eqref{eq:ae:dominating-single-pole-approximation}:
+  \begin{equation}
+    \label{eq:ae:R-approximation}
+    R_n
+      = \frac{n!}{2 (\ln 2)^{n + 1}} + O(n! \cdot 0,16^n)
+  \end{equation}
+  \begin{table}[ht]
+    \centering
+    \begin{tabular}{*{2}{>{\(}r<{\)}}D{.}{,}{4}}
+      \multicolumn{1}{c}{\boldmath \(n\) \unboldmath} &
+	\multicolumn{1}{c}{\boldmath \(R_n\) \unboldmath} &
+	\multicolumn{1}{c}{\textbf{\eqref{eq:ae:R-approximation}}} \\
+      \hline
+      0 &   1 &	  0.7213 \\
+      1 &   1 &	  1.0407 \\
+      2 &   3 &	  3.0028 \\
+      3 &  13 &	 12.9963 \\
+      4 &  75 &	 74.9987 \\
+      5 & 541 & 541.0015 \\
+      \hline
+    \end{tabular}
+    \caption{Números de Bell ordenados}
+    \label{tab:R-approximation}
+  \end{table}
+  El cuadro~\ref{tab:R-approximation}
+  muestra los primeros valores exactos y aproximados,
+  la concordancia es extremadamente buena.
+
+  Para un ejemplo un poquito más complejo,
+  tenemos los números de Bernoulli,%
+    \index{Bernoulli, numeros de@Bernoulli, números de}
+  con función generatriz exponencial
+  (ver la sección~\ref{sec:propiedades-Bernoulli}):
+  \begin{equation}
+    \label{eq:ae:B(0,z)}
+    B(z)
+      = \frac{z}{\mathrm{e}^z - 1}
+  \end{equation}
+  Tanto \(z\) como \(\mathrm{e}^z - 1\) son enteras,
+  \(B(z)\) solo puede tener polos.
+  En los polos \(\mathrm{e}^z = 1\),
+  o sea son polos \(z = 2 k \pi \mathrm{i}\)
+  para todo \(k \in \mathbb{Z}\).
+  En este caso tenemos dos polos a la misma distancia del origen,
+  debemos considerar el aporte de ambos.
+  Es fácil corroborar que los polos son simples,
+  interesan:
+  \begin{equation}
+    \label{eq:residues-B(z)}
+    \res(B(z), 2 k \pi \mathrm{i})
+      = \lim_{z \rightarrow 2 k \pi \mathrm{i}}
+	  \frac{z}{\mathrm{e}^z}
+      = \mathrm{2 k \pi \mathrm{i}}
+  \end{equation}
+  Usando los polos \(\pm 2 \pi \mathrm{i}\)
+  tenemos la aproximación:%
+    \index{Bernoulli, numeros de@Bernoulli, números de!asintotica@asintótica}
+  \begin{equation}
+    \label{eq:ae:Bn-1}
+    \frac{B_n}{n!}
+      = - \frac{2 \pi \mathrm{i}}{(2 \pi \mathrm{i})^{n + 1}}
+	    + \frac{2 \pi \mathrm{i}}{(- 2 \pi \mathrm{i})^{n + 1}}
+	    + O \left( \left( \frac{1}{4 \pi} \right)^n \right)
+  \end{equation}
+  Vemos que para \(n\) impar los aportes se cancelan,
+  esta técnica no entrega demasiada información en ese caso.
+  Para \(n = 2 k\)
+  volvemos a obtener~\eqref{eq:Bernoulli-approximation}:
+  \begin{equation}
+    \label{eq:ae:Bernoulli-approximation}
+    B_{2 k}
+      \sim \frac{- 2 (2 k)!}{(2 \pi \mathrm{i})^{2 k}}
+      = (-1)^{k + 1} \, \frac{2 (2 k)!}{(4 \pi^2)^k}
+  \end{equation}
+  \begin{table}[ht]
+    \centering
+    \begin{tabular}{>{\(}r<{\)}>{\(}c<{\)}
+		    D{.}{,}{4}D{.}{,}{4}}
+      \multicolumn{1}{c}{\boldmath\(n\)\unboldmath} &
+	\multicolumn{2}{c}{\boldmath\(B_n\)\unboldmath} &
+	\multicolumn{1}{c}{\textbf{\eqref{eq:ae:Bernoulli-approximation}}} \\
+      \hline
+       0 & 1		      &	 1.0000 & -2.0000 \\
+       2 & \phantom{-} 1 / 6  &	 1.1666 &  0.1013 \\
+       4 & - 1 / 30	      & -0.0333 & -0.0308 \\
+       6 & \phantom{-} 1 / 42 &	 0.0238 &  0.0234 \\
+       8 & - 1 / 30	      & -0.0333 & -0.0332 \\
+      10 & \phantom{-} 5 / 56 &	 0.0758 &  0.0757 \\
+      12 & - 691 / 2730	      & -0.2531 & -0.2531 \\
+      14 & \phantom{-} 7 / 6  &	 1.1666 &  1.1666 \\
+      16 & - 3617 / 510	      & -7.0922 & -7.0920 \\
+      \hline
+    \end{tabular}
+    \caption{Números de Bernoulli pares}
+    \label{tab:Bernoulli-approximation}
+  \end{table}
+  Los valores exactos y aproximados de \(B_{2 k}\)
+  se contrastan en el cuadro~\ref{tab:Bernoulli-approximation}.
+  La aproximación no es particularmente buena en los índices bajos,
+  se siente la influencia de los polos más lejanos.
+  Igualmente la aproximación es muy buena.
+
+  Si sumamos los aportes de todos los polos,
+  resulta de nuevo la fórmula para \(\zeta(2 k)\):
+  \begin{equation}
+    \label{eq:ae:zeta(2k)}
+    B_{2 k}
+      = (-1)^{k + 1} \, \frac{2 (2 k)!}{(4 \pi^2)^k} \, \zeta(2 k)
+  \end{equation}
+
+  Una aplicación instructiva de las técnicas presentadas
+  dan Odlyzko y Wilf~\cite{odlyzko88:_coins_fountain}
+  al tratar el caso de fuentes no necesariamente de bloques
+  (ver la sección~\ref{sec:FG-combinatoria}).
+
+\input{asintotica-palabras-sin-patron}
+
+\subsection{Singularidades algebraicas}
+\label{sec:algebraic-singularities}
+
+  Supongamos ahora
+  que la singularidad \(z_0\) de \(f\) más cercana al origen
+  es algebraica
+  (un punto de ramificación),
+  vale decir hay \(\alpha \in \mathbb{C}\)
+  con \(\alpha \notin \mathbb{N}\)
+  tal que la función \(g\) definida por lo siguiente
+  es holomorfa en un entorno de \(z_0\):
+  \begin{equation*}
+    f(z)
+      = (z_0 - z)^\alpha g(z)
+  \end{equation*}
+  El desarrollo de la sección anterior
+  hace sospechar que en tal caso la serie:
+  \begin{equation*}
+    f(z)
+      = (z_0 - z)^\alpha \sum_{k \ge 0} g_k (z_0 - z)^k
+      = \sum_{k \ge 0} g_k (z_0 - z)^{k + \alpha}
+  \end{equation*}
+  es clave.
+
+  Seguimos básicamente el desarrollo de Knuth y Wilf~%
+    \cite{knuth89:_short_proof_Darboux}.
+  Sin pérdida de generalidad,
+  podemos suponer que \(z_0 = 1\)
+  (basta considerar \(f(z z_0)\) en caso contrario),
+  y que hay una única singularidad de interés.
+  Primero un par de resultados auxiliares,
+  de interés independiente.
+  \begin{theorem}[Bender]
+    \label{theo:Bender}
+    \index{Bender, teorema de|textbfhy}
+    Sean \(A(z) = \sum a_k z^k\) y \(B(z) = \sum b_k z^k\)
+    series de potencias
+    con radios de convergencia \(\alpha > \beta \ge 0\),
+    respectivamente.
+    Suponga que:
+    \begin{equation*}
+      \lim_{n \rightarrow \infty} \frac{b_{n - 1}}{b_n} = b
+    \end{equation*}
+    Si \(A(b) \ne 0\),
+    y \(A(z) B(z) = \sum c_n z^n\),
+    entonces \(c_n \sim A(b) b_n\).
+  \end{theorem}
+  La demostración sigue la de Bender~%
+    \cite{bender74:_asymp_method_enumer}.
+  \begin{proof}
+    Basta demostrar que \(c_n / b_n \sim A(b)\).
+    Sabemos que:
+    \begin{equation*}
+      c_n
+	= \sum_{0 \le k \le n} a_k b_{n - k}
+    \end{equation*}
+    Con esto:
+    \begin{align*}
+      \left\lvert A(b) - \frac{c_n}{b_n} \right\rvert
+	&=   \left\lvert
+	       A(b)
+		 - \sum_{0 \le k \le n} a_k \frac{b_{n - k}}{b_n}
+	     \right\rvert \\
+	&=   \left\lvert
+	       \sum_{k > n} a_k b^k
+		 - \sum_{0 \le k \le n}
+		     a_k \left( b^k - \frac{b_{n - k}}{b_n} \right)
+	      \right\rvert \\
+	&\le \left\lvert
+	       \sum_{k > n} a_k b^k
+	      \right\rvert
+		+ \left\lvert
+		    \sum_{0 \le k \le n}
+		      a_k \left( b^k - \frac{b_{n - k}}{b_n} \right)
+		  \right\rvert
+    \end{align*}
+    El primer término es la cola de una serie convergente,
+    tiende a cero al crecer \(n\).
+    Para el segundo término,
+    dividiendo la suma en \(n/2\):
+    \begin{align*}
+      \left\lvert
+	\sum_{0 \le k \le n}
+	  a_k \left( b^k - \frac{b_{n - k}}{b_n} \right)
+      \right\rvert
+	&\le \left\lvert
+	       \sum_{0 \le k < n /2}
+		 a_k \left( b^k - \frac{b_{n - k}}{b_n} \right)
+	     \right\rvert
+	       + \sum_{n/2 \le k \le n}
+		   \lvert a_k b^k \rvert
+		     \cdot \left\lvert
+			     \frac{b_{n - k}}{b_n b^k}
+			   \right\rvert \\
+	&\le \left\lvert
+	       \sum_{0 \le k < n /2}
+		 a_k \left( b^k - \frac{b_{n - k}}{b_n} \right)
+	     \right\rvert
+	       + \max_{n/2 \le k \le n}
+		   \left\lvert
+		     \frac{b_{n - k}}{b_n b^k}
+		   \right\rvert
+		   \cdot \sum_{n/2 \le k \le n}
+			   \lvert a_k b^k \rvert
+    \end{align*}
+    El primer término tiende a cero,
+    ya que \(b_{n - k} / b_n \sim b^k\);
+    la suma del segundo término
+    está acotada por la cola de una serie convergente.
+    Para el factor:
+    \begin{equation*}
+      \max_{n/2 \le k \le n}
+	\left\lvert
+	  \frac{b_{n - k}}{b_n b^k}
+	\right\rvert
+	  = \max_{n/2 \le k \le n}
+	      \left\lvert
+		\frac{b_{n - k} b^{n - k}}{b_n b^n}
+	      \right\rvert
+	  = \max_{0 \le k < n/2}
+	      \left\lvert
+		\frac{b_k b^k}{b_n b^n}
+	      \right\rvert
+    \end{equation*}
+    Como la serie \(\sum b_k b^k\) converge,
+    esto está acotado.
+  \end{proof}
+  Una aplicación simple del teorema de Bender
+  es obtener una expansión asintótica para los números de Motzkin~%
+    \cite{motzkin48:_relat_between_hyper_cross_ratios}%
+    \index{Motzkin, numeros de@Motzkin, números de!asintotica@asintótica}
+  (ver la discusión detallada de Donaghey y Shapiro~%
+    \cite{donaghey77:_motzkin_numbers}).
+  Dedujimos~\eqref{eq:ae-Motzkin-gf} en la sección~\ref{sec:numeros-motzkin}:
+  \begin{equation}
+    \label{eq:ae-Motzkin-gf}
+    M(z)
+      = \frac{1 - z - \sqrt{1 - 2 z - 3 z^2}}{2 z^2}
+  \end{equation}
+  Es claro que para \(n \ge 2\):
+  \begin{align*}
+    M_n
+      &= \left[ z^n \right] \, \frac{1 - z - \sqrt{1 - 2 z - 3 z^2}}{2 z^2} \\
+      &= - \frac{1}{2} \,
+	     \left[ z^{n + 2} \right]
+	       \, (1 + z)^{1/2} (1 - 3 z)^{1/2}
+  \end{align*}
+  Vemos que el radio de convergencia de esto último es \(1 / 3\),
+  igual que el segundo factor;
+  el primer factor tiene radio de convergencia \(1\).
+  Por el teorema de Bender:
+  \begin{align}
+    M_n
+      &\sim - \frac{1}{2} \,
+		(1 + 1 / 3)^{1/2}
+		   \left[ z^{n + 2} \right] (1 - 3 z)^{1/2}
+	 \notag \\
+      &= - \frac{\sqrt{3}}{3} \, \binom{1/2}{n + 2} \, (-3)^{n + 2}
+	 \notag \\
+      &= \frac{3 \sqrt{3}}{8 (n + 2)} \, \binom{2 n + 2}{n + 1}
+	   \left( \frac{3}{4} \right)^n
+	 \label{eq:ae:M-approximation}
+  \end{align}
+  \begin{table}[ht]
+    \centering
+    \begin{tabular}{*{2}{>{\(}r<{\)}}D{.}{,}{3}}
+      \multicolumn{1}{c}{\boldmath \(n\) \unboldmath} &
+	\multicolumn{1}{c}{\boldmath \(R_n\) \unboldmath} &
+	\multicolumn{1}{c}{\textbf{\eqref{eq:ae:M-approximation}}} \\
+      \hline
+	0 &    1 & \text{\textemdash} \\
+	1 &    1 & \text{\textemdash} \\
+	2 &    2 &    1.827 \\
+	3 &    4 &    3.836 \\
+	4 &    9 &    8.631 \\
+	5 &   21 &   20.346 \\
+	6 &   51 &   49.593 \\
+	7 &  127 &  123.981 \\
+	8 &  323 &  316.153 \\
+	9 &  835 &  819.123 \\
+       10 & 2188 & 2150.198 \\
+      \hline
+    \end{tabular}
+    \caption{Números de Motzkin}
+    \label{tab:Motzkin-numbers}
+  \end{table}
+  El cuadro~\ref{tab:Motzkin-numbers} contrasta los valores exactos
+  con la aproximación~\eqref{eq:ae:M-approximation}.
+  No es particularmente buena,
+  pero invertimos muy poco esfuerzo en ella.
+
+  Un ejercicio simple
+  de la función \(\Gamma\)	y la fórmula de Stirling
+  da:
+  \begin{lemma}
+    \label{lem:asymptotics-binomial}
+    \index{coeficiente binomial!asintotica@asintótica}
+    Para \(\beta\) fijo cuando \(n \rightarrow \infty\):
+    \begin{equation*}
+      \left[ z^n \right] (1 - z)^\beta
+	\begin{cases}
+	  \sim n^{- \beta - 1} / \Gamma(- \beta)
+	    & \text{si \(\beta \notin \mathbb{N}\)} \\
+	  \rightarrow 0
+	    & \text{si \(\beta \in \mathbb{N}\)} \\
+	\end{cases}
+    \end{equation*}
+  \end{lemma}
+  \begin{proof}
+    Para el caso \(\beta \in \mathbb{N}\),
+    por el teorema del binomio%
+      \index{binomio, teorema del}
+    sabemos que si \(n > \beta\) el coeficiente es cero.
+
+    En caso que \(\beta \notin \mathbb{N}\):
+    \begin{align*}
+      \left[ z^n \right] (1 - z)^\beta
+	= \binom{\beta}{n} (-1)^n
+	= \frac{\beta^{\underline{n}}}{n!} \, (-1)^n
+	= \frac{(-\beta)^{\overline{n}}}{n!}
+	= \frac{\Gamma(n - \beta)}{\Gamma(-\beta) n!}
+    \end{align*}
+    El resultado
+    sigue de la fórmula de Stirling~\eqref{eq:Stirling}:%
+      \index{Stirling, formula de@Stirling, fórmula de}
+    \begin{equation*}
+      \Gamma(n + 1)
+	= n!
+	\sim \sqrt{2 \pi n} \, \left( \frac{n}{e} \right)^n
+    \end{equation*}
+    Tenemos:
+    \begin{align*}
+      \frac{\Gamma(n - \beta)}{\Gamma(-\beta) n!}
+	&\sim \frac{1}{\Gamma(-\beta)}
+		\cdot \frac{(n - \beta - 1)^{n - \beta - 3/2}}
+			   {\mathrm{e}^{n - \beta - 2}}
+		\cdot \frac{\mathrm{e}^n}{n^{n + 1/2}} \\
+	&=    \frac{1}{\Gamma(-\beta)}
+		\cdot \frac{n^{n - \beta - 1/2}
+			      \cdot (1 - (\beta + 2) / n)^n
+			      \cdot (1 - (\beta + 2) / n)^{-\beta - 3/2}
+			      \cdot \mathrm{e}^{- \beta - 2}}
+			   {n^{n + 1/2}} \\
+	&\sim \frac{n^{- \beta - 1}}{\Gamma(-\beta)} \\
+    \end{align*}
+    Acá usamos el límite clásico:
+    \begin{equation*}
+      \lim_{n \rightarrow \infty}
+	\left( 1 + \frac{\alpha}{n} \right)^n
+	= \mathrm{e}^\alpha
+     \qedhere
+    \end{equation*}
+  \end{proof}
+  Con estos:
+  \begin{lemma}
+    \label{lem:bound-algebraic}
+    Sea \(u(z) = (1 - z)^\gamma v(z)\),
+    donde \(v(z)\) es holomorfa
+    en algún disco \(\lvert z \rvert < 1 + \eta\)
+    (acá \(\eta > 0\)).
+    Entonces:
+    \begin{equation*}
+      \left[ z^n \right] u(z)
+	= O(n^{-\gamma - 1})
+    \end{equation*}
+  \end{lemma}
+  \begin{proof}
+    Aplicando el teorema de Bender,%
+      \index{Bender, teorema de}
+    teorema~\ref{theo:Bender},
+    queda:
+    \begin{equation*}
+      \left[ z^n \right] (1 - z)^\gamma v(z)
+	\sim v(1) \left[ z^n \right] (1 - z)^\gamma
+    \end{equation*}
+    El lema~\ref{lem:asymptotics-binomial}
+    entrega el resultado prometido.
+  \end{proof}
+  Estamos en condiciones de demostrar:
+  \begin{theorem}[Lema de Darboux]
+    \index{Darboux, lema de}
+    \label{theo:Darboux-lemma}
+    Sea \(f\) holomorfa en un disco \(\lvert z \rvert < 1 + \eta\),
+    donde \(\eta > 0\).
+    Suponga que en un entorno de \(z = 1\) tiene una expansión
+    \begin{equation*}
+      f(z)
+	= \sum_{k \ge 0} f_k (1 - z)^k
+    \end{equation*}
+    Entonces para todo \(\beta \in \mathbb{C}\)
+    y todo \(m \in \mathbb{N}_0\):
+    \begin{align*}
+      \left[ z^n \right] (1 - z)^\beta f(z)
+	&= \left[ z^n \right] \sum_{k \ge 0} f_k (1 - z)^{\beta + k}
+	     + O(n^{-m - \beta - 2}) \\
+	&= \sum_{0 \le k \le m} f_k \binom{n -\beta - k - 1}{n}
+	     + O(n^{-m - \beta - 2})
+    \end{align*}
+  \end{theorem}
+  \begin{proof}
+    Tenemos:
+    \begin{align*}
+      (1 - z)^\beta f(z)
+	- \sum_{0 \le k \le m} f_k (1 - z)^{\beta + k}
+	&= \sum_{k > m} f_k (1 - z)^{\beta + k} \\
+	&= (1 - z)^{\beta + m + 1} \widetilde{f}(z)
+    \end{align*}
+    Las regiones de holomorfismo
+    de \(f\) y \(\widetilde{f}\) son las mismas.
+    El resultado sigue del lema~\ref{lem:bound-algebraic}.
+  \end{proof}
+  Obtengamos una expansión más precisa de los números de Motzkin.%
+    \index{Motzkin, numeros de@Motzkin, números de!asintotica@asintótica}
+  Tenemos para \(n \ge 2\),
+  vía el cambio de variables \(u = 3 z\):
+  \begin{align*}
+    M_n
+      &= - \frac{1}{2} \,
+	     \left[ z^{n + 2} \right]
+	       \, (1 + z)^{1/2} (1 - 3 z)^{1/2} \\
+      &= - \frac{3^{n + 2}}{2} \,
+	     \left[ u^{n + 2} \right] \,
+	       \left( \frac{4}{3} \right)^{1/2} \,
+		 \left( 1 - \frac{1 - u}{4} \right)^{1/2}
+	       \cdot (1 - u)^{1/2} \\
+      &= - 3 \sqrt{3} \cdot 3^n \cdot
+	     \sum_{k \ge 0} \binom{1/2}{k} (-4)^{-k}
+	       \left[ u^{n + 2} \right] \, (1 - u)^{1/2}
+  \end{align*}
+  Si expandimos para \(m = 0\)
+  y no aproximamos los coeficientes binomiales
+  resulta nuevamente~\eqref{eq:ae:M-approximation}.
+  Extendamos a \(m = 1\),
+  aproximando los coeficientes binomiales
+  mediante el lema~\ref{lem:asymptotics-binomial}.%
+    \index{coeficiente binomial!asintotica@asintótica}
+  Necesitamos:
+  \begin{align*}
+    \binom{1/2}{n + 2}
+      &\sim \frac{(n + 2)^{-3/2}}{\Gamma(-1/2)}
+       =    - \frac{(n + 2)^{-3/2}}{2 \sqrt{\pi}} \\
+    \binom{3/2}{n + 2}
+      &\sim \frac{(n + 2)^{-5/2}}{\Gamma(-3/2)}
+       =    \frac{3 (n + 2)^{-5/2}}{4 \sqrt{\pi}}
+  \end{align*}
+  porque:
+  \begin{align*}
+    \left( - \frac{1}{2} \right)
+	\cdot \Gamma \left( - \frac{1}{2} \right)
+      &= \Gamma \left( \frac{1}{2} \right)
+      = \sqrt{\pi} \\
+    \left( - \frac{3}{2} \right)
+       \cdot \Gamma \left( - \frac{3}{2} \right)
+      &= \Gamma \left( - \frac{1}{2} \right)
+  \end{align*}
+  y tenemos la estimación:
+  \begin{equation}
+    \label{eq:ae:M-approximation-2}
+    M_n
+      = \frac{\sqrt{3} \cdot 3^n}{16 \sqrt{\pi}} \cdot
+	  \left(
+	    8 (n + 2)^{-3/2} + 3 (n + 2)^{-5/2}
+	  \right)
+  \end{equation}
+  \begin{table}[ht]
+    \centering
+    \begin{tabular}{rrD{.}{,}{3}}
+      \multicolumn{1}{c}{\boldmath \(n\) \unboldmath} &
+	\multicolumn{1}{c}{\boldmath \(R_n\) \unboldmath} &
+	\multicolumn{1}{c}{\textbf{\eqref{eq:ae:M-approximation-2}}} \\
+      \hline
+	0 &    1 & \textemdash \\
+	1 &    1 & \textemdash \\
+	2 &    2 &    1.804 \\
+	3 &    4 &    3.805 \\
+	4 &    9 &    8.583 \\
+	5 &   21 &   20.263 \\
+	6 &   51 &   49.438 \\
+	7 &  127 &  123.678 \\
+	8 &  323 &  315.526 \\
+	9 &  835 &  817.783 \\
+       10 & 2188 & 2147.245 \\
+      \hline
+    \end{tabular}
+    \caption{Números de Motzkin nuevamente}
+    \label{tab:Motzkin-numbers-2}
+  \end{table}
+  La aproximación~\eqref{eq:ae:M-approximation-2}
+  no es tan buena como~\eqref{eq:ae:M-approximation},
+  pero hay que considerar
+  que usamos una aproximación bastante cruda
+  para los coeficientes binomiales
+  a cambio de reemplazarlos por potencias.
+  Igual la fórmula diseñada para índices muy grandes
+  da excelentes resultados ya para \(n = 10\).
+
+\subsection{Singularidades algebraico-logarítmicas}
+\label{sec:singularidades-logaritmicas}
+\index{Odlyzko-Flajolet, metodo de@Odlyzko-Flajolet, método de}
+
+  Una técnica que resuelve muchos de los casos de interés en combinatoria
+  es la que presentan Flajolet y Odlyzko\cite{flajolet90:_singular_anal}
+  (ver también el resumen más accesible de Flajolet y Sedgewick~%
+    \cite[sección~VI.2]{flajolet09:_analy_combin}).
+  Las demostraciones son bastante engorrosas,
+  nos remitiremos a citar los resultados.
+  \begin{theorem}
+    \label{theo:(1-z)^alpha}
+    Sea \(\alpha \in \mathbb{C} \smallsetminus \mathbb{Z}_{\le 0}\).
+    Entonces:
+    \begin{equation}
+      \label{eq:(1-z)^alpha-asy}
+      [z^n] (1 - z)^{- \alpha}
+	 \sim \frac{n^{\alpha - 1}}{\Gamma(\alpha)}
+    \end{equation}
+  \end{theorem}
+  Si \(\alpha\) es un entero negativo,
+  \((1 - z)^{- \alpha}\) es un polinomio,
+  y los coeficientes del caso eventualmente se anulan.
+  La exposición de Flajolet y Sedgewick~%
+    \cite[teorema~VI.1]{flajolet09:_analy_combin}
+  da la expansión asintótica.
+  \begin{theorem}
+    \label{theo:(1-z)^alpha*log(1-z)^beta}
+    Sea \(\alpha \in \mathbb{C} \smallsetminus \mathbb{Z}_{\le 0}\).
+    Entonces:
+    \begin{equation}
+      \label{eq:(1-z)^alpha*log(1-z)^beta-asy}
+      [z^n] (1 - z)^{- \alpha}
+	       \left(\frac{1}{z} \ln \frac{1}{1 - z}\right)^\beta
+	 \sim \frac{n^{\alpha - 1}}{\Gamma(\alpha)}
+		\ln^\beta n
+    \end{equation}
+  \end{theorem}
+  Se introduce un factor \(1/z\) en frente del logaritmo
+  para obtener una serie en \(z\),
+  no altera la expansión cerca de \(z = 1\).
+  Nuevamente Flajolet y Sedgewick~%
+    \cite[teorema~VI.2]{flajolet09:_analy_combin}
+  dan la expansión asintótica completa
+  para el caso en que \(\beta\) no es un natural,
+  citan a Jungen~\cite{jungen31:_sur_taylor} para completar ese caso.
+
+\subsection{El método de Hayman}
+\label{sec:Hayman-method}
+\index{Hayman, metodo de@Hayman, método de}
+
+  Las técnicas precedentes dan excelentes resultados
+  cuando las funciones generatrices de interés
+  tienen singularidades cerca del origen.
+  Son totalmente inútiles si la función generatriz es entera.
+  Nos interesaría,
+  por ejemplo,
+  obtener una expansión asintótica de \(n!\)
+  vía considerar la serie para la exponencial.
+  Para ello podemos razonar como sigue:
+  De la fórmula generalizada de Cauchy,%
+    \index{Cauchy, formula de (generalizada)@Cauchy, fórmula de (generalizada)}
+  teorema~\ref{theo:Cauchy-formula-f-(n)},
+  tenemos que para toda curva simple cerrada que incluya el origen:
+  \begin{equation*}
+    \frac{1}{n!}
+      = \frac{1}{2 \pi \mathrm{i}} \,
+	  \int_\gamma \frac{\mathrm{e}^z}{z^{n + 1}} \, \mathrm{d} z
+  \end{equation*}
+  Si usamos la circunferencia de radio \(R\) centrada en el origen,
+  tomando valores absolutos:
+  \begin{align*}
+    \frac{1}{n!}
+      &\le \frac{1}{2 \pi} \,
+	     \max_{\lvert z \rvert = R}
+	       \left\{
+		 \frac{\lvert \mathrm{e}^z \rvert}
+		      {\lvert z \rvert^{n + 1}}
+	       \right\}
+	     \cdot 2 \pi R \\
+      &=   \frac{\mathrm{e}^R}{R^n}
+  \end{align*}
+  Pero el valor de \(R\) es arbitrario,
+  podemos elegir aquel que minimice esta expresión,
+  que resulta ser \(R = n\),
+  dando la cota:
+  \begin{equation*}
+    \frac{1}{n!}
+      \le \left( \frac{\mathrm{e}}{n} \right)^n
+  \end{equation*}
+  Nada mal,
+  si se compara con la fórmula de Stirling~\eqref{eq:Stirling}.%
+    \index{Stirling, formula de@Stirling, fórmula de}
+
+  Si queremos mayor precisión,
+  debemos tratar la integral en forma más cuidadosa.
+  Hayman~\cite{hayman56:_generalization_Stirling}
+  desarrolló maquinaria poderosa para esta situación.
+  Seguimos la exposición de Wilf~\cite{wilf06:_gfology}.
+  En una circunferencia alrededor del origen
+  el módulo de una función con coeficientes reales no negativos
+  tiene un máximo marcado en el eje real positivo,
+  y es precisamente en ese caso que el método es más efectivo.
+  Y este es el caso de las funciones generatrices
+  de la combinatoria.
+  El método en realidad es aplicable siempre,
+  pero las técnicas basadas en singularidades
+  son más sencillas de aplicar.
+
+  Sea \(f(z)\) holomorfa en el disco \(\lvert z \rvert < R\),
+  donde \(0 < R \le \infty\),
+  y suponga que \(f(z)\) es \emph{admisible} para el método.
+  Las condiciones de admisibilidad son bastante complicadas,
+  veremos algunas condiciones suficientes más adelante.
+  En la práctica,
+  que \(f(z)\) sea admisible
+  significa simplemente que la técnica funciona.
+
+  Defina:
+  \begin{equation}
+    \label{eq:Hayman-M-definition}
+    M(r)
+      = \max_{\lvert z \rvert = r}
+	  \left\{ \lvert f(z) \rvert \right\}
+  \end{equation}
+  Una consecuencia de las condiciones de admisibilidad es que
+  para \(r\) suficientemente grande:
+  \begin{equation}
+    \label{eq:Hayman-M-value}
+    M(r)
+      = f(r)
+  \end{equation}
+  Esto porque,
+  como notamos arriba,
+  el método apunta a funciones que toman el valor máximo
+  en la dirección real positiva.
+  Defina funciones auxiliares:
+  \begin{align}
+    a(r)
+      &= r \frac{f'(r)}{f(r)}
+	 \label{eq:Hayman-a-definition} \\
+    b(r)
+      &= r a'(r)
+       = r \, \frac{f'(r)}{f(r)}
+	   + r^2 \, \frac{f''(r)}{f(r)}
+	   - r^2 \, \left( \frac{f'(r)}{f(r)} \right)^2
+	 \label{eq:Hayman-b-definition}
+  \end{align}
+  El resultado central es:
+  \begin{theorem}[Hayman]
+    \index{Hayman, teorema de}
+    \label{theo:Hayman}
+    Sea \(f(z) = \sum f_n z^n\) una función admisible.
+    Sea \(r_n\) el cero positivo de \(a(r_n) = n\)
+    para cada \(n \in \mathbb{N}\),
+    donde \(a(r)\) es la función~\eqref{eq:Hayman-a-definition}.
+    Entonces para \(n \rightarrow \infty\):
+    \begin{equation}
+      \label{eq:Hayman-asymptotic}
+      f_n
+	\sim \frac{f(r_n)}{r_n^n \sqrt{2 \pi b(r_n)}}
+    \end{equation}
+  \end{theorem}
+  La receta misma es de aplicación directa,
+  lo complicado es determinar si \(f(z)\) es admisible.
+
+  Continuemos con nuestro ejemplo \(\mathrm{e}^z\),
+  aceptando por ahora que es admisible.
+  Resultan:
+  \begin{equation*}
+    a(r)
+      = r
+    \qquad
+    b(r)
+      = r \mathrm{e}^r
+  \end{equation*}
+  con lo que \(r_n = n\).
+  La estimación de Hayman~\eqref{eq:Hayman-asymptotic} es:
+  \begin{equation*}
+    \frac{1}{n!}
+      \sim \frac{\mathrm{e}^n}{n^n \sqrt{2 \pi n}}
+  \end{equation*}
+  La fórmula de Stirling.%
+    \index{Stirling, formula de@Stirling, fórmula de}
+
+  Veamos las condiciones de admisibilidad.
+  En lo que sigue,
+  las funciones \(a\) y \(b\)
+  son las definidas
+  por las ecuaciones~\eqref{eq:Hayman-a-definition}
+  y~\eqref{eq:Hayman-b-definition},
+  respectivamente.
+  Sea \(f(z) = \sum_{n \ge 0} f_n z^n\)
+  holomorfa en \(\lvert z \rvert < R\),
+  donde \(0 < R \le \infty\).
+  Suponga que:
+  \begin{enumerate}[label=(\alph*)]
+  \item
+    Existe \(R_0 < R\) tal que para \(R_0 < r < R\) es \(f(r) > 0\)
+  \item
+    Hay una función \(\delta(r)\),
+    definida para \(R_0 < r < R\),
+    tal que \(0 < \delta(r) < \pi\) en ese rango,
+    y tal que cuando \(r \rightarrow R\),
+    uniformemente para \(\lvert \theta \rvert \le \delta(r)\),
+    tenemos:
+    \begin{equation*}
+      f(r \mathrm{e}^{\mathrm{i} \theta})
+	\sim f(r) \mathrm{e}^{\mathrm{i} \theta a(r)
+				- \frac{1}{2} \, \theta^2 b(r)}
+    \end{equation*}
+  \item
+    Uniformemente
+    para \(\delta(r) \le \lvert \theta \rvert \le \pi\)
+    tenemos cuando \(r \rightarrow R\):
+    \begin{equation*}
+      f(r \mathrm{e}^{\mathrm{i} \theta})
+	= \frac{o(f(r))}{\sqrt{b(r)}}
+    \end{equation*}
+  \end{enumerate}
+  Si esto se cumple,
+  \(f\) es admisible y el teorema~\ref{theo:Hayman}
+  da una estimación asintótica de los coeficientes.
+
+  Como puede verse,
+  las condiciones son complejas de verificar.
+  Hay teoremas que dan condiciones suficientes,
+  mucho más sencillas de manejar.
+  Para nuestra fortuna,
+  corresponden a operaciones comunes con funciones generatrices.%
+    \index{Hayman, metodo de@Hayman, método de!funciones admisibles}
+  \begin{enumerate}[label=(\Alph*), ref=(\Alph*)]
+  \item
+    \label{enum:Hayman-admisible-exp(f)}
+    Si \(f(z)\) es admisible,
+    lo es \(\mathrm{e}^{f(z)}\).
+  \item
+    \label{enum:Hayman-admisible-fg}
+    Si \(f(z)\) y \(g(z)\)
+    son admisibles para \(\lvert z \rvert < R\),
+    lo es \(f(z) g(z)\).
+  \item
+    \label{enum:Hayman-admisible-fp}
+    Sea \(f(z)\) admisible en \(\lvert z \rvert < R\).
+    Sea \(p(z)\) un polinomio con coeficientes reales
+    tal que \(p(R) > 0\) si \(R \ne \infty\),
+    o tal que el coeficiente de máximo grado
+    es positivo si \(R = \infty\).
+    Entonces \(f(z) p(z)\) es admisible en \(\lvert z \rvert < R\).
+  \item
+    \label{enum:Hayman-admisible-p(f)}
+    Sea \(p(z)\) un polinomio de coeficiente reales,
+    y sea \(f(z)\) admisible en \(\lvert z \rvert < R\).
+    Si \(f(z) + p(z)\) es admisible,
+    y el coeficiente de máximo grado de \(p\) es positivo,
+    entonces \(p(f(z))\) es admisible.
+  \item
+    \label{enum:Hayman-admisible-exp(p)}
+    Sea \(p(z)\) un polinomio no constante con coeficientes reales,
+    y sea \(f(z) = \mathrm{e}^{p(z)}\).
+    Si \(\left[ z^n \right] \mathrm{e}^{p(z)} > 0\)
+    para todo \(n\) suficientemente grande,
+    entonces \(f(z)\) es admisible en \(\mathbb{C}\).
+  \end{enumerate}
+  Como un ejemplo,
+  tomemos las involuciones,
+  con función generatriz exponencial~\eqref{eq:involution-egf}:
+  \begin{equation*}
+    \mathrm{e}^{z + z^2 / 2}
+  \end{equation*}
+  Es claro
+  que se cumplen las condiciones~\ref{enum:Hayman-admisible-exp(p)}.
+  Obtenemos:
+  \begin{equation*}
+    a(r)
+      = r + r^2
+    \qquad
+    b(r)
+      = r + 2 r^2
+  \end{equation*}
+  Tenemos una excelente aproximación para \(r_n\):
+  \begin{align*}
+    r_n
+      &= \sqrt{n + 1/4} - 1/2 \\
+      &= \sqrt{n}
+	   \left( 1 + \frac{1}{4 n} \right)^n - \frac{1}{2} \\
+      &= \sqrt{n}
+	   \left(
+	     1 + \frac{1}{8 n} - \frac{1}{128 n^2} + \dotsb
+	   \right)
+	   - \frac{1}{2} \\
+      &= \sqrt{n}
+	   - \frac{1}{2}
+	   + \frac{1}{8 n^{1/2}}
+	   - \frac{1}{128 n^{3/2}}
+	   + \dotsb
+  \end{align*}
+  Una revisión de la fórmula~\eqref{eq:Hayman-asymptotic} nos dice
+  que requerimos estimaciones
+  estilo \(\sim\) cuando \(n \rightarrow \infty\)
+  de las cantidades \(f(r_n)\), \(b(r_n)\) y \(r_n^n\).
+  Por turno:
+  \begin{equation*}
+    f(r_n)
+      = \mathrm{e}^{r_n + \frac{1}{2} r_n}
+      = \mathrm{e}^{\frac{1}{2} (r_n + n)}
+      = \mathrm{e}^{n/2} \mathrm{e}^{r_n / 2}
+  \end{equation*}
+  Pero:
+  \begin{align*}
+    \mathrm{e}^{r_n / 2}
+      = \exp \left(
+		\frac{\sqrt{n}}{2} - \frac{1}{4} + O(n^{-1/2}
+	      \right)
+      \sim \mathrm{e}^{\frac{1}{2} \sqrt{n} - \frac{1}{4}}
+  \end{align*}
+  En la lista sigue \(b(r_n)\):
+  \begin{equation*}
+    b(r_n)
+      = r_n + 2 r_n^2
+      \sim 2 (r_n^2 + r_n)
+      = 2 n
+  \end{equation*}
+  El último es el más complicado:
+  \begin{align*}
+    r_n^n
+      &= \left(
+	   \sqrt{n} - \frac{1}{2} + \frac{1}{8 \sqrt{n}} - \dotsb
+	 \right)^n \\
+      &= n^{n/2}
+	   \left(
+	     1 - \frac{1}{2 n^{1/2}} + \frac{1}{8 n} - \dotsb
+	   \right)^n
+  \end{align*}
+  Esta situación debe tratarse con cuidado,
+  a pesar de tender a 1 el paréntesis
+  la potencia no necesariamente tiende a 1.
+  La técnica general en estos casos es usar logaritmos
+  para calcular la potencia:
+  \begin{equation*}
+    \left(
+      1 - \frac{1}{2 n^{1/2}} + \frac{1}{8 n} - \dotsb
+    \right)^n
+      = \exp \left( n \ln \left(
+			    1 - \frac{1}{2 n^{1/2}}
+			      + \frac{1}{8 n}
+			      - \dotsb
+			  \right)
+	     \right)
+  \end{equation*}
+  Luego expandimos el logaritmo en serie,%
+    \index{serie de potencias!logaritmo}
+  hasta llegar a términos de orden \(o(n^{-1})\).
+  En nuestro caso:
+  \begin{align*}
+    \exp \left( n \ln \left(
+			1 - \frac{1}{2 n^{1/2}}
+			  + \frac{1}{8 n}
+			  - \dotsb
+		      \right)
+	 \right)
+      &= \exp \left(
+		n \left(
+		    \left(
+		      - \frac{1}{2 n^{1/2}} + \frac{1}{8 n}
+		    \right)
+		      - \frac{1}{2}
+			  \left(
+			    - \frac{1}{2 n^{1/2}} + \frac{1}{8 n}
+			  \right)^2
+		      + O(n^{-3/2})
+		     \right)
+		  \right) \\
+      &\sim \exp(- \sqrt{n} / 2)
+  \end{align*}
+  con lo que:
+  \begin{equation*}
+    r_n^n
+     \sim n^{n/2} \exp(- \sqrt{n} / 2)
+  \end{equation*}
+  Finalmente,
+  uniendo las distintas piezas:
+  \begin{equation*}
+    \frac{i_n}{n!}
+      \sim \frac{\mathrm{e}^{\frac{n}{2} + \sqrt{n} - \frac{1}{4}}}
+		{2 n^{n/2} \sqrt{\pi n}}
+  \end{equation*}
+  Mediante la fórmula de Stirling:%
+    \index{Stirling, formula de@Stirling, fórmula de}
+  \begin{equation}
+    \label{eq:ae:involutions}
+    i_n
+      \sim \frac{1}{\sqrt{2}} n^{n/2}
+	      \exp \left(
+		     - \frac{n}{2} + \sqrt{n} - \frac{1}{4}
+		   \right)
+  \end{equation}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

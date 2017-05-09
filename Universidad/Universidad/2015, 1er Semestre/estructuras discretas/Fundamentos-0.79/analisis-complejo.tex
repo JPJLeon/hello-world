@@ -1,0 +1,4188 @@
+% analisis-complejo.tex
+%
+% Copyright (c) 2013-2015 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Introducción al análisis complejo}
+\label{cha:analisis-complejo}
+\index{analisis complejo@análisis complejo|textbfhy}
+\index{analisis complejo@análisis complejo|seealso{\(\mathbb{C}\) (números complejos)}}
+
+  Nahin~\cite{nahin10:_imaginary_tale}
+  narra la larga y variada historia de los números complejos.
+  En forma similar al análisis con los reales
+  se puede desarrollar análisis en el ámbito complejo.
+  Muchos resultados son simples de obtener para los complejos,
+  y algunos fenómenos misteriosos en el análisis real
+  se explican al observar desde esta óptica.
+  La teoría tiene su propio encanto.
+
+  Algunas de nuestras maniobras
+  son en extremo engorrosas
+  usando solo las técnicas del análisis real.
+  Daremos acá los resultados más importantes del análisis complejo,
+  que ayuda enormemente al simplificar integrales definidas
+  y sumas.
+  Entrega además herramientas útiles
+  para construir aproximaciones asintóticas
+  a muchos valores de interés.
+  Textos introductorios más completos son por ejemplo los de
+  Ash y Novinger~\cite{ash07:_complex_variables},
+  Beck, Marchesi, Pixton y Sabalka~%
+    \cite{beck12:_first_course_compl_analysis},
+  Cain~\cite{cain01:_compl_analy}
+  y~Chen~\cite{chen08:_intro_complex_anal}.
+  Una visión detallada y bastante completa dan Stein y~Shakarchi~%
+    \cite{stein10:_compl_analy}.
+
+\section{Aritmética}
+\label{sec:aritmetica-complejos}
+\index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!operaciones}
+
+  Sean \(w = u + \mathrm{i} v\) y \(z = x + \mathrm{i} y\) complejos
+  (con la \emph{unidad imaginaria}\, \(\mathrm{i} = \sqrt{-1}\)%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!unidad imaginaria}
+   y \(u, v, x, y \in \mathbb{R}\) ).
+  La \emph{parte real} de \(z\) es \(\Re z = x\),%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!parte real}
+  la \emph{parte imaginaria} de \(z\) es \(\Im z = y\).%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!parte imaginaria}
+  La suma y multiplicación
+  se calculan como polinomios en \(\mathbb{R}\)
+  en la variable \(\mathrm{i}\),
+  para luego considerar \(\mathrm{i}^2 = -1\).
+  Vale decir:
+  \begin{align*}
+    w + z
+      &= (u + x) + \mathrm{i} (v + y) \\
+    w \cdot z
+      &= (u x - v y) + \mathrm{i} (v x + u y)
+  \end{align*}
+  Con estas operaciones los números complejos
+  son un campo,%
+    \index{campo (algebra)@campo (álgebra)}
+  que anotamos \(\mathbb{C}\).
+
+  Podemos identificar los complejos con parte imaginaria \(0\)
+  con los reales,
+  y representar el complejo \(z = x + \mathrm{i} y\)
+  por el punto \((x, y)\) del plano \(\mathbb{R}^2\).
+  A esta forma de representarlos
+  se le llama \emph{forma rectangular}%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!forma rectangular|see{\(\mathbb{C}\) (números complejos)!forma cartesiana}}
+  o \emph{forma cartesiana}.%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!forma cartesiana}
+  Llamamos \emph{eje real} al eje~\(X\)
+  y \emph{eje imaginario} al eje~\(Y\).
+  La suma de complejos
+  es simplemente la suma de los vectores correspondientes.
+  \begin{figure}[ht]
+    \centering
+    \subfloat[Suma]{
+      \pgfimage{images/complex-sum}
+      \label{subfig:complex-sum}
+    }%
+    \hspace*{3em}%
+    \subfloat[Producto]{
+      \pgfimage{images/complex-product}
+      \label{subfig:complex-product}
+    }
+    \caption{Operaciones entre complejos}
+    \label{fig:complex-operations}
+  \end{figure}
+  Vea la figura~\ref{subfig:complex-sum}.
+
+  Como alternativa a dar las coordenadas del vector,
+  podemos describirlo mediante su largo
+  y el ángulo que forma con el eje~\(X\).
+  Para \(z = x + \mathrm{i} y\)
+  el \emph{valor absoluto}
+  (también \emph{módulo}) \(r = \lvert z \rvert\) se define como:%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!modulo@módulo}
+  \begin{equation}
+    \label{eq:complex-modulus}
+    \lvert z \rvert
+      = \sqrt{x^2 + y^2}
+  \end{equation}
+  Un \emph{argumento} de \(z\),%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!argumento}
+  anotado \(\arg z\),
+  es un número real \(\phi\) tal que
+  \begin{equation}
+    \label{eq:complex-argument}
+    x = r \cos \phi \qquad y = r \sin \phi
+  \end{equation}
+  Nótese que todo número complejo tiene infinitos argumentos.
+  En el caso excepcional \(z = 0\)
+  el módulo es \(0\) y cualquier ángulo sirve de argumento.
+  En caso \(z \ne 0\)
+  vemos que si \(\phi\) es un argumento de \(z\),
+  también lo es \(\phi + 2 \pi k\),
+  para todo \(k \in \mathbb{Z}\).
+  La representación del número complejo como módulo y argumento
+  se conoce como \emph{representación polar}.%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!forma polar}
+  El \emph{valor principal} del argumento se anota \(\Arg z\),%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!valor principal}
+  es el ángulo restringido al rango \(-\pi < \phi \le \pi\).
+  A veces resulta útil restringir el ángulo a otro rango,
+  usaremos \(\arg_\alpha z\)
+  para el ángulo en el rango \(\alpha \le \arg_\alpha z < \alpha + 2 \pi\).
+
+  La representación polar
+  da una bonita interpretación de la multiplicación.
+  Sean números complejos \(z_1 = x_1 + \mathrm{i} y_1\)
+  y \(z_2 = x_2 + \mathrm{i} y_2\),
+  respectivamente con módulos \(r_1\) y \(r_2\)
+  y argumentos \(\phi_1\) y \(\phi_2\).
+  Entonces:
+  \begin{align*}
+    (x_1 + \mathrm{i} y_1) \cdot (x_2 + \mathrm{i} y_2)
+      &= (r_1 \cos \phi_1 + \mathrm{i} r_1 \sin \phi_1)
+	   \cdot (r_2 \cos \phi_2 + \mathrm{i} r_2 \sin \phi_2) \\
+      &= r_1 r_2
+	   \left(
+	     (\cos \phi_1 \cos \phi_2 - \sin \phi_1 \sin \phi_2)
+	       + \mathrm{i}
+		   (\sin \phi_1 \cos \phi_2 + \cos \phi_1 \sin \phi_2)
+	   \right) \\
+      &= r_1 r_2 (\cos (\phi_1 + \phi_2)
+		    + \mathrm{i} \, \sin(\phi_1 + \phi_2))
+  \end{align*}
+  Vea la figura~\ref{subfig:complex-product} para un ejemplo.
+
+  Deberemos manipular expresiones de la forma
+    \(\cos \phi + \mathrm{i} \, \sin \phi\)
+  con bastante frecuencia,
+  rindiéndonos a la flojera
+  (con la excusa de ahorrar papel,
+   tinta,
+   etc.)
+  escribimos:
+  \begin{equation}
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!exponencial}
+    \label{eq:imaginary-exponential}
+    \exp(\mathrm{i} \, \phi)
+      = \mathrm{e}^{\mathrm{i} \, \phi}
+      = \cos \phi + \mathrm{i} \, \sin \phi
+  \end{equation}
+  Por ahora~\eqref{eq:imaginary-exponential}
+  es simplemente una abreviatura cómoda,
+  más adelante demostraremos que es consistente
+  con la función exponencial
+  del cálculo real.
+  También es común la notación:
+  \begin{equation*}
+    \operatorname{cis} \phi
+      = \cos \phi + \mathrm{i} \, \sin \phi
+  \end{equation*}
+
+  El siguiente lema recoge algunas propiedades salientes,
+  alentamos al lector interesado demostrarlas.
+  \begin{lemma}
+    \label{lem:imaginary-exponential}
+    Para cualquier \(\phi, \phi_1, \phi_2 \in \mathbb{R}\)
+    y todo \(k \in \mathbb{Z}\):
+    \begin{enumerate}[label=(\roman*), ref=(\roman*)]
+    \item
+      \(\lvert \mathrm{e}^{\mathrm{i} \, \phi} \rvert
+	  = 1\)
+    \item
+      \(\mathrm{e}^{\mathrm{i} \, \phi_1}
+	\mathrm{e}^{\mathrm{i} \, \phi_2}
+	  = \mathrm{e}^{\mathrm{i} (\phi_1 + \phi_2)}\)
+    \item
+      \(1 / \mathrm{e}^{\mathrm{i} \, \phi}
+	  = \mathrm{e}^{- \mathrm{i} \, \phi}\)
+    \item
+      \(\mathrm{e}^{\mathrm{i} (\phi + 2 k \pi)}
+	  = \mathrm{e}^{\mathrm{i} \, \phi}\)
+    \end{enumerate}
+  \end{lemma}
+  Con esta notación,
+  el número complejo de módulo \(r\) y argumento \(\phi\)
+  puede escribirse:
+  \begin{equation}
+    \label{eq:complex-exponential-notation}
+    x + \mathrm{i} y
+      = r \mathrm{e}^{\mathrm{i} \, \phi}
+  \end{equation}
+
+  El cuadrado del valor absoluto de \(z\) tiene la bonita propiedad:
+  \begin{equation}
+    \label{eq:complex-modulus-conjugates}
+    \lvert z \rvert^2
+      = x^2 + y^2
+      = (x + \mathrm{i} y) \cdot (x - \mathrm{i} y)
+  \end{equation}
+  Esto hace útil la operación de \emph{conjugado}:%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!conjugado}
+  \begin{equation}
+    \label{eq:complex-conjugate}
+    \overline{x + \mathrm{i} y}
+      = x - \mathrm{i} y
+  \end{equation}
+  En el plano cartesiano
+  corresponde a reflejar el vector en el eje~\(X\).
+  Tenemos algunas propiedades,
+  que nuevamente animamos a demostrar.
+  \begin{lemma}
+    \label{lem:complex-conjugate}
+    Para todo \(z, z_1, z_2 \in \mathbb{C}\),
+    y para todo \(\phi \in \mathbb{R}\):
+    \begin{enumerate}[label=(\roman*), ref=(\roman*)]
+    \item
+      \(\overline{z_1 \pm z_2} = \overline{z_1} \pm \overline{z_2}\)
+    \item
+      \(\overline{z_1 \cdot z_2}
+	   = \overline{z_1} \cdot \overline{z_2}\)
+    \item
+      \(\overline{z_1 / z_2} = \overline{z_1} / \overline{z_2}\)
+    \item
+      \(\overline{\overline{z}} = z\)
+    \item
+      \(\lvert \overline{z} \rvert = \lvert z \rvert\)
+    \item
+      \label{lem:complex-conjugate:part-f}
+      \(\lvert z \rvert^2 = z \overline{z}\)
+    \item
+      \(\Re z = \frac{1}{2} \, ( z + \overline{z})\)
+      \qquad
+      \(\Im z = \frac{1}{2 \mathrm{i}} \, ( z - \overline{z})\)
+    \item
+      \(\overline{\mathrm{e}^{\mathrm{i} \, \phi}}
+	  = \mathrm{e}^{- \mathrm{i} \, \phi}\)
+    \end{enumerate}
+  \end{lemma}
+  La parte~\ref{lem:complex-conjugate:part-f}
+  del lema~\ref{lem:complex-conjugate}
+  da una fórmula limpia para el recíproco de un complejo no cero:
+  \begin{equation}
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!reciproco@recíproco}
+    \label{eq:complex-inverse}
+    \frac{1}{z}
+      = \frac{\overline{z}}{\lvert z \rvert^2}
+  \end{equation}
+
+\section{Un poquito de topología del plano}
+\label{sec:topologia}
+\index{topologia@topología}
+
+  Al considerar funciones en \(\mathbb{R}\)
+  la situación es bastante simple,
+  basta hablar de intervalos.
+  Incluso en \(\mathbb{R}^n\)
+  el tratamiento puede seguir esencialmente
+  variable a variable
+  y restringirse a intervalos adecuados.
+  En \(\mathbb{C}\) esto no es satisfactorio,
+  áreas del plano
+  pueden tener relaciones mucho más complicadas entre sí
+  que los simples intervalos.
+  Las definiciones siguientes
+  serán usadas con mucha frecuencia en lo que sigue,
+  es importante familiarizarse con ellas.
+
+  Requeriremos alguna terminología
+  para tratar con subconjuntos de \(\mathbb{C}\).
+  Si \(w, z \in \mathbb{C}\),
+  entonces \(\lvert z - w \rvert\) es la distancia en el plano
+  entre esos puntos.
+  Si fijamos un número complejo \(a\) y un real positivo \(r\),
+  el conjunto \(\lvert z - a \rvert = r\)
+  es la circunferencia de radio \(r\) alrededor de \(a\).
+  Al interior del círculo
+  se le llama el \emph{disco abierto} de radio \(r\)%
+    \index{disco abierto}
+  alrededor de \(a\),
+  que anotaremos \(D_r(a)\).
+  Más precisamente,
+  \(D_r(a) = \{z \in \mathbb{C} \colon \lvert z - a \rvert < r\}\).
+  Nótese que esto no incluye la circunferencia.
+
+  \begin{definition}
+    Sea \(E\) un subconjunto cualquiera de \(\mathbb{C}\).
+    \begin{enumerate}[label=(\roman*), ref=(\roman*)]
+    \item
+      \index{punto interior}
+      Un punto \(a\) es un \emph{punto interior} de \(E\)
+      si hay algún disco abierto \(D_r(a)\)
+      que está completamente en \(E\)
+    \item
+      \index{punto frontera}
+      Un punto \(b\) es un \emph{punto frontera} de \(E\)
+      si todo disco abierto \(D_r(b)\) contiene un punto de \(E\)
+      y un punto que no pertenece a \(E\).
+    \item
+      \index{punto de acumulacion@punto de acumulación}
+      Un punto \(c\) es un \emph{punto de acumulación} de \(E\)
+      si todo disco abierto \(D_r(c)\) contiene un punto de \(E\)
+      diferente de \(c\)
+    \item
+      \index{punto aislado}
+      Un punto \(d\) es un \emph{punto aislado}	 de \(E\)
+      si pertenece a \(E\) y algún disco abierto \(D_r(d)\)
+      no contiene ningún punto de \(E\) excepto \(d\)
+    \end{enumerate}
+  \end{definition}
+  En lo anterior \(a\) pertenece a \(E\),
+  pero \(b\) y \(c\) no necesariamente pertenecen a \(E\).
+  Desde un punto interior
+  podemos movernos un poco en cualquier dirección
+  sin salir de \(E\),
+  de un punto frontera moviéndonos un poco quedamos dentro de \(E\),
+  pero otros movimientos arbitrariamente pequeños
+  nos dejan al exterior.
+  Como el nombre indica,
+  un punto aislado está desconectado del resto del conjunto,
+  hay un entorno de él que no contiene otros puntos del conjunto.
+  \begin{definition}
+    \index{conjunto!abierto|see{topología}}
+    \index{conjunto!cerrado|see{topología}}
+    Un conjunto es \emph{abierto} si todos sus puntos son internos,
+    y es \emph{cerrado} si incluye todos sus puntos frontera.
+  \end{definition}
+  Como	ejemplos,
+  para \(r > 0\) y \(z_0 \in \mathbb{C}\)
+  los conjuntos
+    \(\{z \in \mathbb{C} \colon \lvert z - z_0 \rvert < r\}\),
+  \(\{z \in \mathbb{C} \colon \lvert z - z_0 \rvert > r\}\)
+  y \(\{x + \mathrm{i} y \in \mathbb{C} \colon -1 < x < 1\}\)
+  son abiertos.
+  El conjunto
+    \(\{ x + \mathrm{i} y \in \mathbb{C}
+	   \colon -1 \le x \le 1 \wedge -5 \le y \le 5\}\)
+  es cerrado.
+  Los conjuntos \(\varnothing\) y \(\mathbb{C}\) son abiertos,
+  pero también son cerrados
+  (no tienen puntos frontera,
+   con lo que vacuamente incluyen sus fronteras).
+  El conjunto
+    \(\{ x + \mathrm{i} y \colon 0 \le x \le 1 \wedge 0 < y < 1 \}\)
+  no es abierto ni cerrado.
+  \begin{definition}
+    La \emph{frontera} de \(E\),%
+      \index{frontera|see{topología}}
+    anotada \(\partial E\),
+    es el conjunto de los puntos frontera de \(E\).
+    La \emph{clausura} de \(E\),%
+      \index{clausura|see{topología}}
+    anotada \(\overline{E}\),
+    es el conjunto \(E\) junto con su frontera.
+  \end{definition}
+  Para el disco abierto
+    \(D_r(z_0)
+	= \{ z \in \mathbb{C} \colon\lvert z - z_0 \rvert < r \}\)
+  la frontera es
+    \(\partial D_r(z_0)
+	= \{ z \in \mathbb{C} \colon \lvert z - z_0 \rvert = r \}\),
+  y su clausura es
+    \(\overline{D}_r(z_0)
+	= \{ z \in \mathbb{C}
+	     \colon \lvert z - z_0 \rvert \le r \}\).
+  Un tema un tanto sutil en los complejos
+  es la idea de \emph{conectividad}.%
+      \index{conectividad|see{topología}}
+  Intuitivamente,
+  un conjunto es conexo si es ``una sola pieza''.
+  En los reales un conjunto es conexo
+  exactamente si es un único intervalo,
+  lo que no tiene mucho interés.
+  En un plano hay gran variedad de conjuntos conexos,
+  y se requiere una definición precisa.
+  \begin{definition}
+    Dos conjuntos \(X, Y \subseteq \mathbb{C}\)
+    se dicen \emph{separados}
+    si hay conjuntos abiertos \(A\) y \(B\) disjuntos
+    tales que \(X \subseteq A\) y \(Y \subseteq B\).
+    El conjunto \(D \subseteq \mathbb{C}\) es \emph{conexo}
+    si es imposible hallar conjuntos abiertos disjuntos
+    tales que \(D\) es su unión.
+    Una \emph{región} es un conjunto conexo abierto.
+  \end{definition}
+  Por ejemplo,
+  los intervalos \([0, 1)\) y \((1, 2]\) en el eje real
+  están separados
+  (hay infinitas posibilidades para \(X\) e \(Y\) de la definición,
+   por ejemplo \(X = D_1(0)\) e \(Y = D_1(2)\)).
+
+  Un tipo de conjunto conexo
+  que usaremos con frecuencia es la curva.
+  \begin{definition}
+    \index{camino|see{topología}}
+    \index{curva|see{topología}}
+    Un \emph{camino} o \emph{curva} en \(\mathbb{C}\)
+    es la imagen de una función continua
+      \(\gamma \colon [a, b] \rightarrow \mathbb{C}\),
+    donde \([a, b]\) es un intervalo cerrado en \(\mathbb{R}\).
+    Acá la continuidad
+    se refiere a que \(t \mapsto x(t) + \mathrm{i} y(t)\),
+    y que tanto \(x\) como \(y\) son continuas.
+    La curva se dice \emph{suave}
+    si ambas componentes son diferenciables.
+  \end{definition}
+  Decimos que la curva está \emph{parametrizada} por \(\gamma\),
+  y en un abuso común de la notación usaremos \(\gamma\)
+  para referirnos a la curva.
+  La curva se dice \emph{cerrada} si \(\gamma(a) = \gamma(b)\),
+  y es una \emph{curva simple cerrada} si \(\gamma(a) = \gamma(b)\)%
+    \index{curva simple cerrada}
+  y \(\gamma(s) = \gamma(t)\) solo si \(s = t\),
+  \(s = a\) y \(t = b\),
+  o \(s = b\) y \(t = a\).
+  Vale decir,
+  la curva no se intersecta a sí misma,
+  solo coinciden los puntos inicial y final.
+
+  Lo siguiente es intuitivamente obvio,
+  pero requiere ahondar bastante para demostrarse:
+  \begin{theorem}
+    \label{theo:curve=connected}
+    Toda curva en \(\mathbb{C}\) es conexa.
+  \end{theorem}
+  Es claro que \(\gamma \colon [0, 1] \rightarrow \mathbb{C}\)
+  con \(\gamma(t) = z_0 + t (z_1 - z_0)\)
+  define un segmento de una recta en \(\mathbb{C}\)
+  que va de \(z_0\) a \(z_1\).
+  Al segmento de la recta \(z_0 z_1\) así parametrizada
+  la anotaremos \([z_0, z_1]\).
+  Podemos definir una curva formada
+  por los segmentos \(z_0 z_1\),
+  \(z_1 z_2\),
+  \ldots,
+  \(z_{n - 1} z_n\),
+  que anotaremos \([z_0, z_1, \dotsc, z_n]\).
+  A tales curvas las llamaremos \emph{poligonales}.
+  La parametrización quedará a cargo del amable lector.
+  Un teorema intuitivamente obvio,
+  pero cuya demostración tiene sus sutilezas,
+  es el siguiente:
+  \begin{theorem}
+    \label{theo:connected=curve-inside}
+    Si \(D\) es un subconjunto de \(\mathbb{C}\)
+    tal que cualquier par de puntos en \(D\)
+    pueden conectarse mediante una curva en \(D\)
+    entonces \(D\) es conexo.
+    Por el otro lado,
+    si \(D\) es un subconjunto abierto conexo de \(\mathbb{C}\)
+    entonces cualquier par de puntos de \(D\)
+    pueden conectarse mediante una curva en \(D\),
+    incluso es posible conectarlos mediante una curva poligonal.
+  \end{theorem}
+  Un teorema central,
+  bastante difícil de demostrar en su generalidad
+  (ver Jordan~%
+    \cite[páginas~587-594]{jordan87:_cours_analyse}
+   para la demostración original)
+  es el siguiente:
+  \begin{theorem}[Jordan]
+    \label{theo:Jordan}
+    \index{Jordan, teorema de}
+    Sea \(\gamma\) una curva suave simple cerrada.
+    Entonces el complemento de \(\gamma\)
+    consiste exactamente de dos componentes conexos.
+    Uno de estos componentes es acotado
+    (el \emph{interior} de \(\gamma\)),
+    el otro no es acotado
+    (el \emph{exterior} de \(\gamma\)).
+  \end{theorem}
+  Por este teorema comúnmente se les llama \emph{curvas de Jordan}%
+    \index{Jordan, curva de|see{curva simple cerrada}}
+  a las curvas simples cerradas.
+
+\section{Límites y derivadas}
+\label{sec:limites-derivadas}
+
+  Si \(z\) es una variable compleja,
+  y \(f(z)\) alguna función de la misma,
+  el límite se define igual que en los reales.%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!limite@límite}
+  Decimos que
+  \begin{equation*}
+    \lim_{z \rightarrow z_0} f(z) = \omega
+  \end{equation*}
+  si para todo \(\epsilon > 0\) existe \(\delta > 0\) tal que:
+  \begin{equation}
+    \label{eq:complex-limit}
+    0 < \lvert z - z_0 \rvert < \delta
+      \implies \lvert f(z) - \omega \rvert < \epsilon
+  \end{equation}
+  Formalmente es idéntica a la definición para los reales,
+  pero debe tenerse presente
+  que acá \(\lvert z - z_0 \rvert < \delta\)
+  representa un círculo alrededor de \(z_0\).
+  Esto suele describirse diciendo que el límite debe ser el mismo,
+  independiente del camino que siga \(z = x + \mathrm{i} y\)
+  para acercarse a \(z_0 = x_0 + \mathrm{i} y_0\).
+  Definimos que \(f(z)\) es \emph{continua} en \(z_0\) si
+  \begin{equation*}
+    \lim_{z \rightarrow z_0} f(z)
+      = f(z_0)
+  \end{equation*}
+  Si \(f\) es continua en todos los puntos en que está definida
+  decimos simplemente que es continua.
+  Si \(z = x + \mathrm{i} y\),
+  \(z_0 = x_0 + \mathrm{i} y_0\)
+  y \(f(z) = u(x, y) + \mathrm{i} v(x, y)\)
+  (como por ejemplo \(f(z) = z^2 = x^2 - y^2 + 2 x y \mathrm{i}\)) ,
+  es fácil ver que \(f(z)\) es continua si y solo si
+  lo son \(u(x, y)\) y \(v(x, y)\).
+  \begin{lemma}
+    \label{lem:complex-limits}
+    Si \(\lim_{z \rightarrow z_0} f(z)\)
+    y \(\lim_{z \rightarrow z_0} g(z)\)
+    existen,
+    tenemos las siguientes propiedades de los límites:
+    \begin{enumerate}[label=(\roman*), ref=(\roman*)]
+    \item
+      \(\displaystyle \lim_{z \rightarrow z_0} c f(z)
+	= c \lim_{z \rightarrow z_0} f(z)\)
+    \item
+      \(\displaystyle \lim_{z \rightarrow z_0} (f(z) + g(z))
+	= \lim_{z \rightarrow z_0} f(z)
+	    + \lim_{z \rightarrow z_0} g(z)\)
+    \item
+      \(\displaystyle \lim_{z \rightarrow z_0} (f(z) \cdot g(z))
+	= \lim_{z \rightarrow z_0} f(z)
+	    \cdot \lim_{z \rightarrow z_0} g(z)\)
+    \item
+      Siempre que \(\lim_{z \rightarrow z_0} g(z) \ne 0\)
+      es:\\[0.3ex]
+      \(\displaystyle \lim_{z \rightarrow z_0} \frac{f(z)}{g(z)}
+	= \frac{\lim_{z \rightarrow z_0} f(z)}
+	       {\lim_{z \rightarrow z_0} g(z)}\)
+    \end{enumerate}
+  \end{lemma}
+  La demostración es simple,
+  y quedará de ejercicio.
+  De acá es inmediato que la suma, diferencia, producto y cociente
+  de funciones continuas son continuas
+  (siempre que no tengamos un denominador cero,
+   claro está).
+
+  Dada una función compleja \(f(z)\)
+  definimos su \emph{derivada} en \(z = z_0\)%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!derivada}
+  como el siguiente límite,
+  si existe:
+  \begin{equation}
+    \label{eq:complex-derivative}
+    f'(z_0)
+      = \lim_{h \rightarrow 0} \frac{f(z_0 + h) - f(z_0)}{h}
+  \end{equation}
+  Una notación alternativa común es:
+  \begin{equation*}
+    \frac{\mathrm{d} f}{\mathrm{d} z}
+      = f'(z)
+  \end{equation*}
+  La condición que el límite sea el mismo,
+  independiente del camino seguido por \(h\)
+  para aproximarse a cero,
+  hace que para
+    \(f(x + \mathrm{i} y) = u(x, y) + \mathrm{i} v(x, y)\)
+  con \(\Delta x\) y \(\Delta y\) reales deba ser:
+  \begin{align}
+    \lim_{\Delta x \rightarrow 0}
+       \frac{f(z_0 + \Delta x) - f(z_0)}{\Delta x}
+      &= \lim_{\Delta y \rightarrow 0}
+	   \frac{f(z_0 + \mathrm{i} \, \Delta y) - f(z_0)}
+		{\mathrm{i} \, \Delta y}
+	     \notag \\
+    \frac{\partial u}{\partial x}
+      + \mathrm{i} \, \frac{\partial v}{\partial x}
+      &= - \mathrm{i} \, \frac{\partial u}{\partial y}
+	     + \frac{\partial v}{\partial y}
+	     \label{eq:complex-derivative-uv}
+  \end{align}
+  Las expresiones~\eqref{eq:complex-derivative-uv}
+  expresan la derivada compleja en términos de las coordenadas.
+
+  Igualando partes reales y complejas,
+  resultan las \emph{ecuaciones de Cauchy-Riemann}:
+  \begin{equation}
+    \label{eq:Cauchy-Riemann}
+    \index{Cauchy-Riemann, ecuaciones de|textbfhy}
+    \begin{split}
+      \frac{\partial u}{\partial x}
+	&= \frac{\partial v}{\partial y} \\
+      \frac{\partial u}{\partial y}
+	&= - \frac{\partial v}{\partial x}
+    \end{split}
+  \end{equation}
+  Esto ya demuestra que hay condiciones fuertes
+  para que una función tenga derivada en un punto.
+  Resulta que las ecuaciones~\eqref{eq:Cauchy-Riemann}
+  junto con continuidad de las derivadas
+  son condiciones necesarias y suficientes
+  para que \(f(x + \mathrm{i} y) = u(x, y) + \mathrm{i} v(x, y)\)
+  tenga derivada en \(z_0 = x_0 + \mathrm{i} y_0\).
+
+  Si la función \(f\) tiene derivada en \(z_0\),
+  se dice que es \emph{diferenciable} en \(z_0\).
+  A una función diferenciable en todo punto en una región abierta
+  se le llama \emph{holomorfa}%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!funcion holomorfa@función holomorfa|textbfhy}
+  (mucha literatura erróneamente se refiere a ellas
+   como \emph{funciones analíticas},
+   un concepto relacionado).
+  Una función holomorfa sobre todo \(\mathbb{C}\)
+  se llama \emph{entera}.%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!funcion entera@función entera|textbfhy}
+
+  Las siguientes propiedades de la derivada
+  se demuestran básicamente
+  cambiando \(x\) por \(z\)
+  en las demostraciones respectivas para los reales:
+  \begin{lemma}
+    \label{lem:complex-derivative-rules}
+    Sean \(f\) y \(g\) diferenciables en \(z \in \mathbb{C}\),
+    sea \(c \in \mathbb{C}\),
+    sea \(n \in \mathbb{Z}\),
+    y sea \(h\) diferenciable en \(g(z)\).
+    Entonces:
+    \begin{enumerate}[label=(\roman*), ref=(\roman*)]
+    \item
+      \((c f(z))'
+	  = c f'(z)\)
+    \item
+      \((f(z) + g(z))'
+	  = f'(z) + g'(z)\)
+    \item
+      \((f(z) \cdot g(z))'
+	  = f'(z) \cdot g(z) + f(z) \cdot g'(z)\)
+    \item
+      Siempre que \(g(z) \ne 0\) es
+      \((f(z) / g(z))'
+	  = (f'(z) \cdot g(z) - f(z) \cdot g'(z)) / g^2 (z)\)
+    \item
+      \((z^n)'
+	  = n z^{n - 1}\)
+    \item
+      \((h(g(z)))'
+	  = h'(g(z)) \cdot g'(z)\)
+    \end{enumerate}
+  \end{lemma}
+  Un último resultado se refiere a funciones inversas.
+  \begin{lemma}
+    \label{lem:complex-derivative-inverse}
+    Sean \(G\) y \(H\) conjuntos abiertos en \(\mathbb{C}\),
+    \(f \colon G \rightarrow H\) una biyección
+    con inversa \(g \colon H \rightarrow G\),
+    y sea \(z_0 \in H\).
+    Si \(f\) es diferenciable en \(g(z_0)\)
+    con \(f'(g(z_0)) \ne 0\),
+    y \(g\) es continua en \(z_0\),
+    entonces \(g\) es diferenciable en \(z_0\),
+    y:
+    \begin{equation*}
+      g'(z_0)
+	= \frac{1}{f'(g(z_0))}
+    \end{equation*}
+  \end{lemma}
+  \begin{proof}
+    Por definición:
+    \begin{equation*}
+      g'(z_0)
+	= \lim_{z \rightarrow z_0} \frac{g(z) - g(z_0)}{z - z_0}
+	= \lim_{z \rightarrow z_0}
+	    \frac{g(z) - g(z_0)}{f(g(z)) - f(g(z_0))}
+	= \lim_{z \rightarrow z_0}
+	    \frac{1}{\frac{f(g(z)) - f(g(z_0))}{g(z) - g(z_0)}}
+    \end{equation*}
+    Dado que \(g\) es continua en \(z_0\),
+    \(g(z) \rightarrow g(z_0)\) cuando \(z \rightarrow z_0\),
+    lo que da:
+    \begin{equation*}
+      g'(z_0)
+	= \lim_{w \rightarrow g(z_0)}
+	    \frac{1}{\frac{f(w) - f(g(z_0))}{w - g(z_0)}}
+    \end{equation*}
+    El denominador es continuo y diferente de cero,
+    por el lema~\ref{lem:complex-limits} tenemos lo prometido.
+  \end{proof}
+  Un resultado importante es:
+  \begin{theorem}
+    \label{theo:complex-zero-derivative}
+    Si \(f'(z) = 0\) para todo \(z\) en una región \(D\),
+    entonces \(f(z)\) es constante en \(D\).
+  \end{theorem}
+  Elegimos un punto fijo \(z_0 \in D\),
+  y conectaremos un punto arbitrario \(z \in D\) con \(z_0\)
+  mediante una poligonal,
+  y demostraremos que \(f\) es constante sobre esa poligonal.
+  Como \(z\) es arbitrario,
+  \(f\) es constante en \(D\).
+  \begin{proof}
+    Sean \(z_0, z \in D\).
+    Por el teorema~\ref{theo:connected=curve-inside}
+    hay una poligonal \([z_0, z_1, \dotsc, z]\) en \(D\)
+    que los conecta.
+    Sea \(f(z) = u + \mathrm{i} v\),
+    si \(f'(z) = 0\) de las ecuaciones de Cauchy-Riemann
+    es:
+    \begin{equation*}
+      \frac{\partial u}{\partial x}
+	= \frac{\partial u}{\partial y}
+	= \frac{\partial v}{\partial x}
+	= \frac{\partial v}{\partial y}
+	= 0
+    \end{equation*}
+    Considerando uno de los tramos,
+    digamos \([z_k, z_{k + 1}]\)
+    vemos que esta recta
+    queda descrita por una parametrización de la forma
+    \(z_k + (t - t_k) (z_{k + 1} - z_k) / (t_{k + 1} - t_k)
+       = \alpha t + \beta\).
+    Resulta que la derivada de \(f\) respecto a \(t\)
+    a lo largo de \([z_k, z_{k + 1}]\)
+    se anula:
+    \begin{equation*}
+      \frac{f(\alpha (t + h) + \beta)
+	     - f(\alpha t + \beta)}
+	   {h}
+	= \frac{\partial u}{\partial x}
+	     \frac{\mathrm{d} x}{\mathrm{d} t}
+	     + \mathrm{i} \,
+		 \frac{\partial v}{\partial x}
+		 \frac{\mathrm{d} y}{\mathrm{d} t}
+	= 0
+    \end{equation*}
+    Acá usamos la fórmula~\eqref{eq:complex-derivative-uv}
+    para la derivada compleja.
+    Podemos aplicar el teorema del valor medio para funciones reales
+    (componente a componente)
+    a \(f\) como función de \(t\).
+    Como la derivada se anula,
+    esto nos dice que no hay cambios:
+    \begin{equation*}
+      f(z_{k + 1}) - f(z_k)
+	= 0
+    \end{equation*}
+    Esto es lo que queríamos demostrar.
+  \end{proof}
+
+\section{Funciones elementales}
+\label{sec:complex-elementary-functions}
+\index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!funciones elementales}
+
+  Es claro que los polinomios son funciones enteras,
+  y si se restringen a argumentos reales
+  son simplemente las funciones conocidas.
+  Un poquito más delicado es el caso de funciones racionales,
+  como:
+  \begin{equation*}
+    \frac{z^3 - 3 z + 2}{z^2 + 1}
+  \end{equation*}
+  Esta función es holomorfa
+  salvo en los puntos \(z = \pm \mathrm{i}\),
+  donde el denominador se anula.
+  Como función real es continua y tiene derivada en todas partes.
+
+  Veamos la función exponencial.
+  Parece razonable extender la propiedad básica
+    \(\mathrm{e}^{x_1} \cdot \mathrm{e}^{x_2}
+	= \mathrm{e}^{x_1 + x_2}\)
+  a argumentos complejos,
+  lo que para \(x, y \in \mathbb{R}\) da:
+  \begin{equation*}
+    \mathrm{e}^{x + \mathrm{i} y}
+      = \mathrm{e}^x \cdot \mathrm{e}^{\mathrm{i} y}
+  \end{equation*}
+  Esto,
+  con la convención~\eqref{eq:imaginary-exponential},
+  resulta en:
+  \begin{definition}
+    Para \(x, y \in \mathbb{R}\) definimos:
+    \begin{equation}
+      \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!exponencial|textbfhy}
+      \label{eq:complex-exponential}
+      \mathrm{e}^{x + \mathrm{i} y}
+	= \mathrm{e}^x ( \cos y + \mathrm{i} \, \sin y )
+    \end{equation}
+  \end{definition}
+  Escribiendo:
+  \begin{equation*}
+    \mathrm{e}^z
+      = u(x, y) + \mathrm{i} v(x, y)
+  \end{equation*}
+  vemos que se satisfacen
+  las ecuaciones de Cauchy-Riemann~\eqref{eq:Cauchy-Riemann}%
+    \index{Cauchy-Riemann, ecuaciones de}
+  y que las derivadas son continuas para todo \(z \in \mathbb{C}\).
+  Esta función es entera.
+  Vemos también que:
+  \begin{equation}
+    \label{eq:complex-exponential-derivative}
+    \frac{\mathrm{d}}{\mathrm{d} z} \mathrm{e}^z
+      = \frac{\partial u}{\partial x}
+	  + \mathrm{i} \, \frac{\partial v}{\partial x}
+      = \mathrm{e}^x \cos y + \mathrm{i} \, \mathrm{e}^x \sin y
+      = \mathrm{e}^z
+  \end{equation}
+  Ya vimos que
+    \(\mathrm{e}^{\mathrm{i} y_1} \cdot \mathrm{e}^{\mathrm{i} y_2}
+	= \mathrm{e}^{\mathrm{i} (y_1 + y_2)}\),
+  y
+    \(\mathrm{e}^{x_1} \cdot \mathrm{e}^{x_2}
+	= \mathrm{e}^{x_1 + x_2}\),
+  que en conjunto hacen que
+    \(\mathrm{e}^{z_1} \cdot \mathrm{e}^{z_2}
+	= \mathrm{e}^{z_1 + z_2}\),
+  como buscábamos.
+  Notamos que:
+  \begin{equation}
+    \label{eq:complex-exponential-modulus}
+    \left\lvert \mathrm{e}^z \right\rvert
+      = \left\lvert \mathrm{e}^x \right\rvert \cdot
+	  \left\lvert \cos y + \mathrm{i} \, \sin y \right\rvert
+      = \left\lvert \mathrm{e}^x \right\rvert \cdot
+	  \left( \cos^2 y + \sin^2 y \right)^{1/2}
+      = \mathrm{e}^x
+  \end{equation}
+  Como \(\mathrm{e}^x\) nunca se anula para \(x \in \mathbb{R}\),
+  y \(\cos y\) y \(\sin y\) no se anulan juntas,
+  \(\mathrm{e}^z \ne 0\) para todo \(z \in \mathbb{C}\).
+
+  En nuestra lista siguen las funciones trigonométricas.%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!funciones trigonometricas@funciones trigonométricas}
+  La convención~\eqref{eq:imaginary-exponential}
+  para \(\pm \phi\) da:
+  \begin{equation*}
+    \mathrm{e}^{\mathrm{i} \, \phi}
+      = \cos \phi + \mathrm{i} \, \sin \phi
+    \qquad
+    \mathrm{e}^{- \mathrm{i} \, \phi}
+      = \cos \phi - \mathrm{i} \, \sin \phi
+  \end{equation*}
+  De este sistema de ecuaciones:
+  \begin{equation*}
+    \cos \phi
+      = \frac{\mathrm{e}^{\mathrm{i} \, \phi}
+		+ \mathrm{e}^{- \mathrm{i} \, \phi}}
+	     {2}
+    \qquad
+    \sin \phi
+      = \frac{\mathrm{e}^{\mathrm{i} \, \phi}
+		- \mathrm{e}^{- \mathrm{i} \, \phi}}
+	     {2 \mathrm{i}}
+  \end{equation*}
+  lo que sugiere definir:
+  \begin{align}
+    \cos z
+      &= \frac{\mathrm{e}^{\mathrm{i} z} + \mathrm{e}^{- \mathrm{i} z}}{2}
+	    \label{eq:complex-cos} \\
+    \sin z
+      &= \frac{\mathrm{e}^{\mathrm{i} z} - \mathrm{e}^{- \mathrm{i} z}}
+	      {2 \mathrm{i}}
+	    \label{eq:complex-sin}
+  \end{align}
+  Es claro que estas funciones son enteras,
+  y cumplen las identidades trigonométricas conocidas
+  para los reales.
+  Cuidado,
+  estas funciones no son acotadas en \(\mathbb{C}\).
+  El lector escéptico podrá entretenerse
+  demostrando algunas identidades,
+  como \(\cos^2 z + \sin^2 z = 1\)
+  o las fórmulas para sumas de ángulos.
+
+  De las relaciones~\eqref{eq:complex-cos} y~\eqref{eq:complex-sin}
+  vemos que para las funciones hiperbólicas:%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!funciones hiperbolicas@funciones hiperbólicas}
+  \begin{align}
+    \cosh z
+      &= \frac{\mathrm{e}^z + \mathrm{e}^{- z}}{2}
+       = \cos \mathrm{i} z
+	    \label{eq:complex-cosh} \\
+    \sinh z
+      &= \frac{\mathrm{e}^z  - \mathrm{e}^{- z}}{2}
+       = - \mathrm{i} \, \sin \mathrm{i} z
+	    \label{eq:complex-sinh}
+  \end{align}
+  Estas funciones también son enteras.
+  Podemos definir las demás funciones trigonométricas
+  e hiperbólicas usando las mismas definiciones que para los reales.
+
+\section{Logaritmos y potencias}
+\label{sec:complex-logarithm}
+
+  Entre los reales,
+  el logaritmo es simplemente el inverso de la exponencial.
+  Esto está perfectamente bien definido en ese caso.
+  Entre los complejos,
+  sin embargo,
+  la exponencial es una función periódica
+  (el período es \(2 \pi \mathrm{i}\)).
+  Como hay infinitas soluciones a la ecuación \(\mathrm{e}^z = w\)
+  siempre que \(w \ne 0\),
+  no podemos esperar definir una función análoga,
+  deberemos dar algunos rodeos.
+  En particular,
+  para \(x \in \mathbb{R}\) con \(x > 0\)
+  realmente es \(\log x = \ln x + 2 k \pi \mathrm{i}\),%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!logaritmo}
+  ya que debemos considerar los posibles argumentos.
+  Acá \(\ln x\) es el familiar logaritmo natural de los reales.
+  En los reales
+  simplemente dejamos de lado la componente imaginaria.
+
+  Para \(z \ne 0\) definimos:
+  \begin{equation}
+    \label{eq:log-definition}
+    \log z
+      = \ln \lvert z \rvert + \mathrm{i} \, \arg z
+  \end{equation}
+  Con esto tenemos el caso emblemático:
+  \begin{equation*}
+    \log(-1)
+      = \ln 1 + \mathrm{i} \, \arg(-1)
+      = (2 k + 1) \pi \mathrm{i}
+  \end{equation*}
+  Esto cumple el familiar:
+  \begin{equation*}
+    \mathrm{e}^{\log z}
+      = \mathrm{e}^{\ln \lvert z \rvert + \mathrm{i} \, \arg z}
+      = \mathrm{e}^{\ln \lvert z \rvert}
+	  \cdot \mathrm{e}^{\mathrm{i} \, \arg z}
+      = z
+  \end{equation*}
+  Pero aparece una complicación.
+  Con el ya tradicional \(z = x + \mathrm{i} y\) tenemos:
+  \begin{equation*}
+    \log \left( \mathrm{e}^z \right)
+      = \ln \mathrm{e}^x + \mathrm{i} \, \arg \mathrm{e}^z
+      = x + (y + 2 k \pi) \mathrm{i}
+      = z + 2 k \pi \mathrm{i}
+  \end{equation*}
+  Acá \(k\) es un entero cualquiera.
+  De la misma manera,
+  para un entero cualquiera \(k\):
+  \begin{align*}
+    \log (w z)
+      &= \ln (\lvert w \rvert \cdot \lvert z \rvert)
+	   + \mathrm{i} \, \arg (w z)
+       = \ln \lvert w \rvert + \mathrm{i} \, \arg w
+	   + \ln \lvert z \rvert + \mathrm{i} \, \arg z
+	   + 2 k \pi \mathrm{i} \\
+      &= \log w + \log z + 2 k \pi \mathrm{i}
+  \end{align*}
+  Definimos la \emph{rama principal} del logaritmo mediante:%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!logaritmo!rama principal}
+  \begin{equation}
+    \label{eq:log-principal-branch}
+    \Log z
+      = \ln \lvert z \rvert + \mathrm{i} \, \Arg z
+  \end{equation}
+  Si \(z = x\),
+  un real positivo,
+  es:
+  \begin{equation*}
+    \Log x
+      = \ln x + \mathrm{i} \, \Arg x
+      = \ln x
+  \end{equation*}
+  Vemos que la nueva función es una extensión del logaritmo real.
+  La definición del argumento principal con este rango,
+  en vez del mucho más natural \(0 \le \phi < 2 \pi\),
+  es precisamente para asegurar esta coincidencia
+  sin estar equilibrándonos en el borde del abismo
+  a lo largo de la línea real.
+
+  La función \(\Log\) es holomorfa en muchas partes.
+  No está definida para \(z = 0\),
+  y tiene un corte en la línea real negativa.
+  Sea \(z_0 = x_0 + \mathrm{i} y_0\)
+  tal que \(\Log z_0\) esté definido,
+  y veamos su derivada:
+  \begin{equation*}
+    \lim_{z \rightarrow z_0} \frac{\Log z - \Log z_0}{z - z_0}
+      = \lim_{z \rightarrow z_0}
+	  \frac{\Log z - \Log z_0}
+	       {\mathrm{e}^{\Log z} - \mathrm{e}^{\Log z_0}}
+  \end{equation*}
+  Deberemos restringirnos a trabajar en una región
+  que no incluya los puntos conflictivos mencionados.
+  Con \(w = \Log z\) y \(w_0 = \Log z_0\),
+  notando que \(w \rightarrow w_0\)
+  cuando \(z \rightarrow z_0\),
+  esto es:
+  \begin{align*}
+    \lim_{z \rightarrow z_0} \frac{\Log z - \Log z_0}{z - z_0}
+      &= \lim_{w \rightarrow w_0}
+	   \frac{w - w_0}{\mathrm{e}^w - \mathrm{e}^{w_0}}
+       = \frac{1}{e^{w_0}} \\
+      &= \frac{1}{z_0}
+  \end{align*}
+
+  \begin{figure}[ht]
+    \centering
+    \pgfimage{images/log-domain}
+    \caption{Dominio alternativo de $\log z$}
+    \label{fig:log-domain}
+  \end{figure}
+  Nótese que la restricción del argumento es un tanto arbitraria,
+  si nos interesa trabajar en la región \(D\)
+  de la figura~\ref{fig:log-domain},
+  podemos restringir el argumento
+  al rango \([\pi / 4,	9 \pi / 4)\).
+
+  Ahora estamos en condiciones
+  de definir potencias arbitrarias de \(z\).%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!potencia}
+  La definición obvia es:
+  \begin{equation*}
+    z^c
+      = \mathrm{e}^{c \log z}
+  \end{equation*}
+  Hay muchos valores de \(\log z\),
+  con lo que pueden haber muchos valores de \(z^c\).
+  Al lector atento no le extrañará
+  que se le llame el \emph{valor principal} de \(z^c\)
+  a \(\mathrm{e}^{c \Log z}\).%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!potencia!rama principal}
+  En caso que \(c = n\),
+  un entero,
+  la definición da:
+  \begin{align*}
+    z^n
+      &= \mathrm{e}^{n \log z}
+       = \mathrm{e}^{n (\Log z + 2 k \pi \mathrm{i})}
+       = \mathrm{e}^{n \Log z}
+	   \cdot \mathrm{e}^{2 n k \pi \mathrm{i}} \\
+      &= \mathrm{e}^{n \Log z} \\
+      &= \lvert z \rvert^n \cdot \mathrm{e}^{\mathrm{i} n \Arg z}
+  \end{align*}
+  Exactamente como debiera ser.
+  El lector interesado verificará que si \(c\) es un racional,
+  la fórmula da todos los valores esperados.
+
+  Esto introduce un nuevo problema.
+  Tenemos una definición de potencias que aplicada a \(z = e\)
+  puede dar infinitos valores para \(\mathrm{e}^c\).
+  Hasta acá hemos asumido simplemente
+  que para \(z = x + \mathrm{i} y\)
+  es:
+  \begin{equation*}
+    \mathrm{e}^z
+      = \exp(z)
+      = \mathrm{e}^x (\cos y + \mathrm{i} \, \sin y)
+  \end{equation*}
+  Equivalentemente,
+  \(\mathrm{e}^z\) se refiere al valor principal de esta expresión.
+  Esta es la convención que adoptaremos,
+  que por lo demás es universal.
+
+\section{Integrales}
+\label{sec:complex-integrals}
+\index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!integral}
+
+  La integral en los reales
+  es simplemente a lo largo de la línea real.
+  Al integrar en los complejos
+  hay muchos caminos distintos que podemos seguir.
+  De todas formas,
+  una definición natural para la integral de la función \(f\)
+  a lo largo del camino suave
+    \(\gamma \colon [a, b] \rightarrow \mathbb{C}\)
+  es seguir la definición de la integral de Riemann en los reales.
+  Imaginemos una subdivisión del rango \([a, b]\) en \(n\) tramos
+  \([t_{k - 1}, t_k]\),
+  donde \(1 \le k \le n\).
+  Vemos que al tramo \([t_{k - 1}, t_k]\)
+  corresponde un arco \([z_{k - 1}, z_k]\) del camino \(\gamma\),
+  un punto \(t_k^*\) en el tramo \([t_{k - 1}, t_k]\)
+  da un punto \(z_k^*\) en el arco correspondiente.
+  Supongamos ahora dado \(\epsilon > 0\) cualquiera.
+  Dada una partición \(P\) tal que se cumple para todo tramo
+  que \(\lvert z_k - z_{k - 1} \rvert < \epsilon\),
+  eligiendo puntos \(t_k^*\) en cada tramo
+  calculamos la suma:
+  \begin{equation*}
+    S(P)
+      = \sum_{1 \le k \le n} f(z_k^*) (z_k - z_{k - 1})
+  \end{equation*}
+  Si estas sumas tienden al valor \(L\)
+  cuando \(\epsilon \rightarrow 0\),
+  llamamos a este límite el valor de la integral,
+  y anotamos:
+  \begin{equation*}
+    \int_\gamma f(z) \, \mathrm{d} z
+      = L
+  \end{equation*}
+  Podemos expresar la suma en términos de \(t\):
+  \begin{align*}
+    S(p)
+      &= \sum_{1 \le k \le n}
+	   f(\gamma(t_k^*)) (\gamma(t_k^*) - \gamma(t_{k - 1}^*)) \\
+      &= \sum_{1 \le k \le n}
+	   f(\gamma(t_k^*)) (\gamma(t_k^*) - \gamma(t_{k - 1}^*)) \\
+      &= \sum_{1 \le k \le n}
+	   f(\gamma(t_k^*)) \,
+	     \frac{\gamma(t_k^*) - \gamma(t_{k - 1}^*)}
+		  {t_k^* - t_{k - 1}^*}
+	     \cdot (t_k^* - t_{k - 1}^*)
+  \end{align*}
+  Si \(\epsilon \rightarrow 0\),
+  vemos que esto tiende a:
+  \begin{equation}
+    \label{eq:complex-integral-parametrized}
+    \int_\gamma f(z) \, \mathrm{d} z
+      = \int_a^b f(\gamma(t)) \gamma'(t) \, \mathrm{d} t
+  \end{equation}
+  Esta misma fórmula indica que el valor de la integral
+  es independiente de la parametrización de la curva.
+
+  Una cota que usaremos frecuentemente es la siguiente.
+  \begin{lemma}[Cota para integrales complejas]
+    \label{lem:complex-integral-bound}
+    Supóngase que hay un número \(M\) tal que \(\lvert f(z) \rvert \le M\)
+    para todo \(z\) en la curva suave
+      \(\gamma \colon [a, b] \rightarrow \mathbb{C}\),
+    y sea \(l_\gamma\) el largo de la curva \(\gamma\).
+    Entonces:
+    \begin{equation}
+      \label{eq:complex-integral-bound}
+      \left\lvert \int_\gamma f(z) \, \mathrm{d} z \right\rvert
+	\le M l_\gamma
+    \end{equation}
+  \end{lemma}
+  \begin{proof}
+    Usando la desigualdad triangular
+    sobre la definición de la integral,%
+      \index{desigualdad triangular}
+    vemos que:
+    \begin{equation*}
+      \left\lvert \int_\gamma f(z) \, \mathrm{d} z \right\rvert
+	= \left\lvert \int_a^b f(z) \gamma'(t)
+	    \, \mathrm{d} t \right\rvert
+	\le \int_a^b
+	      \lvert f(z) \rvert
+		\cdot	\lvert \gamma'(t) \rvert \, \mathrm{d} t
+	\le M \int_a^b \lvert \gamma'(t) \rvert \, \mathrm{d} t
+    \end{equation*}
+    Si describimos \(\gamma(t) = x(t) + \mathrm{i} y(t)\) tenemos:
+    \begin{equation*}
+      \int_a^b \lvert \gamma'(t) \rvert \, \mathrm{d} t
+	= \int_a^b
+	    \left(
+	      \left( x'(t) \right)^2 + \left( y'(t) \right)^2
+	    \right)^{1/2} \, \mathrm{d} t
+    \end{equation*}
+    que reconocemos como el largo \(l_\gamma\) de la curva.
+  \end{proof}
+
+\subsection{Integrales y antiderivadas}
+\label{sec:complex-integral-antiderivative}
+
+  Supongamos nuevamente
+  un camino suave \(\gamma\) entre \(a\) y \(b\),
+  una función \(g(z)\) diferenciable en \(\gamma\),
+  y consideremos \(t \in [a, b]\).
+  Veamos cuál es la derivada de \(g(\gamma(t))\).
+  Resulta ser exactamente como nos imaginamos.
+  Primero,
+  con \(g(x + \mathrm{i} y) = u(x, y) + \mathrm{i} v(x, y)\)
+  y \(\gamma(t) = x(t) + \mathrm{i} y(t)\),
+  es:
+  \begin{equation*}
+    g(\gamma(t))
+      = u(x(t), y(t)) + \mathrm{i} v(x(t), y(t))
+  \end{equation*}
+  Enseguida:
+  \begin{align*}
+    \frac{\mathrm{d}}{\mathrm{d} t} \, g(\gamma(t))
+      &= \frac{\partial u}{\partial x} \,
+	    \frac{\mathrm{d} x}{\mathrm{d} t}
+	    + \frac{\partial u}{\partial y} \,
+		\frac{\mathrm{d} y}{\mathrm{d} t}
+	  + \mathrm{i}
+	      \left(
+		\frac{\partial v}{\partial x} \,
+		  \frac{\mathrm{d} x}{\mathrm{d} t}
+		  + \frac{\partial v}{\partial y} \,
+		      \frac{\mathrm{d} y}{\mathrm{d} t}
+	      \right) \\
+  \intertext{Usando las ecuaciones de Cauchy-Riemann:%
+	       \index{Cauchy-Riemann, ecuaciones de}}
+    \frac{\mathrm{d}}{\mathrm{d} t} \, g(\gamma(t))
+      &= \frac{\partial u}{\partial x} \,
+	   \frac{\mathrm{d} x}{\mathrm{d} t}
+	     - \frac{\partial v}{\partial x} \,
+		 \frac{\mathrm{d} y}{\mathrm{d} t}
+	   + \mathrm{i} \,
+	       \left(
+		\frac{\partial v}{\partial x} \,
+		  \frac{\mathrm{d} x}{\mathrm{d} t}
+		  + \frac{\partial u}{\partial x} \,
+		      \frac{\mathrm{d} y}{\mathrm{d} t}
+	       \right) \\
+      &= \left(
+	   \frac{\partial u}{\partial x}
+	     + \mathrm{i} \, \frac{\partial v}{\partial x}
+	 \right)
+	   \cdot \left(
+		   \frac{\mathrm{d} x}{\mathrm{d} t}
+		     + \mathrm{i} \, \frac{\mathrm{d} y}
+					  {\mathrm{d} t}
+		 \right) \\
+      &= g'(\gamma(t)) \gamma'(t)
+  \end{align*}
+
+  Volvamos a las integrales ahora.
+  Sea una región \(D\)
+  y una función \(F \colon D \rightarrow \mathbb{C}\)
+  tal que en \(D\) tenemos \(F'(z) = f(z)\).
+  Supongamos un camino suave \(\gamma \colon [a, b] \rightarrow D\).
+  Sabemos de arriba que:
+  \begin{equation*}
+    \frac{\mathrm{d}}{\mathrm{d} t} \, F(\gamma(t))
+      = F'(\gamma(t)) \gamma'(t)
+      = f(\gamma(t)) \gamma'(t)
+  \end{equation*}
+  Entonces:
+  \begin{equation}
+    \label{eq:complex-integral-antiderivative}
+    \int_\gamma f(\zeta) \, \mathrm{d} \zeta
+      = \int_a^b f(\gamma(t)) \gamma'(t) \, \mathrm{d} t
+      = \int_a^b \frac{\mathrm{d}}{\mathrm{d} t} \, F(\gamma(t))
+	  \, \mathrm{d} t
+      = F(\gamma(b)) - F(\gamma(a))
+  \end{equation}
+  La última relación
+  resulta del teorema fundamental del cálculo integral.
+
+  Muy agradable,
+  la integral depende únicamente
+  de los puntos inicial y final del camino.
+  En particular,
+  si el camino es cerrado,
+  la integral es cero.
+
+  El recíproco ahora.
+  Supongamos que la integral de la función continua \(f\)
+  no depende del camino,
+  vale decir podemos tomar un punto \(z_0 \in D\)
+  y definir una función:
+  \begin{equation*}
+    F(z)
+      = \int_{\gamma_z} f(\zeta) \, \mathrm{d} \zeta
+  \end{equation*}
+  donde el camino \(\gamma_z\)
+  comienza en \(z_0\) y termina en \(z\),
+  sin salir de \(D\).
+  Sabemos que de existir tales caminos para cada elección de \(z\)
+  la región \(D\) debe ser conexa.
+  Evaluemos la derivada de \(F\):
+  \begin{equation*}
+    \lim_{h \rightarrow 0}
+      \frac{F(z + h) - F(z)}{h}
+      = \lim_{h \rightarrow 0}
+	  \frac{1}{h} \int_{\gamma_h} f(\zeta) \, \mathrm{d} \zeta
+  \end{equation*}
+  Acá \(\gamma_h\)
+  es un camino que comienza en \(z\) y termina en \(z + h\).
+  Vemos también que:
+  \begin{align*}
+    \int_{\gamma_h} \, \mathrm{d} \zeta
+      &= h \\
+    \int_{\gamma_h} f(z) \, \mathrm{d} \zeta
+      &= h f(z)
+  \end{align*}
+  Con esto:
+  \begin{equation*}
+    \lim_{h \rightarrow 0}
+      \frac{F(z + h) - F(z)}{h}
+	- f(z)
+      = \lim_{h \rightarrow 0}
+	  \frac{1}{h} \, \int_{\gamma_h} (f(\zeta) - f(z))
+	  \, \mathrm{d} \zeta
+  \end{equation*}
+  Ahora bien,
+  como las integrales no dependen del camino
+  podemos calcularla sobre la recta de \(z\) a \(z + h\):
+  \begin{equation*}
+    \left\lvert
+      \frac{1}{h} \, \int_{\gamma_h} (f(\zeta) - f(z))
+	\, \textrm{d} \zeta
+    \right\rvert
+      \le \left\lvert \frac{1}{h} \right\rvert
+	    \cdot \lvert h \rvert
+	    \cdot \max \left\{ \lvert f(\zeta) - f(z) \rvert
+			   \colon \zeta \in [z, z + h] \right\}
+  \end{equation*}
+  Como \(f\) es continua,
+  cuando \(h \rightarrow 0\) esto tiende a cero,
+  y \(F'(z) = f(z)\),
+  como esperábamos.
+
+  En resumen:
+  \begin{theorem}
+    \label{theo:complex-integral=antiderivative}
+    Sea \(D\) una región conexa,
+    y sea \(f \colon D \rightarrow \mathbb{C}\) continua.
+    Entonces \(f\) tiene antiderivada en \(D\) si y solo si
+    la integral entre dos puntos de \(D\)
+    es independiente del camino.
+    El valor de la integral es la diferencia
+    entre los valores de la antiderivada.
+  \end{theorem}
+  Pero también hemos demostrado:
+  \begin{theorem}[Morera]
+    \label{theo:Morera}
+    Sea \(f\) continua en \(D\) tal que
+    para toda curva suave cerrada simple \(\gamma \subset D\):
+    \begin{equation*}
+      \int_\gamma f(z) \, \mathrm{d} z
+	= 0
+    \end{equation*}
+    Entonces \(f\) es holomorfa en \(D\).
+  \end{theorem}
+
+\subsection{El teorema de Cauchy}
+\label{sec:Cauchy-theorem}
+
+  Nos interesa evaluar integrales sobre caminos cerrados,
+  en particular demostrar que tales integrales
+  no dependen del detalle del camino.
+  Para ello requeriremos algunas herramientas adicionales.
+  \begin{definition}
+    \index{curva cerrada!homotopica@homotópica|textbfhy}
+    Sean \(\gamma_0\) y \(\gamma_1\) curvas cerradas
+    en el conjunto abierto \(D \subseteq \mathbb{C}\),
+    parametrizadas por \(\gamma_0 \colon [0, 1] \rightarrow D\)
+    y \(\gamma_1 \colon [0, 1] \rightarrow D\),
+    respectivamente.
+    Decimos que \(\gamma_0\)
+    es \emph{\(D\)-homotópica} a \(\gamma_1\),
+    en símbolos \(\gamma_0 \sim_D \gamma_1\),
+    si hay una función continua \(h \colon [0, 1]^2 \rightarrow D\)
+    tal que:
+    \begin{align*}
+      h(t, 0)
+	&= \gamma_0(t) \\
+      h(t, 1)
+	&= \gamma_1(t) \\
+      h(0, s)
+	&= h(1, s)
+    \end{align*}
+    Si \(D\) es conexa
+    y tal que toda curva cerrada simple es homotópica
+    a un punto,
+    se dice que \(D\) es \emph{conexa simple}.%
+      \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!region conexa simple@región conexa simple}
+  \end{definition}
+  \begin{figure}[ht]
+    \centering
+    \pgfimage{images/homotopy}
+    \caption{Ejemplos de homotopía}
+    \label{fig:homotopy}
+  \end{figure}
+  La idea es que \(h(t, s)\) es una curva en \(D\),
+  la última condición asegura que sea siempre cerrada.
+  Cambiando \(s\) cambia la curva,
+  que va en forma continua de \(\gamma_0\) a \(\gamma_1\).
+  Nótese también que las curvas se recorren todas
+  en dirección de \(t\) creciente,
+  arbitrariamente definimos la dirección positiva
+  como aquella en que el interior encerrado por la curva
+  queda a su izquierda.
+  Es simple ver que la homotopía
+  es una relación de equivalencia entre curvas.
+  Frecuentemente consideraremos un punto aislado como una ``curva''
+  de largo cero.
+  Una región conexa simple no tiene ``agujeros''.
+
+  Mucho de lo que viene a continuación
+  se basa en el siguiente teorema.
+  La demostración es de Beck, Marchesi, Pixton y Sabalka~%
+    \cite{beck12:_first_course_compl_analysis}.
+  \begin{theorem}[Cauchy]
+    \index{Cauchy, teorema de}
+    Sea \(D \subseteq \mathbb{C}\) una región abierta,
+    \(f\) holomorfa en \(D\),
+    y \(\gamma_0 \sim_D \gamma_1\) vía una homotopía
+    con segundas derivadas continuas
+    y que coinciden para \(s = 0\) y \(s = 1\).
+    Entonces:
+    \begin{equation*}
+      \int_{\gamma_0} f(z) \, \mathrm{d} z
+	= \int_{\gamma_1} f(z) \, \mathrm{d} z
+    \end{equation*}
+  \end{theorem}
+  La condición de suavidad de la homotopía puede relajarse bastante,
+  pero la demostración se hace muy compleja.
+  Para las aplicaciones de nuestro interés
+  esta condición se cumple.
+  \begin{proof}
+    Sea \(h(t, s)\) la homotopía de \(\gamma_0\) a \(\gamma_1\),
+    y definamos \(\gamma_s\) como la curva definida por \(h\)
+    para \(s\).
+    Consideremos la función:
+    \begin{equation*}
+      I(s)
+	= \int_{\gamma_s} f(z) \, \mathrm{d} z
+	= \int_0^1 f(h(t, s)) \frac{\partial h}{\partial t}
+	    \, \mathrm{d} t
+    \end{equation*}
+    Esta expresión
+    resulta de~\eqref{eq:complex-integral-parametrized}.
+    Demostraremos que \(I(s)\) es constante,
+    con lo que se cumple lo prometido como \(I(0) = I(1)\).
+    Por la regla de Leibnitz:%
+      \index{Leibnitz, regla de}
+    \begin{equation*}
+      \frac{\mathrm{d}}{\mathrm{d} s} \, I(s)
+	= \frac{\mathrm{d}}{\mathrm{d} s}
+	    \int_0^1 f(h(t, s)) \,
+	      \frac{\partial h}{\partial t} \, \mathrm{d} t
+	= \int_0^1 \frac{\partial}{\partial s} \,
+	    \left(
+	      f(h(t, s)) \frac{\partial h}{\partial t}
+	    \right)
+	    \, \mathrm{d} t
+    \end{equation*}
+    Usando el menú completo
+    de propiedades de las derivadas parciales:
+    \begin{align*}
+      \frac{\mathrm{d}}{\mathrm{d} s} I(s)
+	&= \int_0^1
+	     \left(
+	       f'(h(t, s))
+		 \frac{\partial h}{\partial s}
+		     \frac{\partial h}{\partial t}
+		 + f(h(t, s))
+		     \frac{\partial^2 h}{\partial s \partial t}
+	     \right)
+	     \, \mathrm{d} t \\
+	&= \int_0^1
+	     \left(
+	       f'(h(t, s))
+		 \frac{\partial h}{\partial t}
+		    \frac{\partial h}{\partial s}
+		 + f(h(t, s))
+		    \frac{\partial^2 h}{\partial t \partial s}
+	     \right)
+	     \, \mathrm{d} t \\
+	&= \int_0^1 \frac{\partial}{\partial t}
+	     \left(
+	       f(h(t, s)) \frac{\partial h}{\partial s}
+	     \right)
+	     \, \mathrm{d} t
+    \end{align*}
+    Aplicando el teorema fundamental del cálculo integral%
+      \index{calculo integral, teorema fundamental del@cálculo integral, teorema fundamental del}
+    por separado a las componentes real e imaginaria,
+    y recordando la condición \(h(0, s) = h(1, s)\)
+    y que las respectivas derivadas coinciden:
+    \begin{equation*}
+      \frac{\mathrm{d}}{\mathrm{d} s} I(s)
+	= f(h(1, s)) \, \frac{\partial h}{\partial s} (1, s)
+	   - f(h(0, s)) \, \frac{\partial h}{\partial s} (0, s)
+	= 0
+    \end{equation*}
+    Si la derivada compleja es cero,
+    lo son las derivadas parciales
+    de las componentes real e imaginaria,
+    y así la función es constante.
+  \end{proof}
+  Una consecuencia inmediata es que si \(D\)
+  es una región conexa simple
+  en la cual la función \(f\) es holomorfa
+  entonces para todo camino suave cerrado \(\gamma \subset D\):
+  \begin{equation*}
+    \int_\gamma f(z) \, \mathrm{d} z
+      = 0
+  \end{equation*}
+  Esto porque en este caso
+  cualquier curva \(\gamma \subset D\) es homotópica con un punto,
+  y claramente la integral para un punto es cero.
+  Por el teorema~\ref{theo:complex-integral=antiderivative}
+  en tales regiones la integral es independiente del camino
+  y existe una antiderivada.
+
+\subsection{La fórmula integral de Cauchy}
+\label{sec:Cauchy-integral-formula}
+
+  Tenemos el siguiente resultado notable:
+  \begin{theorem}[Fórmula integral de Cauchy]
+    \index{Cauchy, formula integral de@Cauchy, fórmula integral de|textbfhy}
+    \label{theo:Cauchy-integral-formula}
+    Sea \(f\) holomorfa en la región \(D\)
+    que contiene el camino cerrado simple \(\gamma\),
+    con la orientación habitual que el interior está a la izquierda,
+    y suponga que \(z_0\) está al interior de \(\gamma\).
+    Entonces:
+    \begin{equation*}
+      f(z_0)
+	= \frac{1}{2 \pi \mathrm{i}} \,
+	    \int_\gamma	 \frac{f(z)}{z - z_0} \, \mathrm{d} z
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Sea \(\epsilon > 0\) arbitrario.
+    Sabemos que \(f\) es continua en \(z_0\),
+    por lo que existe \(\delta > 0\) tal que
+    \(\lvert f(z) - f(z_0) \rvert < \epsilon\)
+    siempre que \(\lvert z - z_0 \rvert < \delta\).
+    Sea ahora \(r > 0\) tal que \(r < \delta\)
+    y la circunferencia
+      \(C_0 = \{ z \colon \lvert z - z_0 \rvert = r\}\)
+    está dentro de \(\gamma\).
+    Entonces \(f(z) / (z - z_0)\) es holomorfa
+    en la región entre \(\gamma\) y \(C_0\),
+    por lo que del teorema de Cauchy:
+    \begin{equation*}
+      \int_\gamma \frac{f(z)}{z - z_0} \, \mathrm{d} z
+	= \int_{C_0} \frac{f(z)}{z - z_0} \, \mathrm{d} z
+    \end{equation*}
+    La integral siguiente es fácil de evaluar
+    si parametrizamos \(C_0\)
+    como \(z_0 + r \mathrm{e}^{\mathrm{i} t}\):
+    \begin{equation*}
+      \int_{C_0} \frac{1}{z - z_0} \, \mathrm{d} z
+	= \int_0^{2 \pi} \frac{1}{r}
+			   \cdot r \mathrm{i}
+			     \, \mathrm{e}^{\mathrm{i} t}
+			   \, \mathrm{d} t
+	= 2 \pi \mathrm{i}
+    \end{equation*}
+    Con esto:
+    \begin{equation*}
+      \int_{C_0} \frac{f(z)}{z - z_0} \, \mathrm{d} z
+	- 2 \pi \mathrm{i} f(z_0)
+	= \int_{C_0} \frac{f(z)}{z - z_0} \, \mathrm{d} z
+	    - \int_{C_0} \frac{f(z_0)}{z - z_0} \, \mathrm{d} z
+	= \int_{C_0} \frac{f(z) - f(z_0)}{z - z_0} \, \mathrm{d} z
+    \end{equation*}
+    Sobre \(C_0\) tenemos:
+    \begin{equation*}
+      \left\lvert \frac{f(z) - f(z_0)}{z - z_0} \right\rvert
+	= \frac{\lvert f(z) - f(z_0) \rvert}{\lvert z - z_0 \rvert}
+	\le \frac{\epsilon}{r}
+    \end{equation*}
+    De nuestra cota~\eqref{eq:complex-integral-bound}
+    para integrales:
+    \begin{equation*}
+      \int_{C_0} \frac{f(z) - f(z_0)}{z - z_0} \, \mathrm{d} z
+	\le \frac{\epsilon}{r} \cdot 2 \pi r
+	= 2 \pi \epsilon
+    \end{equation*}
+    Pero \(\epsilon\) es un número positivo arbitrario,
+    la integral debe ser cero.
+  \end{proof}
+  Esto es realmente notable:
+  Si \(f\) es holomorfa
+  al interior del camino cerrado simple \(\gamma\)
+  y conocemos los valores de \(f\) sobre \(\gamma\),
+  los conocemos en todo su interior.
+
+  Incluso da una manera sencilla de evaluar ciertas integrales.
+  Por ejemplo,
+  evaluemos la integral:
+  \begin{equation*}
+    \int_0^\infty \frac{1}{x^2 + 1} \, \mathrm{d} x
+  \end{equation*}
+  Primero,
+  el integrando es par,
+  con lo que:
+  \begin{equation*}
+    \int_0^\infty \frac{1}{x^2 + 1} \, \mathrm{d} x
+      = \frac{1}{2} \,
+	  \int_{- \infty}^\infty \frac{1}{x^2 + 1} \, \mathrm{d} x
+  \end{equation*}
+  El integrando tiene problemas en \(\pm \mathrm{i}\),
+  es holomorfo
+  en \(\mathbb{C} \smallsetminus \{- \mathrm{i}, \mathrm{i} \}\).
+  \begin{figure}[ht]
+    \centering
+    \pgfimage{images/example-integral-contour}
+    \caption{Curva para integral ejemplo}
+    \label{fig:example-integral-contour}
+  \end{figure}
+  La curva \(\gamma\)
+  de la figura~\ref{fig:example-integral-contour}
+  se descompone en un arco \(A\) de radio \(R\)
+  y la línea \(L\) de \(-R\) a \(R\) a lo largo del eje~\(X\).
+  Si hacemos tender \(R \rightarrow \infty\),
+  la integral sobre \(L\) es el resultado que nos interesa.
+  Debemos evaluar la integral sobre el arco.
+  Como nos interesa \(R \rightarrow \infty\),
+  perfectamente podemos concentrarnos en \(R > 1\).
+  Tenemos:
+  \begin{equation*}
+    \left\lvert
+      \int_A \frac{1}{z^2 + 1} \, \mathrm{d} z
+    \right\rvert
+      \le \int_A \frac{1}{\lvert z^2 + 1 \rvert} \, \mathrm{d} z
+      \le \int_A \frac{1}{\lvert z \rvert^2 - 1} \, \mathrm{d} z
+      =	  \frac{1}{R^2 - 1} \cdot \pi R
+  \end{equation*}
+  Esto tiende a cero cuando \(R \rightarrow \infty\),
+  como esperábamos.
+  Acá usamos:
+  \begin{equation*}
+    \lvert z \rvert^2
+      =	  \lvert (z^2 + 1) - 1 \rvert
+      \le \lvert z^2 + 1 \rvert + 1
+  \end{equation*}
+  Por otro lado,
+  por la fórmula de Cauchy%
+    \index{Cauchy, formula integral de@Cauchy, fórmula integral de}
+  podemos escribir para \(z_0 = \mathrm{i}\):
+  \begin{equation*}
+    \int_\gamma \frac{1 / (z + \mathrm{i})}{z - \mathrm{i}}
+	\, \mathrm{d} z
+      = \left.
+	  2 \pi \mathrm{i} \, \frac{1}{z + \mathrm{i}}
+	\right\rvert_{z = \mathrm{i}}
+      = \pi
+  \end{equation*}
+  y nuestra integral original es:
+  \begin{equation*}
+    \int_0^\infty \frac{1}{x^2 + 1} \, \mathrm{d} x
+      = \frac{\pi}{2}
+  \end{equation*}
+  Esta integral es simple de evaluar en forma tradicional,
+  pero esta técnica es aplicable en forma mucho más amplia.
+
+  \begin{theorem}
+    \label{theo:Cauchy-formula-f-prime}
+    Sea \(f\) holomorfa en la región \(D\).
+    Entonces \(f'\) es holomorfa en \(D\).
+  \end{theorem}
+  \begin{proof}
+    Sea \(C\) una circunferencia centrada en \(z\) de radio \(r\)
+    dentro de \(D\),
+    y \(z + h\) un punto dentro de \(C\).
+    Es rutina verificar que:
+    \begin{equation*}
+      \frac{1}{h} \,
+	\left(
+	  \frac{1}{\zeta - z - h} - \frac{1}{\zeta - z}
+	\right)
+	= \frac{1}{(\zeta - z)^2}
+	    + \frac{h}{(\zeta - z)^2 (\zeta - z - h)}
+    \end{equation*}
+    Calculamos:
+    \begin{align*}
+      \frac{f(z + h) - f(z)}{h}
+	&= \frac{1}{2 \pi h \mathrm{i}} \,
+	     \int_C \frac{f(\zeta)}{\zeta - z - h}
+		 \, \mathrm{d} \zeta
+	     - \frac{1}{2 \pi h \mathrm{i}}
+		 \int_C \frac{f(\zeta)}{\zeta - z}
+		    \, \mathrm{d} \zeta \\
+	&= \frac{1}{2 \pi \mathrm{i}} \,
+	     \int_C \frac{f(\zeta)}{(\zeta - z)^2}
+		 \, \mathrm{d} \zeta
+	       + \frac{h}{2 \pi \mathrm{i}} \,
+		   \int_C \frac{f(\zeta)}
+			       {(\zeta - z)^2 (\zeta - z - h)}
+		     \, \mathrm{d} \zeta
+    \end{align*}
+    Si \(\lvert h \rvert < r / 2\),
+    por la desigualdad triangular
+    (teorema~\ref{theo:desigualdad-triangular})%
+      \index{desigualdad triangular}
+    para todo \(\zeta \in C\) es:
+    \begin{equation*}
+      \lvert \zeta - z - h \rvert
+	\ge \lvert \zeta - z \rvert - \lvert h \rvert
+	> r - \frac{r}{2}
+	= \frac{r}{2}
+    \end{equation*}
+    Por el otro lado,
+    \(f\) es continua sobre \(C\),
+    por lo que hay \(M\) tal que \(\lvert f(\zeta) \rvert \le M\)
+    para \(\zeta \in C\).
+    De la estimación~\eqref{eq:complex-integral-bound} tenemos:
+    \begin{equation*}
+      \left\lvert
+	\frac{h}{2 \pi \mathrm{i}} \,
+	  \int_C \frac{f(\zeta)}{(\zeta - z)^2 (\zeta - z - h)}
+		   \, \mathrm{d} \zeta
+      \right\rvert
+	\le \frac{\lvert h \rvert}{2 \pi}
+	       \, \frac{2 M}{r^3} \, 2 \pi r
+	= \frac{2 M \lvert h \rvert}{r^2}
+    \end{equation*}
+    Cuando \(h \rightarrow 0\) esto tiende a cero.
+    Esto incluso da una fórmula explícita para \(f'(z)\):
+    \begin{equation*}
+      f'(z)
+	= \frac{1}{2 \pi \mathrm{i}}
+	    \int_C \frac{f(\zeta)}{(\zeta - z)^2}
+	       \, \mathrm{d} \zeta
+    \end{equation*}
+  \end{proof}
+  Aplicando el mismo argumento,
+  obtenemos \(f''(z)\),
+  con lo que \(f'\) es holomorfa.%
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!funcion holomorfa@función holomorfa}
+  Continuando tenemos derivadas de todos los órdenes.
+  Hemos demostrado:
+  \begin{theorem}
+    \label{theo:holomorphic=>f-(n)}
+    Sea \(f\) holomorfa en la región \(D\).
+    Entonces para todo \(n \in \mathbb{N}\)
+    la función \(f^{(n)}\) es holomorfa en \(D\).
+  \end{theorem}
+  Esto es notable,
+  en los reales la existencia de la primera derivada
+  nada dice de las derivadas superiores,
+  acá la existencia de la primera derivada
+  asegura que hay derivadas de todos los órdenes.
+  Aún más:
+  \begin{theorem}[Fórmula integral de Cauchy generalizada]
+    \label{theo:Cauchy-formula-f-(n)}
+    Sea \(f\) holomorfa en la región \(D\),
+    y \(\gamma\) un camino cerrado simple al interior de \(D\).
+    Entonces:
+    \begin{equation}
+      \label{eq:Cauchy-formula-f-(n)}
+      f^{(n)}(z)
+	= \frac{n!}{2 \pi \mathrm{i}} \,
+	    \int_\gamma \frac{f(\zeta)}{(\zeta - z)^{n + 1}}
+	      \, \mathrm{d} \zeta
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    Por el teorema~\ref{theo:holomorphic=>f-(n)}
+    sabemos que \(f^{(n)}\)
+    es holomorfa en \(D\).
+    La fórmula integral de Cauchy permite escribir:%
+      \index{Cauchy, formula integral de@Cauchy, fórmula integral de}
+    \begin{equation*}
+      f^{(n)}(z)
+	= \frac{1}{2 \pi \mathrm{i}} \,
+	    \int_\gamma \frac{f^{(n)}(\zeta)}{\zeta - z}
+	      \, \mathrm{d} \zeta
+    \end{equation*}
+    Integrando por partes \(n\) veces entrega lo prometido.
+  \end{proof}
+  Hay más consecuencias de interés.
+  \begin{theorem}[Liouville]
+    \index{Liouville, teorema de}
+    \label{theo:Liouville}
+    Si una función entera es acotada en valor absoluto,
+    es constante.
+  \end{theorem}
+  \begin{proof}
+    Por hipótesis hay una constante \(M\)
+    tal que \(\lvert f(z) \rvert  \le M\)
+    para todo \(z \in \mathbb{C}\).
+    Demostramos por contradicción
+    que \(f'(z) = 0\) en todo \(\mathbb{C}\),
+    con lo que por el teorema~\ref{theo:complex-zero-derivative}
+    \(f\) es constante.
+
+    Supongamos que para algún \(z\) es \(f'(z) \ne 0\).
+    Elija \(R\) de manera que \(M / R < \lvert f'(z) \rvert\).
+    Sea \(C\) la circunferencia de radio \(R\) alrededor de \(z\).
+    Entonces:
+    \begin{equation*}
+      \frac{M}{R}
+	<   \lvert f'(z) \rvert
+	=   \left\lvert
+	      \frac{1}{2 \pi \mathrm{i}} \,
+		\int_C \frac{f(\zeta)}{(\zeta - w)^2}
+		  \, \mathrm{d} \zeta
+	    \right\rvert
+	\le \frac{1}{2 \pi} \, \frac{M}{R^2} \, 2 \pi R
+	= \frac{M}{R}
+    \end{equation*}
+    Esta contradicción muestra que tal \(z\) no existe.
+  \end{proof}
+  Podemos aprovechar esto inmediatamente,
+  básicamente como lo hizo Gauß en su disertación
+  (aunque Liouville es bastante posterior).
+  Pese a su nombre,
+  poco tiene que ver con el álgebra actual
+  y no es particularmente fundamental.
+  \begin{theorem}[Teorema fundamental del álgebra]
+    \index{algebra, teorema fundamental del@álgebra, teorema fundamental del}
+    \index{polinomio!cero}
+    \label{theo:fundamental-algebra}
+    Todo polinomio no constante con coeficientes complejos
+    tiene un cero complejo.
+  \end{theorem}
+  \begin{proof}
+    Por contradicción.
+    Sea \(p(z)\) un polinomio no constante sin ceros complejos.
+    Entonces \(1 / p(z)\) es entera y acotada
+    (cuando \(z \rightarrow \infty\)
+     también \(\lvert p(z) \rvert \rightarrow \infty\),
+     y la función \(1 / p(z)\) es acotada en todo \(\mathbb{C}\)),
+    y por el teorema de Liouville es constante.
+    Esto contradice el que \(p\) no es constante.
+  \end{proof}
+  La manera tradicional
+  de expresar el teorema~\ref{theo:fundamental-algebra}
+  es diciendo que todo polinomio no constante
+  de coeficientes reales
+  se puede factorizar en factores lineales
+  o cuadráticos sin ceros reales,
+  o que si tiene grado \(n\)
+  tiene \(n\) ceros reales o complejos conjugados
+  (contando multiplicidades).
+
+\section{Secuencias y series}
+\label{sec:complex-sequences-series}
+
+  Las definiciones de secuencias y series complejas
+  son esencialmente las mismas que para los reales.
+  Anotamos \(\langle a_n \rangle_{n \ge 0}\)
+  para la secuencia de los \(a_n\)
+  (formalmente,
+   es una función
+     \(a \colon \mathbb{N}_0 \rightarrow \mathbb{C}\)).%
+     \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!secuencia}
+  El número \(L\) se llama el \emph{límite} de la secuencia
+  si para cualquier \(\epsilon > 0\) que se elija
+  hay un entero \(n_\epsilon\),
+  dependiente de \(\epsilon\),
+  tal que siempre que \(n \ge n_\epsilon\)
+  es \(\lvert L - a_n \rvert < \epsilon\).
+  Esto lo anotamos \(\lim a_n = L\).%
+     \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!secuencia!limite@límite}
+  Es fácil ver que si \(a_n = u_n + \mathrm{i} v_n\)
+  y la secuencia \(\langle a_n \rangle_{n \ge 0}\) converge a \(L\),
+  tenemos \(\lim u_n = \Re L\) y \(\lim v_n = \Im L\).
+  Al revés,
+  si las secuencias reales \(\langle u_n \rangle_{n \ge 0}\)
+  y \(\langle v_n \rangle_{n \ge 0}\) convergen,
+  converge la secuencia compleja
+    \(\langle u_n + \mathrm{i} v_n \rangle_{n \ge 0}\).
+  Se desprenden todas las familiares propiedades de los límites.
+  Una condición necesaria y suficiente
+  para la convergencia
+  de la secuencia \(\langle a_n \rangle_{n \ge 0}\)
+  es el \emph{criterio de Cauchy}:%
+    \index{Cauchy, criterio de}
+  Dado \(\epsilon > 0\)
+  hay un entero \(n_\epsilon\)
+  tal que \(\lvert a_m - a_n \rvert < \epsilon\)
+  siempre que \(m, n \ge n_\epsilon\).
+
+  Es obvio considerar secuencias de funciones en una región \(D\).
+  Para cada \(z \in D\) tenemos una secuencia ordinaria
+  \(\langle f_n(z) \rangle_{n \ge 0}\).
+  Si estas secuencias convergen,
+  la secuencia \emph{converge punto a punto}%
+     \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!secuencia!convergencia}
+  a la función \(f(z) = \lim f_n(z)\).
+  Se dice que la secuencia de funciones
+  converge \emph{uniformemente}%
+    \index{convergencia uniforme}
+  sobre el conjunto \(S\) si dado un \(\epsilon > 0\)
+  hay un entero \(n_\epsilon\)
+  tal que \(\lvert f(z) - f_n(z) \rvert < \epsilon\)
+  para todo \(n \ge n_\epsilon\) y todo \(z \in S\).
+  El punto de la convergencia uniforme
+  es que el mismo \(n_\epsilon\) sirve para todos los \(z \in S\).
+
+  \begin{figure}[ht]
+    \centering
+    \pgfimage{images/sequence-continuous-limit-discontinuous}
+    \caption{Secuencia de funciones continuas con límite discontinuo}
+    \label{fig:sequence-continuous-limit-discontinuous}
+  \end{figure}
+  Note que una secuencia de funciones continuas
+  puede converger a una función discontinua.
+  Considere por ejemplo la secuencia de funciones
+  definidas para \(n \ge 1\) por:
+  \begin{equation}
+    \label{eq:sequence-continuous-functions}
+    f_n(x)
+      = \begin{cases}
+	  0	    & x \le - 1 / n \\
+	  1 + n x   & -1 / n < x \le 0 \\
+	  1 - n x   & 0 < x \le 1 / n \\
+	  0	    & 1 / n < x
+	\end{cases}
+  \end{equation}
+  La figura~\ref{fig:sequence-continuous-limit-discontinuous}
+  grafica algunas de las funciones~%
+    \eqref{eq:sequence-continuous-functions}.
+  Es claro que:
+  \begin{equation}
+    \label{eq:continuous-functions-discontinuous-limit}
+    \lim_{n \rightarrow \infty} f_n(x)
+      = \begin{cases}
+	  0  & x \ne 0 \\
+	  1  & x = 1
+	\end{cases}
+  \end{equation}
+  Este comportamiento es imposible si la convergencia es uniforme.
+  Porque suponga que \(\langle f_n(z) \rangle_{n \ge 0}\)
+  converge uniformemente a \(f\) en la región \(D\),
+  sea \(z_0 \in D\) y \(\epsilon > 0\).
+  Demostraremos que hay \(\delta\)
+  tal que \(\lvert f(z_0) - f(z) \rvert < \epsilon\)
+  siempre que \(\lvert z_0 - z \rvert < \delta\).
+  Elija \(n_\epsilon\)
+  tal que \(\lvert f_{n_\epsilon}(z) - f(z) \rvert < \epsilon / 3\).
+  Por convergencia uniforme
+  también es
+     \(\lvert f_{n_\epsilon}(z_0) - f(z_0) \rvert < \epsilon / 3\).
+  Ahora elija \(\delta\)
+  de forma que
+    \(\lvert f_{n_\epsilon}(z_0) - f_{n_\epsilon}(z) \rvert
+	< \epsilon / 3\)
+  siempre que \(\lvert z_0 - z \rvert < \delta\).
+  Esto es posible ya que \(f_{n_\epsilon}\) es continua.
+  Si \(\lvert z_0 - z \rvert < \delta\) resulta
+  para todo \(n > n_\epsilon\):
+  \begin{align*}
+    \lvert f(z_0) - f(z) \rvert
+      &=   \lvert f(z_0) - f_n(z_0)
+		    + f_n(z_0) - f_n(z)
+		    + f_n(z) - f(z) \rvert \\
+      &\le \lvert f(z_0) - f_n(z_0) \rvert
+	     + \lvert f_n(z_0) - f_n(z) \rvert
+	     + \lvert f_n(z) - f(z) \rvert \\
+      &<   \frac{\epsilon}{3}
+	     + \frac{\epsilon}{3}
+	     + \frac{\epsilon}{3} \\
+      &=   \epsilon
+  \end{align*}
+
+  En los reales hay secuencias de funciones diferenciables
+  que convergen uniformemente a funciones que no son diferenciables.
+  La función símbolo que no es diferenciable en \(0\)
+  es \(\lvert x \rvert\),
+  interesa construir una secuencia de funciones
+  que se parecen a las ramas del valor absoluto,
+  ``suavizando'' la esquina
+  por ejemplo con una parábola \(y = a x^2\)
+  entre \(\pm 1 / n\).
+  Las ramas serán rectas de pendiente \(\pm 1\),
+  digamos \(y = \pm x + b\);
+  queremos que los valores
+  y las derivadas coincidan en \(\pm 1 / n\):
+  \begin{equation*}
+    f_n	 \left( \pm \frac{1}{n} \right)
+      = \frac{1}{n} + b
+    \hspace{4em}
+    f_n' \left( \pm \frac{1}{n} \right)
+      = \pm 2 a \frac{1}{n}
+      = \pm 1
+  \end{equation*}
+  De acá:
+  \begin{equation*}
+    a = \frac{n}{2}
+    \hspace{3em}
+    b = - \frac{1}{2 n}
+  \end{equation*}
+  Nuestra función es:
+  \begin{equation*}
+    f_n(x)
+      = \begin{cases}
+	  - x - 1 / 2 n	      & -1 \le x < 1 / n \\
+	  n x^2 / 2	      & - 1 / n < x \le 1 / n \\
+	  x - 1 / 2 n	      & 1 / n < x \le 1
+	\end{cases}
+  \end{equation*}
+  Por la forma que la construimos,
+  \(f_n\) es diferenciable en \([-1, 1]\).
+  Difiere de \(\lvert x \rvert\) a lo más en \(1 / 2 n\),
+  con lo que la convergencia es uniforme.
+  Pero \(\lim f_n(x) = \lvert x \rvert\),
+  que no es diferenciable en \(x = 0\).
+
+  Pero también:
+  \begin{theorem}
+    \label{theo:int_f_n->int_f}
+    Sea \(\gamma\) una curva suave,
+    sobre la cual las funciones \(f_n\) son continuas
+    y convergen uniformemente a \(f\).
+    Entonces:
+    \begin{equation}
+      \label{eq:int_f_n->int_f}
+      \lim_{n \rightarrow \infty} \int_\gamma f_n(z) \, \mathrm{d} z
+	= \int_\gamma f(z) \, \mathrm{d} z
+    \end{equation}
+  \end{theorem}
+  Este resultado tiene múltiples consecuencias,
+  que veremos más adelante.
+  La demostración es rutina:
+  \begin{proof}
+    Podemos acotar:
+    \begin{equation*}
+      \left\lvert
+	\int_\gamma f_n(z) \, \mathrm{d} z
+	  - \int_\gamma f(z) \, \mathrm{d} z
+      \right\rvert
+	= \left\lvert
+	    \int_\gamma (f_n(z) - f(z)) \, \mathrm{d} z
+	  \right\rvert
+	\le \max_{z \in \gamma} \lvert f_n(z) - f(z) \rvert
+	      \cdot l_\gamma
+    \end{equation*}
+    Por convergencia uniforme
+    podemos hacer el primer factor de la cota
+    tan pequeño como deseemos.
+  \end{proof}
+  Incluso más:
+  \begin{theorem}
+    \label{theo:holomorphic_f_n->holomorphic_f}
+    Sea una secuencia de funciones holomorfas
+    \(\langle f_n(z) \rangle_{n \ge 0}\) que en \(D\)
+    convergen uniformemente a \(f(z)\).
+    Entonces \(f\) es holomorfa en \(D\).
+  \end{theorem}
+  Nótese que el resultado no se cumple para reales.
+  \begin{proof}
+    Sea \(\gamma \subset D\) una curva cerrada simple.
+    Del teorema de Cauchy sabemos:%
+      \index{Cauchy, teorema integral de}
+    \begin{equation*}
+      \int_\gamma f_n(z) \, \mathrm{d} z
+	= 0
+    \end{equation*}
+    Por convergencia uniforme:
+    \begin{equation*}
+      \int_\gamma f(z) \, \mathrm{d} z
+	= 0
+    \end{equation*}
+    El teorema de Morera,
+    teorema~\ref{theo:Morera},
+    nos dice que
+    la función \(f\) es holomorfa en \(D\).
+  \end{proof}
+
+\subsection{Series}
+\label{sec:complex-series}
+
+  Una serie es simplemente
+  la secuencia \(\langle s_n \rangle_{n \ge 0}\)
+  resultante de sumar los elementos
+  de una secuencia \(\langle a_n \rangle_{n \ge 0}\),
+  vale decir,
+  \(s_n = a_0 + a_1 + \dotsb + a_n\).
+  Si la serie converge,
+  debe ser \(\lim a_n = 0\).
+  Para el límite de la serie
+  anotamos según nuestra convención sobre sumas:
+  \begin{equation*}
+    \sum_{n \ge 0} a_n
+  \end{equation*}
+  o el más familiar:
+  \begin{equation*}
+    \sum_{n = 0}^\infty a_n
+  \end{equation*}
+
+  Igual que en el caso de series en los reales,
+  es útil distinguir series
+  que \emph{convergen en valor absoluto},%
+    \index{serie!convergencia absoluta}
+  vale decir la secuencia:
+  \begin{equation*}
+    \sum_{0 \le k \le n} \lvert a_k \rvert
+  \end{equation*}
+  converge.
+  Es simple demostrar que si la serie converge en valor absoluto,
+  converge la serie original;
+  pero la convergencia de la serie original
+  no asegura convergencia en valor absoluto.
+  Por ejemplo,
+  tenemos la serie harmónica alternante
+  (el valor lo justificaremos más adelante):
+  \begin{equation}
+    \label{eq:alternating-harmonic-series}
+    \sum_{k \ge 1} \frac{(-1)^{k + 1}}{k}
+      = \ln 2
+  \end{equation}
+  pero la contraparte de valores absolutos es la serie harmónica,
+  que no converge.
+  Incluso más:
+  \begin{theorem}[Reordenamiento de Riemann]
+    \index{Riemann, teorema de reordenamiento de}
+    \label{theo:Riemann-rearrangement}
+    Sea una serie real que converge pero no absolutamente.
+    Entonces sus términos
+    pueden reordenarse para dar cualquier suma,
+    e incluso diverger a \(\pm \infty\)
+    o no tener límite.
+  \end{theorem}
+  \begin{proof}
+    Si la serie converge,
+    pero no absolutamente,
+    tiene infinitos términos positivos cuya suma diverge
+    y de la misma forma tiene infinitos términos negativos
+    cuya suma diverge.
+    Fijemos un valor \(L\) cualquiera;
+    consideraremos el caso en que \(L \ge 0\),
+    el caso \(L < 0\) es similar.
+    Ordenamos los términos como sigue:
+    \begin{itemize}
+    \item
+      Elegimos términos positivos
+      hasta que la suma sobrepase a \(L\).
+      Como la suma de los términos positivos diverge,
+      esto puede hacerse.
+    \item
+      Elegimos luego términos negativos
+      hasta que la suma sea menor a \(L\).
+      Nuevamente,
+      como los términos negativos divergen esto puede hacerse.
+    \end{itemize}
+    Repitiendo este proceso obtenemos un ordenamiento
+    de los términos de la serie que converge a \(L\).
+    La diferencia entre la suma y el valor elegido va disminuyendo,
+    como la serie original converge
+    sabemos que los términos de la serie reordenada
+    disminuyen en valor absoluto.
+
+    Siendo suficientemente tacaños con los términos negativos
+    (respectivamente positivos)
+    logramos que diverja;
+    tomando dos valores podemos hacer oscilar los valores de la suma
+    alrededor de ellos.
+  \end{proof}
+  De tales series se dice que \emph{convergen condicionalmente}.%
+    \index{serie!convergencia condicional}
+  Un ejemplo de este fenómeno
+  es escribir la serie harmónica alternante~%
+    \eqref{eq:alternating-harmonic-series}
+  como:
+  \begin{equation}
+    \label{eq:alternating-harmonic-series-reordered-value}
+    \sum_{k \ge 1}
+      \left(
+	\frac{1}{2 k - 1} - \frac{1}{2 (2 k - 1)} - \frac{1}{4 k}
+      \right)
+      = \sum_{k \ge 1}
+	  \left(
+	    \frac{1}{2 (2 k - 1)} - \frac{1}{2 \cdot 2 k}
+	  \right)
+      = \frac{1}{2}
+	  \sum_{k \ge 1} \frac{(-1)^{k + 1}}{k}
+      = \frac{1}{2} \ln 2
+  \end{equation}
+  Este es un reordenamiento correcto,
+  aparecen los recíprocos de todos los impares con signo positivo
+  y los recíprocos de todos los pares con signo negativo.
+  La mitad
+  del valor original~\eqref{eq:alternating-harmonic-series}.
+
+  En forma análoga podemos considerar series de funciones:
+  \begin{equation*}
+    \sum_{k \ge 0} f_k(z)
+  \end{equation*}
+  Tales series pueden converger para ciertos valores de \(z\)
+  y no para otros.
+  Un criterio útil de convergencia es el siguiente:
+  \begin{theorem}[Prueba \(M\) de Weierstraß]
+    \index{Weierstrass, prueba \(M\) de@Weierstraß, prueba \(M\) de}
+    \label{theo:Weierstrass-M}
+    Sea \(\langle M_k \rangle_{k \ge 0}\)
+    una secuencia de números reales,
+    que hay \(K\) tal que \(M_k \ge 0\) para todo \(k > K\),
+    y suponga que la secuencia
+    \begin{equation*}
+      \left\langle \sum_{0 \le k \le n} M_k \right\rangle_{n \ge 0}
+    \end{equation*}
+    converge.
+    Si para todo \(z \in D\) es
+    \(\lvert f_k(z) \rvert \le M_k\) para \(k \ge K\),
+    la serie
+    \begin{equation*}
+      \sum_{k \ge 0} f_k(z)
+    \end{equation*}
+    converge uniformemente en valor absoluto en \(D\).
+  \end{theorem}
+  \begin{proof}
+    Sea \(\epsilon > 0\) cualquiera,
+    y elegimos \(N > K\) tal que:
+    \begin{equation*}
+      \sum_{m \le k \le n} M_k
+	< \epsilon
+    \end{equation*}
+    para todo \(m, n > N\)
+    (esto resulta del criterio de Cauchy).
+    Por la desigualdad triangular,
+    teorema~\ref{theo:desigualdad-triangular},
+    es:
+    \begin{equation*}
+      \left\lvert
+	\sum_{m \le k \le n} f_k(z)
+      \right\rvert
+	\le \sum_{m \le k \le n} \lvert f_k(z) \rvert
+	\le \sum_{m \le k \le n} M_k
+	< \epsilon
+    \end{equation*}
+    La serie converge.
+    Para convergencia uniforme,
+    observe que para todo \(z \in D\) y \(n > m > N\):
+    \begin{equation*}
+      \left\lvert
+	\sum_{m \le k \le n} f_k(z)
+      \right\rvert
+	= \left\lvert
+	    \sum_{0 \le k \le n} f_k(z)
+	      - \sum_{0 \le k \le m - 1} f_k(z)
+	  \right\rvert
+	< \epsilon
+    \end{equation*}
+    En consecuencia:
+    \begin{equation*}
+      \lim_{n \rightarrow \infty}
+	\left\lvert
+	  \sum_{m \le k \le n} f_k(z)
+	\right\rvert
+	= \left\lvert
+	    \sum_{k \ge 0} f_k(z)
+	      - \sum_{0 \le k \le m - 1} f_k(z)
+	  \right\rvert
+	\le \epsilon
+    \end{equation*}
+    y la convergencia es uniforme y en valor absoluto.
+  \end{proof}
+
+  El caso más interesante es el de series de potencias:
+  \begin{equation*}
+    s_n(z)
+      = \sum_{0 \le k \le n} c_k (z - z_0)^k
+  \end{equation*}
+  Una serie de potencias
+  podrá tener un límite para ciertos valores de \(z\)
+  y no para otros.
+  Claramente siempre tiene límite si \(z = z_0\).
+  \begin{theorem}[Cauchy-Hadamard]
+    \index{Cauchy-Hadamard, teorema de}
+    \index{serie de potencias!radio de convergencia}
+    \label{theo:convergence-root}
+    Sea la serie:
+    \begin{equation*}
+      \sum_{0 \le k \le n} c_k (z - z_0)^k
+    \end{equation*}
+    Sea:
+    \begin{equation}
+      \label{eq:convergence-radius-root}
+      \lambda
+	= \limsup_{k \rightarrow \infty} \sqrt[k]{\lvert c_k \rvert}
+    \end{equation}
+    Sea \(R = \lambda^{-1}\),
+    donde diremos que \(R = \infty\) si \(\lambda = 0\)
+    y que \(R = 0\) si \(\lambda = \infty\).
+    Entonces la serie converge uniformemente en valor absoluto
+    para todo \(\lvert z - z_0 \rvert < r < R\)
+    y diverge para todo \(\lvert z - z_0 \rvert > R\).
+  \end{theorem}
+  \begin{proof}
+    Primero demostramos que la serie no converge
+    para \(\lvert z - z_0 \rvert > R\).
+    Sea \(L\) tal que:
+    \begin{equation*}
+      \frac{1}{\lvert z - z_0 \rvert}
+	< L
+	< \frac{1}{R}
+	= \lambda
+    \end{equation*}
+    Hay un número infinito de \(c_k\)
+    tales que \(\sqrt[k]{\lvert c_k \rvert} > L\),
+    ya que de lo contrario el límite superior sería menor a \(L\).
+    Para cada uno de ellos tenemos:
+    \begin{equation*}
+      \lvert c_k (z - z_0)^k \rvert
+	= \left(
+	    \sqrt[k]{\lvert c_k \rvert} \cdot \lvert z - z_0 \rvert
+	  \right)^k
+	> \left( L \lvert z - z_0 \rvert \right)^k
+	> 1
+    \end{equation*}
+    y la serie no puede converger.
+
+    Enseguida demostramos que converge uniformemente
+    para todo \(\lvert z - z_0 \rvert < r < R\).
+    Sea \(L\) tal que:
+    \begin{equation*}
+      \lambda
+	= \frac{1}{R}
+	< L
+	< \frac{1}{r}
+    \end{equation*}
+    Para \(k\) suficientemente grande
+    es \(\sqrt[k]{\lvert c_k \rvert} < L\),
+    con lo que si \(\lvert z - z_0 \rvert \le r\):
+    \begin{equation*}
+      \lvert c_k (z - z_0)^k \rvert
+	= \left(
+	    \sqrt[k]{\lvert c_k \rvert} \cdot \lvert z - z_0 \rvert
+	  \right)^k
+	< (L \lvert z - z_0 \rvert)^k
+	< (L r)^k
+    \end{equation*}
+    La serie geométrica de los \((L r)^k\) converge,
+    y la prueba de \(M\) da convergencia uniforme en valor absoluto.
+  \end{proof}
+  Nótese que hemos demostrado que toda serie de potencias
+  converge uniformemente en valor absoluto
+  en el disco abierto \(D_R(z_0)\),
+  su \emph{región de convergencia};
+  a \(R\) se le llama el \emph{radio de convergencia} de la serie.
+
+  Ya que estamos en eso,
+  explicitemos lo que el teorema~\ref{theo:int_f_n->int_f}
+  dice para series de potencias.
+  La función \(g\) que introduciremos nos vendrá bien más adelante.
+  \begin{corollary}
+    \label{cor:power-series-integrate-termwise}
+    Suponga una serie de potencias
+      \(\sum_{k \ge 0} c_k (z - z_0)^k\)
+    con radio de convergencia \(R\),
+    y una curva suave \(\gamma \subset D_R(z_0)\),
+    y sea \(g(z)\) continua
+    sobre \(\gamma\).
+    Entonces:
+    \begin{equation*}
+      \int_\gamma g(z) \sum_{k \ge 0} c_k (z - z_0)^k
+	  \, \mathrm{d} z
+	= \sum_{k \ge 0} c_k \int_\gamma g(z) (z - z_0)^k
+	    \, \mathrm{d} z
+    \end{equation*}
+    En particular,
+    si \(\gamma\) es cerrada:
+    \begin{equation*}
+      \int_\gamma \sum_{k \ge 0} g(z) c_k (z - z_0)^k
+	  \, \mathrm{d} z
+	= 0
+    \end{equation*}
+  \end{corollary}
+  \begin{proof}
+    Sea \(\epsilon > 0\),
+    y sea \(M\) el máximo de \(g\) sobre \(\gamma\),
+    y \(l_\gamma\) el largo de la curva.
+    Entonces hay un entero \(N\) tal que para \(n > N\):
+    \begin{equation*}
+      \left\lvert
+	\sum_{k \ge n} c_k (z - z_0)^k
+      \right\rvert
+	< \frac{\epsilon}{M l_\gamma}
+    \end{equation*}
+    de donde:
+    \begin{equation*}
+      \left\lvert
+	\int_\gamma g(z) \sum_{k \ge n} c_k (z - z_0)^k
+	  \, \mathrm{d} z
+      \right\rvert
+	< M l_\gamma \, \frac{\epsilon}{M l_\gamma}
+	= \epsilon
+    \end{equation*}
+    Con esto:
+    \begin{equation*}
+      \left\lvert
+	\int_\gamma g(z) \sum_{k \ge n} c_k (z - z_0)^k
+	  \, \mathrm{d} z
+	  - \sum_{0 \le k \le n - 1}
+	      c_k \int_\gamma g(z) (z - z_0)^k \, \mathrm{d} z
+      \right\rvert
+	= \left\lvert
+	    \int_\gamma g(z) \sum_{k \ge n} c_k (z - z_0)^k
+	      \, \mathrm{d} z
+	  \right\rvert
+	< \epsilon
+    \end{equation*}
+    Esto es lo que prometimos.
+  \end{proof}
+  Si elegimos \(g(z) = 1\),
+  tenemos que
+  podemos integrar término a término
+  dentro del radio de convergencia,
+  y la serie define una función holomorfa dentro de \(D_R(z_0)\).
+  Si analizamos los términos de la serie,
+  tenemos el siguiente:
+  \begin{corollary}
+    \label{cor:ratio-test-1}
+    Sean \(c_k\) los coeficientes de una serie de potencias
+    con radio de convergencia \(R\).
+    Entonces para \(r < R\):
+    \begin{equation*}
+      \lim_{k \rightarrow \infty} \lvert c_k \rvert r^k
+	= 0
+    \end{equation*}
+    mientras para \(r > R\):
+    \begin{equation*}
+      \lim_{k \rightarrow \infty} \lvert c_k \rvert r^k
+	= \infty
+    \end{equation*}
+  \end{corollary}
+  Nótese que esto nada dice sobre la convergencia o divergencia
+  en la frontera de la región de convergencia.
+  La manoseada serie:
+  \begin{equation}
+    \label{eq:logarithmic-series}
+    \sum_{k \ge 1} \frac{z^k}{k}
+  \end{equation}
+  tiene radio de convergencia \(1\).
+  Si partimos con:
+  \begin{equation}
+    \label{eq:geometric-series}
+    \frac{1}{1 - z}
+      = \sum_{k \ge 0} z^k
+  \end{equation}
+  cuyo radio de convergencia es \(1\),
+  obtenemos que su integral
+  (vale decir,
+   \eqref{eq:logarithmic-series})
+  tiene el mismo radio de convergencia.
+  Dentro del radio de convergencia converge a \(\Log (1 - z)\);
+  como converge para \(z = -1\),
+  por continuidad converge a \(\ln 2\) para \(z = -1\).
+  Diverge para \(z = 1\),
+  donde resulta la serie harmónica.
+
+  Una forma más sencilla
+  de usar del corolario~\ref{cor:ratio-test-1}
+  es la siguiente:
+  \begin{corollary}
+    \label{cor:ratio-test}
+    Sean \(c_k\) los coeficientes de una serie de potencias,
+    con \(c_k \ne 0\) para \(k\) suficientemente grande.
+    Entonces su radio de convergencia es:
+    \begin{equation}
+      \label{eq:convergence-radius-ratio}
+      R
+	= \lim_{k \rightarrow \infty}
+	    \frac{\lvert c_{k + 1} \rvert}{\lvert c_k \rvert}
+    \end{equation}
+  \end{corollary}
+
+  Vimos
+  (teorema~\ref{theo:holomorphic_f_n->holomorphic_f})
+  que si una secuencia de funciones holomorfas
+  converge uniformemente
+  en una región,
+  su límite es holomorfo.
+  Aplicando esto a series de potencias:
+  \begin{corollary}
+    \label{cor:holomorphic=>analytic}
+    Suponga \(f(z) = \sum_{k \ge 0} c_k (z - z_0)^k\)
+    tiene radio de convergencia positivo \(R\).
+    Entonces \(f\) es holomorfa en \(D_R(z_0)\).
+  \end{corollary}
+  Series de potencias con radio de convergencia infinito
+  representan funciones enteras.
+  Podemos derivar término a término:
+  \begin{theorem}
+    \label{theo:complex-series-differentiate-termwise}
+    Suponga \(f(z) = \sum_{k \ge 0} c_k (z - z_0)^k\)
+    tiene radio de convergencia positivo \(R\).
+    En \(D_R(z_0)\) tenemos:
+    \begin{equation*}
+      f'(z)
+	= \sum_{k \ge 0} k c_k (z - z_0)^{k - 1}
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Sea \(z\) un punto dentro de la región de convergencia,
+    y sea \(C\) una circunferencia orientada positivamente
+    centrada en \(z\) al interior de la región de convergencia.
+    Defina:
+    \begin{equation*}
+      g(\zeta)
+	= \frac{1}{2 \pi \mathrm{i} (\zeta - z)^2}
+    \end{equation*}
+    Aplicamos el corolario~\ref{cor:power-series-integrate-termwise}
+    para concluir:
+    \begin{align*}
+      \int_C g(\zeta) f(\zeta) \, \mathrm{d} \zeta
+	&= \sum_{k \ge 0}
+	     c_k \int_C g(\zeta) (\zeta - z_0)^k
+	       \, \mathrm{d} \zeta \\
+      \frac{1}{2 \pi \mathrm{i}} \,
+	\int_C \frac{f(\zeta)}{(\zeta - z)^2} \, \mathrm{d} \zeta
+	&= \sum_{k \ge 0} c_k \frac{1}{2 \pi \mathrm{i}} \,
+	     \int_C \frac{(\zeta - z_0)^k}{(\zeta - z)^2}
+	       \, \mathrm{d} \zeta \\
+    \intertext{La fórmula integral de Cauchy,
+	       teorema~\ref{theo:Cauchy-formula-f-prime},
+	       da:}
+      f'(z)
+	&= \sum_{k \ge 0} k c_k (z - z_0)^k
+    \end{align*}
+    La expansión es válida
+    dentro de la región de convergencia original.
+  \end{proof}
+
+\section{Series de Taylor y Laurent}
+\label{sec:Taylor-Laurent-series}
+
+  Veamos ahora cómo construir series
+  para una función holomorfa dada.
+
+\subsection{Serie de Taylor}
+\label{sec:Taylor-series}
+\index{Taylor, serie de}
+
+  \begin{theorem}[Serie de Taylor]
+    \label{theo:Taylor}
+    Suponga \(f\) holomorfa en el disco abierto \(D_R(z_0)\).
+    Entonces:
+    \begin{equation}
+      \label{eq:Taylor-series}
+      f(z)
+	= \sum_{k \ge 0}
+	    \frac{f^{(k)}(z_0)}{k!} (z - z_0)^k
+    \end{equation}
+    Esta serie converge en \(D_R(z_0)\).
+  \end{theorem}
+  \begin{proof}
+    Sea \(z \in D_R(z_0)\),
+    y sea \(C\)
+    una circunferencia de radio \(r\) alrededor de \(z\)
+    dentro del disco abierto.
+    Entonces \(0 < r < R\).
+    Para \(\zeta \in C\) podemos escribir:
+    \begin{equation*}
+      \frac{1}{\zeta - z}
+	= \frac{1}{(\zeta - z_0) - (z - z_0)}
+	= \frac{1}
+	       {\zeta - z_0}
+		 \cdot \frac{1}{1 - \frac{z - z_0}{\zeta - z_0}}
+	= \sum_{k \ge 0} \frac{(z - z_0)^k}{(\zeta - z_0)^{k + 1}}
+    \end{equation*}
+    Esto es válido ya que \((z - z_0) / (\zeta - z_0) < 1\),
+    y la convergencia es uniforme.
+    Podemos integrar:
+    \begin{align*}
+      \int_C \frac{f(\zeta)}{\zeta - z_0} \, \mathrm{d} \zeta
+	&= \sum_{k \ge 0}
+	     \left(
+	       \int_C \frac{f(\zeta)}{(\zeta - z_0)^{k + 1}}
+		 \, \mathrm{d} \zeta
+	     \right) \, (z - z_0)^k \\
+      f(z)
+	&= \frac{1}{2 \pi \mathrm{i}} \,
+	     \int_C \frac{f(\zeta)}{\zeta - z} \, \mathrm{d} \zeta
+	 = \sum_{k \ge 0}
+	     \left(
+	       \frac{1}{2 \pi \mathrm{i}} \,
+		 \int_C \frac{f(\zeta)}{(\zeta - z_0)^{k + 1}}
+		   \, \mathrm{d} \zeta
+	     \right) \, (z - z_0)^k \\
+	&= \sum_{k \ge 0} \frac{f^{(k)}(z_0)}{k!} \, (z - z_0)^k
+      \qedhere
+    \end{align*}
+  \end{proof}
+  A una función que puede representarse localmente
+  (en un disco abierto centrado en \(z_0\))
+  mediante una serie de potencias convergente
+  se le llama \emph{analítica}
+  (en \(z_0\)).
+  Vemos que es muy similar al concepto de holomorfismo
+  en los complejos,
+  lo que explica que comúnmente se usen intercambiablemente.
+
+  Vale la pena tomar un poco de distancia
+  y recapitular lo que hemos demostrado.
+  \begin{itemize}
+  \item
+    Si la función \(f\) es derivable
+    en una región \(D\) de \(\mathbb{C}\),
+    tiene derivadas de todos los órdenes en \(D\).
+    Igualmente tiene antiderivadas de todos los órdenes en \(D\).
+  \item
+    La integral de \(f\) es independiente del camino
+    al interior de la región simple \(D\),
+    y el valor de la integral
+    es la diferencia de los valores de una antiderivada
+    en los puntos inicial y final.
+  \item
+    El valor de la función en un punto interior de \(D\)
+    queda determinado por los valores en la frontera de \(D\).
+  \item
+    Podemos representar la función \(f\) mediante
+    su serie de Taylor~\eqref{eq:Taylor-series}
+    sobre un disco abierto
+      \(\{z \colon \lvert z - z_0 \rvert < R\}\).
+  \item
+    La serie de Taylor de \(f\)
+    converge uniformemente en valor absoluto
+    a \(f\) para \(\{z \colon \lvert z - z_0 \rvert \le r < R\}\),
+    donde el radio de convergencia \(R\)
+    está dado por~\eqref{eq:convergence-radius-root}
+    o~\eqref{eq:convergence-radius-ratio}.
+  \item
+    Una serie de potencias
+    puede derivarse e integrarse término a término,
+    resultando series con el mismo radio de convergencia.
+    Las series resultantes
+    igualmente convergen uniformemente en valor absoluto.
+  \item
+    La serie de potencias para \(f\) es única
+    (si tenemos dos series de potencias
+     que representan la misma función
+     centradas en el mismo punto,
+     tienen los mismo coeficientes).
+  \end{itemize}
+
+\subsection{Singularidades}
+\label{sec:singularities}
+\index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!singularidad|textbfhy}
+\index{singularidad}
+
+  Requeriremos un poco de jerga adicional.
+  Si la función \(f\) es tal que:
+  \begin{equation*}
+    f(z_0)
+      = 0
+  \end{equation*}
+  decimos que \(z_0\) es un \emph{cero} de \(f\).%
+    \index{cero|textbfhy}
+  Si \(m \in \mathbb{N}\) es tal que:
+  \begin{equation*}
+    \lim_{z \rightarrow z_0} \frac{f(z)}{(z - z_0)^{m - 1}}
+      = 0
+    \text{\ y\ }
+    \lim_{z \rightarrow z_0} \frac{f(z)}{(z - z_0)^m}
+      \ne 0
+  \end{equation*}
+  decimos que es un \emph{cero de multiplicidad} \(m\).
+  En el caso \(m = 1\) se habla de \emph{cero simple}.
+
+  Veamos cómo extender la representación de funciones
+  para abarcar puntos en los que dejan de ser holomorfas,
+  \emph{singularidades} en las que la función no está definida.
+  Estamos interesados en \emph{singularidades aisladas},
+  vale decir,
+  hay un disco abierto perforado
+  (en inglés, \emph{\foreignlanguage{english}{punctured disk}})
+  \(\{ z \in \mathbb{C} \colon 0 < \lvert z - z_0 \rvert < R \}\)
+  sobre el que la función \(f\) es holomorfa.
+  Tenemos los siguientes casos,
+  que detallaremos en lo que sigue:
+  \begin{description}
+  \item[Singularidad removible:]
+    Si existe:
+    \begin{equation*}
+      \lim_{z \rightarrow z_0} f(z)
+    \end{equation*}
+    la singularidad es removible.
+    Basta definir \(f(z_0)\) como el límite del caso,
+    y asunto resuelto.%
+      \index{singularidad!removible}
+    Véase el teorema~\ref{theo:Riemann-removable-singularity}.
+  \item[Polo:]\index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!polo}
+    Si hay \(m \in \mathbb{N}\)
+    tal que la función \(g\) definida por:
+    \begin{equation*}
+      g(z)
+	= (z - z_0)^m f(z)
+    \end{equation*}
+    cumple
+    \begin{equation*}
+      \lim_{z \rightarrow z_0} g(z) \ne 0
+    \end{equation*}
+    y \(g\) es holomorfa en un entorno de \(z_0\),
+    decimos que \(f\)
+    tiene un \emph{polo} de orden \(m\) en \(z_0\).%
+      \index{singularidad!polo}
+    Si \(m = 1\),
+    también se le llama \emph{polo simple}.
+
+    Es claro que si \(f\) tiene un cero de multiplicidad \(m\)
+    en \(z_0\),
+    entonces \(1 / f(z)\) tiene un polo de multiplicidad \(m\)
+    en ese punto.
+  \item[Singularidad esencial:]
+    Si \(f\) tiene una singularidad en \(z_0\)
+    que no es removible ni es un polo,
+    es una \emph{singularidad esencial}.%
+      \index{singularidad!esencial}
+  \end{description}
+  Una definición que será útil más adelante es la siguiente:
+  \begin{definition}
+    A una función \(f\) que es holomorfa sobre una región \(D\)
+    salvo polos se le llama \emph{meromorfa}.%
+      \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!funcion meromorfa@función meromorfa}
+  \end{definition}
+
+  Nótese que al conocer todas las derivadas de una función
+  en un punto cualquiera,
+  podemos expandirla en serie de Taylor alrededor de ese punto,
+  y esta serie converge en el disco abierto centrado en ese punto
+  y que llega a la singularidad más cercana.
+  De esta forma,
+  podemos \emph{extender analíticamente} la función%
+      \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)!extension analitica@extensión analítica}
+  a nuevas áreas del plano,
+  salvo que las singularidades formen un conjunto denso
+  en alguna curva cerrada.
+
+  Algunos resultados al respecto son los siguientes:
+  \begin{theorem}[De Riemann sobre singularidades removibles]
+    \label{theo:Riemann-removable-singularity}
+    Suponga que \(f\) es holomorfa sobre el disco abierto perforado
+    \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\),
+    y que
+    \begin{equation*}
+      \lim_{z \rightarrow z_0} (z - z_0) f(z)
+	= 0
+    \end{equation*}
+    Entonces \(f\) tiene una singularidad removible en \(z_0\).
+  \end{theorem}
+  \begin{proof}
+    Sea \(z\) un punto en el disco perforado
+    \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\),
+    y sean \(r_1\) y \(r_2\) tales que
+    \(0 < r_1 < \lvert z \rvert < r_2\),
+    y sean \(C_1\) y \(C_2\) circunferencias
+    de radios \(r_1\) y \(r_2\) respectivamente
+    centradas en \(z_0\),
+    orientadas ambas en sentido positivo.
+    La función:
+    \begin{equation*}
+      g(\zeta)
+       = \begin{cases}
+	   \displaystyle f'(z)
+				   & \zeta =   z \\
+	   \\
+	   \displaystyle \frac{f(\zeta) - f(z)}{\zeta - z}
+				   & \zeta \ne z
+	 \end{cases}
+    \end{equation*}
+    claramente es holomorfa
+    en \(\{ \zeta \colon \lvert \zeta - z_0 \rvert < R \}\).
+    Por el teorema de Cauchy:
+    \begin{equation*}
+      \int_{C_1} g(\zeta) \, \mathrm{d} \zeta
+	= \int_{C_2} g(\zeta) \, \mathrm{d} \zeta
+    \end{equation*}
+    De la definición de \(g\) esto significa:
+    \begin{equation*}
+      \int_{C_1} \frac{f(\zeta)}{\zeta - z} \, \mathrm{d} \zeta
+	-  f(z) \int_{C_1} \frac{1}{\zeta - z} \, \mathrm{d} \zeta
+	= \int_{C_2} \frac{f(\zeta)}{\zeta - z} \, \mathrm{d} \zeta
+	    -  f(z) \int_{C_2} \frac{1}{\zeta - z}
+		      \, \mathrm{d} \zeta
+    \end{equation*}
+    En la región
+      \(\{ \zeta \colon \lvert \zeta - z_0 \rvert
+	   < \lvert z - z_0 \rvert \}\)
+    (que incluye la curva \(C_1\) y su interior,
+     pero excluye \(z\))
+    es holomorfa la función:
+    \begin{equation*}
+      \frac{1}{\zeta - z}
+    \end{equation*}
+    y por lo tanto:
+    \begin{equation*}
+      \int_{C_1} \frac{1}{\zeta - z} \, \mathrm{d} \zeta
+	= 0
+    \end{equation*}
+    Por el otro lado,
+    la fórmula integral de Cauchy
+    aplicada a la función \(1 = 1(z)\) da:%
+      \index{Cauchy, formula integral de@Cauchy, fórmula integral de}
+    \begin{equation*}
+      \int_{C_2} \frac{1}{\zeta - z} \, \mathrm{d} \zeta
+	= 2 \pi \mathrm{i}
+    \end{equation*}
+    Por hipótesis,
+    dado \(\epsilon > 0\) hay \(\delta > 0\)
+    tal que si \(0 < \lvert \zeta - z_0 \rvert < \delta\)
+    entonces \(\lvert (\zeta - z_0) f(\zeta) \rvert < \epsilon\).
+    Sin perder generalidad podemos suponer:
+    \begin{equation*}
+      \delta < \frac{1}{2} \, \lvert z - z_0 \rvert
+    \end{equation*}
+    Si elegimos \(r_1 = \delta\),
+    por~\eqref{eq:complex-integral-bound}:
+    \begin{equation*}
+      \left\lvert
+	\int_{C_1} \frac{f(\zeta)}{\zeta - z} \, \mathrm{d} \zeta
+      \right\rvert
+	\le \left\lvert
+	      \int_{C_1} \frac{(\zeta - z_0) f(\zeta)}
+			      {(\zeta - z_0) \, (\zeta - z)}
+			 \, \mathrm{d} \zeta
+	    \right\rvert
+	\le \frac{\epsilon}
+		 {\delta ( \lvert z - z_0 \rvert - \delta )}
+	      \cdot 2 \pi \delta
+	\le \frac{4 \pi \epsilon}{\lvert z - z_0 \rvert}
+    \end{equation*}
+    Como \(\epsilon\) es arbitrario,
+    la integral se anula.
+    Concluimos:
+    \begin{equation*}
+      f(z)
+	= \frac{1}{2 \pi \mathrm{i}} \,
+	    \int_{C_2} \frac{f(\zeta)}{\zeta - z}
+	      \, \mathrm{d} \zeta
+    \end{equation*}
+    Esta definición vale sobre el disco perforado
+    \(\{ z  \colon 0 < \lvert z - z_0 \rvert < R \}\),
+    pero la integral define una función holomorfa
+    en \(\{z \colon \lvert z - z_0 \rvert < R \}\),
+    con lo que definiendo \(f(z_0)\) mediante:
+    \begin{equation*}
+      f(z_0)
+	= \frac{1}{2 \pi \mathrm{i}} \,
+	    \int_{C_2} \frac{f(\zeta)}{\zeta - z_0}
+	      \, \mathrm{d} \zeta
+    \end{equation*}
+    la función \(f\) es holomorfa
+    en \(\{z \colon \lvert z - z_0 \rvert < R \}\),
+    como prometimos.
+  \end{proof}
+  La condición del teorema~\ref{theo:Riemann-removable-singularity}
+  se cumple si \(\lvert f(z) \rvert\) es acotada.
+  Como una función holomorfa es continua,
+  si la singularidad es removible basta definir:
+  \begin{equation*}
+    f(z_0)
+      = \lim_{z \rightarrow z_0} f(z)
+  \end{equation*}
+
+  Cerca de singularidades esenciales las funciones
+  se comportan en forma descontrolada.
+  El gran teorema de Picard~%
+    \cite{picard79:_sur_propr_fonct_entier}
+  (para demostración ver textos de análisis complejo,
+   como el de Conway\cite{conway78:_funct_one_compl_variab_i})
+  muestra que en todo entorno de la singularidad
+  la función toma todos los valores posibles,%
+    \index{Picard, teorema de}%
+    \index{Picard, Charles Emile@Picard, Charles Émile}
+  salvo posiblemente uno.
+  El resultado siguiente es mucho más restringido,
+  pero también más fácil de demostrar:
+  \begin{theorem}[Casorati-Weierstraß]
+    \index{Casorati-Weierstrass, teorema de@Casorati-Weierstraß, teorema de}
+    \label{theo:Casorati-Weierstrass}
+    Sea \(f\) holomorfa en el disco perforado
+    \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\),
+    con una singularidad esencial en \(z_0\).
+    Entonces dado cualquier \(w \in \mathbb{C}\)
+    y números reales arbitrarios
+    \(\epsilon > 0\) y \(\delta > 0\)
+    hay \(z\) en el disco perforado tal que
+    \begin{equation*}
+      0 < \lvert z - z_0 \rvert < \delta
+      \text{\ y\ }
+      \lvert f(z) - w \rvert < \epsilon
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Suponga que hay \(w \in \mathbb{C}\),
+    \(\epsilon > 0\) y	\(\delta > 0\) tales que
+    \(\lvert f(z) - w \lvert \ge \epsilon\)
+    siempre que \(0 < \lvert z - z_0 \rvert < \delta\).
+    Entonces la función
+    \begin{equation*}
+      g(z)
+	= \frac{1}{f(z) - w}
+    \end{equation*}
+    es holomorfa y acotada en el disco perforado
+    \(\{ z \colon 0 < \lvert z - z_0 \rvert < \delta \}\),
+    con una singularidad removible en \(z_0\)
+    (teorema~\ref{theo:Riemann-removable-singularity}).
+    Definiendo \(g(z_0)\) apropiadamente,
+    \(g(z)\) es holomorfa
+    en \(\{ z \colon \lvert z - z_0 \rvert < \delta \}\),
+    y no es idénticamente cero en este disco.
+    Note que:
+    \begin{equation*}
+      f(z)
+	= w + \frac{1}{g(z)}
+    \end{equation*}
+    con lo que si \(g(z_0) \ne 0\),
+    \(f\) es derivable en \(z_0\);
+    si \(g(z_0) = 0\) entonces \(f\) tiene un polo en \(z_0\).
+    Esto contradice la hipótesis
+    de que \(f\) tiene una singularidad esencial
+    en \(z_0\).
+  \end{proof}
+
+  Un par de ejemplos servirán para clarificar el tema.
+  La función \(\mathrm{e}^{1 / z}\)
+  es holomorfa en todo \(\mathbb{C}\)
+  salvo en \(z = 0\),
+  que es una singularidad aislada.
+  Si nos restringimos al eje real,
+  vemos que:
+  \begin{equation*}
+    \lim_{x \rightarrow 0^+} \mathrm{e}^{1 / x}
+      = \lim_{u \rightarrow \infty} \mathrm{e}^u
+      = \infty
+  \end{equation*}
+  y la singularidad no es removible.
+  Por otro lado,
+  para \(n \in \mathbb{N}\):
+  \begin{equation*}
+    \lim_{x \rightarrow 0^+} x^n \mathrm{e}^{1 / x}
+      = \lim_{u \rightarrow \infty} \frac{\mathrm{e}^u}{u^n}
+      = \infty
+  \end{equation*}
+  y tampoco es un polo.
+  En consecuencia,
+  es una singularidad esencial.
+
+  Analicemos ahora la función:
+  \begin{equation*}
+    f(z)
+      = \frac{\mathrm{e}^z - 1}{z (z - 1)}
+  \end{equation*}
+  Es claro que tiene singularidades aisladas
+  en \(z = 0\) y \(z = 1\).
+  En \(z = 1\) tiene un polo simple,
+  ya que:
+  \begin{equation*}
+    g(z)
+      = (z - 1) f(z)
+      = \frac{\mathrm{e}^z - 1}{z}
+  \end{equation*}
+  y \(g(1) = \mathrm{e} - 1 \ne 0\).
+  La singularidad en \(z = 0\) es removible,
+  ya que por la regla de l'Hôpital:%
+    \index{Hopital, regla de@l'Hôpital, regla de}
+  \begin{equation*}
+    \lim_{z \rightarrow 0} \frac{\mathrm{e}^z - 1}{z (z - 1)}
+      = \lim_{z \rightarrow 0} \frac{\mathrm{e}^z}{2 z - 1}
+      = -1
+  \end{equation*}
+  Podemos analizar lo que ocurre en \(\infty\)
+  considerando \(f(1 / z)\),
+  que tiene una singularidad aislada en \(0\).
+  Según el comportamiento,
+  diremos que \(f\) tiene una singularidad removible,
+  un polo o una singularidad esencial en \(\infty\).
+  Primeramente,
+  el límite:
+  \begin{equation*}
+    \lim_{\lvert z \rvert \rightarrow \infty}
+      \frac{\mathrm{e}^z - 1}{z (z - 1)}
+  \end{equation*}
+  no existe,
+  ya que:
+  \begin{equation*}
+    \lim_{x \rightarrow \infty} \frac{\mathrm{e}^x - 1}{x (x - 1)}
+      = \infty
+    \qquad
+    \lim_{x \rightarrow -\infty} \frac{\mathrm{e}^x - 1}{x (x - 1)}
+      = 0
+  \end{equation*}
+  O sea,
+  la singularidad no es removible.
+  Enseguida,
+  para \(n \in \mathbb{N}\) cualquiera,
+  no existe el límite:
+  \begin{equation*}
+    \lim_{\lvert z \rvert \rightarrow \infty}
+      \frac{\mathrm{e}^z - 1}{z^{n + 1} (z - 1)}
+  \end{equation*}
+  porque:
+  \begin{equation*}
+    \lim_{x \rightarrow \infty}
+	\frac{\mathrm{e}^x - 1}{x^{n + 1} (x - 1)}
+      = \infty
+    \qquad
+    \lim_{x \rightarrow -\infty}
+	\frac{\mathrm{e}^x - 1}{x^{n + 1} (x - 1)}
+      = 0
+  \end{equation*}
+  Por tanto,
+  al no ser removible ni un polo,
+  es una singularidad esencial.
+
+  Es simple demostrar que si
+  \(\lim_{\lvert z \rvert \rightarrow \infty}
+	\lvert f(z) \rvert = \infty\),
+  entonces \(f\) es entera si y solo si es un polinomio.
+  O sea,
+  una función entera que no es un polinomio
+  tiene una singularidad esencial en \(\infty\).
+  Supongamos que \(f\) tiene un polo de orden \(m\) en \(\infty\).
+  Restando un polinomio \(p\) de \(f\),
+  de ser necesario,
+  podemos arreglar que \(f(z) - p(z)\)
+  tenga un cero de orden \(m\) en \(0\).
+  Claramente \(p\) tiene grado a lo más \(m\).
+  La función:
+  \begin{equation*}
+    g(z)
+      = \frac{f(z) - p(z)}{z^m}
+  \end{equation*}
+  es entera y acotada,
+  con lo que por el teorema de Liouville
+  (teorema~\ref{theo:Liouville})
+  es constante.
+  Entonces \(f\) es un polinomio.
+
+  La función tangente se define como:
+  \begin{equation*}
+    \tan z
+      = \frac{\sin z}{\cos z}
+  \end{equation*}
+  Esta función tiene singularidades no removibles
+  en los ceros de \(\cos z\),
+  que son \((k + 1 / 2) \pi\) para \(k \in \mathbb{Z}\).
+  Por l'Hôpital vemos que:%
+    \index{Hopital, regla de@l'Hôpital, regla de}
+  \begin{equation*}
+    \lim_{z \rightarrow \left( k + \frac{1}{2} \right) \, \pi}
+       \frac{\cos z}{z - \left( k + \frac{1}{2} \right) \, \pi}
+      = \lim_{z \rightarrow
+	    \left( k + \frac{1}{2} \right) \, \pi} - \sin z
+      = -1
+  \end{equation*}
+  Como los ceros de \(\cos z\) son simples,
+  las singularidades mencionadas son polos simples.
+  La singularidad en \(\infty\) no es aislada,
+  ya que todo entorno de \(z = 0\) de \(\tan 1 / z\)
+  contiene infinitas singularidades
+  (no hay \(R\) tal que \(\tan 1 / z\) es holomorfa
+   en \(\{ z \colon R < \lvert z \rvert < \infty \}\)).
+
+\subsection{Series de Laurent}
+\label{sec:Laurent-series}
+
+  Supongamos la función \(f\) holomorfa en el disco perforado
+  \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\),
+  con un polo de orden \(m\) en \(z_0\).
+  De la discusión precedente esto significa que la función siguiente
+  es holomorfa
+  en \(\{ z \colon \lvert z - z_0 \rvert < R \}\):
+  \begin{equation*}
+    g(z)
+      = (z - z_0)^m f(z)
+  \end{equation*}
+  Como es holomorfa,
+  tiene una serie de Taylor,
+  lo que significa que podemos escribir:
+  \begin{equation}
+    \label{eq:Laurent-series-1}
+    f(z)
+      = \sum_{k \ge 0} \frac{g^{(k)}(z_0)}{k!} (z - z_0)^{k - m}
+  \end{equation}
+  A la expresión:
+  \begin{equation}
+    \label{eq:Laurent-series-pp}
+    \frac{g(z_0)}{(z - z_0)^m}
+      + \frac{g'(z_0)}{(z - z_0)^{m - 1}}
+      + \frac{g''(z_0)}{2! (z - z_0)^{m - 1}}
+      + \dotsb
+      + \frac{g^{(m - 1)}(z_0)}{(m - 1)! (z - z_0)}
+  \end{equation}
+  se le llama la \emph{parte principal}%
+    \index{parte principal}
+  de la serie~\eqref{eq:Laurent-series-1},
+  que se anota \(\pp(f; z_0)\).
+
+  Nos interesa formalizar y extender lo anterior.
+  \begin{theorem}
+    \label{theo:complex-f1+f2-singularity}
+    Sea \(f\) una función holomorfa
+    en el disco perforado
+      \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\),
+    con una singularidad aislada en \(z_0\).
+    Entonces existen funciones únicas \(f_1\) y \(f_2\) tales que:
+    \begin{enumerate}[label=(\alph*), ref=(\alph*)]
+    \item
+      \label{theo:complex-f1+f2-singularity:a}
+      \(f(z) = f_1(z) + f_2(z)\)
+      en \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\)
+    \item
+      \label{theo:complex-f1+f2-singularity:b}
+      \(f_1\) es holomorfa en \(\mathbb{C}\),
+      excepto posiblemente en \(z_0\)
+    \item
+      \label{theo:complex-f1+f2-singularity:c}
+      \(f_1(z) \rightarrow 0\)
+	 cuando \(\lvert z \rvert \rightarrow \infty\)
+    \item
+      \label{theo:complex-f1+f2-singularity:d}
+      \(f_2\) es holomorfa
+	 en \(\{ z \colon \lvert z - z_0 \rvert < R \}\)
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Comenzamos como la demostración
+    del teorema~\ref{theo:Riemann-removable-singularity}.
+    Sea \(z\) un punto en el disco perforado
+    \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\),
+    y sean \(0 < r_1 < \lvert z - z_0 \rvert < r_2 < R\).
+    Sean además \(C_1\) y \(C_2\)
+    las circunferencias
+    de radios \(r_1\) y \(r_2\) respectivamente
+    alrededor de \(z_0\).
+    Obtenemos:
+    \begin{equation*}
+      f(z)
+	= \frac{1}{2 \pi \mathrm{i}} \,
+	    \int_{C_2} \frac{f(\zeta)}{\zeta - z}
+	      \, \mathrm{d} \zeta
+	      - \frac{1}{2 \pi \mathrm{i}} \,
+		  \int_{C_1} \frac{f(\zeta)}{\zeta - z}
+		    \, \mathrm{d} \zeta
+    \end{equation*}
+    Defina entonces:
+    \begin{equation*}
+      f_1(z)
+	= - \frac{1}{2 \pi \mathrm{i}} \,
+	      \int_{C_1} \frac{f(\zeta)}{\zeta - z}
+		\, \mathrm{d} \zeta
+     \qquad
+      f_2(z)
+	= \frac{1}{2 \pi \mathrm{i}} \,
+	    \int_{C_2} \frac{f(\zeta)}{\zeta - z}
+	      \, \mathrm{d} \zeta
+    \end{equation*}
+    La parte~\ref{theo:complex-f1+f2-singularity:a} es inmediata.
+    Para la parte~\ref{theo:complex-f1+f2-singularity:d},
+    la función \(f_2\) definida por la integral es holomorfa
+    en el disco \(\{ z \colon \lvert z - z_0 \rvert < r_2 \}\)
+    (como en el teorema~\ref{theo:Riemann-removable-singularity}).
+    Para~\ref{theo:complex-f1+f2-singularity:b},
+    la función \(f_2\) es holomorfa en el anillo
+    \(\{ z \colon r_1 < \lvert z - z_0 \rvert < r_2 \}\).
+    Como \(f\) y \(f_2\) no dependen de \(r_1\),
+    tampoco depende de \(r_1\)
+    la función \(f_1(z) = f(z) - f_2(z)\).
+    Tampoco depende de \(r_2\) la función \(f_2\),
+    por un razonamiento similar.
+    Se ve que:
+    \begin{equation*}
+      \lim_{\lvert z \rvert \rightarrow \infty}
+	\int_{C_1} \frac{f(\zeta)}{\zeta - z} \, \mathrm{d} \zeta
+	= 0
+    \end{equation*}
+    que es la parte~\ref{theo:complex-f1+f2-singularity:c}.
+    Para demostrar que \(f_1\) y \(f_2\) son únicas,
+    suponga funciones \(g_1\) y \(g_2\) con las mismas propiedades
+    en el disco perforado
+      \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\),
+    con lo que allí:
+    \begin{equation*}
+      f_1(z) - g_1(z)
+	= g_2(z) - f_2(z)
+    \end{equation*}
+    Defina:
+    \begin{equation*}
+      F(z)
+	= \begin{cases}
+	    g_2(z) - f_2(z) & \lvert z - z_0 \rvert < R \\
+	    g_1(z) - f_1(z) & \lvert z - z_0 \rvert \ge R
+	  \end{cases}
+    \end{equation*}
+    Entonces \(F\) es entera.
+    Pero por la parte~\ref{theo:complex-f1+f2-singularity:c}
+    \(F(z) \rightarrow 0\)
+    cuando \(\lvert z \rvert \rightarrow \infty\),
+    con lo que \(F\) es acotada.
+    Por el teorema de Liouville,%
+      \index{Liouville, teorema de}
+    \(F(z)\) es constante,
+    igual al límite mencionado antes;
+    con lo que \(F(z) = 0\) para todo \(z \in \mathbb{C}\),
+    y las funciones coinciden.
+  \end{proof}
+  Estamos en condiciones de completar nuestro ejemplo inicial.
+  \begin{theorem}[Serie de Laurent]
+    \label{theo:Laurent-series}
+    Sea \(f\) holomorfa en el disco perforado
+    \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\),
+    con una singularidad aislada en \(z_0\).
+    Sea \(C\) una circunferencia de radio \(r\),
+    donde \(0 < r < R\),
+    y para cada \(n \in \mathbb{Z}\) sea
+    \begin{equation}
+      \label{eq:Laurent-series-coefficient}
+      a_n
+	= \frac{1}{2 \pi \mathrm{i}} \,
+	    \int_C \frac{f(z)}{(z - z_0)^{n + 1}} \, \mathrm{d} z
+    \end{equation}
+    Entonces la serie
+    \begin{equation}
+      \label{eq:Laurent-series}
+      f(z)
+	= \sum_n a_n (z - z_0)^n
+    \end{equation}
+    converge en el disco perforado
+      \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\).
+    Más aún,
+    la convergencia es uniforme en todo anillo
+      \(\{ z \colon r_1 < \lvert z - z_0 \rvert < r_2 \}\),
+    donde \(0 < r_1 < r_2 < R\).
+  \end{theorem}
+  Nótese que la convergencia uniforme de la serie en el anillo
+    \(\{ z \colon r_1 < \lvert z - z_0 \rvert < r_2 \}\)
+  significa que para todo \(\epsilon > 0\)
+  existe \(N_0 = N_0(\epsilon, r_1, r_2)\),
+  independiente de \(z\),
+  tal que si \(N_1 \ge N_0\) y \(N_2 \ge N_0\):
+  \begin{equation*}
+    \left\lvert
+      f(z)
+	- \sum_{-N_1 \le n \le N_2} a_n (z - z_0)^n
+    \right\rvert
+      < \epsilon
+  \end{equation*}
+  A la serie~\eqref{eq:Laurent-series} se la llama
+  la \emph{serie de Laurent} de \(f\) alrededor de \(z_0\).%
+    \index{Laurent, serie de|textbfhy}
+  \begin{proof}
+    El primer paso es demostrar
+    que la serie~\eqref{eq:Laurent-series}
+    converge uniformemente a \(f(z)\)
+    sobre la circunferencia \(C\)
+    centrada en \(z_0\) de radio \(r\),
+    donde \(0 < r < R\),
+    y los coeficientes
+    están dados por~\eqref{eq:Laurent-series-coefficient}.
+    Suponga \(n \in \mathbb{Z}\) dado y fijo.
+    Para cualquier \(\epsilon > 0\)
+    podemos elegir \(N_1\) y \(N_2\)
+    suficientemente grandes para que
+    \(-N_1 \le n \le N_2\)
+    y tal que para todo \(z \in C\):
+    \begin{equation*}
+      \left\lvert
+	f(z)
+	  - \sum_{-N_1 \le k \le N_2} a_k (z - z_0)^k
+      \right\rvert
+	< \epsilon
+    \end{equation*}
+    Por la cota~\eqref{eq:complex-integral-bound} es:
+    \begin{equation*}
+      \left\lvert
+	\frac{1}{2 \pi \mathrm{i}} \,
+	  \int_C
+	    \left(
+	      f(z)
+	      - \sum_{-N_1 \le k \le N_2} a_k (z - z_0)^k
+	    \right) \,
+	      \frac{1}{(z - z_0)^n}
+	      \, \mathrm{d} z
+      \right\rvert
+	<\frac{\epsilon}{r^n}
+    \end{equation*}
+    Como:
+    \begin{equation*}
+      \frac{1}{2 \pi \mathrm{i}}
+	\, \int_C (z - z_0)^k \, \mathrm{d} z
+	= [k = -1]
+    \end{equation*}
+    resulta:
+    \begin{equation*}
+      \frac{1}{2 \pi \mathrm{i}} \,
+	\int_C
+	  \left(
+	    \sum_{-N_1 \le k \le N_2} a_k (z - z_0)^k
+	  \right) \,
+	    \frac{1}{(z - z_0)^{n + 1}}
+	    \, \mathrm{d} z
+       = a_n
+    \end{equation*}
+    Esto permite simplificar:
+    \begin{equation*}
+      \left\lvert
+	\frac{1}{2 \pi \mathrm{i}} \,
+	  \int_C \frac{f(z)}{(z - z_0)^{n + 1}} \, \mathrm{d} z
+	  - a_n
+      \right\rvert
+	<\frac{\epsilon}{r^n}
+    \end{equation*}
+    Como \(\epsilon\) es arbitrario,
+    resulta~\eqref{eq:Laurent-series-coefficient}.
+
+    Queda por demostrar
+    que la representación~\eqref{eq:Laurent-series}
+    vale en el disco perforado
+    \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\),
+    y que la convergencia es uniforme en todo anillo
+    \(\{ z \colon r_1 < \lvert z - z_0 \rvert < r_2 \}\)
+    con \(0 < r_1 < r_2 < R\).
+    Suponga \(r_1 < r < r_2\).
+    Por el teorema~\ref{theo:complex-f1+f2-singularity}
+    podemos escribir \(f(z) = f_1(z) + f_2(z)\)
+    donde \(f_1\) y \(f_2\) son únicas
+    y cumplen las condiciones~\ref{theo:complex-f1+f2-singularity:a}
+    a~\ref{theo:complex-f1+f2-singularity:d}.
+    Como \(f_2\) es holomorfa en el disco
+      \(\{ z \colon \lvert z - z_0 \rvert < R \}\),
+    su serie de Taylor:
+    \begin{equation*}
+      f_2(z)
+	= \sum_{n \ge 0} A_n (z - z_0)^n
+    \end{equation*}
+    converge
+    en el disco \(\{ z \colon \lvert z - z_0 \rvert < R \}\),
+    uniformemente
+    en el disco \(\{ z \colon \lvert z - z_0 \rvert < r_2 \}\).
+    Para estudiar \(f_1\),
+    efectuamos el cambio de variables:
+    \begin{equation*}
+      w = \frac{1}{z - z_0}
+      \qquad
+      z = z_0 + \frac{1}{w}
+    \end{equation*}
+    La función:
+    \begin{equation*}
+      f_1(z)
+	= f_1 \left( \frac{1}{w} + z_0 \right)
+    \end{equation*}
+    es entera en \(w\),
+    con lo que la serie de Taylor:%
+      \index{Taylor, serie de}
+    \begin{equation*}
+      f_1 \left( \frac{1}{w} + z_0 \right)
+	= \sum_{m \ge 1} B_m w^m
+    \end{equation*}
+    converge en \(\mathbb{C}\),
+    uniformemente en el disco cerrado
+      \(\{ w \colon \lvert w \rvert \le 1 / r_1 \}\).
+    El coeficiente \(B_0\) se anula.
+    Es el valor de \(f_1\) en \(w = 0\),
+    vale decir \(z = \infty\);
+    y por la parte~\ref{theo:complex-f1+f2-singularity:c}
+    del teorema~\ref{theo:complex-f1+f2-singularity}
+    esto se anula.
+    Combinando las series para \(f_1\) en términos de \(z - z_0\)
+    y para \(f_2\)
+    resulta lo prometido.
+  \end{proof}
+  El tipo de singularidad aislada
+  es sencillo de ver de los coeficientes
+  de la serie de Laurent~\eqref{eq:Laurent-series}:
+  \begin{corollary}
+    \label{cor:Laurent-singularity}
+    Sea \(f\) holomorfa en el disco perforado
+      \(\{ z \colon 0 < \lvert z - z_0 \rvert < R \}\),
+    y serie de Laurent dada por~\eqref{eq:Laurent-series}
+    con coeficientes \(a_n\)
+    como en~\eqref{eq:Laurent-series-coefficient}.
+    Entonces:
+    \begin{enumerate}[label=(\alph*), ref=(\alph*)]
+    \item
+      \label{cor:Laurent-singularity:a}
+      La función \(f\) es diferenciable en \(z_0\)
+      o tiene una singularidad removible si y solo si
+      \(a_n = 0\) para todo \(n < 0\)
+    \item
+      \label{cor:Laurent-singularity:b}
+      La función \(f\) tiene un polo
+      si y solo si un número finito pero no nulo
+      de coeficientes \(a_n\) con \(n\) negativo
+      son diferentes de cero
+    \item
+      \label{cor:Laurent-singularity:c}
+      La función \(f\) tiene una singularidad esencial
+      si y solo si un número infinito de coeficientes \(a_n\)
+      con \(n\) negativo son diferentes de cero
+    \end{enumerate}
+  \end{corollary}
+  \begin{proof}
+    Para la parte~\ref{cor:Laurent-singularity:a},
+    sabemos que si \(f\)
+    tiene una singularidad removible en \(z_0\),
+    podemos hacerla holomorfa definiendo \(f(z_0)\) adecuadamente.
+    Y la función holomorfa tiene serie de Taylor,
+    vale decir,
+    sin términos de índice negativo.
+
+    Para la parte~\ref{cor:Laurent-singularity:b},
+    si solo un número finito de coeficientes de índice negativo
+    no se anulan,
+    habrá \(m > 0\) tal que \(a_{-m} \ne 0\)
+    pero \(a_n = 0\) para todo \(n < -m\).
+    En tal caso:
+    \begin{equation*}
+      f(z)
+	= \sum_{n  \ge -m} a_n (z - z_0)^n
+    \end{equation*}
+    de forma que:
+    \begin{equation*}
+      g(z)
+	= (z - z_0)^m f(z)
+    \end{equation*}
+    es holomorfa en un entorno de \(z_0\),
+    y \(g(z_0) = a_{-m} \ne 0\),
+    y \(f\) tiene un polo de orden \(m\) en \(z_0\).
+
+    La parte~\ref{cor:Laurent-singularity:c}
+    resulta por no ser~\ref{cor:Laurent-singularity:a}
+    ni ~\ref{cor:Laurent-singularity:b}.
+  \end{proof}
+  Como la serie de Laurent es única,
+  podemos usar técnicas alternativas
+  a la fórmula~\eqref{eq:Laurent-series-coefficient}
+  para obtener los coeficientes.
+  Por ejemplo,
+  de la substitución \(w = 1 / z\) en la serie para \(\mathrm{e}^w\)
+  tenemos directamente:
+  \begin{equation*}
+    \mathrm{e}^{1/z}
+      = \sum_{n \ge 0} \frac{1}{n! z^n}
+  \end{equation*}
+  Nuevamente concluimos
+  que la singularidad en \(z = 0\) de esta función
+  es esencial.
+
+\subsection{Residuos}
+\label{sec:residues}
+
+  Al calcular la integral sobre una curva cerrada simple
+  que encierra una región en la que el integrando no es holomorfo,
+  el resultado no siempre es cero.
+  Primeramente tenemos:
+  \begin{lemma}
+    \label{lem:integral-residue}
+    Sea \(f\) una función holomorfa
+    en la región conexa simple \(D\),
+    excepto una singularidad aislada en \(z_0\),
+    y sea:
+    \begin{equation*}
+      f_1(z)
+	= \sum_{n \le -1} a_n (z - z_0)^n
+    \end{equation*}
+    la parte principal de la serie de Laurent de \(f\) en \(z_0\).
+    Sea también \(\gamma \subset D\) una curva cerrada simple suave
+    que se sigue en la dirección positiva,
+    que no pasa por \(z_0\).
+    Entonces:
+    \begin{equation*}
+      \frac{1}{2 \pi \mathrm{i}}
+	\, \int_\gamma f(\zeta) \, \mathrm{d} \zeta
+	= \begin{cases}
+	    a_{-1}
+	       & \text{si \(z_0\) está en el interior
+		       de \(\gamma\)} \\
+	    0
+	       & \text{si \(z_0\) está en el exterior de \(\gamma\)}
+	  \end{cases}
+   \end{equation*}
+  \end{lemma}
+  \begin{proof}
+    Si \(z_0\) está al exterior de \(\gamma\),
+    vemos que \(\gamma\) es holomorfa a un punto en \(D\),
+    y la integral es cero.
+
+    En caso que \(z_0\) está al interior de \(\gamma\),
+    la integral no es más que el coeficiente \(a_{-1}\)
+    de la serie de Laurent
+    según~\eqref{eq:Laurent-series-coefficient}.
+  \end{proof}
+  Al coeficiente \(a_{-1}\)
+  se le llama el \emph{residuo} de \(f\) en \(z_0\),
+  y se anota \(a_{-1} = \res(f, z_0)\).
+
+  Con esto podemos demostrar una forma simple
+  del teorema de residuos de Cauchy.
+  \begin{theorem}[De residuos de Cauchy]
+    \index{Cauchy, teorema de residuos de|textbfhy}
+    \label{theo:Cauchy-residues}
+    Sea \(f\) holomorfa,
+    salvo singularidades aisladas \(z_1, \dotsc, z_n\),
+    en la región simple conexa \(D\),
+    y \(\gamma \subset D\) una curva cerrada simple
+    trazada en dirección positiva.
+    Entonces:
+    \begin{equation}
+      \label{eq:Cauchy-integral-residues}
+      \int_\gamma f(z) \, \mathrm{d} z
+	= \sum_{\substack{1 \le k \le n \\
+			  \text{\(z_k\) interior a \(\gamma\)}}}
+	    \res(f, z_k)
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    Sea \(f_k(z)\) la parte principal de \(f(z)\) en \(z_k\).
+    Por el teorema~\ref{theo:complex-f1+f2-singularity}
+    sabemos que \(f_k\) es holomorfa excepto en \(z_k\),
+    por lo que la función:
+    \begin{equation*}
+      g(z)
+	= f(z) - \sum_{1 \le k \le n} f_k(z)
+    \end{equation*}
+    es holomorfa en \(D\).
+    Aplicando el lema~\ref{lem:integral-residue} resulta:
+    \begin{equation*}
+      \int_\gamma f(z) \, \mathrm{d} z
+	= \int_\gamma g(z) \, \mathrm{d} z
+	    + \sum_{1 \le k \le n}
+		\int_\gamma f_k(z) \, \mathrm{d} z
+	= 0 + \sum_{\substack{1 \le k \le n \\
+			  \text{\(z_k\) interior a \(\gamma\)}}}
+		\res(f_k, z_k)
+	= \sum_{\substack{1 \le k \le n \\
+			  \text{\(z_k\) interior a \(\gamma\)}}}
+	    \res(f, z_k)
+    \qedhere
+    \end{equation*}
+  \end{proof}
+  Para que esto resulte útil,
+  requerimos formas de calcular el residuo de \(f\)
+  en una singularidad \(z_0\).
+
+  Si la singularidad es removible,
+  \(f\) tiene una serie de Taylor alrededor de \(z_0\),%
+    \index{Taylor, serie de}
+  y el residuo es cero.
+
+  Enseguida,
+  si \(z_0\) es un polo simple de \(f\),
+  entonces tiene serie de Laurent:%
+    \index{Laurent, serie de}
+  \begin{equation*}
+    f(z)
+      = \frac{a_{-1}}{z - z_0} + g(z)
+  \end{equation*}
+  La función \(g(z)\) está representada por una serie de Taylor,
+  con lo que es holomorfa en un disco centrado en \(z_0\),
+  y \(\lim_{z \rightarrow z_0} (z - z_0) g(z) = 0\).
+  O sea:
+  \begin{equation*}
+    a_{-1}
+      = \lim_{z \rightarrow z_0} (z - z_0) f(z)
+  \end{equation*}
+  Una forma alternativa útil es la siguiente:
+  Suponga que \(f(z) = g(z) / h(z)\),
+  donde \(g\) y \(h\) son holomorfas,
+  \(g(z_0) \ne 0\)
+  y \(h\) tiene un cero simple en \(z_0\).
+  Entonces,
+  como \(h(z_0) = 0\):
+  \begin{equation*}
+    \lim_{z \rightarrow z_0} (z - z_0) \frac{g(z)}{h(z)}
+      = \frac{\lim_{z \rightarrow z_0} g(z)}
+	     {\lim_{z \rightarrow z_0} \frac{h(z) - h(z_0)}
+					    {z - z_0}}
+      = \frac{g(z_0)}{h'(z_0)}
+  \end{equation*}
+
+  Si \(z_0\) es un polo de orden \(m\) de \(f\),
+  tenemos:
+  \begin{equation*}
+    f(z)
+      = \frac{a_{-m}}{(z - z_0)^m}
+	  + \frac{a_{-m + 1}}{(z - z_0)^{m - 1}}
+	  + \dotsb
+	  + \frac{a_{-1}}{z - z_0}
+	  + g(z)
+  \end{equation*}
+  Entonces es holomorfa:
+  \begin{equation*}
+    (z - z_0)^m f(z)
+      = a_{-m}
+	 + a_{- m + 1} (z - z_0)
+	 + \dotsb
+	 + a_{-1} (z - z_0)^{m - 1}
+	 + (z - z_0)^m g(z)
+  \end{equation*}
+  Derivando \(m - 1\) veces:
+  \begin{equation*}
+    \frac{\mathrm{d}^{m - 1}}{\mathrm{d} z^{m - 1}} \,
+      ((z - z_0)^m f(z))
+      = a_{-1} (m - 1)!
+	  + \frac{\mathrm{d}^{m - 1}}{\mathrm{d} z^{m - 1}} \,
+	      ((z - z_0)^m f(z))
+  \end{equation*}
+  Como \(g\) es holomorfa,
+  el segundo término tiende a 0 cuando \(z \rightarrow z_0\):
+  \begin{equation*}
+    a_{-1}
+      = \frac{1}{(m - 1)!} \,
+	  \lim_{z \rightarrow z_0}
+	    \frac{\mathrm{d}^{m - 1}}{\mathrm{d} z^{m - 1}} \,
+	      ((z - z_0)^m f(z))
+  \end{equation*}
+
+  Un resultado que requeriremos más adelante es el siguiente.
+  Para \(0 < \alpha < 1\) tenemos la integral real:
+  \begin{equation}
+    \label{eq:integral-Gamma(z)Gamma(1-z)}
+    \int_{-\infty}^\infty
+      \frac{\mathrm{e}^{\alpha x}}{1 + \mathrm{e}^x}
+	 \, \mathrm{d} x
+      = \frac{\pi}{\sin \pi \alpha}
+  \end{equation}
+  Usamos como contorno
+  el rectángulo con vértices en
+  \(-R, R, R + 2 \pi \mathrm{i}, -R + 2 \pi \mathrm{i}\),
+  luego haremos tender \(R \rightarrow \infty\).
+  El numerador del integrando es una función entera,
+  el denominador tiene un único cero simple
+  en \(z = \pi \mathrm{i}\)
+  dentro de la curva:
+  \begin{equation*}
+    \res \left(
+	   \frac{\mathrm{e}^{\alpha z}}{1 + \mathrm{e}^z},
+	   \pi \mathrm{i}
+	 \right)
+      = \frac{\mathrm{e}^{\alpha \pi \mathrm{i}}}
+	     {\mathrm{e}^{\pi \mathrm{i}}}
+      = - \mathrm{e}^{\alpha \pi \mathrm{i}}
+  \end{equation*}
+  Veamos las integrales sobre los lados del rectángulo.
+  Sea \(I_R\) la integral que nos interesa,
+  a lo largo del eje real desde \(-R\) a \(R\);
+  y similarmente \(I\) la integral de interés.
+  La integral a lo largo del lado superior del rectángulo
+  (recordar que estamos integrando de derecha a izquierda)
+  es:
+  \begin{equation*}
+    - \mathrm{e}^{2 \pi \mathrm{i} \, \alpha} I_R
+  \end{equation*}
+  Finalmente,
+  para el lado derecho
+    \(V_R = \{ R + \mathrm{i} t \colon 0 \le t \le 2\pi \}\)
+  resulta:
+  \begin{equation*}
+    \left\lvert
+      \int_{V_R}
+	\frac{\mathrm{e}^{\alpha z}}{1 + \mathrm{e}^z}
+	\, \mathrm{d} z
+    \right\rvert
+      \le \int_0^{2 \pi}
+	    \left\lvert
+	      \frac{\mathrm{e}^{\alpha (R + \mathrm{i} t)}}
+		   {1 + \mathrm{e}^{R + \mathrm{i} t}}
+	      \, \mathrm{d} t
+	    \right\rvert
+      \le \int_0^{2 \pi}
+	    \mathrm{e}^{R (\alpha - 1) t}
+	      \cdot \lvert \mathrm{e}^{(\alpha - 1) \mathrm{i} t}
+	    \rvert
+	    \, \mathrm{d} t
+      \le C \mathrm{e}^{R (\alpha - 1)}
+  \end{equation*}
+  Como \(\alpha < 1\),
+  esto tiende a \(0\) al tender \(R\) a infinito.
+  El lado izquierdo es casi lo mismo.
+  Por el teorema de residuos:
+  \begin{align*}
+    I - \mathrm{e}^{2 \alpha \pi \mathrm{i}} I
+      &= - 2 \pi \mathrm{i} \, \mathrm{e}^{\alpha \pi \mathrm{i}} \\
+    I
+      &= - 2 \pi \mathrm{i} \,
+	   \frac{\mathrm{e}^{\alpha \pi \mathrm{i}}}
+		{1 - \mathrm{e}^{2 \alpha \pi \mathrm{i}}}
+       = \frac{2 \pi \mathrm{i}}
+	      {\mathrm{e}^{\alpha \pi \mathrm{i}}
+		 - \mathrm{e}^{- \alpha \pi \mathrm{i}}}
+       = \frac{\pi}{\sin \alpha \pi}
+  \end{align*}
+
+\subsection{Principio del argumento}
+\label{sec:argument-principle}
+
+  Aplicado adecuadamente,
+  el teorema de residuos de Cauchy
+  (teorema~\ref{theo:Cauchy-residues})
+  permite calcular el número de ceros y de polos
+  de funciones meromorfas.
+  \begin{lemma}
+    \label{lem:zero-residue}
+    Sea \(f\) holomorfa en un entorno de \(z_0\),
+    donde tiene un cero de multiplicidad \(m\).
+    Entonces la función \(f'(z) / f(z)\)
+    es holomorfa en un entorno perforado de \(z_0\),
+    con un polo simple en \(z_0\) con residuo \(m\).
+  \end{lemma}
+  \begin{lemma}
+    \label{lem:pole-residue}
+    Sea \(f\) holomorfa en un entorno de \(z_0\),
+    donde tiene un polo de multiplicidad \(m\).
+    Entonces la función \(f'(z) / f(z)\)
+    es holomorfa en un entorno perforado de \(z_0\),
+    con un polo simple en \(z_0\) con residuo \(-m\).
+  \end{lemma}
+  \begin{proof}[Demostración del lema~\ref{lem:zero-residue}]
+    Podemos escribir \(f(z) = (z - z_0)^m g(z)\),
+    con \(g\) holomorfa en un entorno de \(z_0\) y \(g(z_0) \ne 0\).
+    Entonces:
+    \begin{equation*}
+      \frac{f'(z)}{f(z)}
+	= \frac{m (z - z_0)^{m - 1} g(z) + (z - z_0)^m g'(z)}
+	       {(z - z_0)^m g(z)}
+	= \frac{m}{z - z_0} + \frac{g'(z)}{g(z)}
+    \end{equation*}
+    El segundo término es holomorfo en el entorno de \(z_0\)
+    y tenemos lo prometido.
+  \end{proof}
+  \begin{proof}[Demostración del lema~\ref{lem:pole-residue}]
+    Podemos escribir \(f(z) = (z - z_0)^{-m} g(z)\),
+    con \(g\) holomorfa en un entorno de \(z_0\) y \(g(z_0) \ne 0\).
+    Entonces:
+    \begin{equation*}
+      \frac{f'(z)}{f(z)}
+	= \frac{-m (z - z_0)^{-m - 1} g(z) + (z - z_0)^{-m} g'(z)}
+	       {(z - z_0)^{-m} g(z)}
+	= \frac{-m}{z - z_0} + \frac{g'(z)}{g(z)}
+    \end{equation*}
+    El segundo término es holomorfo en el entorno de \(z_0\)
+    y tenemos lo prometido.
+  \end{proof}
+  Uniendo los lemas~\ref{lem:zero-residue} y~\ref{lem:pole-residue}
+  resulta:
+  \begin{theorem}[Principio del argumento]
+    \index{principio del argumento|textbfhy}
+    \label{theo:argument-principle}
+    Sea \(f\) meromorfa en la región \(D\),
+    y \(\gamma \subset D\) una curva cerrada simple
+    trazada en dirección positiva,
+    y tal que no hayan ceros ni polos de \(f\) sobre \(\gamma\).
+    Sea \(N\) el número de ceros de \(f\) al interior de \(\gamma\),
+    contados con sus multiplicidades;
+    y análogamente \(P\)
+    el número de polos de \(f\) al interior de \(\gamma\),
+    contados con sus multiplicidades.
+    Entonces:
+    \begin{equation}
+      \label{eq:argument-principle}
+      \frac{1}{2 \pi \mathrm{i}} \,
+	\int_\gamma \frac{f'(z)}{f(z)} \, \mathrm{d} z
+	= N - P
+    \end{equation}
+  \end{theorem}
+  El nombre del teorema~\eqref{theo:argument-principle}
+  viene de lo siguiente:
+  \begin{equation*}
+    \int_\gamma \frac{f'(z)}{f(z)} \, \mathrm{d} z
+  \end{equation*}
+  es la variación del logaritmo de \(f(z)\) al trazar \(\gamma\),
+  como \(\gamma\) es cerrada
+  esto es únicamente la variación del argumento de \(f\)
+  en unidades de \(2 \pi \mathrm{i}\).
+
+  Para aplicación concreta del principio del argumento
+  al contar ceros
+  el resultado siguiente permite obviar el principio mismo,
+  o al menos aplicarlo a una función más simple.
+  \begin{theorem}[Rouché]
+    \index{Rouche, teorema de@Rouché, teorema de|textbfhy}
+    \label{theo:Rouche}
+    Sean \(f\) y \(g\) holomorfas en \(D\),
+    y sea \(\gamma \subset D\) una curva conexa simple.
+    Suponga además que \(\lvert f(z) \rvert > \lvert g(z) \rvert\)
+    sobre \(\gamma\).
+    Entonces el número de ceros de \(f\) y \(f + g\)
+    al interior de \(\gamma\) es el mismo.
+  \end{theorem}
+  La demostración que daremos se debe a Chen~%
+      \cite{chen08:_intro_complex_anal}.
+  \begin{proof}
+    Para \(\tau \in [0, 1]\) defina:
+    \begin{equation*}
+      N(\tau)
+	= \int_\gamma \frac{f'(z) + \tau g'(z)}{f(z) + \tau g(z)}
+	    \, \mathrm{d} z
+    \end{equation*}
+    Como en \(\gamma\)
+    es \(\lvert f(z) \rvert > \lvert g(z) \rvert\),
+    esto asegura:
+    \begin{equation*}
+      \lvert f(z) + \tau g(z) \rvert
+	\ge \lvert f(z) \rvert - \tau \lvert g(z) \rvert
+	\ge \lvert f(z) \rvert - \lvert g(z) \rvert
+	> 0
+    \end{equation*}
+    de forma que \(f + \tau g\) no tiene ceros sobre \(\gamma\),
+    con lo que \(N(\tau)\) es continua.
+    Siendo entero el valor,
+    la única posibilidad es que \(N(\tau)\) sea constante.
+    Pero \(N(0)\) es el número de ceros de \(f\)
+    al interior de \(\gamma\),
+    y \(N(1)\) el número de ceros de \(f + g\).
+  \end{proof}
+
+\section{Aplicaciones discretas}
+\label{sec:complex-discrete-applications}
+
+  Para ir a nuestro tema,
+  veremos algunas aplicaciones discretas del análisis complejo.
+
+\subsection{Sumas infinitas}
+\label{sec:complex-infinite-sums}
+
+  Para mostrar la técnica general,
+  veamos un par de ejemplos.
+
+  Consideremos la función:
+  \begin{equation*}
+    f(z)
+      = \frac{\pi \cot \pi z}{z^2}
+  \end{equation*}
+  Esta función tiene singularidades en \(z = k\)
+  para todo \(k \in \mathbb{Z}\)
+  (\(\sin \pi z\) tiene ceros simples allí).
+  En \(z = 0\) es un polo de orden 3,
+  los demás son polos simples.
+  En el origen:
+  \begin{equation*}
+    \res(f, 0)
+      = \frac{1}{2!} \,
+	  \lim_{z \rightarrow 0}
+	    \frac{\mathrm{d}^2}{\mathrm{d} z^2} z^3 f(z)
+      = - \frac{\pi^2}{3}
+  \end{equation*}
+  Para los demás polos:
+  \begin{equation*}
+    \res(f, k)
+      = \frac{\pi \cos k \pi}{k^2 \pi \cos k \pi + 2 k \sin k \pi}
+      = \frac{1}{k^2}
+  \end{equation*}
+  Nuestra estrategia será hallar una curva
+  que encierre todas las singularidades de interés de \(f\),
+  y sobre la cual sea sencillo calcular la integral
+  (o demostrar que dicha integral tiende a cero).
+  Elegir adecuadamente la curva es un arte,
+  no hay recetas simples.
+  Con eso tenemos la suma.
+
+  Una curva simple de manejar es \(\gamma_n\),
+  el cuadrado
+  con esquinas en \(\pm (n + 1/2) \pm \mathrm{i}(n + 1/2)\).
+  Es importante mantenerse alejado de los polos,
+  ya que en ellos la función tiende a infinito
+  y acotar la integral sobre un camino que pase cerca de un polo
+  será complicado.
+
+  Otras alternativas populares
+  son circunferencias centradas en el origen
+  cuyo radio tiende a infinito,
+  y también semicircunferencias
+  (en el semiplano imaginario positivo o negativo)
+  completadas con el eje \(x\).
+
+  Consideremos la función \(\cot z\) para \(z = x + \mathrm{i} y\).
+  Podemos expresar:
+  \begin{equation}
+    \label{eq:cot(z)}
+    \cot z
+      = \frac{\cos x \cosh y - \mathrm{i} \, \sin x \sinh y}
+	     {\sin x \cosh y + \mathrm{i} \, \cos x \sinh y}
+  \end{equation}
+  En los lados verticales del cuadrado es \(\cos x = 0\),
+  con lo que \(\sin x = 1\) y~\eqref{eq:cot(z)} queda:
+  \begin{align}
+    \cot z
+      &= \frac{- \mathrm{i} \, \sinh y}{\cosh y}
+       = - \mathrm{i} \, \tanh y \notag \\
+    \lvert \cot z \rvert
+      &= \lvert \tanh y \rvert
+       \le 1 \label{eq:complex-cot-vertical-bound}
+  \end{align}
+  Obtenemos la cota:
+  \begin{equation*}
+    \left\lvert
+	\int_\text{vertical} f(z) \, \mathrm{d} z
+    \right\rvert
+      \le \max( \lvert f(z) \rvert) \cdot (2 n + 1)
+      \le \frac{1}{(n + 1/2)^2} \cdot (2 n + 1)
+  \end{equation*}
+
+  En los lados horizontales escribimos:
+  \begin{equation*}
+    \lvert \cot z \rvert^2
+      =	 \frac{\cos^2 x \cosh^2 y + \sin^2 x \sinh^2 y}
+	      {\sin^2 x \cosh^2 y + \cos^2 x \sinh^2 y}
+  \end{equation*}
+  Por~\eqref{eq:cot(z)} podemos expresar:
+  \begin{align*}
+    \lvert \cot z \rvert^2
+      &= \frac{\cos^2 x \cosh^2 y + \sin^2 x \sinh^2 y}
+	      {\sin^2 x \cosh^2 y + \cos^2 x \sinh^2 y} \\
+      &= \frac{\cos^2 x \cosh^2 y + (1 - \cos^2 x) (\cosh^2 y - 1)}
+	      {(1 - \cos^2 x) \cosh^2 y
+		+ \cos^2 x (\cosh^2 y - 1)} \\
+      &= 1 + \frac{2 \cos^2 x - 1}{\cosh^2 y - \cos^2 x}
+  \end{align*}
+  Como cuando \(y \rightarrow \pm \infty\)
+  también \(\cosh y \rightarrow \infty\),
+  para \(y\) suficientemente grande es:
+  \begin{equation}
+    \label{eq:complex-cot-horizontal-bound}
+    \lvert \cot z \rvert
+      \le 2
+  \end{equation}
+  Con este entendido resulta la cota:
+  \begin{equation*}
+    \left\lvert \int_\text{horizontal} f(z) \, \mathrm{d} z \right\rvert
+      \le \max(\lvert f(z) \rvert) \cdot (2 n + 1)
+      \le \frac{2}{(n + 1/2)^2} \cdot (2 n + 1)
+  \end{equation*}
+  Uniendo las anteriores
+  tenemos la cota para la integral sobre \(\gamma_n\):
+  \begin{equation*}
+    \left\lvert \int_{\gamma_n} f(z) \, \mathrm{d} z \right\rvert
+      \le 2 \cdot \frac{1}{(n  + 1/2)^2} \cdot (2 n + 1)
+	   + 2 \cdot \frac{2}{(n + 1/2)^2} \cdot (2 n + 1)
+      = \frac{24}{2 n + 1}
+  \end{equation*}
+  Esto tiende a cero cuando \(n \rightarrow \infty\).
+  Por lo tanto:
+  \begin{align*}
+    \lim_{n \rightarrow \infty} \int_{\gamma_n} f(z) \, \mathrm{d} z
+      &= 0 \\
+    \sum_{k \in \mathbb{Z}} \res(f, k \pi)
+      &= 0
+       = - \frac{\pi^2}{3} + 2 \sum_{k \ge 1} \frac{1}{k^2}
+  \end{align*}
+  De acá:%
+    \index{Basilea, problema de}
+  \begin{equation}
+    \label{eq:sum-reciprocal-squares}
+    \sum_{k \ge 1} \frac{1}{k^2}
+      = \frac{\pi^2}{6}
+  \end{equation}
+  Otra solución al problema de Basilea.
+  El mismo método entrega valores
+  para \(\zeta(2 n)\) para todo \(n\).
+
+  Consideremos ahora la función:
+  \begin{equation*}
+    f(z)
+      = \frac{\pi \csc \pi z}{z^2}
+  \end{equation*}
+  Nuevamente tenemos singularidades aisladas
+  en \(z \in \mathbb{Z}\).
+  En el origen es un polo de orden tres:
+  \begin{equation*}
+    \res(f, 0)
+      = \lim_{z \rightarrow 0} \frac{1}{2!} \,
+	  \frac{\mathrm{d}^2}{\mathrm{d} z^2} f(z)
+      = \frac{\pi^2}{6}
+  \end{equation*}
+  Para los demás polos,
+  que son todos simples:
+  \begin{equation*}
+    \res(f, k)
+      = \frac{\pi}{\pi k^2 \cos k \pi + 2 k \sin k \pi}
+      = \frac{(-1)^k}{k^2}
+  \end{equation*}
+  Veamos \(\csc z\) para \(z = x + \mathrm{i} y\)
+  sobre el mismo cuadrado \(\gamma_n\).
+  Primero:
+  \begin{equation*}
+    \csc z
+      = \frac{1}{\sin x \cosh y + \mathrm{i} \, \cos x \sinh y}
+  \end{equation*}
+  En los lados verticales,
+  donde \(\cos x = 0\) y \(\sin x = 1\):
+  \begin{equation}
+    \label{eq:complex-csc-vertical-bound}
+    \lvert \csc z \rvert
+      = \frac{1}{\cosh y}
+      \le 1
+  \end{equation}
+  Para los horizontales interesa una cota superior para \(\cot z\),
+  que es lo mismo que una cota inferior para \(\sin z\):
+  \begin{align*}
+    \lvert \sin z \rvert^2
+      &= \lvert \sin^2 x \, \cosh^2 y
+	    + \cos^2 x \, \sinh^2 y \rvert \\
+      &= \lvert (1 - \cos^2 x) (1 + \sinh^2 y)
+		   + \cos^2 x \, \sinh^2 y \rvert \\
+      &= \lvert 1 - \cos^2 x + \sinh^2 y \rvert
+  \end{align*}
+  Para \(y \rightarrow \pm \infty\)
+  tenemos \(\sinh^2 y \rightarrow \infty\),
+  por lo que para \(y\) suficientemente grande
+    \(\lvert \csc z \rvert \le 1\).
+  Similar a antes:
+  \begin{equation*}
+    \left\lvert \int_{\gamma_n} f(z) \, \mathrm{d} z \right\rvert
+      \le 2 \cdot \frac{1}{(n  + 1/2)^2} \cdot (2 n + 1)
+	   + 2 \cdot \frac{1}{(n + 1/2)^2} \cdot (2 n + 1)
+      = \frac{16}{2 n + 1}
+  \end{equation*}
+  Resulta:
+  \begin{align*}
+    \lim_{n \rightarrow \infty} \int_{\gamma_n} f(z) \, \mathrm{d} z
+      &= 0 \\
+    \sum_{k \in \mathbb{Z}} \res(f, k \pi)
+      &= 0
+       = - \frac{\pi^2}{6} + 2 \sum_{k \ge 1} \frac{(-1)^k}{k^2}
+  \end{align*}
+  De acá:
+  \begin{equation}
+    \label{eq:sum-alternating-reciprocal-squares}
+    \sum_{k \ge 1} \frac{(-1)^k}{k^2}
+      = \frac{\pi^2}{12}
+  \end{equation}
+
+  Si se revisa el desarrollo,
+  es claro que para cualquier función meromorfa \(g(z)\)
+  par en \(\mathbb{R}\) y tal que:
+  \begin{equation*}
+    \lim_{\lvert z \rvert \rightarrow \infty} z g(z) = 0
+  \end{equation*}
+  podemos aplicar las mismas técnicas para evaluar las sumas:
+  \begin{equation*}
+    \sum_{k \ge 1} g(k)
+    \qquad
+    \sum_{k \ge 1} (-1)^k g(k)
+  \end{equation*}
+
+  Podemos usar el mismo método para evaluar series.
+  Por ejemplo,
+  si nos interesa evaluar
+  la siguiente serie para \(w \in \mathbb{C}\):
+  \begin{equation*}
+    \sum_{k \ge 1} \frac{w}{k^2 - w^2}
+  \end{equation*}
+  Si consideramos \(w\) como una constante,
+  podemos aplicar la idea precedente con:
+  \begin{equation*}
+    f(z)
+      = \frac{\pi \cot \pi z}{z^2 - w^2}
+  \end{equation*}
+  Esta función tiene polos simples en \(z \in \mathbb{Z}\)
+  y en \(z = \pm w\).
+  Igual que antes,
+  en las últimas singularidades:
+  \begin{equation*}
+    \res(f, \pm w)
+      = \lim_{z \rightarrow \pm w}
+	  \frac{\pi \cot \pi z}{z \pm w}
+      = \pm \frac{\pi \cot (\pm \pi w)}{2 w}
+      = \frac{\pi \cot \pi w}{2 w}
+  \end{equation*}
+  En \(z = k \in \mathbb{Z}\):
+  \begin{equation*}
+    \res(f, k)
+      = \lim_{z \rightarrow k}
+	  \frac{\pi \cos \pi z}
+	{(z^2 - w^2) \, \pi \cos \pi z + 2 z \sin \pi z}
+      = \frac{1}{k^2 - w^2}
+  \end{equation*}
+  Igual que arriba,
+  la integral sobre el cuadrado se anula:
+  \begin{align*}
+    \sum_{k \in \mathbb{Z}} \frac{1}{k^2 - w^2}
+      + 2 \cdot \frac{\pi \cot (\pi w)}{2 w}
+      &= 0 \\
+    2 \sum_{k \ge 1} \frac{1}{k^2 - w^2}
+      - \frac{1}{w^2}
+      + \frac{\pi \cot (\pi w)}{w}
+      &= 0
+  \end{align*}
+  \begin{align*}
+    \sum_{k \ge 1} \frac{1}{k^2 - w^2}
+      &= \frac{1}{2 w^2} - \frac{\pi \cot (\pi w)}{2 w} \\
+    \sum_{k \ge 1} \frac{w}{k^2 - w^2}
+      &= \frac{1}{2 w} - \frac{\pi}{2} \cot \pi w
+  \end{align*}
+
+\subsection{Números de Fibonacci}
+\label{sec:complex-Fibonacci-numbers}
+
+  Los números de Fibonacci quedan definidos por la recurrencia
+  (ver sección~\ref{sec:Fibonacci}):%
+     \index{Fibonacci, numeros de@Fibonacci, números de}
+  \begin{equation}
+    \label{eq:Fibonacci-recurrence-2}
+    F_{n + 2}
+      = F_{n + 1} + F_n
+    \qquad
+    F_0 = 0, F_1 = 1
+  \end{equation}
+  Sabemos que la función generatriz ordinaria
+  es~\eqref{eq:Fibonacci-explicit}:
+  \begin{equation}
+    \label{eq:Fibonacci-explicit}
+    F(z)
+      = \sum_{k \ge 0} F_k z^k
+      = \frac{z}{1 - z - z^2}
+  \end{equation}
+  Los ceros del denominador de~\eqref{eq:Fibonacci-explicit}
+  son \((-1 \pm \sqrt{5}) / 2\),
+  siendo \((-1 + \sqrt{5}) / 2\) el más cercano al origen.
+  Esto determina el radio de convergencia
+  de la serie.
+  Recordamos las definiciones:
+  \begin{equation*}
+    \tau
+      = \frac{1 + \sqrt{5}}{2}
+    \qquad
+    \phi
+      = \frac{1 - \sqrt{5}}{2}
+  \end{equation*}
+  con lo que:
+  \begin{equation*}
+    1 - z - z^2
+      = - (z + \tau) (z + \phi)
+  \end{equation*}
+  y también:
+  \begin{equation}
+    \label{eq:phi*barphi}
+    \tau \phi
+      = -1
+  \end{equation}
+  Nuestro operador de extracción de coeficientes es:
+  \begin{equation*}
+    \left[ z^n \right] F(z)
+      = \res \left( \frac{F(z)}{z^{n + 1}}, 0 \right)
+      = F_n
+  \end{equation*}
+  Las otras singularidades son polos simples:
+  \begin{align*}
+    \res \left( \frac{F(z)}{z^{n + 1}}, -\tau \right)
+      &= - \lim_{z \rightarrow -\tau}
+	     \frac{1}{z^n (z + \phi)}
+      = - \frac{1}{(-\tau)^n (-\tau + \phi)}
+      = \frac{\phi^n}{\tau - \phi} \\
+    \res \left( \frac{F(z)}{z^{n + 1}}, -\phi \right)
+      &= - \lim_{z \rightarrow -\phi}
+	     \frac{1}{z^n (z + \tau)}
+      = - \frac{1}{(-\phi)^n (-\phi + \tau)}
+      = - \frac{\tau^n}{\tau - \phi}
+  \end{align*}
+  Acá usamos la ecuación~\eqref{eq:phi*barphi} para los recíprocos
+  de \(\tau\) y \(\phi\).
+  Integremos sobre \(C_R\),
+  la circunferencia de radio \(R\) centrada en el origen,
+  donde \(R > \tau\).
+  Por la desigualdad triangular,%
+    \index{desigualdad triangular}
+  teorema~\ref{theo:desigualdad-triangular}:
+  \begin{equation*}
+    \lvert z \rvert^2 - \lvert z \rvert - 1
+      \le \lvert z^2 + z - 1 \rvert
+  \end{equation*}
+  Para \(\lvert z \rvert\) suficientemente grande:
+  \begin{equation*}
+    \lvert z \rvert^2
+       \left(
+	 1 - \frac{\lvert z \rvert + 1}{\lvert z \rvert^2}
+       \right)
+       \ge \frac{1}{2} \lvert z \rvert^2
+  \end{equation*}
+  Usando esto en la integral:
+  \begin{equation*}
+    \left\lvert
+      \int_{C_R} \frac{z}{z^{n + 1}(1 - z - z^2)} \, \mathrm{d} z
+    \right\rvert
+      \le \frac{2}{R^{n + 1} R^2}
+	    \cdot 2 \pi R
+      = \frac{4 \pi}{R^{n + 2}}
+  \end{equation*}
+  Esto tiende a cero al tender \(R\) a infinito:
+  \begin{equation*}
+    F_n
+      = \frac{1}{\tau - \phi} \,
+	  \left(
+	    \tau^n - \phi^n
+	  \right)
+      = \frac{1}{\sqrt{5}} \,
+	  \left(
+	    \left( \frac{1 + \sqrt{5}}{2} \right)^n
+	      - \left( \frac{1 - \sqrt{5}}{2} \right)^n
+	  \right)
+  \end{equation*}
+  De nuevo la fórmula de Binet~\eqref{eq:Binet-Fibonacci}.%
+    \index{Binet, formula de@Binet, fórmula de}
+
+\input{gamma}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

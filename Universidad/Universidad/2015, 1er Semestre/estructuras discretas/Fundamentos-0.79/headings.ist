@@ -1,0 +1,20 @@
+# headings.ist
+#
+# Copyright (c) 2014 Horst H. von Brand
+# Bajo licencia MIT. Vea LICENSE-MIT para detalles
+
+% Put capital letters in index
+% Cribbed from makeindex(1) and tex.SE 53986
+%
+% Horst H. von Brand <vonbrand@inf.utfsm.cl>
+% Version 1.1  2014-12-12
+
+headings_flag 1
+
+symhead_positive "S\\'\\i mbolos"
+symhead_negative "s\\'\\i mbolos"
+numhead_positive "N\\'umeros"
+numhead_negative "n\\'umeros"
+
+heading_prefix "\{\\Large\\textbf\{"
+heading_suffix "\}\\vspace*\{0.2\\baselineskip\}\}\\nopagebreak\n"

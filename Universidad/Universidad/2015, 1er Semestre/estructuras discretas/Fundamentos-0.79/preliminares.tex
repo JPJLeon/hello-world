@@ -1,0 +1,2597 @@
+% preliminares.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Preliminares}
+\label{cha:preliminares}
+
+  El capítulo
+  resume algunas nociones y notaciones
+  que usaremos en el resto del texto.
+  No debiera presentar material realmente nuevo para el lector.
+
+  El rango de nociones manejados en matemáticas es muy amplio,
+  y la notación bastante variada.
+  La notación
+  (y la nomenclatura)
+  usada por distintos autores no es uniforme,
+  por tanto servirá también
+  para definir la notación que usaremos.
+  Donde hay diversas notaciones en uso más o menos común,
+  se anotarán las alternativas.
+
+  Repasaremos lógica matemática,
+  conjuntos
+  y notaciones para sumatorias y productorias.
+  Introducimos potencias factoriales,
+  las funciones piso
+  (\emph{\foreignlanguage{english}{floor}})
+  y techo
+  (\emph{\foreignlanguage{english}{ceil}}),
+  que se usan frecuentemente en matemáticas discretas.
+  Definiremos notaciones asintóticas,
+  que usaremos más adelante al discutir algunos algoritmos.
+
+\section{Notación de lógica matemática}
+\label{sec:notacion-logica}
+\index{logica matematica@lógica matemática!notacion@notación|textbfhy}
+
+  Usaremos la notación de la lógica matemática
+  con frecuencia en lo que sigue,
+  la introduciremos informalmente acá.
+
+\subsection{Proposiciones}
+\label{sec:proposiciones}
+
+  \begin{definition}
+    Una \emph{proposición} es una aseveración
+    que puede ser verdadera o falsa.
+    \index{proposicion@proposición|textbfhy}
+    \glossary{Proposición}
+	     {En lógica, una aseveración que puede ser verdadera o falsa}
+  \end{definition}
+  Algunos ejemplos son:
+  \begin{proposition}
+    \label{prop:llueve}
+    Está lloviendo en Valparaíso.
+  \end{proposition}
+  \begin{proposition}
+    \label{prop:Fermat-5}
+    El número \(2^{32} + 1\) es primo
+  \end{proposition}
+  \begin{proposition}
+    \label{prop:zeta(3)}
+    El número real
+    \begin{equation*}
+      \zeta(5)
+	= \sum_{k \ge 1} k^{-5}
+    \end{equation*}
+    es irracional.
+  \end{proposition}
+  La verdad de~\ref{prop:llueve} depende del momento,
+  \ref{prop:Fermat-5} es falsa
+  (es \(2^{32} + 1 = 641 \cdot 6\,700\,417\)),
+  y nadie sabe si~\ref{prop:zeta(3)} es cierta o no.
+
+  Gran parte de nuestro lenguaje no son proposiciones,
+  con lo que la lógica no es capaz de representarlo todo.
+  Por ejemplo,
+  a una pregunta,
+  a una orden
+  o a una interjección no se le puede asignar verdad o falsedad.
+
+\subsection{Conectivas lógicas}
+\label{sec:conectivas-logicas}
+\index{logica matematica@lógica matemática!conectivas|textbfhy}
+\index{conectivas logicas@conectivas lógicas|see{lógica matemática!conectivas}}
+
+  Comúnmente combinamos proposiciones como
+  ``Si llueve, uso paraguas'',
+  ``Se puede viajar a Concepción en bus o en avión'',
+  ``No traje mis documentos'',
+  ``Apruebo el ramo solo si obtengo al menos 35 en la prueba''
+  o ``El cartel es rojo y azul''.
+  Para precisar el significado de estas combinaciones
+  usamos \emph{tablas de verdad}.
+    \index{tabla de verdad (logica)@tabla de verdad (lógica)}
+  \begin{table}[htbp]
+    \centering
+    \subfloat[Negación]{
+      \begin{tabular}[t]{|c|c|}
+	\firsthline
+	  \rule[-0.9ex]{0pt}{3ex}%
+	\(\pmb{P}\) & \(\boldsymbol{\neg} \pmb{P}\) \\
+	\hline
+	F & V \\
+	V & F \\
+	\hline
+	\multicolumn{2}{c}{} \\
+	\multicolumn{2}{c}{}
+      \end{tabular}
+    }
+    \hspace*{4em}
+    \subfloat[Conectivas]{
+      \begin{tabular}[t]{|*{6}{c|}}
+	\firsthline
+	  \rule[-0.9ex]{0pt}{3ex}%
+	\(\pmb{P}\) & \(\pmb{Q}\) & \(\pmb{P} \boldsymbol{\vee} \pmb{Q}\)
+		    & \(\pmb{P} \boldsymbol{\wedge} \pmb{Q}\)
+		    & \(\pmb{P} \boldsymbol{\implies} \pmb{Q}\)
+		    & \(\pmb{P} \boldsymbol{\iff} \pmb{Q}\) \\
+	\hline
+	F & F & F & F & V & V \\
+	F & V & V & F & V & F \\
+	V & F & V & F & F & F \\
+	V & V & V & V & V & V \\
+	\lasthline
+      \end{tabular}
+    }
+    \caption{Tablas de verdad para conectivas básicas}
+    \label{tab:conectivas-logicas}
+    \index{conectivas logicas@conectivas lógicas!tablas de verdad}
+  \end{table}
+  Al combinar proposiciones \(P\) y \(Q\)
+  mediante las operaciones indicadas
+  obtenemos el cuadro~\ref{tab:conectivas-logicas},
+  donde falso se indica mediante \(F\)
+  y verdadero mediante \(V\).
+  Se anota \(\vee\) para \emph{o}
+  (disyunción),
+  usamos \(\wedge\) para \emph{y}
+  (conjunción),
+  para \emph{si \ldots entonces} escribimos \(\implies\)
+  (implicancia),%
+    \index{implicancia (logica)@implicancia (lógica)}
+  y para expresar \emph{si y solo si} usamos \(\iff\)
+  (equivalencia).%
+    \index{equivalencia (logica)@equivalencia (lógica)}
+  Estas operaciones no son todas necesarias,
+  por ejemplo \(P \implies Q\)
+  es equivalente a \(\neg P \vee Q\),
+  y \(P \iff Q\) no es más que
+  \((P \implies Q) \wedge (Q \implies P)\).
+  Nótese que la tabla de verdad para \(P \implies Q\)
+  coincide con \(\neg Q \implies \neg P\),
+  su \emph{contrapositivo}.%
+     \index{contrapositivo}
+
+  En castellano
+  (como en la mayoría de los lenguajes modernos)
+  hay ambigüedad,
+  en que ``A o B'' puede entenderse como \emph{A o B, o ambos}
+  (inclusivo),%
+    \index{o inclusivo}
+  o también como \emph{A o B, pero no ambos}
+  (exclusivo).%
+    \index{o exclusivo}
+  Un mito~%
+    \cite{sep-disjunction}
+  bastante extendido entre los lógicos
+  es que en el latín hay dos disyunciones;
+  \emph{\foreignlanguage{latin}{vel}},
+  que expresa el sentido inclusivo,
+  y \emph{\foreignlanguage{latin}{aut}},
+  que expresa el exclusivo.
+  En realidad,
+  ambas son ambiguas como en los lenguajes modernos.
+  La noción empleada en lógica matemática es inclusiva,
+  y nuestra notación
+  sugiere el latín \emph{\foreignlanguage{latin}{vel}}.
+
+  Suele decirse ``\(A\) es suficiente para \(B\)''%
+    \index{implicancia (logica)@implicancia (lógica)}
+  si \(A \implies B\)
+  (si la implicancia es cierta,
+   saber que \(A\) es cierto asegura que \(B\) es cierto,
+   si \(A\) es falso \(B\) puede ser cierto como no serlo),
+  y que ``\(A\) es necesario para \(B\)''%
+    \index{implicancia (logica)@implicancia (lógica)}
+  o ``\(A\) solo si \(B\)''%
+    \index{solo si (logica)@solo si (lógica)|see{implicancia (lógica)}}
+  si \(B \implies A\)
+  (saber que \(A\) es cierto permite concluir que debe serlo \(B\)).
+  Así suele decirse ``\(A\) es necesario y suficiente para \(B\)''
+  o ``\(A\) si y solo si \(B\)''%
+    \index{si y solo si (logica)@si y solo si (lógica)}
+  para expresar \(A \iff B\).
+  Note que hay diversas formas de expresar lo mismo,
+  y es fácil confundirse.
+
+  Al decir ``Hoy almorzaré bife a lo pobre o pescado frito con ensalada''
+  se entiende que es uno o el otro, no ambos;
+  en ``Leo novelas policiales o históricas''
+  se subentiende que son ambas;
+  mientras ``Sus mascotas son perros o gatos''
+  no queda claro si es solo uno o el otro,
+  o posiblemente ambas.
+  De la misma forma,
+  ``Si llueve, llevo paraguas''
+  puede entenderse
+  como que llevo paraguas exclusivamente cuando llueve,
+  nuestra conectiva implica incluye la posibilidad de llevarlo
+  incluso si no llueve.
+  La aseveración sobre hábitos de lectura
+  se interpretaría como que no leo nada más
+  que novelas policiales o históricas,
+  nuestra formalización no es así de excluyente.
+  Hay cosas que se subentienden u omiten
+  en el lenguaje cotidiano,
+  si se quiere lograr precisión eso no es aceptable.
+
+  \begin{table}[ht]
+    \centering
+    \begin{tabular}{|*{2}{>{\(}c<{\)}}|l|}
+      \hline
+      \multicolumn{2}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Leyes}} &
+	\multicolumn{1}{c|}{\textbf{Nombre(s)}} \\
+      \hline
+      \multicolumn{2}{|>{\(}c<{\)}|}{\rule[-0.7ex]{0pt}{3ex}%
+	\neg \neg P \equiv P
+      } &
+	Doble negación \\
+      P \vee \neg P \equiv V &
+	P \wedge \neg P \equiv F &
+	Medio excluido/contradicción \\
+      P \vee F \equiv P &
+	P \wedge V \equiv P &
+	Identidad \\
+      P \vee V \equiv V &
+	P \wedge F \equiv F &
+	Dominación \\
+      P \vee P \equiv P &
+	P \wedge P \equiv P &
+	Idempotencia \\
+      \neg (P \vee Q) \equiv \neg P \wedge \neg Q   &
+	\neg (P \wedge Q) \equiv \neg P \vee \neg Q &
+	de Morgan \\
+      P \vee Q \equiv Q \vee P &
+	P \wedge Q \equiv Q \wedge P &
+	Conmutatividad \\
+      (P \vee Q) \vee R \equiv P \vee (Q \vee R) &
+	(P \wedge Q) \wedge R \equiv P \wedge (Q \wedge R) &
+	Asociatividad \\
+      P \vee (Q \wedge R) \equiv (P \vee Q) \wedge (P \vee R) &
+	P \wedge (Q \vee R) \equiv (P \wedge Q) \vee (P \wedge R) &
+	Distributividad \\
+      P \vee (P \wedge Q) \equiv P &
+	P \wedge (P \vee Q) \equiv P &
+	Absorción \\
+      \hline
+    \end{tabular}
+    \caption{Identidades adicionales}
+    \label{tab:logical-identities}
+    \index{logica@lógica!identidad}
+  \end{table}
+  Identidades útiles
+  reseña el cuadro~\ref{tab:logical-identities},
+  propiedades importantes
+  da el cuadro~\ref{tab:propiedades-importantes-logica}.
+  Nótese que la segunda columna
+  del cuadro~\ref{tab:logical-identities}
+  se obtiene de la primera
+  intercambiando \(\wedge\) con \(\vee\) y \(V\) con \(F\).
+  Esto es lo que se conoce como \emph{dualidad},%
+    \index{dualidad (logica)@dualidad (lógica)}
+  obtenemos dos equivalencias por el precio de una.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|>{\(}l<{\)}|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Nombre}} &
+	\multicolumn{1}{c|}{\textbf{Propiedad}} \\
+      \hline\rule[-0.7ex]{0pt}{3ex}%
+      Definición de implicancia
+	& P \implies Q \equiv \neg P \vee Q \\
+      Definición de si y solo si
+	& P \iff Q
+	      \equiv (P \implies Q) \wedge (Q \implies P) \\
+      Contrapositivo
+	& P \implies Q \equiv \neg Q \implies \neg P \\
+      Reducción al absurdo
+	& P \implies Q \equiv P \wedge \neg Q \implies F \\
+      Transitividad de implicancia
+	& (P \implies Q) \wedge (Q \implies R)
+	      \implies (P \implies R) \\
+      \hline
+    \end{tabular}
+    \caption{Propiedades importantes de las operaciones lógicas}
+    \label{tab:propiedades-importantes-logica}
+    \index{logica@lógica!identidad}
+  \end{table}
+  A \(Q \implies P\)
+  se le llama el \emph{recíproco}%
+    \index{reciproco (logica)@recíproco (lógica)}
+  de \(P \implies Q\)
+  (en inglés,
+   \emph{\foreignlanguage{english}{converse}}).%
+     \index{converse@\emph{\foreignlanguage{english}{converse}}|see{recíproco}}
+  No hay relación
+  entre los valores de verdad de una implicancia y su recíproca,
+  como es fácil demostrar.
+  Las identidades de los cuadros~\ref{tab:logical-identities}
+  y~\ref{tab:propiedades-importantes-logica} debieran memorizarse.
+
+\subsection{Lógica de predicados}
+\label{sec:predicados}
+\index{logica de predicados@lógica de predicados|textbfhy}
+
+  Queremos razonar sobre individuos de un conjunto,
+  no solo de proposiciones que son verdaderas o falsas.
+  Usaremos la convención
+  que letras mayúsculas representan variables,
+  y letras minúsculas constantes.
+
+  \begin{definition}
+    Un \emph{predicado}
+    es una función cuyo valor es verdadero o falso.
+    \index{predicado (logica)@predicado (lógica)|textbfhy}%
+    \index{logica@lógica!predicado}
+  \end{definition}
+
+  Usaremos la convención que letras mayúsculas denotan constantes,
+  y letras minúsculas variables.%
+    \index{logica@lógica!convencion variables@convención variables}
+  Por ejemplo,
+  tenemos el predicado \(\text{prime}(x)\)
+  que es verdadero exactamente cuando \(x\) es un número primo.
+  Así,
+  tanto \(\text{prime}(2)\)
+  como \(\text{prime}(2^{16} + 1)\) son verdaderos,
+  mientras \(\text{prime}(2\,743)\) es falso
+  (\(2\,743 = 13 \cdot 211\)).
+
+  Podemos considerar la expresión:
+  \begin{equation*}
+    a = 3 b
+  \end{equation*}
+  como un predicado de dos argumentos
+  (\(a\) y \(b\))
+  que es verdadero exactamente cuando \(a = 3 b\).
+  Asimismo,
+  \begin{equation*}
+    17 = 3 x
+  \end{equation*}
+  es un predicado que es falso para todos los naturales \(x\)
+  y es cierto para el racional \(17 / 3\).
+
+  Usamos las conectivas lógicas para combinar predicados,%
+    \index{logica@lógica!conectiva}
+  construyendo predicados más complejos.
+  Por ejemplo,
+  \begin{equation*}
+    a x^2 + b x + c = 0
+       \implies x = \frac{-b \pm \sqrt{b^2 - 4 a c}}{2a}
+  \end{equation*}
+  resulta ser cierto
+  si consideramos \(a\), \(b\), \(c\) y \(x\)
+  como números complejos.
+  Está claro que es importante indicar
+  de qué conjunto toman valores las variables indicados.
+
+\subsection{Cuantificadores}
+\label{sec:cuantificadores}
+\index{cuantificadores (logica)@cuantificadores (lógica)|textbfhy}
+\index{logica@lógica!cuantificador}
+
+  Desearemos expresar que un predicado es cierto
+  para todos los posibles valores de las variables involucradas,
+  o que es cierto al menos para uno de ellos.
+  Esto se expresa mediante \emph{cuantificadores}.
+  Los que usaremos son \(\forall\) (para todo)
+  y \(\exists\) (existe).
+  Una proposición expresada concisamente es
+  \begin{equation*}
+    \forall n \colon \text{prime}(n^2 + n + 41)
+  \end{equation*}
+  donde \(\text{prime}(x)\) es el predicado discutido antes.
+  La variable usada queda atada al cuantificador
+  y no tiene significado fuera.
+  Explicitando el conjunto al que pertenecen las variables,
+  escribiremos por ejemplo:
+  \begin{equation}
+    \label{eq:primos?}
+    \forall n \in \mathbb{N} \colon \text{prime}(n^2 + n + 41)
+  \end{equation}
+  Veamos diferentes valores de \(n\),
+  como resume el cuadro~\ref{tab:polinomio-primo}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|>{\(}r<{\)}|>{\(}r<{\)}|c|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\(\boldsymbol{n}\)} &
+	\multicolumn{1}{c|}{\textbf{Valor}} &
+	\multicolumn{1}{c|}{\textbf{¿Primo?}} \\
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+       0	 &     41 & Si \\
+       1	 &     43 & Si \\
+       2	 &     47 & Si \\
+       \multicolumn{1}{|c|}{\phantom{0}\vdots} &
+	 \multicolumn{1}{c|}{\phantom{00\;}\vdots} &
+	 \multicolumn{1}{c|}{\vdots} \\
+      39	 & 1\,601 & Si \\
+      \hline
+    \end{tabular}
+    \caption{Valores de $n^2 + n + 41$ para $1 \le n \le 39$}
+    \label{tab:polinomio-primo}
+  \end{table}
+  Hasta \(n = 39\) vamos bien.
+  Pero resulta \(40^2 + 40 + 41 = 1\,681 = 41 \cdot 41\),
+  con lo que la proposición~\ref{eq:primos?} es falsa.
+  Si nos preguntamos que valores de \(n\) dan un valor compuesto,
+  caemos en cuenta que para \(n = 41\)
+  todos los términos son divisibles por \(41\).
+  En efecto,
+  se reduce a \(41^2\),
+  que no es primo.
+  Al polinomio~\eqref{eq:primos?}
+  se le conoce como polinomio de Euler,%
+    \index{Euler, polinomio de}
+  hay una variedad de polinomios
+  que dan primos para sus primeros valores.
+
+\section{Conjuntos}
+\label{sec:conjuntos}
+\index{conjunto|textbfhy}
+
+  Una de las nociones más importantes en las matemáticas actuales
+  es la de conjunto.
+  En términos simples,
+  un conjunto es una colección de elementos
+  bien definida,
+  vale decir,
+  para cada elemento se puede determinar claramente
+  si pertenece o no al conjunto.
+  Para indicar que el elemento \(a\)
+  pertenece al conjunto \(\mathcal{A}\),
+  se escribe \(a \in \mathcal{A}\),%
+    \index{\(\in\) (pertenece)|textbfhy}
+  para indicar que no pertenece se anota \(a \notin \mathcal{A}\).%
+    \index{\(\not\in\) (no pertenece)|textbfhy}
+  A veces resulta más cómodo escribir estas relaciones al revés,
+  o sea anotar \(\mathcal{A} \ni a\)%
+    \index{\(\ni\) (contiene)|textbfhy}
+  o \(\mathcal{A} \centernot\ni a\),
+    \index{\(\centernot\ni\) (no contiene)|textbfhy}
+  respectivamente.
+
+  Ciertos conjuntos tienen notación especial por su frecuente uso.
+  El conjunto especial que no tiene elementos
+  se llama el \emph{conjunto vacío} y se anota \(\varnothing\).%
+    \index{\(\varnothing\) (conjunto vacio)@\(\varnothing\) (conjunto vacío)|textbfhy}%
+    \index{conjunto!vacio@vacío}
+  Otros son el conjunto de los \emph{números naturales},
+  \(\mathbb{N} = \{1, 2, 3, \dotsc\}\);%
+    \index{N (números naturales)@\(\mathbb{N}\) (números naturales)|textbfhy}
+  el de los \emph{números enteros},
+  \(\mathbb{Z} = \{\dotsc, - 3, -2, -1, 0, 1, 2, 3, \dotsc\}\);%
+    \index{Z (numeros enteros)@\(\mathbb{Z}\) (números enteros)|textbfhy}
+  los \emph{números racionales},
+  \(\mathbb{Q}\);%
+    \index{Q (números racionales)@\(\mathbb{Q}\) (números racionales)|textbfhy}
+  los \emph{reales},
+  \(\mathbb{R}\);%
+    \index{R (números reales)@\(\mathbb{R}\) (números reales)|textbfhy}
+  y los \emph{complejos},
+  \(\mathbb{C}\).
+    \index{N (números naturales)@\(\mathbb{N}\) (números naturales)|textbfhy}
+  El conjunto de los naturales más el cero lo anotaremos
+  \(\mathbb{N}_0\).%
+    \index{N 0 (números naturales y cero)@\(\mathbb{N}_0\) (números naturales y cero)|textbfhy}
+  Anotaremos \(\mathbb{Q}^+\)
+  para los números racionales mayores a cero,%
+    \index{Q + números racionales positivos)@\(\mathbb{Q}^+\) (números racionales positivos)|textbfhy}
+  y similarmente \(\mathbb{R}^+\) para los reales.%
+    \index{R + números reales positivos)@\(\mathbb{R}^+\) (números reales positivos)|textbfhy}
+
+  Una manera de describir un conjunto es por \emph{extensión},%
+    \index{conjunto!descripcion por extension@descripción por extensión}
+  nombrando cada uno de sus elementos:
+  \begin{equation*}
+    \mathcal{A}
+      = \{1, 2, 3, 4, 5\}
+  \end{equation*}
+  Esto resulta incómodo para conjuntos grandes,
+  por lo que suele usarse alguna notación como la siguiente
+  para no dar explícitamente todos los elementos:
+  \begin{equation*}
+    \mathcal{B}
+      = \{1, 2, \dotsc, 128\}
+  \end{equation*}
+  Esto también se usa si estamos frente a conjuntos infinitos:
+  \begin{equation*}
+    \mathcal{C}
+      = \{1, 2, 4, 8, \dotsc\}
+  \end{equation*}
+  El problema es que no queda claro exactamente cuáles
+  son los elementos a incluir.
+  Una forma alternativa
+  de describir conjuntos es por \emph{intención},%
+    \index{conjunto!descripcion por intencion@descripción por intención}
+  describiendo de alguna forma los elementos que lo componen.
+  Haciendo referencia a los conjuntos definidos antes:
+  \begin{align*}
+    \mathcal{B}
+      &= \{x \colon 1 \le x \le 128\}
+	 \qquad \text{(aunque tal vez es
+			\(\mathcal{B}
+			    =\{2^k \colon 0 \le k < 8\}\))} \\
+    \mathcal{C}
+      &= \{2^k \colon k \ge 0\}
+  \end{align*}
+
+  Es importante tener presente
+  que un elemento pertenece o no al conjunto,
+  no puede pertenecer más de una vez a él.
+  Otro detalle es que no hay ningún orden
+  entre los elementos de un conjunto.
+  El conjunto \(\{1, 2, 3, 4, 5\}\) es exactamente el mismo que
+  \(\{4, 2, 1, 5, 3\}\),
+  o que \(\{2, 1, 2, 5, 4, 2, 3\}\).
+
+  Operaciones comunes entre conjuntos%
+    \index{conjunto!operaciones|textbfhy}
+  se describen mediante diagramas de Venn
+  en la figura~\ref{fig:Venn}.%
+    \index{Venn, diagrama de|textbfhy}
+  \begin{figure}[htbp]
+    \centering
+    \subfloat[Unión]{\pgfimage{images/union}}
+    \qquad
+    \subfloat[Intersección]{\pgfimage{images/interseccion}}
+
+    \subfloat[Diferencia]{\pgfimage{images/diferencia}}
+    \qquad
+    \subfloat[Diferencia simétrica]{\pgfimage{images/diferencia-simetrica}}
+    \\
+    \subfloat[Complemento]{\pgfimage{images/complemento}}
+    \caption{Diagramas de Venn para operaciones entre conjuntos}
+    \label{fig:Venn}
+  \end{figure}
+  \begin{description}
+  \item[Unión:]
+    \index{conjunto!union@unión|textbfhy}
+    Los elementos que pertenecen a \(\mathcal{A}\)
+    o a \(\mathcal{B}\) o a ambos
+    se anota \(\mathcal{A} \cup \mathcal{B}\).
+    Es fácil ver
+      que \(\mathcal{A} \cup \mathcal{B}
+	      = \mathcal{B} \cup \mathcal{A}\).
+    Como \((\mathcal{A} \cup \mathcal{B}) \cup \mathcal{C}
+	      = \mathcal{A} \cup (\mathcal{B} \cup \mathcal{C})\),
+    se suele omitir el paréntesis en tales expresiones.%
+      \index{operacion@operación!asociativa}
+  \item[Intersección:]
+    \index{conjunto!interseccion@intersección|textbfhy}
+    Aquellos elementos
+    que pertenecen a \(\mathcal{A}\) y a \(\mathcal{B}\)
+    se anotan \(\mathcal{A} \cap \mathcal{B}\).
+    Es \(\mathcal{A} \cap \mathcal{B}
+	   = \mathcal{B} \cap \mathcal{A}\).
+    Nuevamente,
+    \((\mathcal{A} \cap \mathcal{B}) \cap \mathcal{C}
+	 = \mathcal{A} \cap (\mathcal{B} \cap \mathcal{C})\),
+    y convencionalmente se omiten los paréntesis.%
+      \index{operacion@operación!asociativa}
+    Si tienen intersección vacía
+    (o sea,
+    \(\mathcal{A} \cap \mathcal{B} = \varnothing\)),
+    se dice que son \emph{disjuntos}.%
+      \index{conjunto!disjunto|textbfhy}
+  \item[Resta:]
+    \index{conjunto!resta|textbfhy}
+    Los elementos de \(\mathcal{A}\)
+    que no pertenecen a \(\mathcal{B}\)
+    se anotan \(\mathcal{A} \smallsetminus \mathcal{B}\).
+  \item[Diferencia simétrica:]
+    \index{conjunto!diferencia simetrica@diferencia simétrica|textbfhy}
+    Los que pertenecen a \(\mathcal{A}\) o a \(\mathcal{B}\),
+    pero no a ambos,
+    se escriben \(\mathcal{A} \vartriangle \mathcal{B}\).
+    También tenemos
+      \(\mathcal{A} \vartriangle \mathcal{B}
+	  = \mathcal{B} \vartriangle \mathcal{A}\).
+    Considerando las diferentes áreas del diagrama de Venn
+    para \((\mathcal{A} \vartriangle \mathcal{B}) \vartriangle \mathcal{C}\)
+    vemos que incluye los elementos de exactamente uno o tres de los conjuntos,
+    con lo que
+    \((\mathcal{A} \vartriangle \mathcal{B}) \vartriangle \mathcal{C}
+         = \mathcal{A} \vartriangle (\mathcal{B}) \vartriangle \mathcal{C})\).%
+      \index{operacion@operación!asociativa}
+
+  \item[Complemento:]
+    \index{conjunto!complemento|textbfhy}
+      Si estamos considerando
+      un conjunto de elementos como ámbito de discusión,
+      lo tomamos como \emph{universo}%
+        \index{conjunto!universo}
+      (comúnmente anotado \(\mathcal{U}\)),
+      y tenemos el \emph{complemento} del conjunto \(\mathcal{A}\)
+      como aquellos elementos de \(\mathcal{U}\)
+      que no pertenecen a \(\mathcal{A}\).
+      Esto lo anotaremos \(\overline{\mathcal{A}}\).
+  \end{description}
+
+  Resulta importante comparar conjuntos.
+  \begin{description}
+  \item[Igualdad:]
+    \index{conjunto!igualdad|textbfhy}
+    Dos conjuntos son \emph{iguales}
+    cuando tienen los mismos elementos.
+    Esto se anota \(\mathcal{A} = \mathcal{B}\).
+  \item[Subconjunto:]
+    \index{conjunto!subconjunto|textbfhy}
+    Si todos los elementos de \(\mathcal{A}\)
+    pertenecen a \(\mathcal{B}\)
+    se anota \(\mathcal{A} \subseteq \mathcal{B}\),
+    y se dice que \(A\) es \emph{subconjunto} de \(\mathcal{B}\).
+    Si queremos excluir
+    la posibilidad \(\mathcal{A} = \mathcal{B}\),
+    escribimos \(\mathcal{A} \subset \mathcal{B}\)
+    (a veces se le llama \emph{subconjunto propio}).
+    Para indicar
+    que \(\mathcal{A}\) no es subconjunto de \(\mathcal{B}\)
+    se anota \(\mathcal{A} \centernot\subseteq \mathcal{B}\).
+    Nótese
+    que algunos usan la notación \(\mathcal{A} \subset \mathcal{B}\)
+    para lo que anotamos \(\mathcal{A} \subseteq \mathcal{B}\),
+    y usan \(\mathcal{A} \subsetneq \mathcal{B}\)
+    para lo que llamamos \(\mathcal{A} \subset \mathcal{B}\).
+  \item[Superconjunto:]
+    \index{conjunto!superconjunto|textbfhy}
+    Si \(\mathcal{A} \subseteq \mathcal{B}\),
+    también anotamos \(\mathcal{B} \supseteq \mathcal{A}\),
+    y similarmente si \(\mathcal{A} \subset \mathcal{B}\)
+    anotamos también \(\mathcal{B} \supset \mathcal{A}\).
+    Decimos que \(\mathcal{B}\)
+    es \emph{superconjunto} de \(\mathcal{A}\).
+  \end{description}
+
+  Las operaciones entre conjuntos
+  pueden expresarse usando notación lógica:%
+    \index{conjunto!operaciones!notacion logica@notación lógica|textbfhy}
+  \begin{align}
+    \mathcal{A} \cup \mathcal{B}
+      &= \{x \colon x \in \mathcal{A} \vee x \in \mathcal{B}\}
+	  \label{eq:set-union} \\
+    \mathcal{A} \cap \mathcal{B}
+      &= \{x \colon x \in \mathcal{A} \wedge x \in \mathcal{B}\}
+	  \label{eq:set-intersection} \\
+    \mathcal{A} \subseteq \mathcal{B}
+      &\equiv x \in \mathcal{A} \implies x \in \mathcal{B}
+	  \label{eq:set-subset} \\
+    \mathcal{A} = \mathcal{B}
+      &\equiv x \in \mathcal{B} \iff x \in \mathcal{A}
+	  \label{eq:set-equals}
+  \end{align}
+  La forma de la unión y la intersección
+  sugieren la forma de la conectiva lógica
+  en~\eqref{eq:set-union} y en~\eqref{eq:set-intersection}.
+  La dirección de la implicancia en~\eqref{eq:set-subset}
+  puede recordarse como ambas apuntando en la misma dirección.
+
+  Podemos definir diferencia y diferencia simétrica
+  en términos de las operaciones tradicionales:
+  \begin{align*}
+    \mathcal{A} \smallsetminus \mathcal{B}
+      &= \mathcal{A} \cap \overline{\mathcal{B}} \\
+    \mathcal{A} \vartriangle \mathcal{B}
+      &= (\mathcal{A} \cup \mathcal{B})
+	    \smallsetminus (\mathcal{A} \cap \mathcal{B}) \\
+      &= (\mathcal{A} \cap \overline{\mathcal{B}})
+	   \cup (\overline{\mathcal{A}} \cap \mathcal{B})
+  \end{align*}
+  Algunas propiedades simples de las anteriores
+  son las dadas en el cuadro~\ref{tab:properties-set-operations},
+  donde \(\mathcal{A}\), \(\mathcal{B}\) y \(\mathcal{C}\)
+  representan conjuntos cualquiera.
+  Compárese con el cuadro~\ref{tab:logical-identities}.
+  \begin{table}[ht]
+    \centering
+    \begin{tabular}{|*{2}{>{\(}c<{\)}}|l|}
+      \hline
+      \multicolumn{2}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Leyes}} &
+	\multicolumn{1}{c|}{\textbf{Nombre(s)}} \\
+      \hline
+	\multicolumn{2}{|>{\(}c<{\)}|}{\rule[-0.7ex]{0pt}{4ex}%
+	  \overline{\overline{\mathcal{A}}} = \mathcal{A}
+	} &
+	  Doble complemento \\
+	\mathcal{A} \cup \overline{\mathcal{A}} = \mathcal{U} &
+	  \mathcal{A} \cap \overline{\mathcal{A}} = \varnothing &
+	  Complemento \\
+	\mathcal{A} \cup \varnothing = \mathcal{A} &
+	  \mathcal{A} \cap \mathcal{U} = \mathcal{A} &
+	  Identidad \\
+	\mathcal{A} \cup \varnothing = \mathcal{A} &
+	  \mathcal{A} \cap \mathcal{U} = \mathcal{A} &
+	  Dominación \\
+	\overline{\mathcal{A} \cup \mathcal{B}}
+	     = \overline{\mathcal{A}} \cap \overline{\mathcal{B}} &
+	  \overline{\mathcal{A} \cap \mathcal{B}}
+	       = \overline{\mathcal{A}} \cup \overline{\mathcal{B}} &
+	  de Morgan \\
+	\mathcal{A} \cup \mathcal{B} = \mathcal{B} \cup \mathcal{A} &
+	  \mathcal{A} \cap \mathcal{B} = \mathcal{B} \cap \mathcal{A} &
+	  Conmutatividad \\
+	(\mathcal{A} \cup \mathcal{B}) \cup \mathcal{C} &
+	  (\mathcal{A} \cap \mathcal{B}) \cap \mathcal{C} &
+	  Asociatividad \\
+	\mathcal{A} \cup (\mathcal{B} \cap \mathcal{C})
+	     = (\mathcal{A} \cup \mathcal{B})
+		 \cap (\mathcal{A} \cup \mathcal{C}) &
+	  \mathcal{A} \cap (\mathcal{B} \cup \mathcal{C})
+	       = (\mathcal{A} \cap \mathcal{B})
+		   \cup (\mathcal{A} \cap \mathcal{C}) &
+	  Distributividad \\
+       \mathcal{A} \cup (\mathcal{A} \cap \mathcal{B}) = \mathcal{A} &
+	  \mathcal{A} \cap (\mathcal{A} \cup \mathcal{B}) = \mathcal{A} &
+	  Absorción \\
+       \hline
+    \end{tabular}
+    \caption{Propiedades de las operaciones entre conjuntos}
+    \label{tab:properties-set-operations}
+    \index{conjunto!operaciones!propiedades}
+  \end{table}
+  También tenemos que si \(\mathcal{A} \subset \mathcal{B}\)
+  y \(\mathcal{B} \subset \mathcal{C}\)
+  entonces \(\mathcal{A} \subset \mathcal{C}\).
+  Una manera de demostrar igualdad entre conjuntos%
+    \index{conjunto!igualdad!demostrar}
+  es usar el hecho que si \(\mathcal{A} \subseteq \mathcal{B}\)
+  y \(\mathcal{B} \subseteq \mathcal{A}\),
+  entonces \(\mathcal{A} = \mathcal{B}\).
+
+  Otra noción importante es el número de elementos del conjunto,
+  su \emph{cardinalidad}.%
+    \index{conjunto!cardinalidad|textbfhy}
+  La cardinalidad del conjunto \(\mathcal{A}\)
+  se anotará \(\lvert \mathcal{A} \rvert\).
+  Para conjuntos finitos,
+  es simplemente el número de elementos del conjunto.
+  Si \(\mathcal{A} = \{1, 2, 4, 8, 16, 32\}\),
+  tenemos \(\lvert \mathcal{A} \rvert = 6\).
+  Sólo para \(\varnothing\)
+  se cumple \(\lvert \varnothing \rvert = 0\).
+  También tenemos que si \(\mathcal{A} \subseteq \mathcal{B}\)
+  entonces
+    \(\lvert \mathcal{A} \rvert \le \lvert \mathcal{B} \rvert\)\@.
+  Más adelante
+  (capítulo~\ref{cha:numerabilidad})
+  consideraremos conjuntos infinitos también.
+
+  Es común referirse a rangos de elementos de algún conjunto ordenado,
+  típicamente \(\mathbb{R}\) y ocasionalmente \(\mathbb{N}\).%
+    \index{conjunto!rangos (notacion)@rangos (notación)|textbfhy}
+  Para ello usaremos las notaciones siguientes.
+  \begin{align*}
+    (a, b)
+      &= \{x \colon a < x < b\} \\
+    [a, b)
+      &= \{x \colon a \le x < b\} \\
+    (a, b]
+      &= \{x \colon a < x \le b\} \\
+    [a, b]
+      &= \{x \colon a \le x \le b\}
+  \end{align*}
+  Si un extremo es abierto
+  (no incluye el elemento del caso)
+  usamos paréntesis,
+  en caso que el extremo es cerrado
+  (el elemento indicado está incluido)
+  usamos corchetes
+  (paréntesis cuadrados).
+  En el caso especial de un rango de los primeros naturales
+  anotaremos:
+  \begin{equation*}
+    [1, n] = [n]
+  \end{equation*}
+
+  Al conjunto de todos los subconjuntos
+  de algún conjunto \(\mathcal{A}\)
+  (el \emph{conjunto potencia} de \(\mathcal{A}\))%
+    \index{conjunto!conjunto potencia|textbfhy}
+  lo anotaremos \(2^{\mathcal{A}}\).
+  También es común notación como \(\mathfrak{P}(\mathcal{A})\).
+  Por ejemplo:
+  \begin{equation*}
+    2^{\{1, 2, 3\}}
+      = \{\varnothing,
+	  \{1\}, \{2\}, \{3\},
+	  \{1, 2\}, \{1, 3\}, \{2, 3\},
+	  \{1, 2, 3\}\}
+  \end{equation*}
+
+\section{Tuplas}
+\label{sec:tuplas}
+\index{tupla|textbfhy}
+
+  A objetos que combinan varios elementos
+  se les llama \emph{tuplas}.
+  Escribimos las componentes de la tupla separados por comas
+  y la tupla completa encerrada entre paréntesis.
+  El caso más común es el de pares de elementos,
+  como \((1, 2)\),
+  pero también podemos tener tríos como \((x, y, z)\),
+  y así sucesivamente.
+  Es lamentable que esta notación para pares
+  pueda confundirse con rangos abiertos,
+  como descritos antes.
+  Deberá quedar claro del contexto lo que se está discutiendo.
+
+  El orden importa,
+  el par \((1, 2)\) no es lo mismo que \((2, 1)\).
+  Pueden repetirse elementos,
+  \((5, 2, 1, 5)\) es una tupla válida.
+  Nada dice que los elementos deban ser tomados del mismo conjunto,
+  podemos tener pares formados por un polinomio
+  y un número complejo,
+  como \((3x^2 - 5x + 2, 3 + 5 \mathrm{i})\).
+
+  Una manera de construir tuplas
+  es mediante producto cartesiano entre conjuntos:%
+    \index{conjunto!producto cartesiano|textbfhy}
+  \begin{equation*}
+    \mathcal{A} \times \mathcal{B}
+      = \{(a, b) \colon a \in \mathcal{A} \wedge b \in \mathcal{B}\}
+  \end{equation*}
+  Podemos construir tríos
+  vía \(\mathcal{A} \times \mathcal{B} \times \mathcal{C}\)
+  y así sucesivamente,
+  donde interpretamos
+    \(\mathcal{A} \times \mathcal{B} \times \mathcal{C}\)
+  como \((\mathcal{A} \times \mathcal{B}) \times \mathcal{C}\),
+  y la tupla \((a, b, c)\)
+  como una abreviatura del par \(((a, b), c)\),
+  y de forma similar para largos mayores
+  (llamaremos \emph{largo} al número de elementos de la tupla).%
+     \index{tupla!largo|textbfhy}
+  Usaremos potencias para indicar tuplas de un largo dado
+  tomando elementos de un conjunto.
+  Formalmente,
+  para cualquier conjunto \(\mathcal{A}\) definimos:
+  \begin{equation}
+    \label{eq:A^n}
+    \begin{split}
+      \mathcal{A}^1
+	&= \mathcal{A} \\
+      \mathcal{A}^{n + 1}
+	&= \mathcal{A}^n \times \mathcal{A}
+	     \quad \text{si \(n \ge 1\)}
+    \end{split}
+  \end{equation}
+
+  Tuplas de elementos de un mismo conjunto,
+  particularmente si son de largos posiblemente diferentes,
+  se llaman \emph{secuencias}.%
+    \index{secuencia|textbfhy}
+  En una secuencia interesa el largo
+  (que para la secuencia \(\sigma\)
+   anotaremos \(\lvert \sigma \rvert\))%
+    \index{secuencia!largo (notacion)@largo (notación)|textbfhy}
+  y el elemento en cada posición.
+  Hay una única secuencia de largo 0,
+  que generalmente llamaremos \(\epsilon\).%
+    \index{\(\epsilon\) (secuencia vacia)@\(\epsilon\) (secuencia vacía)|textbfhy}
+  Si las secuencias son finitas y de elementos atómicos
+  (\emph{símbolos})
+  se les suele llamar \emph{palabras}
+  o \emph{\foreignlanguage{english}{strings}}
+    \index{string@\emph{\foreignlanguage{english}{string}}|see{secuencia}}
+  (por el término en inglés).
+  Más adelante trataremos extensamente con secuencias infinitas.
+
+\section{Multiconjuntos}
+\label{sec:preliminares-multiconjuntos}
+\index{multiconjunto|textbfhy}
+
+  Un elemento puede pertenecer varias veces
+  a un \emph{multiconjunto}.
+  Anotamos las repeticiones mediante exponentes.
+  Un ejemplo
+  es \(\{a, b, a, c, b, a\}
+	 = \{a, a, a, b, b, c\}
+	 = \{a^3, b^2, c^1\}\).
+
+  Las operaciones entre multiconjuntos
+  son afines a las de conjuntos:%
+    \index{multiconjunto!operaciones|seealso{conjunto!operaciones}}
+  La unión es juntar todos los elementos
+  de los multiconjuntos que se unen,
+  la intersección es lo que tienen en común.
+  Por ejemplo:
+  \begin{align*}
+    \{a^2, b^5, c^2\} \cup \{b^2, c^3, d^1\}
+      &= \{a^2, b^7, c^5, d^1\} \\
+    \{a^2, b^5, c^2\} \cap \{b^2, c^3, d^1\}
+      &= \{b^2, c^2\}
+  \end{align*}
+  En forma similar a las demás operaciones entre conjuntos
+  definimos las operaciones respectivas para multiconjuntos.
+  Para multiconjuntos tiene sentido hablar del universo
+  del que se toman los elementos,
+  pero no la idea de complemento.
+  Por ejemplo:
+  \begin{align*}
+    \{a^2, b^5, c^2\} \smallsetminus \{b^2, c^3, d^1\}
+      &= \{a^2, b^3\} \\
+    \{a^2, b^5, c^2\} \vartriangle \{b^2, c^3, d^1\}
+      &= \{a^2, b^3, c^1, d^1\}
+  \end{align*}
+  Un multiconjunto es subconjunto de otro
+  si todos sus elementos
+  (con las repeticiones respectivas)
+  aparecen en el segundo:
+  \begin{align*}
+    \{a^2, b^5, c^2\}
+      &\subseteq \{a^3, b^5, c^6, d^1\} \\
+    \{a^4, b^5, c^2\}
+      &\centernot\subseteq \{a^3, b^5, d^3\}
+  \end{align*}
+  Una manera de asimilar las operaciones con las de conjuntos
+  es que la unión considera sumar los elementos de ambos,
+  la intersección es el mínimo.
+
+\section{Sumatorias, productorias y yerbas afines}
+\label{sec:sumatorias-productorias}
+\index{sumatoria|textbfhy}
+\index{productoria|textbfhy}
+
+  Es común referirse a sumas de términos parecidos,
+  como:
+  \begin{equation*}
+    a + a^2 + \dotsb + a^{16}
+  \end{equation*}
+  La notación indicada es sugestiva,
+  pero no queda realmente claro cuáles son los términos a incluir.
+  Esto lo anotamos mediante sumatoria:
+  \begin{equation*}
+    \sum_{1 \le k \le 16} a^k
+  \end{equation*}
+  Aunque podríamos también referirnos a
+    \begin{equation*}
+    \sum_{0 \le k \le 4} a^{2^k}
+  \end{equation*}
+  Nótese que la variable índice es irrelevante:
+    \index{sumatoria!indice@índice}
+  \begin{equation*}
+    \sum_{1 \le k \le 16} a^k
+      = \sum_{1 \le r \le 16} a^r
+  \end{equation*}
+  Además,
+  esa variable queda atada a la suma,
+  de forma que no tiene significado fuera:
+  \begin{equation*}
+    \sum_{1 \le r \le 10} a^r + \sum_{1 \le s \le 10} b^s
+      = \sum_{1 \le k \le 10} a^k + \sum_{1 \le k \le 10} b^k
+      = \sum_{1 \le i \le 10} \left( a^i + b^i \right)
+  \end{equation*}
+  Un caso típico es cuando tenemos un conjunto \(\mathcal{A}\),
+  y queremos sumar sobre los \(k \in \mathcal{A}\),
+  como en:
+  \begin{equation*}
+    \sum_{k \in \mathcal{A}} a^k
+  \end{equation*}
+  Incluso podemos tener varias condiciones,
+  en cuyo caso se entiende
+  que estamos sumando sobre el valor del índice
+  que cumple con todas ellas:
+  \begin{equation*}
+    \sum_{\mathclap{\substack{
+		      0 \le k \le 10 \\
+		      k \text{\ múltiplo de 3}
+	 }}} \; a^k
+      = a^0 + a^3 + a^6 + a^9
+  \end{equation*}
+  Ocasionalmente usaremos un único signo de suma
+  para indicar suma sobre varias variables,
+  como por ejemplo:
+  \begin{align*}
+    \sum_{\mathclap{\substack{
+		      0 \le r \le 2 \\
+		      1 \le s \le 3
+	 }}} \; a^{2 r + s}
+      &= a^1 + a^2 + a^3 + a^3 + a^4 + a^5 + a^4 + a^5 + a^6 \\
+      &= a + a^2 + 2 a^3 + 2 a^4 + 2 a^5 + a^6
+  \end{align*}
+  Un problema con esta notación es que no explicita
+  las variables sobre las que se suma.
+  Esto deberá quedar claro del contexto.
+
+  Con esta convención,
+  expresamos sumas infinitas como por ejemplo
+  la del problema de Basilea:%
+    \index{Basilea, problema de}
+  \begin{equation*}
+    \sum_{k \ge 1} \frac{1}{k^2}
+      = \frac{\pi^2}{6}
+  \end{equation*}
+  Una notación útil es la convención de Iverson~%
+    \index{Iverson, Kenneth E.}%
+    \index{Iverson, convencion de@Iverson, convención de|textbfhy}%
+    \index{APL (lenguaje de programacion)@APL (lenguaje de programación)}%
+    \cite{iverson62:_APL},
+  uno de cuyos campeones es Knuth~%
+    \index{Knuth, Donald E.}%
+    \cite{graham94:_concr_mathem, knuth92:_two_notes_notat}.
+  Se anota una condición entre corchetes
+  para indicar el valor \(0\) si la condición es falsa,
+  y \(1\) si es verdadera.
+  Sirve,
+  entre otras cosas,
+  para eliminar condiciones de las sumas,
+  transformándolas en sumas infinitas
+  y llevando las condiciones
+  a una posición más visible y manipulable.
+  Una aplicación simple es:
+  \begin{equation*}
+    \sum_{k \in \mathcal{A}} f(k) + \sum_{k \in \mathcal{B}} f(k)
+      = \sum_k f(k) [ k \in \mathcal{A} ]
+	  + \sum_k f(k) [ k \in \mathcal{B} ]
+      = \sum_k f(k) ([ k \in \mathcal{A} ] + [ k \in \mathcal{B} ])
+  \end{equation*}
+  Como estamos incluyendo dos veces
+  los elementos en la intersección:
+  \begin{equation*}
+    [ k \in \mathcal{A} ] + [ k \in \mathcal{B} ]
+      = [ k \in \mathcal{A} \cup \mathcal{B} ]
+	  + [ k \in \mathcal{A} \cap \mathcal{B} ]
+  \end{equation*}
+  O sea:
+  \begin{equation*}
+    \sum_k f(k) ([ k \in \mathcal{A} ] + [ k \in \mathcal{B} ])
+      = \sum_k f(k) [ k \in \mathcal{A} \cup \mathcal{B} ]
+	  + \sum_k f(k)[ k \in \mathcal{A} \cap \mathcal{B} ]
+  \end{equation*}
+  Nuestra suma original en notación más tradicional es:
+  \begin{equation}
+    \label{eq:suma-union-interseccion}
+    \sum_{k \in \mathcal{A}} f(k) + \sum_{k \in \mathcal{B}} f(k)
+      = \sum_{k \in \mathcal{A} \cup \mathcal{B}} f(k)
+	  + \sum_{k \in \mathcal{A} \cap \mathcal{B}} f(k)
+  \end{equation}
+  También ayuda al intercambiar órdenes de sumas.
+  El multiplicar símbolos de Iverson%
+    \index{Iverson, convencion de@Iverson, convención de!operaciones}
+  corresponde a que ambas condiciones sean ciertas:
+  \begin{align}
+    \sum_{1 \le j \le n} \sum_{1 \le k \le j} f(j, k)
+      &= \sum_{j, k} f(j, k) [1 \le j \le n] [1 \le k \le j]
+	    \notag \\
+      &= \sum_{j, k} f(j, k) [1 \le k \le j \le n]
+	    \notag \\
+      &= \sum_{j, k} f(j, k) [1 \le k \le n] [ k \le j \le n]
+	    \notag \\
+      &= \sum_{1 \le k \le n} \sum_{k \le j \le n} f(j, k)
+	    \label{eq:suma-intercambio}
+  \end{align}
+  Otro ejemplo interesante es:
+  \begin{align}
+    \sum_{2 \le k \le n} \sum_{1 \le j \le k - 1} \frac{1}{k - j}
+      &= \sum_k [2 \le k \le n] \sum_j [1 \le j \le k - 1]
+	   \cdot \frac{1}{k - j}
+	       \notag \\
+      &= \sum_{k, j}  [2 \le k \le n] \cdot [1 \le j \le k - 1]
+	   \cdot \frac{1}{k - j}
+	       \label{eq:M.SE}
+  \end{align}
+  Podemos reorganizar:
+  \begin{equation}
+    \label{eq:M.SE:rangos}
+    [2 \le k \le n] \cdot [1 \le j \le k - 1]
+      = [1 \le j < k \le n]
+      = [1 \le j \le n - 1] \cdot [j + 1 \le k \le n]
+  \end{equation}
+  Introduciendo la nueva variable \(m = k - j\),
+  tenemos:
+  \begin{align}
+    \label{eq:M.SE:rango-m}
+    [j + 1 \le k \le n]
+      = [j + 1 \le m + j \le n]
+      = [1 \le m \le n - j]
+  \end{align}
+  Usando~\eqref{eq:M.SE:rangos} con~\eqref{eq:M.SE:rango-m}
+  en~\eqref{eq:M.SE}
+  permite cambiar el orden de las sumas:
+  \begin{align}
+    \sum_{2 \le k \le n} \sum_{1 \le j \le k - 1} \frac{1}{k - j}
+      &= \sum_{k, j}  [1 \le j \le n - 1] \cdot [j + 1 \le k \le n]
+	   \cdot \frac{1}{k - j} \notag \\
+      &= \sum_{1 \le j \le n - 1} \sum_{1 \le m \le n - j}
+	   \frac{1}{m} \\
+      &= \sum_{1 \le j \le n - 1} H_{n - j} \label{eq:M.SE:2}
+  \end{align}
+  Acá usamos la definición de los \emph{números harmónicos}:%
+    \index{numeros harmonicos@números harmónicos|textbfhy}
+  \begin{equation}
+    \label{eq:definicion-numeros-harmonicos}
+    H_n
+      = \sum_{1 \le k \le n} \frac{1}{k}
+  \end{equation}
+  La suma~\eqref{eq:M.SE:2}
+  es sobre \(n - j\) entre 1 y \(n - 1\) en reversa,
+  que es lo mismo que sumar sobre \(j\) de 1 a \(n - 1\):
+  \begin{equation}
+    \label{eq:M.SE:3}
+    \sum_{2 \le k \le n} \sum_{1 \le j \le k - 1} \frac{1}{k - j}
+      = \sum_{1 \le j \le n - 1} H_j
+  \end{equation}
+
+  De forma similar a las sumas podemos expresar productos,
+  por ejemplo factoriales:
+  \begin{align*}
+    \prod_{\mathclap{1 \le k \le n}} \; k
+      = n!
+  \end{align*}
+  También productos infinitos,
+  como el producto de Wallis%
+    \index{Wallis, producto de}
+  (lo demostraremos en el teorema~\ref{theo:producto-Wallis}):
+  \begin{equation*}
+    \prod_{k \ge 1} \frac{2 k}{2 k - 1} \cdot \frac{2 k}{2 k + 1}
+      = \frac{2}{1} \cdot \frac{2}{3}
+	  \cdot \frac{4}{3} \cdot \frac{4}{5}
+	  \cdot \frac{6}{5} \cdot \frac{6}{7}
+	  \cdot \frac{8}{7} \cdot \frac{8}{9} \cdots
+      = \frac{\pi}{2}
+  \end{equation*}
+  Esta idea es aplicable a toda operación asociativa y conmutativa,
+  ya que implícitamente estamos obviando completamente el orden
+  en que se efectúan las operaciones
+  entre los elementos considerados.
+  Claro que tal cosa solo es válida en sumas
+  (o productos, etc)
+  finitas
+  o sumas infinitas que convergen en forma incondicional.
+  Podemos expresar
+  uniones e intersecciones:
+  \begin{equation*}
+    \bigcup_{\mathclap{1 \le k \le 10}} \; \mathcal{A}_k
+    \hspace{4em}
+    \bigcap_{\mathclap{1 \le k \le 10}} \; \mathcal{A}_k
+  \end{equation*}
+
+  Hace falta definir qué se entenderá por una suma sin términos,
+  un producto sin factores,
+  etc.%
+  \index{sumatoria!vacia@vacía}%
+  \index{productoria!vacia@vacía}
+  La convención general es que el resultado es el valor neutro
+  para la operación indicada.
+  Vale decir,
+  con \(\mathcal{U}\) el conjunto universo:
+  \begin{alignat*}{2}
+    \sum_{k \in \varnothing}  t_k
+      &= 0
+	& \quad & \text{porque \(t + 0 = t\)} \\
+    \prod_{k \in \varnothing} t_k
+      &= 1
+	&& \text{porque \(t \cdot 1 = t\)} \\
+    \bigcup_{k \in \varnothing} t_k
+      &= \varnothing
+	&& \text{porque \(t \cup \varnothing = t\)} \\
+    \bigcap_{k \in \varnothing} t_k
+      &= \mathcal{U}
+	&& \text{porque \(t \cap \mathcal{U} = t\)}
+  \end{alignat*}
+  Podemos partir con esto y extender la suma
+  (o el producto, etc)
+  un elemento a la vez.
+  La definición completa de la sumatoria es:
+  \begin{equation*}
+    \sum_{k \in \varnothing} t_k
+      = 0
+    \hspace{4em}
+    \sum_{\mathclap{k \in \mathcal{A} \cup \{n\}}} \;\; t_k
+      = \sum_{k \in \mathcal{A}} t_k + t_n
+	   \quad \text{si \(n \notin \mathcal{A}\)}
+  \end{equation*}
+  El caso más común,
+  claro está,
+  es extender un rango.
+  Expresamos \(k \in \varnothing\)
+  mediante el rango \(0 \le k \le -1\):
+  \begin{equation*}
+    \sum_{\mathclap{0 \le k \le -1}} \; t_k
+      = 0
+   \hspace{4em}
+   \sum_{\mathclap{0 \le k \le n + 1}} \;\; t_k
+      = \sum_{0 \le k \le n} t_k + t_{n + 1}
+  \end{equation*}
+
+\section{Potencias factoriales}
+\label{sec:preliminares-potencias-factoriales}
+\index{potencia factorial|textbfhy}
+
+  Siguiendo a Knuth%
+    \index{Knuth, Donald E.}
+  (ver por ejemplo~\cite{graham94:_concr_mathem})
+  usamos las siguientes notaciones para \(x\) cualquiera
+  y entero no negativo \(n\):
+  \begin{align}
+    \label{eq:def-factorial-desciende}
+    x^{\underline{n}}
+      &= \prod_{0 \le k < n} (x - k) \\
+      &= x \cdot (x - 1) \dotsm (x - (n - 1)) \notag \\
+      &= x \cdot (x - 1) \dotsm (x - n + 1) \notag \\
+    \label{eq:def-factorial-asciende}
+    x^{\overline{n}}
+      &= \prod_{0 \le k < n} (x + k) \\
+      &= x \cdot (x + 1) \dotsm (x + n - 1) \notag
+  \end{align}
+  Nótese que
+  son exactamente \(n\) factores,
+  como en las potencias convencionales.
+  Siguiendo la convención de que productos vacíos son \(1\):
+  \begin{equation}
+    \label{eq:potencias-factoriales-0}
+    x^{\underline{0}} = x^{\overline{0}} = 1
+  \end{equation}
+  Les llamamos \emph{potencias factoriales en bajada}
+  y \emph{en subida}
+  (en inglés
+    \emph{\foreignlanguage{english}{falling factorial power}}
+   y \emph{\foreignlanguage{english}{rising factorial power}}),
+  respectivamente.
+  Hay una variedad de otras notaciones en uso para esto;
+  particularmente común es \((x)_k\)
+  (\emph{símbolo de Pochhammer})%
+    \index{Pochhammer, simbolo de@Pochhammer, símbolo de}
+    \glossary{\((x)_k\)}
+	     {Símbolo de Pochhammer,
+	      potencia factorial en bajada \(x^{\underline{k}}\)}
+  para la potencia en bajada
+  (aunque ocasionalmente
+   se usa para potencias factoriales en subida).
+  Se usa también \(x^{(n)}\) para la potencia factorial en subida.
+  Algunos autores usan \((x)^+_n\) y \((x)^-_n\)
+  para potencias factoriales en subida y bajada,
+  respectivamente.
+
+  Una de las razones que hacen útil esta notación es lo siguiente:
+  \begin{equation*}
+    \frac{\mathrm{d}^n}{\mathrm{d} u^n} u^x
+      = x (x - 1) (x - 2) \dotsm (x - n + 1) u^{x - n}
+      = x^{\underline{n}} u^{x - n}
+  \end{equation*}
+  Esto vale para \(x \in \mathbb{C}\),
+  y con la convención
+  que la \(0\)\nobreakdash-ésima derivada es no hacer nada,
+  vale para todo \(n \in \mathbb{N}_0\).
+
+  Nótese que si \(m\), \(n\) y \(k\) son enteros no negativos:
+  \begin{align}
+    m^{\underline{n + k}}
+      &= m^{\underline{n}} \cdot (m - n)^{\underline{k}}
+	  \label{eq:potencia-factorial-bajada-suma} \\
+    m^{\overline{n + k}}
+      &= m^{\overline{n}} \cdot (m + n)^{\overline{k}}
+	  \label{eq:potencia-factorial-subida-suma}
+  \end{align}
+  En particular:
+  \begin{equation}
+    \label{eq:factorial-potencia-factorial}
+    (m + n)^{\underline{n}} \cdot m!
+      = (m + 1)^{\overline{n}} \cdot m!
+      = (m + n)!
+  \end{equation}
+  Esto porque:
+  \begin{alignat*}{2}
+    (m + n)^{\underline{n}} \cdot m!
+      &= (m + n) (m + n - 1) \dotsm (m + 1) \cdot m!
+      &&= (m + n)! \\
+    (m + 1)^{\overline{n}} \cdot m!
+      &= (m + 1) (m + 2) \dotsm (m + n) \cdot m!
+      &&= (m + n)!
+  \end{alignat*}
+  Tenemos también:
+  \begin{equation}
+    \label{eq:factorial=potencia-factorial}
+    n^{\underline{n}} = 1^{\overline{n}} = n!
+  \end{equation}
+
+  Otra relación notable es la siguiente:
+  \begin{equation}
+    \label{eq:potencia-factorial-negativo}
+    x^{\underline{k}}
+      = (-1)^k (-x)^{\overline{k}}
+  \end{equation}
+
+\section{Cálculo de diferencias finitas}
+\label{sec:finite-differences}
+\index{calculo de diferencias finitas@cálculo de diferencias finitas|textbfhy}
+
+  Si definimos el operador \(\Delta\):%
+    \index{\(\Delta\)}
+  \begin{equation}
+    \label{eq:define-Delta}
+    \Delta f(n)
+      = f(n + 1) - f(n)
+  \end{equation}
+  El operador es claramente lineal:
+  \begin{equation}
+    \label{eq:Delta-lineal}
+    \Delta ( \alpha f(n) + \beta g(n) )
+      = \alpha \Delta f(n) + \beta \Delta g(n)
+  \end{equation}
+  Tenemos el operador inverso,
+  que también es lineal:%
+    \index{\(\Sigma\)}
+  \begin{equation}
+    \label{eq:define-Sigma}
+    \Sigma f(n)
+      = \sum_{0 \le k < n} f(k) + c
+  \end{equation}
+  El límite inferior de la suma es arbitrario,
+  pero hay que fijar alguno.
+  Como \(\Delta c = 0\) vale para cualquier constante \(c\):
+  \begin{equation}
+    \label{eq:Sigma-Delta-inverses}
+    \begin{split}
+      \Delta \Sigma f(n) &= f(n) \\
+      \Sigma \Delta f(n) &= f(n) + c
+    \end{split}
+  \end{equation}
+  para alguna constante arbitraria \(c\).
+  Tenemos:
+  \begin{align}
+    \Delta n^{\underline{k}}
+      &= (n + 1)^{\underline{k}} - n^{\underline{k}} \notag \\
+      &= (n + 1) n^{\underline{k - 1}}
+	    - n^{\underline{k - 1}} \cdot (n - k + 1) \notag \\
+      &= (n + 1 - (n - k + 1)) n^{\underline{k - 1}} \notag \\
+      &= k n^{\underline{k - 1}}
+	   \label{eq:Delta-falling-factorial}
+  \end{align}
+  De~\eqref{eq:Sigma-Delta-inverses}
+  y~\eqref{eq:Delta-falling-factorial}
+  tenemos también:
+  \begin{equation}
+    \label{eq:Sigma-falling-factorial}
+    \Sigma n^{\underline{k}}
+      = \frac{n^{\underline{k + 1}}}{k + 1} + c
+  \end{equation}
+  Otras relaciones de interés son:
+  \begin{align}
+    \Delta c
+      &= 0 \qquad \text{(\(c\) es una constante)}
+	 \label{eq:Delta-constant} \\
+    \Delta c^n
+      &= (c - 1) c^n
+	 \label{eq:Delta-c^n} \\
+ \intertext{En particular:}
+    \Delta 2^n
+      &= 2^n
+	 \label{eq:Delta-2^n}
+  \end{align}
+  Demostrar relaciones similares
+  a~\eqref{eq:Delta-falling-factorial} y~\eqref{eq:Sigma-falling-factorial}
+  para potencias factoriales en subida
+  queda de ejercicio.
+
+  Un resultado interesante es la \emph{suma por partes},%
+    \index{suma por partes}
+  afín a la integración por partes.
+  Comenzamos con:
+  \begin{align}
+    \Delta x_k y_k
+      &= x_{k + 1} y_{k + 1} - x_k y_k \notag \\
+      &= x_{k + 1} y_{k + 1}
+	  - x_k y_{k + 1}
+	  + x_k y_{k + 1}
+	  - x_k y_k
+	   \notag \\
+      &= y_{k + 1} \Delta x_k + x_k \Delta y_k
+	   \label{eq:Delta_xy}
+  \end{align}
+  De~\eqref{eq:Delta_xy} reorganizando y sumando tenemos:
+  \begin{equation}
+    \label{eq:sum-parts}
+    \sum_{0 \le k \le n} x_k \Delta y_k
+      = x_{n + 1} y_{n + 1} - x_0 y_0
+	  - \sum_{0 \le k \le n} y_{k + 1} \Delta x_k
+  \end{equation}
+  La relación~\eqref{eq:sum-parts} permite
+  completar la suma~\eqref{eq:M.SE}.
+  En~\eqref{eq:M.SE:3} habíamos llegado a:
+  \begin{equation*}
+    \sum_{2 \le k \le n} \sum_{1 \le j \le k - 1} \frac{1}{k - j}
+      = \sum_{1 \le j \le n - 1} H_j
+  \end{equation*}
+  Podemos considerar:
+  \begin{equation*}
+    x_j \Delta y_j
+      = H_j \cdot 1
+    \qquad
+    \Delta x_j
+      = H_{j + 1} - H_j = \frac{1}{j + 1}
+    \qquad
+    y_j
+      = j
+  \end{equation*}
+  Substituyendo en~\eqref{eq:sum-parts},
+  con ajustes de índices:
+  \begin{equation*}
+    \sum_{1 \le j \le n - 1} H_j
+      = n H_n - 1 \cdot H_1
+	  - \sum_{1 \le j \le n - 1} (j + 1) \, \frac{1}{j + 1}
+      = n H_n - n
+  \end{equation*}
+  y finalmente:
+  \begin{equation}
+    \label{eq:M.SE:4}
+    \sum_{2 \le k \le n} \sum_{1 \le j \le k - 1} \frac{1}{k - j}
+      = n H_n - n
+  \end{equation}
+
+  Las relaciones~\eqref{eq:Delta-lineal},
+  \eqref{eq:Sigma-Delta-inverses},
+  \eqref{eq:Sigma-falling-factorial}
+  y \eqref{eq:sum-parts}
+  recuerdan a las del cálculo infinitesimal,
+  y son base del \emph{cálculo de diferencias finitas},%
+    \index{calculo de diferencias finitas@cálculo de diferencias finitas}
+  con aplicaciones
+  en la aproximación de funciones mediante polinomios
+  y la interpolación.
+  Referencia obligada es Milne-Thomson~%
+    \cite{milne-thomson33:_calculus_finite_differences},
+  una visión más moderna ofrecen Graham, Knuth y~Patashnik~%
+    \cite{graham94:_concr_mathem}.
+  Extensiones de las paralelas indicadas
+  dan pie al \emph{cálculo umbral},
+  formalizado por Roman y Rota~%
+    \cite{roman78:_umbral_calculus},
+  una visión general dan Bucchianico y Loeb~%
+    \cite{bucchianico00:_survey_umbral_calculus}.
+
+\section{Funciones \emph{floor} y \emph{ceil}}
+\label{sec:floor-ceil}
+\index{funcion piso@función piso|textbfhy}
+\index{funcion techo@función techo|textbfhy}
+
+  Siguiendo nuevamente a Knuth,%
+      \index{Knuth, Donald E.}
+  usaremos la notación \(\lfloor x \rfloor\)
+    \glossary{\(\lfloor x \rfloor\)}
+	     {Piso, entero inmediatamente inferior a \(x\)}
+  para el entero inmediatamente inferior a \(x\)
+  (en inglés le llaman \emph{\foreignlanguage{english}{floor}},
+   piso)
+  y \(\lceil x \rceil\)
+    \glossary{\(\lceil x \rceil\)}
+	     {Techo, entero inmediatamente superior a \(x\)}
+  para el entero inmediatamente superior
+  (le llaman \emph{\foreignlanguage{english}{ceil}},
+   por \emph{\foreignlanguage{english}{ceiling}},
+   techo en inglés).
+  La notación es mnemónica en que indica el entero inferior
+  a través de marcar un ``piso'',
+  y el entero superior mediante un ``techo''.
+  Fue Gauß%
+    \index{Gauss, Carl Friedrich@Gauß, Carl Friedrich}
+  quien introdujo
+  la noción de \emph{\foreignlanguage{english}{floor}}
+  con la notación \([x]\),
+  que se mantuvo como estándar indiscutible hasta que Iverson~%
+    \cite{iverson62:_APL}
+  introdujera las usadas acá en 1962.
+  La notación de Gauß sigue siendo común en teoría de números.
+  Algunos usan \(]x[\) para \(\lceil x \rceil\),
+  y hay quienes interpretan \(\lfloor x \rfloor\)
+  como la ``parte entera'',
+  el entero más cercano en dirección al cero.
+  Nuestra definición es más regular,
+  no depende del signo.
+  Por ejemplo:
+  \begin{align*}
+    \left\lfloor -\frac{2}{3} \right\rfloor
+      &= -1 \\
+    \lfloor \pi \rfloor
+      &= 3 \\
+    \lceil \pi \rceil
+      &= 4 \\
+    \lfloor -3 \rfloor
+      &= \lceil -3 \rceil
+      = -3
+  \end{align*}
+
+  Una función relacionada es la \emph{parte fraccional},%
+    \index{parte fraccional|textbfhy}
+  o \emph{función diente de sierra}%
+    \index{diente de sierra|see{parte fraccional}}
+  (en inglés \emph{\foreignlanguage{english}{sawtooth}}):
+  \begin{equation}
+    \label{eq:def-diente-sierra}
+    \{x\}
+      = x - \lfloor x \rfloor
+  \end{equation}
+
+  Se cumplen las siguientes relaciones básicas%
+    \index{parte fraccional!identidades}%
+    \index{funcion piso@función piso!identidades}%
+    \index{funcion techo@función techo!identidades}
+  para estas funciones:
+  \begin{align}
+    \label{eq:cotas-floor}
+    \lfloor x \rfloor	&\le x	   <   \lfloor x \rfloor + 1 \\
+    \label{eq:cotas-ceil}
+    \lceil x \rceil - 1 &<   x	   \le \lceil x \rceil
+  \end{align}
+  Expresado de otra forma:
+  \begin{align}
+    \label{eq:cotas-floor-2}
+    x - 1 &<   \lfloor x \rfloor \le x	   \\
+    \label{eq:cotas-ceil-2}
+    x	  &\le \lceil x \rceil	 <   x + 1 \\
+    \label{eq:cotas-diente-sierra}
+    0	  &\le \{x\}		 < 1
+  \end{align}
+  Es claro que:
+  \begin{align}
+    \label{eq:ceil-negativo}
+    \lfloor x \rfloor
+      &= -\lceil -x \rceil \\
+    \label{eq:floor-negativo}
+    \lceil x \rceil
+      &= -\lfloor -x \rfloor
+  \end{align}
+  De la definición,
+  ecuación~\eqref{eq:def-diente-sierra},
+  tenemos directamente:
+  \begin{equation}
+    \label{eq:floor-diente-sierra}
+    \lfloor x \rfloor
+      = x - \{ x \}
+  \end{equation}
+  Usando las relaciones para cambio de signo
+  tenemos:
+  \begin{align}
+    x
+      &= \lceil x \rceil + (x - \lceil x \rceil)
+       = \lceil x \rceil - (- x + \lfloor -x \rfloor )	\notag \\
+  \intertext{y resulta}
+    \lceil x \rceil
+      &= x + \{ -x \}  \label{eq:ceil-diente-sierra}
+  \end{align}
+
+  Si \(n\) es un entero y \(x\) un real cualquiera,
+  se cumplen:
+  \begin{align}
+    \label{eq:floor-real+int}
+    \lfloor x + n \rfloor
+      &= \lfloor x \rfloor + n \\
+    \label{eq:ceil-real+int}
+    \lceil x + n \rceil
+      &= \lceil x \rceil + n \\
+    \{ x + n \}
+      &= \{ x \}
+  \end{align}
+  En cambio,
+  para \(x\) e \(y\) reales cualquiera tenemos:
+  \begin{align}
+    \label{eq:floor-sum}
+    \lfloor x \rfloor + \lfloor y \rfloor
+      &\le \lfloor x + y \rfloor
+       \le \lfloor x \rfloor + \lfloor y \rfloor + 1 \\
+    \label{eq:ceil-sum}
+    \lceil x \rceil + \lceil y \rceil -1
+      &\le \lceil x + y \rceil
+       \le \lceil x \rceil + \lceil y \rceil
+  \end{align}
+
+  Algunas identidades más interesantes
+  con \(x\) real,
+  \(m\) entero y \(n\) natural son~%
+    \cite{graham94:_concr_mathem}:
+  \begin{align}
+    \label{eq:floor-real-fraccion}
+    \left\lfloor \frac{x + m}{n} \right\rfloor
+      &= \left\lfloor
+	   \frac{\lfloor x \rfloor + m}{n}
+	 \right\rfloor \\
+    \label{eq:ceil-real-fraccion}
+    \left\lceil \frac{x + m}{n} \right\rceil
+      &= \left\lceil \frac{\lceil x \rceil + m}{n} \right\rceil
+  \end{align}
+  La primera servirá de ejemplo de demostración con estas nociones:
+  \begin{equation*}
+    \left\lfloor \frac{x + m}{n} \right\rfloor
+      = \left\lfloor
+	  \frac{\lfloor x \rfloor + \{x\} + m}{n}
+	\right\rfloor
+      = \left\lfloor
+	  \frac{\lfloor x \rfloor + m}{n} + \frac{\{x\}}{n}
+	\right\rfloor
+  \end{equation*}
+  Como \(\{x\} < 1\),
+  el término final no influye.
+
+  Con \(m\) positivo:
+  \begin{align}
+    \label{eq:n-suma-fracciones-floor}
+    n &= \left\lfloor \frac{n}{m} \right\rfloor
+	   + \left\lfloor \frac{n + 1}{m} \right\rfloor
+	   + \left\lfloor \frac{n + 2}{m} \right\rfloor
+	   + \dotsb
+	   + \left\lfloor \frac{n + m - 1}{m} \right\rfloor \\
+    \label{eq:n-suma-fracciones-ceil}
+    n &= \left\lceil \frac{n}{m} \right\rceil
+	   + \left\lceil \frac{n - 1}{m} \right\rceil
+	   + \left\lceil \frac{n - 2}{m} \right\rceil
+	   + \dotsb
+	   + \left\lceil \frac{n - m + 1}{m} \right\rceil
+  \end{align}
+  Para demostrar la primera de éstas,
+  llamemos \(n = q \cdot m + r\),
+  con \(0 \le r < m\).
+  Escribamos:
+  \begin{equation*}
+    \sum_{0 \le k < m} \left\lfloor \frac{n + k}{m} \right\rfloor
+      = \sum_{0 \le k < m}
+	  \left\lfloor q + \frac{r + k}{m} \right\rfloor
+      = m \cdot q +
+	 \sum_{0 \le k < m}
+	   \left\lfloor \frac{r + k}{m} \right\rfloor
+  \end{equation*}
+  Los términos de la última suma son \(0\) si \(r + k < m\)
+  y \(1\) si \(r + k \ge m\),
+  que es el rango \(m - r \le k < m\)
+  con exactamente \(r\) elementos,
+  y resulta lo indicado.
+
+  Más generalmente,
+  con \(x \in \mathbb{R}\):
+  \begin{align}
+    \label{eq:floor-mx-suma}
+    \lfloor m x \rfloor
+      &= \left\lfloor x \right\rfloor
+	   + \left\lfloor x + \frac{1}{m} \right\rfloor
+	   + \left\lfloor x + \frac{2}{m} \right\rfloor
+	   + \dotsb
+	   + \left\lfloor x + \frac{m - 1}{m} \right\rfloor \\
+    \label{eq:ceil-mx-suma}
+    \lceil m x \rceil
+      &= \left\lceil x \right\rceil
+	   + \left\lceil x - \frac{1}{m} \right\rceil
+	   + \left\lceil x - \frac{2}{m} \right\rceil
+	   + \dotsb
+	   + \left\lceil x - \frac{m - 1}{m} \right\rceil
+  \end{align}
+  A la relación~\eqref{eq:floor-mx-suma}
+  se le conoce como \emph{identidad de Hermite}.%
+    \index{Hermite, identidad de}
+  La siguiente demostración es debida a Matsuoka~%
+    \cite{matsuoka64:_Hermite_identity}.
+  Sea:
+  \begin{equation*}
+    f(x)
+      = \lfloor m x \rfloor
+	  - \lfloor x \rfloor
+	  - \left\lfloor x + \frac{1}{m} \right\rfloor
+	  - \left\lfloor x + \frac{2}{m} \right\rfloor
+	  - \dotsb
+	  - \left\lfloor x + \frac{m - 1}{m} \right\rfloor
+  \end{equation*}
+  Entonces,
+  como para \(\alpha\), \(\beta\) reales siempre es
+  \(\lfloor \alpha + 1 \rfloor - \lfloor \beta + 1 \rfloor
+      = \lfloor \alpha \rfloor - \lfloor \beta \rfloor\)
+  tenemos:
+  \begin{align*}
+    f\left( x + \frac{1}{m} \right)
+      &= \lfloor m x + 1 \rfloor
+	   - \left\lfloor x + \frac{1}{m}\right\rfloor
+	   - \left\lfloor x + \frac{2}{m} \right\rfloor
+	   - \dotsb
+	   - \left\lfloor x + \frac{m - 1}{m} \right\rfloor
+	   - \lfloor x + 1 \rfloor \\
+      &= \lfloor m x \rfloor
+	   - \lfloor x \rfloor
+	   - \left\lfloor x + \frac{1}{m} \right\rfloor
+	   - \left\lfloor x + \frac{2}{m} \right\rfloor
+	   - \dotsb
+	   - \left\lfloor x + \frac{m - 1}{m} \right\rfloor \\
+      &= f(x)
+  \end{align*}
+  Por el otro lado,
+  para \(0 \le x < 1 / m\) tenemos \(f(x) = 0\),
+  con lo que \(f(x) = 0\) para todo \(x\),
+  que es lo que queríamos probar.
+  La relación~\eqref{eq:ceil-mx-suma} se demuestra de forma similar.
+
+  Alternativamente,
+  para la identidad de Hermite
+  por~\eqref{eq:floor-real-fraccion} podemos escribir:
+  \begin{equation*}
+    \left\lfloor \frac{\lfloor m x \rfloor + k}{m} \right\rfloor
+      = \left\lfloor \frac{m x + k}{m} \right\rfloor
+      = \left\lfloor x + \frac{k}{m} \right\rfloor
+  \end{equation*}
+  Por~\eqref{eq:n-suma-fracciones-floor} resulta lo indicado.
+
+  Para \(m\) positivo,
+  las siguientes permiten transformar pisos en techos y viceversa:
+  \begin{align}
+    \label{eq:floor-fraccion}
+    \left\lfloor \frac{n}{m} \right\rfloor
+      &= \left\lceil \frac{n - m + 1}{m} \right\rceil
+       = \left\lceil \frac{n + 1}{m} \right\rceil - 1 \\
+    \label{eq:ceil-fraccion}
+    \left\lceil \frac{n}{m} \right\rceil
+      &= \left\lfloor \frac{n + m - 1}{m} \right\rfloor
+       = \left\lfloor \frac{n - 1}{m} \right\rfloor + 1
+  \end{align}
+  Para demostrar~\eqref{eq:floor-fraccion},
+  sea \(n = q m + r\) con \(0 \le r < m\).
+  Entonces:
+  \begin{align*}
+    n - m + 1
+      &= (q - 1) m + r + 1 \\
+    n + 1
+      &= q m + r + 1
+  \end{align*}
+  Como \(1 \le r + 1 \le m\),
+  resultan las relaciones indicadas en~\eqref{eq:floor-fraccion}.
+
+  A veces resultan útiles:
+  \begin{align}
+    \label{eq:frac-floor-floor}
+    \left\lfloor \frac{\lfloor x / m \rfloor}{n} \right\rfloor
+      &= \left\lfloor \frac{x}{m n} \right\rfloor \\
+    \label{eq:frac-ceil-ceil}
+    \left\lceil \frac{\lceil x / m \rceil}{n} \right\rceil
+      &= \left\lceil \frac{x}{m n} \right\rceil
+  \end{align}
+  Estas son reflejo de lo siguiente:
+  Sea \(f(x)\) una función continua monótona creciente
+  con la propiedad especial
+  que si \(f(x)\) es entero entonces \(x\) es entero.
+  Entonces:
+  \begin{align*}
+    \lfloor f(\lfloor x \rfloor)\rfloor
+      &= \lfloor f(x) \rfloor \\
+    \lceil f(\lceil x \rceil)\rceil
+      &= \lceil f(x) \rceil
+  \end{align*}
+  Veremos el primer caso,
+  el otro es análogo.
+  Cuando \(x = \lfloor x \rfloor\) no hay nada que demostrar.
+  Supongamos entonces que \(\lfloor x \rfloor < x\),
+  con lo que \(f(\lfloor x \rfloor) < f(x)\)
+  ya que \(f\) es monótona,
+  y \(\lfloor f(\lfloor x \rfloor) \rfloor
+	\le \lfloor f(x) \rfloor\).
+  Si fuera \(\lfloor f(\lfloor x \rfloor) \rfloor
+	       < \lfloor f(x) \rfloor\),
+  habría un número \(y\) tal que \(\lfloor x \rfloor < y \le x\)
+  con \(f(y) = \lfloor f(x) \rfloor\) dado que \(f\) es continua.
+  Pero entonces \(f(y)\) es entero,
+  luego por la propiedad especial \(y\) es entero también.
+  Como no hay enteros \(y\)
+  que cumplen \(\lfloor x \rfloor < y \le x\),
+  debe ser
+    \(\lfloor f(\lfloor x \rfloor) \rfloor
+	= \lfloor f(x) \rfloor\).
+
+  Como ejemplo,
+  esto da:
+  \begin{equation*}
+    \lfloor \sqrt{\lfloor x \rfloor} \rfloor
+      = \lfloor \sqrt{x} \rfloor
+  \end{equation*}
+
+\section{Otros resultados de interés}
+\label{sec:resultados-interesantes}
+
+  En esta sección recogeremos la demostración de algunos resultados
+  que usaremos más adelante.
+
+  \begin{theorem}[Desigualdad de Cauchy-Schwarz]
+    \index{Cauchy-Schwarz, desigualdad de}
+    \index{desigualdad de Cauchy-Schwarz|see{Cauchy-Schwarz, desigualdad de}}
+    \label{theo:Cauchy-Schwarz}
+    Sean vectores de números reales
+    \mbox{\(\boldsymbol{a} = (a_1, a_2, \dotsc, a_n)\)}
+    y \mbox{\(\boldsymbol{b} =(b_1, b_2, \dotsc, b_n)\)}.
+    Definamos:
+    \begin{alignat*}{4}
+      p &= \sum_{1 \le k \le n} a_k^2
+	&\qquad&
+      q &= \sum_{1 \le k \le n} a_k b_k
+	&\qquad&
+      r &= \sum_{1 \le k \le n} b_k^2
+    \end{alignat*}
+    Entonces \(q^2 \le p r\).
+  \end{theorem}
+  \begin{proof}
+    Sea \(x \in \mathbb{R}\),
+    y consideremos la suma
+    \begin{equation*}
+      s(x)
+	= \sum_{1 \le k \le n} (a_k x + b_k)^2
+    \end{equation*}
+    Siendo \(s(x)\) una suma de cuadrados de números reales,
+    \(s(x) \ge 0\).
+    Expandiendo los cuadrados y agrupando términos
+    la suma se expresa:
+    \begin{equation*}
+      s(x)
+	= p x^2 + 2 q x + r
+    \end{equation*}
+    Este polinomio tiene a lo más un cero real ya que nunca es negativo,
+    por lo que su discriminante no es positivo:
+    \begin{equation*}
+      4 q^2 - 4 p r
+	\le 0
+    \end{equation*}
+    Esto equivale a lo anunciado.
+  \end{proof}
+
+  \begin{theorem}[Desigualdad triangular]
+    \index{desigualdad triangular}
+    \label{theo:desigualdad-triangular}
+    Sean \(a\) y \(b\) números complejos.
+    Entonces
+      \mbox{\(\lvert a + b \rvert
+		\le \lvert a \rvert + \lvert b \rvert\)}.
+  \end{theorem}
+  Se le llama ``desigualdad triangular'' porque
+  si se consideran \(a\) y \(b\) como los lados de un triángulo,
+  \(a + b\) es el tercer lado
+  (vea la figura~\ref{fig:triangle}),
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/triangle}
+    \caption{Desigualdad triangular}
+    \label{fig:triangle}
+  \end{figure}
+  y el teorema dice
+  que la suma de los largos de dos lados del triángulo
+  es mayor que el largo del tercero
+  (salvo cuando el triángulo es en realidad una única línea,
+   en cuyo caso la suma de los largos de dos de los lados
+   es igual al largo del tercero).
+   \begin{proof}
+     Sean \(a = u + \mathrm{i} v\) y \(b = x + \mathrm{i} y\).
+     En estos términos,
+     anotando \(\overline{a}\) para el conjugado de \(a\):
+     \begin{align*}
+       \lvert a \rvert^2
+	 &= u^2 + v^2
+	  = a \cdot \overline{a} \\
+       \lvert a + b \rvert^2
+	 &= (a + b) \cdot \overline{(a + b)} \\
+	 &= (a + b) \cdot (\overline{a} + \overline{b}) \\
+	 &= a \cdot \overline{a}
+	     + b \cdot \overline{b}
+	     + a \cdot \overline{b}
+	     + \overline{a} \cdot b \\
+	 &= \lvert a \rvert^2 + \lvert b \rvert^2
+	     + a \cdot \overline{b}
+	     + \overline{a} \cdot b
+     \end{align*}
+     Por otro lado:
+     \begin{equation*}
+       a \cdot \overline{b} + \overline{a} \cdot b
+	 = (u + \mathrm{i} v) \cdot (x - \mathrm{i} y)
+	     + (u - \mathrm{i} v) \cdot (x + \mathrm{i} y)
+	 = 2 u x + 2 v y
+     \end{equation*}
+     Por la desigualdad de Cauchy-Schwarz es
+     \((u x + v y)^2 \le (u^2 + v^2) \cdot (x^2 + y^2)\),
+     así que \(u x + v y \le \lvert a \rvert \cdot \lvert b \rvert\)
+     y resulta:
+     \begin{equation*}
+       \lvert a + b \rvert^2
+	 = \lvert a \rvert^2 + \lvert b \rvert^2
+	    + a \cdot \overline{b}
+	    + \overline{a} \cdot b
+	 \le \lvert a \rvert^2
+	    + 2 \lvert a \rvert \cdot \lvert b \rvert
+	    + \lvert b \rvert^2
+	 = \left(\lvert a \rvert + \lvert b \rvert\right)^2
+     \end{equation*}
+     Tomando raíces cuadradas obtenemos lo prometido.
+   \end{proof}
+   Es obvio que esto puede extenderse a sumas finitas:
+   \begin{equation}
+     \label{eq:triangle-inequality-sum}
+     \left\lvert \sum_{1 \le k \le n} a_k \right\rvert
+       \le \sum_{1 \le k \le n} \lvert a_k \rvert
+   \end{equation}
+
+  Una observación simple
+  es lo que llaman el \emph{principio del palomar}%
+    \index{principio del palomar}
+  (en inglés
+    \emph{\foreignlanguage{english}{pigeonhole principle}}):%
+    \index{pigeonhole principle@\emph{\foreignlanguage{english}{pigeonhole principle}}|see{principio del palomar}}
+  Si hay \(n\) palomares,
+  y hay más de \(n\) palomas,
+  hay al menos un palomar con más de una paloma.
+  Si hay infinitas palomas,
+  al menos uno de los palomares tiene infinitos huéspedes.
+  \begin{theorem}[Principio extendido del palomar]
+    \label{theo:pigeonhole}
+    Si hay \(n\) palomares,
+    y \(r\) palomas,
+    hay un palomar con al menos \(\lceil r / n \rceil\) palomas.
+  \end{theorem}
+  \begin{proof}
+    La demostración es por contradicción.
+    Supongamos que todos los palomares
+    tienen menos de \(\lceil r / n \rceil\) palomas.
+    Entonces el número total de palomas cumple:
+    \begin{equation*}
+      r
+	\le n \cdot \left(
+		      \left\lceil \frac{r}{n} \right\rceil - 1
+		    \right)
+	< n \cdot \frac{r}{n}
+	= r
+    \end{equation*}
+    Concluimos \(r < r\),
+    lo que es absurdo.
+  \end{proof}
+
+  Para un ejemplo,
+  considere los números \(1, 2, \dotsc, 2 n\),
+  y elija \(n + 1\) de ellos formando el conjunto \(\mathcal{A}\).
+  Entonces hay dos números relativamente primos en \(\mathcal{A}\),
+  porque hay dos números que difieren en \(1\)
+  (considere los \(n\) ``palomares''
+   formados por pares adyacentes
+   \((1, 2)\), \((3, 4)\), \ldots, \((2 n - 1, 2 n)\),
+   al menos uno contiene dos números).
+
+  Considere nuevamente la situación anterior.
+  Entonces entre los números de \(\mathcal{A}\)
+  hay uno que divide a otro.
+  Acá podemos escribir cada uno de los \(2 n\) elementos
+  como \(2^k m\),
+  con \(m\) impar en el rango \(1 \le m \le 2 n - 1\).
+  Como hay \(n + 1\) números,
+  pero solo \(n\) posibles partes impares,
+  alguna debe repetirse,
+  y en consecuencia
+  tenemos un par que solo difiere en la potencia de 2.
+
+\section{Notación asintótica}
+\label{sec:notacion-asintotica}
+\index{notacion asintotica@notación asintótica|seealso{Bachmann-Landau, notaciones de}}
+
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}[c]{|l|l|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Notación}} &
+	 \multicolumn{1}{c|}{\textbf{Definición}} \\
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+      \vphantom{\(\biggl(\biggr)\)}
+      \(f(n) \underset{n \rightarrow \infty}{=} O(g(n))\) &
+	 \(\exists k > 0, n_0 \forall n > n_0 \colon
+	      \lvert f(n) \rvert \le k \cdot g(n)\) \\
+      \vphantom{\(\biggl(\biggr)\)}
+      \(f(n) \underset{n \rightarrow \infty}{=} \Omega(g(n))\) &
+	 \(\exists k > 0, n_0 \forall n > n_0 \colon
+	       \lvert f(n) \rvert \ge k \cdot g(n)\) \\
+      \vphantom{\(\biggl(\biggr)\)}
+      \(f(n) \underset{n \rightarrow \infty}{=} \Theta(g(n))\) &
+	  \(\exists k_1 > 0, k_2 > 0, n_0 \forall n > n_0 \colon
+	       k_1 \cdot g(n) \le \lvert f(n) \rvert
+			      \le k_2 \cdot g(n)\) \\
+      \vphantom{\(\biggl(\biggr)\)}
+      \(f(n) \underset{n \rightarrow \infty}{=} o(g(n))\) &
+	  \(\forall \epsilon > 0 \exists n_0 \forall n > n_0 \colon
+	       \lvert f(n) \rvert \le \epsilon \cdot g(n)\) \\
+      \vphantom{\(\biggl(\biggr)\)}
+      \(f(n) \underset{n \rightarrow \infty}{=} \omega(g(n))\) &
+	  \(\forall \epsilon > 0 \exists n_0 \forall n > n_0 \colon
+	       \lvert f(n) \rvert \ge \epsilon \cdot g(n)\) \\
+      \vphantom{\(\biggl(\biggr)\)}
+      \(f(n) \underset{n \rightarrow \infty}{\sim} g(n)\) &
+	       \(\displaystyle \lim_{n \rightarrow \infty}
+				 f(n) / g(n) = 1\)
+		     \rule[-2ex]{0pt}{3ex} \\
+      \hline
+    \end{tabular}
+    \caption{Notaciones de Bachmann-Landau}
+    \label{tab:bachmann-landau}
+    \index{Bachmann-Landau, notaciones de|textbfhy}
+  \end{table}
+  A la familia del cuadro~\ref{tab:bachmann-landau}
+  se le llama \emph{notaciones de Bachmann-Landau},
+  aunque en realidad fue Knuth~%
+    \cite{knuth76:_big_omicr_omega_theta}%
+    \index{Knuth, Donald E.}
+  quien las definió como las damos acá.
+  Por convención
+  se escriben las cosas de la forma más simple posible,
+  vale decir no se escribe \(O(\pi)\) sino \(O(1)\),
+  tampoco \(O(3 n^2 + 17)\) sino simplemente \(O(n^2)\).
+  Aunque acá esto se ha anotado en términos de la variable \(n\),
+  lo que hace subentender \(n \in \mathbb{N}\),
+  la notación tiene perfecto sentido para \(n \in \mathbb{R}\).
+
+  Intuitivamente:
+  \begin{description}
+  \item[\boldmath
+	  \(f(n) \underset{n \rightarrow \infty}{=} O(g(n))\):%
+	\unboldmath]
+    Indica que \(f\) crece a lo más como (una constante por) \(g\)
+    cuando \(n \rightarrow \infty\),
+    que \(g\) acota a \(f\) por arriba.
+    Se aplica
+    cuando \(\lim_{n \rightarrow \infty} f(n) = \infty\).
+  \item[\boldmath
+	  \(f(n) \underset{n \rightarrow \infty}{=} \Omega(g(n))\):%
+	\unboldmath]
+    Significa que \(f\)
+    crece a lo menos como (una constante por) \(g\)
+    cuando \(n \rightarrow \infty\),
+    que \(g\) acota a \(f\) por abajo.
+    Al igual que el caso anterior,
+    se aplica más que nada
+    cuando \(\lim_{n \rightarrow \infty} f(n) = \infty\).
+  \item[\boldmath
+	  \(f(n) \underset{n \rightarrow \infty}{=} \Theta(g(n))\):%
+	\unboldmath]
+    En este caso \(f\) está acotada por arriba y abajo por \(g\),
+    ambas crecen a la misma tasa
+    (dentro de un factor constante)
+    cuando  \(n \rightarrow \infty\).
+    Resume el caso en que
+      \(f(n) \underset{n \rightarrow \infty}{=} O(g(n))\)
+    y también
+      \(f(n) \underset{n \rightarrow \infty}{=} \Omega(g(n))\).
+  \item[\boldmath
+	  \(f(n) \underset{n \rightarrow \infty}{=} o(g(n))\):%
+	\unboldmath]
+    Acá \(f\) es dominada asintóticamente por \(g\),
+    \(f\) disminuye más rápidamente que \(g\)
+    cuando  \(n \rightarrow \infty\).
+    Esto se usa más que nada para comparar funciones
+    tales que \(\lim_{n \rightarrow \infty} f(n) = 0\).
+  \item[\boldmath
+	  \(f(n) \underset{n \rightarrow \infty}{=} \omega(g(n))\):%
+	\unboldmath]
+    La situación acá es la inversa de la anterior,
+    \(f\) domina asintóticamente a \(g\),
+    \(g\) disminuye más rápidamente que \(f\)
+    cuando  \(n \rightarrow \infty\).
+    Útil principalmente cuando
+      \(\lim_{n \rightarrow \infty} f(n) = 0\).
+  \item[\boldmath
+	  \(f(n) \underset{n \rightarrow \infty}{\sim} g(n)\):%
+	\unboldmath]
+    Asintóticamente,
+    ambas funciones son iguales.
+  \end{description}
+  Más que nada usaremos las primeras tres,
+  las otras se mencionan por completitud.
+
+  Es común el caso de considerar el caso en que \(x \rightarrow 0\)
+  (o alguna otra constante),
+  no \(n \rightarrow \infty\),
+  y por ejemplo la definición de \(O()\) se debe leer como:
+  \begin{equation*}
+    f(x)
+      \underset{x \rightarrow a}{=} O(g(x))
+	 \text{\ si\ }
+	   \exists k
+	     \forall \epsilon > 0 \; \forall x \colon
+	       \lvert x - a \rvert \le \epsilon \implies
+		 \lvert f(n) \rvert \le k \cdot g(n)
+  \end{equation*}
+  Para las demás notaciones se definen en forma afín.
+
+  Nótense las similitudes
+  con las definiciones de los límites respectivos:%
+    \index{Bachmann-Landau, notaciones de!relacion con limites@relación con límites}
+  \begin{align*}
+    \lim_{n \rightarrow \infty} f(n) = a
+       &\text{\ cuando\ }
+	 \forall \epsilon > 0 \exists N \colon
+	   n \ge N \implies \lvert f(n) - a \rvert \le \epsilon \\
+    \lim_{x \rightarrow x_0} f(x) = a
+       &\text{\ cuando\ }
+	 \forall \epsilon > 0 \; \exists \delta \colon
+	   0 < \lvert x - x_0 \rvert \le \delta
+	      \implies \lvert f(n) - a \rvert \le \epsilon
+  \end{align*}
+  Lejos las más usadas son \(n \rightarrow \infty\),
+  y se suele solo indicar explícitamente en otros casos.
+  Si la variable es real
+  normalmente se estará frente a la situación \(x \rightarrow 0\).
+
+  Podemos deducir relaciones entre las distintas situaciones,
+  suponiendo que \(f(n)\) y \(g(n)\) no se anulan.
+  Las definiciones
+  inmediatamente indican que \(f(n) = \Theta(g(n))\)
+  si \(f(n) = \Omega(g(n))\) y también \(f(n) = O(g(n))\).
+  Es fácil ver que si \(f(n) = O(g(n))\)
+  entonces \(g(n) = \Omega(f(n))\),
+  y viceversa.
+  Similarmente,
+  \(f(n) = o(g(n))\) si y solo si \(g(n) = \omega(f(n))\).
+  Vemos también que si \(f(n) = o(g(n))\)
+  no puede ser simultáneamente \(f(n) = \Omega(g(n))\).
+  Si \(f(n) \sim g(n)\),
+  es claro que \(f(n) = \Theta(g(n))\),
+  pero por ejemplo \(3 n = \Theta(n)\)
+  y \(3 n \not\sim n\).
+  \begin{figure}[ht]
+    \centering
+    \pgfimage{images/Bachmann-Landau}
+    \caption{Relación entre $f(n)$ y $g(n)$
+	     en notaciones de Bachmann-Landau}
+    \label{fig:Bachmann-Landau}
+  \end{figure}
+  La figura~\ref{fig:Bachmann-Landau}
+  resume las relaciones indicadas.
+
+  Las notaciones dadas
+  son abusivas.
+  Por ejemplo,
+  \(n^{\sfrac{1}{2}} = O(n^2)\) y \(3 n^2 - 17 = O(n^2)\)
+  definitivamente no permiten concluir
+  que \(n^{\sfrac{1}{2}} = 3 n^2 - 17\).
+  Una notación más ajustada
+  sería considerar \(O(g(n))\) como el \emph{conjunto} de funciones
+  que cumplen lo indicado,
+  y decir \(f(n) \in O(g(n))\).
+  La forma más simple de evitar problemas
+  es considerar siempre que el lado derecho de igualdades
+  que usan estas notaciones
+  es una versión menos precisa del lado izquierdo.
+
+  También se usa notación como:
+  \begin{equation*}
+    f(n) = 3 n^3 + 2 n^2 + O(n)
+  \end{equation*}
+  con la intención de indicar que hay una función \(g(n)\)
+  que da:
+  \begin{equation*}
+    f(n) = 3 n^3 + 2 n^2 + g(n)
+  \end{equation*}
+  donde \(g(n) = O(n)\).
+  Este uso hace preferible el no considerar las notaciones
+  como conjuntos de funciones.
+
+  Recordemos la definición:
+  \begin{equation*}
+    \lim_{n \rightarrow \infty} f(n) = a
+  \end{equation*}
+  si para todo \(\epsilon > 0\) existe \(n_0\)
+  tal que para todo \(n \ge n_0\)
+  se cumple \(\lvert f(n) - a \rvert \le \epsilon\).
+  Considerar los límites suele ser útil
+  para determinar relaciones asintóticas.
+  Incluso hay quienes usan resultados como el teorema siguiente
+  para definirlas.
+  \begin{theorem}
+    \label{theo:limite-O-Omega}
+    Dadas funciones \(f(n)\) y \(g(n)\),
+    si \(\lim_{n \rightarrow \infty} f(n) / g(n)\) es finito,
+    entonces \(f(n) = O(g(n))\).
+    Si además el límite es positivo,
+    entonces \(f(n) = \Theta(g(n))\)
+    (en particular,
+     tenemos \(f(n) = \Omega(g(n))\)).
+     Si \(\lim_{n \rightarrow \infty} f(n) / g(n) = \infty\),
+     entonces \(f(n) = \Omega(g(n))\).
+  \end{theorem}
+  \begin{proof}
+    Por definición
+    \begin{equation*}
+      \lim_{n \rightarrow \infty} \frac{f(n)}{g(n)} = a
+    \end{equation*}
+    con \(a\) finito
+    cuando para todo \(\epsilon > 0\)
+    hay \(n_0\) tal que siempre que \(n \ge n_0\) tenemos
+    \(\lvert f(n) / g(n) - a \rvert \le \epsilon\).
+    Esto puede expresarse como:
+    \begin{equation*}
+      (a - \epsilon) g(n) \le f(n) \le	(a + \epsilon) g(n)
+	\text{\ cuando\ } n \ge n_0
+    \end{equation*}
+    La segunda desigualdad corresponde a la definición
+    de \(f(n) = O(g(n))\).
+
+    Si el límite \(a > 0\),
+    podemos elegir \(\epsilon < a\),
+    lo que da constantes positivas en ambas desigualdades,
+    y corresponde a \(f(n) = \Theta(g(n))\).
+    La definición de \(f(n) = \Omega(g(n))\)
+    es simplemente una de las desigualdades del caso anterior.
+
+    Por definición,
+    \begin{equation*}
+      \lim_{n \rightarrow \infty} \frac{f(n)}{g(n)}
+	= \infty
+    \end{equation*}
+    significa que para todo \(c > 0\) hay \(n_0\)
+    tal que si \(n \ge n_0\):
+    \begin{equation*}
+      \frac{f(n)}{g(n)}
+	\ge c
+      \qquad
+      f(n)
+	\ge c g(n)
+    \end{equation*}
+    En esto basta elegir \(c\) con su correspondiente \(n_0\)
+    para satisfacer la definición de \(f(n) = \Omega(g(n))\).
+  \end{proof}
+
+  Nótese que hay situaciones en las cuales esto no es aplicable.
+  Por ejemplo,
+  sea
+  \begin{equation*}
+    f(n)
+      = 3 n^2 \sin^2 n + n / 2
+  \end{equation*}
+  Sabemos que \(0 \le \sin^2 n \le 1\),
+  con lo que para todo \(n > 1\):
+  \begin{align*}
+    f(n)
+      &\ge \frac{1}{2} \, n \\
+    f(n)
+      &\le 3 n^2 + \frac{1}{2} \, n
+       \le \frac{7}{2} \, n^2
+  \end{align*}
+  Estas corresponden directamente a \(f(n) = \Omega(n)\)
+  y \(f(n) = O(n^2)\).
+  Pero los límites
+  a los que hace referencia
+  el teorema~\ref{theo:limite-O-Omega} no ayudan:
+  \(\lim_{n \rightarrow \infty} f(n) / n^2\) no existe
+  (la razón oscila entre 0 y 3)
+  y tampoco existe \(\lim_{n \rightarrow \infty} f(n) / n\)
+  (la razón oscila entre \(1 / 2\) y \(3 n\)).
+  No hay \(\alpha\) tal que \(f(n) = \Theta(n^\alpha)\).
+
+  Sabemos del teorema de Taylor%
+    \index{Taylor, teorema de}
+  (para condiciones sobre la función
+   y otros véase un texto de cálculo,
+  por ejemplo el de Stein y Barcellos~%
+   \cite{stein92:_calculus_anal_geom})
+  que si \(a \le x\) y \(x\) está dentro del radio de convergencia
+  podemos escribir:
+  \begin{equation*}
+    f(x)
+      = \sum_{0 \le r \le k}
+	  \frac{f^{(r)}(a)}{r!} \, (x - a)^r + R_k(x)
+  \end{equation*}
+  La forma de Lagrange del residuo es:
+  \begin{equation*}
+    R_k(x) = \frac{f^{(k + 1)}(\xi)}{(k + 1)!} \, (x - a)^{k + 1}
+  \end{equation*}
+  donde \(a \le \xi \le x\).
+  Si \(f^{(k + 1)}(x)\) es acotado en el rango de interés,
+  podemos decir:
+  \begin{equation*}
+    f(x)
+      = \sum_{0 \le r \le k} \frac{f^{(i)}(a)}{r!} \, (x - a)^r
+	  + O((x - a)^{k + 1})
+  \end{equation*}
+  Por ejemplo:
+  \begin{equation*}
+    \frac{n}{n - 1}
+      = \frac{1}{1 - 1 / n}
+  \end{equation*}
+  Aplicando el teorema de Maclaurin:%
+    \index{Maclaurin, teorema de}
+  \begin{equation*}
+    \frac{1}{1 - x}
+      = 1 + x + O(x^2)
+  \end{equation*}
+  porque
+  \begin{equation*}
+    \frac{\mathrm{d}^2}{\mathrm{d} x^2} \, \frac{1}{1 - x}
+      = \frac{2}{(1 - x)^3}
+  \end{equation*}
+  En el rango de interés
+  (digamos \(n \ge 2\),
+   que se traduce en \(0 < 1 / n \le 1 / 2\),
+   donde lo único que realmente interesa es que \(1 / n < 1\))
+  la derivada está acotada.
+  Resulta:
+  \begin{equation*}
+    \frac{n}{n - 1}
+      = \frac{1}{1 - 1 / n}
+      = 1 + \frac{1}{n} + O(n^{-2})
+  \end{equation*}
+
+  Suponiendo que \(a_r \ne 0\),
+  tenemos que:
+  \begin{equation*}
+    a_r n^r + a_{r - 1} n^{r - 1} + \dotsb + a_0 = \Theta(n^r)
+  \end{equation*}
+  Esto porque:
+  \begin{equation*}
+    \lim_{n \rightarrow \infty}
+	 \frac{a_r n^r + a_{r - 1} n^{r - 1} + \dotsb + a_0}{n^r}
+      = a_r
+  \end{equation*}
+  También:
+  \begin{equation*}
+    a_r n^r + a_{r - 1} n^{r - 1} + \dotsb + a_0 \sim a_r n^r
+  \end{equation*}
+  Para demostrar esto debemos calcular:
+  \begin{equation*}
+    \lim_{n \rightarrow \infty}
+	 \frac{a_r n^r + a_{r - 1} n^{r - 1} + \dotsb + a_0}
+	      {a_r n^r}
+      = \lim_{n \rightarrow \infty}
+	     \left(
+	 1 + \frac{a_{r - 1} n^{r - 1} + \dotsb + a_0}{a_r n^r}
+	     \right)
+      = 1
+  \end{equation*}
+
+  Es fácil demostrar que para valores reales de \(a < b\):
+  \begin{equation*}
+    n^a
+      = O(n^b)
+    \hspace{3em}
+    n^b
+      = \Omega(n^a)
+  \end{equation*}
+  Porque tenemos:
+  \begin{equation*}
+    \lim_{n \rightarrow \infty} \frac{n^b}{n^a}
+      = \lim_{n \rightarrow \infty} n^{b - a}
+      = \infty
+  \end{equation*}
+  Por el teorema~\ref{theo:limite-O-Omega} se cumple lo indicado.
+  Lo otro se demuestra de forma similar.
+
+  También resulta para \(a \ge 0\) y \(b > 1\):
+  \begin{equation*}
+    n^a = O(b^n)
+  \end{equation*}
+  Si \(a = 0\),
+  el resultado es inmediato.
+  Si \(a > 0\),
+  hacemos:
+  \begin{equation*}
+    \lim_{n \rightarrow \infty} \frac{n^a}{b^n}
+      = \exp\left(
+	 \lim_{n \rightarrow \infty}
+	     (a \ln n - n \ln b)
+	     \right)
+      = 0
+  \end{equation*}
+  El teorema~\ref{theo:limite-O-Omega} entrega lo aseverado.
+  Nótese que esto significa,
+  por ejemplo,
+  que \(n^{100} = O(1,01^n)\),
+  aunque las constantes involucradas son gigantescas.
+
+  Hay que tener cuidado de no interpretar \(f(n) = O(g(n))\)
+  en el sentido que \(g(n)\) es de alguna forma ``mejor posible''.
+  Por ejemplo,
+  \(\sqrt{5 n^2 + 2} = O(n^3)\),
+  como es fácil demostrar,
+  y eso está lejos de ser ajustado.
+  Como:
+  \begin{equation*}
+    \lim_{n \rightarrow \infty} \frac{\sqrt{5 n^2 + 2}}{n}
+       = \sqrt{5}
+  \end{equation*}
+  sabemos del teorema~\ref{theo:limite-O-Omega}
+  que \(\sqrt{5 n^2 + 2} = \Theta(n)\).
+  Pero también,
+  dado que para \(x \ge 0\) es \(1 + x \le (1 + x)^2\),
+  o \((1 + x)^{1/2} \le 1 + x\),
+  lo que es lo mismo que \((1 + x)^{1/2} = 1 + O(x)\):
+  \begin{equation*}
+    \sqrt{5 n^2 + 2}
+       = n \sqrt{5} \cdot \sqrt{1 + \frac{2}{5 n^2}}
+       = n \sqrt{5} \cdot \left( 1 + O(1 / n^2) \right)
+       = n \sqrt{5} + O(1 / n)
+  \end{equation*}
+  Acá usamos que \(f(n) \cdot O(g(n)) = O(f(n) \cdot g(n))\),
+  como se demuestra fácilmente.
+    \index{Bachmann-Landau, notaciones de!operaciones}
+  Este tipo de ideas pueden extenderse bastante,
+  hasta obtener reglas para manipular y simplificar
+  toda variedad de expresiones asintóticas.
+  Para mayores detalles refiérase por ejemplo a
+  Graham, Knuth y Patashnik~%
+    \cite{graham94:_concr_mathem}
+  o a Sedgewick y Flajolet~%
+    \cite[capítulo 4]{sedgewick13:_introd_anal_algor}.
+  En resumen,
+  se aplican las reglas básicas del álgebra,
+  con algún cuidado:
+  Hay que recordar que las notaciones de Bachmann-Landau
+  representan cotas,
+  no valores exactos.
+  Debemos siempre ponernos en el peor caso,
+  en particular no podemos contar con cancelaciones en sumas.
+  Así:
+  \begin{align*}
+    O(f(n)) \pm O(g(n))
+      &= O(f(n) + g(n)) \\
+    O(f(n)) \cdot O(g(n))
+      &= O(f(n) \cdot g(n))
+  \end{align*}
+
+  Como un ejemplo obtengamos una aproximación
+  para \(\mathrm{e}^{1 / n} \sqrt{n^2 - 2 n}\).
+  Primeramente,
+  por el teorema de Maclaurin:%
+    \index{Maclaurin, teorema de}
+  \begin{align*}
+    \mathrm{e}^{1 / n}
+      &= 1 + \frac{1}{n} + O\left(n^{-2}\right) \\
+    \sqrt{n^2 - 2 n}
+      &= n \sqrt{1 - 2 / n} \\
+      &= n \left(
+	      1 - \frac{1}{n}
+		- \frac{1}{2 n^2}
+		+ O\left(n^{-3}\right)
+	    \right)
+  \end{align*}
+  Multiplicando directamente tenemos:
+  \begin{equation*}
+     \mathrm{e}^{1 / n} \sqrt{n^2 - 2 n}
+      = \left(
+	  1 + \frac{1}{n} + O\left(n^{-2}\right)
+	\right)
+	  \cdot n
+	     \left(
+	1 - \frac{1}{n} - \frac{1}{2 n^2} + O\left(n^{-3}\right)
+	     \right)
+      = n - \frac{1}{n} + O(n^{-2})
+  \end{equation*}
+  Suele ocurrir
+  que la cota para el resultado
+  es mucho peor que las cotas que entran.
+  Si la cota \(O(n^{-2})\) que resulta no fuera suficiente,
+  deberemos volver atrás
+  y obtener mejores aproximaciones de partida.
+  Normalmente deben entrar cotas de la misma precisión
+  para no desperdiciarla en el proceso.
+
+\section{Notación asintótica en algoritmos}
+\label{sec:asintotica-algoritmos}
+\index{notacion asintotica@notación asintótica!algoritmos}
+
+  Comúnmente se usa notación asintótica
+  para expresar tiempos de ejecución
+  de algoritmos.
+  En este tipo de aplicación
+  el que \(O(g(n))\) ``oculte'' factores constantes
+  es cómodo,
+  así los resultados no dependen de detalles de la máquina
+  ni de cómo se programó el algoritmo.
+  Para obtener esta clase de estimaciones
+  basta fijarse en alguna operación clave,
+  tal que el costo de las demás operaciones sean proporcionales
+  (o menos)
+  que las operaciones claves.
+  Por ejemplo,
+  en el listado~\ref{lst:insercion}
+  aparece una rutina de ordenamiento por inserción%
+    \index{ordenamiento!insercion@inserción}
+  codificada en C~%
+    \cite{kernighan88:_c_progr_lang}.%
+    \index{C (lenguaje de programacion)@C (lenguaje de programación)}
+  \lstinputlisting[language=C,
+		   xleftmargin=3em, numbers=left,
+		   caption={Ordenamiento por inserción},
+		   label=lst:insercion]
+		   {code/insertion.c}
+  Acá las líneas 6, 7 y~10 se ejecutan \(n - 1\) veces,
+  mientras las líneas 8 y~9
+  se ejecutan entre \(n - 1\) y \(n (n - 1) / 2\) veces,
+  respectivamente cuando el arreglo ya está ordenado
+  y si viene exactamente en orden inverso.%
+    \index{analisis de algoritmos@análisis de algoritmos!ordenamiento!insercion@inserción}
+  Si simplemente contamos ``líneas de C ejecutadas''
+  (lo que es válido
+   bajo el supuesto que cada línea toma un tiempo máximo,
+   independiente de los valores de las variables involucradas)
+  para un valor dado de \(n\),
+  el tiempo de ejecución será alguna expresión de la forma
+  \begin{align*}
+    T_{\text{min}}(n)
+      &= 3 (n - 1) + 2 (n - 1) \\
+      &= 5 n - 5 \\
+    T_{\text{max}}(n)
+      &= 3 (n - 1) + 2 \, \frac{n (n - 1)}{2} \\
+      &= n^2 + 2 n - 3
+  \end{align*}
+  Podemos decir
+  que para el tiempo de ejecución \(T(n)\) del programa
+  tenemos una cota superior dado que los ciclos anidados
+  de las líneas~6 a~11
+  dan que la línea~9 se ejecuta a lo más \(n^2\) veces,
+  mientras que en el mejor caso se ejecuta solo \(n\) veces,
+  lo que da:
+  \begin{align*}
+    T(n)
+      &= O(n^2) \\
+    T(n)
+      &= \Omega(n)
+  \end{align*}
+  Esto coincide con lo obtenido antes.
+  Puede verse que esta clase de estimaciones son simples de obtener,
+  y son más sencillas de usar que funciones detalladas.
+  Además tienen la ventaja de obviar posibles diferencias
+  en tiempos de ejecución entre instrucciones.
+  Cabe notar que las anteriores cotas son las mejores posibles,
+  y en este caso no se puede obtener
+  la misma función como cota inferior y superior
+  (\(\Theta\)).
+  De todas formas,
+  es útil contar con valores asintóticos del tiempo de ejecución~%
+    \cite{sedgewick13:_introd_anal_algor},
+  el que un \(O(\cdot)\)
+  o incluso \(\Theta(\cdot)\) oculte constantes
+  hace fácil obtener la cota,
+  pero poder decir que el tiempo de ejecución
+  (o el número de ciertas operaciones)
+  cumple \(T(n) \sim a g(n)\) es mucho más valioso.
+
+  Está claro que se puede hacer un análisis mucho más detallado,
+  contabilizando cada tipo de operación que ejecuta el programa,
+  y considerando el tiempo que demanda
+  en una implementación particular.%
+    \index{analisis de algoritmos@análisis de algoritmos}
+  El ejemplo clásico es el monumental trabajo de Knuth~%
+    \cite{knuth97:_fundam_algor,
+	  knuth97:_semin_algor,
+	  knuth98:_sortin_searc,
+	  knuth11:_combin_alg_1}
+    \index{Knuth, Donald E.}
+  en análisis de algoritmos.
+  Esto es mucho más trabajo,
+  y en caso de cambiar de plataforma
+  (diferente compilador,
+   cambian opciones de compilación,
+   otro lenguaje o nuevo computador)
+  gran parte del análisis hay que repetirlo.
+  Para la mayor parte de los efectos
+  basta con nuestro análisis somero.
+  Si tenemos que elegir entre un algoritmo
+  con tiempo de ejecución \(O(n^2)\)
+  y otro con tiempo de ejecución \(O(n^3)\),
+  para valores suficientemente grandes de \(n\) ganará el primero.
+  Sin embargo,
+  puede ocurrir que los valores de \(n\) de interés práctico
+  sean más importantes
+  los factores constantes ocultados por la notación.
+  Mucho más detalle de cómo lograr esta clase de estimaciones
+  se encuentra en textos sobre algoritmos o estructuras de datos,
+  por ejemplo en~%
+    \cite{aho74:_design_anal_comp_algor,
+	  cormen09:_introd_algor,
+	  sedgewick13:_introd_anal_algor,
+	  skiena08:_algor_desig_manual}.
+  Otros algoritmos son mucho más complejos de manejar,
+  el desarrollo de mejores algoritmos y el análisis de su desempeño
+  son áreas de investigación activa.
+  En~%
+     \cite{bentley82:_writing_efficent_programs,
+	   bentley00:_progr_pearl,
+	   kernighan99:_practice_progr}
+  se discute cómo llevar algoritmos a buenos programas.
+
+  Los algoritmos efectúan operaciones discretas
+  sobre estructuras de datos discretas,
+  evaluar su rendimiento es estudiar esas estructuras
+  y contar las operaciones efectuadas sobre ellas.
+  Esta es una de las razones que hacen que las matemáticas discretas
+  sean fundamentales en la informática.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

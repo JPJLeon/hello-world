@@ -1,0 +1,45 @@
+// Example program
+#include <iostream>
+#include <string>
+using namespace std;
+typedef int tipo;
+
+
+typedef struct {
+	int top;
+	char elementos[100];
+} Pila;
+
+void push(char valor, Pila &p){
+	p.top++;
+	p.elementos[p.top]=valor;
+	
+}
+void pop(Pila &p){
+    p.elementos[p.top--];
+    cout<<p
+}
+    
+
+int main(){
+    Pila hexa;
+    hexa.top=0;
+    int resto=1;
+	char posibles_caracteres[16]={0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F'};
+	int numero=16;
+	cout<<"hola!"<<" ";
+	
+	while(numero!=0){
+	    cout<<"holi!"<<endl;
+	    resto=numero%16;
+	    numero=(numero-resto)/16;
+	    push(posibles_caracteres[resto],hexa);
+	    
+	}
+	while(hexa.top!=-1){
+	    pop(hexa);
+	}
+	
+	
+    return 0;	    
+}

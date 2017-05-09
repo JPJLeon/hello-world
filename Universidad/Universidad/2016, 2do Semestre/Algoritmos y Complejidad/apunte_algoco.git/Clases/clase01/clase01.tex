@@ -1,0 +1,528 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 3.0cm, right = 2.5cm]{geometry}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{2mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit]{titlesec}
+\titleformat{\section}
+{\normalfont\sffamily\Large\bfseries}
+{\llap{\setlength{\arrayrulewidth}{.11em}\begin{tabular}{c|}
+			\hline
+			\hspace{1em}\thesection.
+		\end{tabular} \hspace{0.6em}}}
+{0em}{#1}
+
+\titleformat{\subsection}
+{\normalfont\sffamily\large\bfseries}
+{\llap{{\makebox[3em][r]  {\thesubsection.}}\hspace{1em}}}
+{0em}{#1}
+
+\titleformat{\subsubsection}
+{\bfseries\sffamily\raggedright}
+{\llap{{\makebox[3em][r]  {\thesubsubsection.}}\hspace{1em}}}
+{0em}{#1}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+\newcommand{\definicion}[1]{\textit{\underline{\smash{#1}}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=0.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=0.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{ejemplo}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\definecolor{newGreenNew}{HTML}{F2F9EC}
+\newcolumntype{?}{!{\color[HTML]{009933}\vrule width 4pt}}
+\newcolumntype{b}{>{\columncolor{newGreenNew}}p{.967\textwidth}}
+\newenvironment{newquote}{\renewcommand{\arraystretch}{1.8}\color[HTML]{009933}\begin{longtable}{?b}}{\end{longtable}\renewcommand{\arraystretch}{1.3}}
+%================================
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#1\quad Ceros de una Función}}
+\renewcommand{\headrulewidth}{2pt}
+
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#1\\\textit{Ceros de una Función}}
+\author{Aldo Berrios Valenzuela}
+\date{Martes 2 de Agosto de 2016}
+
+\usepackage{tikz,ifthen}
+\usepackage{pgfplots}
+\usepgfplotslibrary{fillbetween}
+\usepackage{tikz,ifthen}
+\usetikzlibrary{automata,positioning, babel}
+\usetikzlibrary{calc}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+	Comienza la diversión, comienza algoco \texttt{:D}
+\end{abstract}
+
+\section{Algoritmos y Complejidad}
+\begin{itemize}
+	\item Cómo diseñar buenos algoritmos.
+	\item Evaluar algoritmos.
+	\item Un poquito más de complejidad.
+\end{itemize}
+\begin{newquote}
+	Buscamos el algoritmo que mejor resuelva nuestro problema.
+\end{newquote}
+\vspace{-2em}
+\subsection{Temario del Ramo}
+\begin{itemize}
+	\item Algoritmos numéricos\footnote{Dorin Levy \comillas{Introduction to numerical analysis.}}.
+	
+	\item Algoritmos, complejidad\footnote{Dasgupta, Papadimitriou, Vazarani \comillas{Algoritmos} (CLRS)}.
+\end{itemize}
+
+\section{Encontrar ceros de funciones}
+\paragraph{Idea:} Dada $f\nparentesis{x}$, hallar $x^*$ tal que $f\nparentesis{x^*}=0$ ($f$ debe ser continua). Por ejemplo: ¿Para qué valor de $x$ se cumple $x=e^{-x}$?. Una idea para resolver este problema simplemente basta con graficar
+\begin{equation}
+f\nparentesis{x}=x-e^{-x}
+\end{equation}
+y ver cuáles son los valores de $x^*$ tal que $f\nparentesis{x^*}=0$.
+
+Otra forma de solucionar el problema puede ser graficar $x$, $e^{-x}$, para buscar las intersecciones (Figura \ref{01::Grafico:interseccion}).
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = left,
+	xlabel = $x$,
+	ylabel = {$y=f(x)$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=2,
+	ymin=0,
+	ymax=1.2,
+	xtick={0.567143},
+	xticklabels = {$x^*$},
+	ytick = {1},
+	yticklabels = {$1$},
+	height = 5cm, width = 9cm
+	]
+	
+	\addplot [samples = 100, red!90!black!90, domain = 0:1.6] {exp(-x)} node [xshift = 18pt] (exponencial) {$y = e^{-x}$};
+	\addplot [samples = 100, blue!50!black!90, domain = 0:1] {x} node [xshift = 13pt, yshift = 3pt] (lineal) {$y=x$}; 
+	
+	
+	
+	\draw[dashed, blue] (axis cs:0.567143,0) -- (axis cs:0.567143, 0.567143);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Es claro que usando un gráfico podemos apreciar que $0<x^*<1$.}
+	\label{01::Grafico:interseccion}
+\end{figure}
+
+\newpage
+\subsection{Métodos Bracketing}
+Corresponden a métodos para encontrar ceros (o raíces) de funciones los cuales usan el \textit{teorema del valor intermedio} ello y que básicamente van encerrando la solución hasta encontrar un punto de convergencia. A continuación, se explican dos métodos Bracketing: el método de la bisección y regula falsi.
+
+
+\subsubsection{Método de la Bisección}
+Si tengo $x_0, x_1$ tales que $f\nparentesis{x_0}\cdot f\nparentesis{x_1} < 0$, hay un cero de $f$ en $\left] x_0, x_1 \right[$, elegimos 
+\begin{equation}
+x_2 = \dfrac{x_0 + x_1}{2}
+\end{equation}
+con $\left] x_0, x_2\right[$ o $\left] x_2, x_1\right[$ según el cual tenga valores de $f$ de signo distinto.
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y=f(x)$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=2,
+	ymin=-2,
+	ymax=2,
+	xtick={0.3, 0.85, 1.4},
+	xticklabels = {$x_0$, $x_2$, $x_1$},
+	ytick = {0.8, -0.6},
+	yticklabels = {$f\nparentesis{x_0}$, $f\nparentesis{x_1}$},
+	height = 6cm, width = 9cm
+	]
+	\addplot [samples = 100, smooth, tension = 0.8, red!80!black!90] coordinates {(0.3, 0.8) (0.5, 1.7) (0.8, 0.4) (1.1, 0.9) (1.3, -1) (1.4, -0.6)};
+	
+	\draw [blue, dashed] (axis cs:0.3, 0) -- (axis cs:0.3, 0.8);
+	\draw [blue, dashed] (axis cs:1.4, 0) -- (axis cs:1.4, -0.6);
+	
+	\draw [blue, dashed] (axis cs:0, -0.6) -- (axis cs:1.4, -0.6);
+	\draw [blue, dashed] (axis cs:0, 0.8) -- (axis cs:0.3, 0.8);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Si las cotas del intervalo $\ncorchetes{x_0, x_1}$ cumplen con $f\nparentesis{x_0}\cdot f\nparentesis{x_1} <0$, es claro que para algún valor $x^*\in\ncorchetes{x_0, x_1}$ se cumple que $f\nparentesis{x^*}=0$.}
+	\label{01::BiseccionEjemplo1}
+\end{figure}
+Por ejemplo, consideremos la Figura \ref{01::BiseccionEjemplo1}. En ella, podemos apreciar que el intervalo $\left]x_2, x_1\right[$ cumple con $f\nparentesis{x_2}\cdot f\nparentesis{x_1}<0$. En consecuencia, sabemos que $x^*\in\left]x_2, x_1\right[$. Luego, para obtener $x^*$ obtenemos el valor medio del intervalo $\left]x_2, x_1\right[$ y repetimos el proceso.
+
+Nótese que la gracia de todo esto es encontrar sólo \underline{\smash{un}} cero, ¡no todos!. Esto quiere decir lo ideal es escoger intervalo $\ncorchetes{a, b}$ tal que sólo tenga \underline{\smash{un}} cero (Evite casos como los de la Figura \ref{01::BiseccionEjemplo2}).
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y=f(x)$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=2,
+	ymin=-2,
+	ymax=2,
+	xtick={0.3, 0.85, 1.4},
+	xticklabels = {$x_0$, $x_2$, $x_1$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	\addplot [samples = 100, smooth, tension = 0.8, red!80!black!90] coordinates {(0.3, 0.8) (0.5, 1.7) (0.8, -0.9) (1.1, 0.9) (1.3, -1) (1.4, -0.6)};
+	
+	\draw [blue, dashed] (axis cs:0.3, 0) -- (axis cs:0.3, 0.8);
+	\draw [blue, dashed] (axis cs:1.4, 0) -- (axis cs:1.4, -0.6);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{La presente función tiene 3 ceros.}
+	\label{01::BiseccionEjemplo2}
+\end{figure}
+Por lo tanto, el método de la bisección no abarca todos los casos posibles.
+
+
+
+\subsubsection{Método Regula Falsi}
+Cuando tenemos la sospecha o simplemente nos dicen que nuestra curva $f$ tiene una especie de \comillas{guatita} o simplemente tiene tendencia lineal (Figura \ref{01::RegularFalsi:grafico}), podemos usar:
+\begin{equation}
+x_2 = x_1 - f\nparentesis{x_1}\cdot \dfrac{x_1-x_0}{f\nparentesis{x_1}-f\nparentesis{x_0}}
+\end{equation}
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=2,
+	ymin=-0.6,
+	ymax=2,
+	xtick={0.3, 1.0619, 1.3},
+	xticklabels = {$x_0$, $x_2$, $x_1$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	\addplot [blue!60!black, samples = 100, smooth, tension = 0.8] coordinates {(0.3, 1.6) (0.8, 0) (1.3, -0.5)};
+	\addplot [red!80!black, samples = 100, domain = 0.2:1.4] {2.23 - 2.1*x};
+	
+	\draw [dashed, blue] (axis cs:0.3, 0) -- (axis cs:0.3, 1.6);
+	\draw [dashed, blue] (axis cs:1.3, -0.5) -- (axis cs:1.3, 0);
+	\draw [dashed, blue] (axis cs:0.3, 0) -- (axis cs:0.3, 1.6);
+	\draw [dashed, blue] (axis cs:1.0619, 0) -- (axis cs:1.0619, -0.35);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{$f$ tiene tendencia lineal.}
+	\label{01::RegularFalsi:grafico}
+\end{figure}
+
+\subsection{Iteración de Punto Fijo (FPI)}
+\begin{definition}
+	Sea $g\nparentesis{x}$ una función. Un \definicion{punto fijo} de $g$ es $x^*$ tal que $x^*=g\nparentesis{x^*}$.
+\end{definition}
+
+Encontrar la raíz de una función por algún método de punto fijo consiste en reescribir
+\begin{equation}\label{01::FPI:example}
+	f\nparentesis{x}=0
+\end{equation}
+luego, despejamos $x$ de \eqref{01::FPI:example} y lo que quede al lado opuesto de la ecuación será una función $g\nparentesis{x}$ tal que:
+\begin{equation}
+g\nparentesis{x}=x
+\end{equation}
+\begin{ejemplo}
+	Supongamos que queremos encontrar el cero de la ecuación
+	\begin{equation*}
+	\cos\nparentesis{x}-2x=0
+	\end{equation*}
+	Es fácil ver que $f\nparentesis{x}=\cos\nparentesis{x}-2x$. Entonces, se tiene una posible función $g$ sería:
+	\begin{align*}
+		\underbrace{\cos\nparentesis{x}-x}_{g\nparentesis{x}}=x
+	\end{align*}
+	\qed
+\end{ejemplo}
+
+Usando iteraciones de punto fijo, se tiene que el cero de la función corresponde a la intersección entre $y=x$ y $g\nparentesis{x}$ (Figura \ref{01::FPI}).
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=2.5,
+	ymin=0,
+	ymax=2,
+	xtick={0.81},
+	xticklabels = {$x^*$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	\addplot [samples = 100, blue!50!black!90, domain = 0:1.4] {x} node [yshift = 2pt, xshift = 13pt] (yx) {$y=x$}; 
+	\addplot [domain = 0.5: 1.6, samples = 100] {(1.5-0.7*x)^3} node [yshift = 10pt] (g) {$g\nparentesis{x}$};
+	
+	\draw [dashed, blue] (axis cs:0.81, 0) -- (axis cs:0.81, 1.11);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{El valor de $x$ de la intersección entre la recta $y=x$ y la función $g\nparentesis{x}$ corresponde al cero de $f$}
+	\label{01::FPI}
+\end{figure}
+
+Para efectos de convergencia, se puede ver como una espiral (Figura \ref{01::Espiral:divergente} y Figura \ref{01::Espiral:convergente}). 
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=2.5,
+	ymin=0,
+	ymax=2,
+	xtick={0.6},
+	xticklabels = {$x_0$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	\addplot [samples = 100, blue!50!black!90, domain = 0:1.4] {x}; 
+	\addplot [domain = 0.5: 1.6, samples = 100] {(1.5-0.7*x)^3};
+	\draw [red, dashed] (axis cs: 0.6, 0) -- (axis cs: 0.6, 1.259712) -- (axis cs: 1.259712, 1.259712) -- (axis cs: 1.259712, 0.23626) -- (axis cs: 0.23626, 0.23626);
+	
+	\draw [red, ->, thick] (axis cs: 0.6, 0.7) -- (axis cs: 0.6, 1);
+	\draw [red, ->, thick] (axis cs: 0.8, 1.259712) --++ (axis cs: 0.2, 0);
+	\draw [red, ->, thick] (axis cs: 1.259712, 0.9) --++ (axis cs: 0, -0.2);
+	\draw [red, ->, thick] (axis cs: 0.9, 0.23626) --++ (axis cs: -0.2, 0);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{En este caso, la espiral diverge (mire las flechas).}
+	\label{01::Espiral:divergente}
+\end{figure}
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=2.5,
+	ymin=0,
+	ymax=2,
+	xtick={0.6},
+	xticklabels = {$x_0$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	\addplot [samples = 100, blue!50!black!90, domain = 0:1.4] {x}; 
+	\addplot [domain = 0.3: 2, samples = 100] {1.5*exp(-x)+0.3};
+	\draw [red, dashed] (axis cs: 0.6, 0) -- (axis cs: 0.6, 1.12322) -- (axis cs: 1.12322, 1.12322) -- (axis cs: 1.12322, 0.787848) -- (axis cs: 0.787848, 0.787848);
+	
+	\draw [red, ->, thick] (axis cs: 0.6, 0.7) --++ (axis cs: 0, 0.2);
+	\draw [red, ->, thick] (axis cs: 0.8, 1.12322) --++ (axis cs: 0.2, 0);
+	\draw [red, ->, thick] (axis cs: 1.12322, 1.05) --++ (axis cs: 0, -0.2);
+	\draw [red, ->, thick] (axis cs: 1.05, 0.787848) --++ (axis cs: -0.2, 0);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{En este caso, la espiral converge (mire las flechas).}
+	\label{01::Espiral:convergente}
+\end{figure}
+Nótese que para construir estas espirales debe partir por el eje $x$, en algún $x_0$ a su gusto. Luego, tirar una linea vertical hasta chocar con $g$. En seguida, continúe con una línea horizontal hasta llegar a $y=x$ y vuelva a trazar otra vertical hasta $g\nparentesis{x}$... y así sucesivamente hasta encontrar el punto de convergencia.
+
+\subsubsection{Método de la Secante}
+Mantener los últimos dos ($x_1$, $x_2$, luego $x_2, x_3$ y así sucesivamente). Ojo que el método de la secante no tiene garantía de convergencia (Figura \ref{01::secante:grafico}).
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=2,
+	ymin=-0.6,
+	ymax=2,
+	xtick={0.345, 0.835, 0.988125},
+	xticklabels = {\small$x_0$, \small$x_{1}$, \small$x_{2}$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	\addplot [black!70!blue!80, samples = 100, smooth, tension = 0.8] coordinates {(0.3, 1.3) (0.6, 0.5) (1.4, -0.05) (1.9, -0.12)};
+	\addplot [domain = 0.2:1.2, red!80!black, samples = 100] {-1.72043*x+1.7};
+	
+	\draw [dashed, blue] (axis cs:0.345, 0) -- (axis cs:.345, 1.11);
+	\draw [dashed, blue] (axis cs:0.835, 0) -- (axis cs:0.835, 0.27);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Una secante corta a la curva $f$ en los puntos $x_0$ y $x_{1}$. El intercepto con el eje $x$ corta en $x_{2}$. Luego, se evalúa $f$ en $x_{2}$ y se obtiene una nueva secante que una los puntos $f\nparentesis{x_{1}}$ y $f\nparentesis{x_{2}}$. Finalmente, repetir el proceso hasta encontrar el valor de convergencia.}
+	\label{01::secante:grafico}
+\end{figure}
+
+\subsubsection{Método de la tangente (Newton)}
+La idea consiste en elegir un valor arbitrario $x_0$ que esté razonablemente cerca de $x^*$ (cero de la función). Luego, encontramos el intercepto con el eje $x$ de la recta tangente de la curva en $x_0$ usando la ecuación
+\begin{equation}\label{01::ecuacion:newton}
+x_1=x_0-\dfrac{f\nparentesis{x_0}}{f'\nparentesis{x_0}}
+\end{equation}
+resultando un valor $x_1$ que se encuentra más cerca de $x^*$ (Figura \ref{01::newton:grafico}). Finalmente, iteramos el proceso hasta obtener un valor de convergencia.
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines = center,
+	xlabel = $x$,
+	ylabel = {$y$},
+	every axis y label/.style={at=(current axis.above origin),anchor=south},
+	every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	xmin=0, 
+	xmax=2,
+	ymin=-0.6,
+	ymax=2,
+	xtick={0.535, 0.88375},
+	xticklabels = {$x_0$, $x_1$},
+	ytick = {0},
+	yticklabels = {},
+	height = 6cm, width = 9cm
+	]
+	\addplot [black!70!blue!80, samples = 100, smooth, tension = 0.8] coordinates {(0.3, 1.3) (0.6, 0.5) (1.3, -0.2) (1.8, -0.3)};
+	\addplot [domain = 0.2:1.1, red!80!black, samples = 100] {-1.72043*x+1.52043};
+	
+	\draw [dashed, blue] (axis cs:0.535, 0) -- (axis cs:0.535, 0.6);
+	\end{axis}
+	\end{tikzpicture}
+	\caption{El valor $x_1$ obtenido con la ecuación \eqref{01::ecuacion:newton} está más cercano a $x^*$ que $x_0$.}
+	\label{01::newton:grafico}
+\end{figure}
+
+
+\section{Orden de Convergencias}
+Si definimos $e_n=\nabsoluto{x_n-x^*}$, se dice que un método es de \definicion{orden $p$}, si hay constantes $C > 0$, $p$ tales que
+\begin{equation}
+	e_{n+1} \leq C e_n^p
+\end{equation}
+Donde $e_n$ corresponde al error con $n$ iteraciones.
+
+\begin{itemize}
+	\item Si $p=1$ hablamos de convergencia lineal (bisección $C=\frac{1}{2}$).
+	
+	\item Si $p=2$ hablamos de convergencia cuadrática (en cada paso, el error se eleva a $p=2$).
+	
+	\item Si  $1 < p < 2$ decimos que es superlineal.
+\end{itemize}
+Nótese que mientras mayor sea el orden de convergencia $p$, más rápido encontraremos el valor de convergencia.
+
+\begin{newquote}
+	Es buena idea comparar cuál método es mejor según el caso que usemos
+\end{newquote}
+\vspace{-1.5em}
+\begin{newquote}
+	Para el caso del método de bisección, tenemos que $p=1$ y $C=\frac{1}{2}$
+\end{newquote}
+
+\end{document}

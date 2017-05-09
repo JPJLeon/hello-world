@@ -1,0 +1,303 @@
+% quicksort.tex
+%
+% Copyright (c) 2010-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\subsection{Quicksort}
+\label{sec:quicksort}
+\index{ordenamiento!quicksort|textbfhy}
+\index{analisis de algoritmos@análisis de algoritmos!ordenamiento!quicksort}
+
+  Quicksort,
+  debido a Hoare~\cite{hoare62:_quicksort},
+  es otro algoritmo basado en dividir y conquistar,
+  pero en este caso la división no es fija.
+  Dado un rango de elementos de un arreglo a ser ordenado,
+  se elige un elemento \emph{pivote} de entre ellos
+  y se reorganizan los elementos en el rango
+  de forma que todos los elementos menores que el pivote
+  queden antes de este,
+  y todos los elementos mayores queden después.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/qsort-idea}
+    \caption{Idea de Quicksort}
+    \label{fig:qsort:idea}
+  \end{figure}
+  Con esto el pivote ocupa su posición final en el arreglo,
+  y bastará ordenar recursivamente cada uno
+  de los dos nuevos rangos generados
+  para completar el trabajo.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/qsort-particionar}
+    \caption{Particionamiento en Quicksort}
+    \label{fig:qsort:particionamiento}
+  \end{figure}
+  La figura~\ref{fig:qsort:particionamiento} indica una manera popular
+  de efectuar esta \emph{partición}:
+  Se elige un pivote de forma aleatoria
+  y el pivote elegido se intercambia con el primer elemento del rango
+  (para sacarlo de en medio),
+  luego se busca un elemento mayor que el pivote desde la izquierda
+  y uno menor desde la derecha.
+  Estos están fuera de orden,
+  se intercambian y se continúa de la misma forma hasta agotar el rango.
+  Después se repone el pivote en su lugar,
+  intercambiándolo con el último elemento menor que él.
+  El rango finalmente queda como indica la figura~\ref{fig:qsort:idea}.
+  El listado~\ref{lst:quicksort} muestra una versión simple del programa,
+  que elige siempre el primer elemento del rango como pivote.
+  \lstinputlisting[language=C,
+		   float,
+		   caption={Versión simple de Quicksort},
+		   label=lst:quicksort]
+		   {code/quicksort.c}
+% LaTeX bug: Leaving out the "float, ..." line out gives a crash
+  Evaluaremos el tiempo promedio de ejecución del algoritmo.%
+    \index{quicksort!analisis@análisis}
+  Supondremos~\(n\) elementos todos diferentes,
+  que las \(n!\)~permutaciones de los \(n\)~elementos
+  son igualmente probables,
+  y que el pivote se elige al azar en cada etapa.
+  En este caso está claro que el método de particionamiento planteado
+  no altera el orden de los elementos en las particiones
+  respecto del orden que tenían originalmente.
+  Luego,
+  los elementos en cada partición también son una permutación al azar.
+
+  Para efectos del análisis del algoritmo
+  tomaremos como medida de costo el número promedio de comparaciones
+  que efectúa Quicksort al ordenar un arreglo de \(n\)~elementos.
+  El trabajo adicional que se hace en cada partición
+  será aproximadamente proporcional a esto,
+  por lo que esta es una buena vara de medida.
+  Al particionar,
+  cada uno de los \(n - 1\) elementos fuera del pivote
+  se comparan con este exactamente una vez en el método planteado,
+  y además es obvio que este es el mínimo número de comparaciones necesario
+  para hacer este trabajo.
+  Si llamamos \(k\) a la posición final del pivote,
+  el costo de las llamadas recursivas que completan el ordenamiento
+  será \(C(k - 1) + C(n - k)\).
+  Si elegimos el pivote al azar
+  la probabilidad de que \(k\) tenga un valor cualquiera entre~\(1\)
+  y~\(n\) es la misma.
+  Cuando el rango es vacío no se efectúan comparaciones.
+  Estas consideraciones llevan a la recurrencia:
+  \begin{equation*}
+    C(n)
+       =  n - 1 +
+	   \frac{1}{n} \, \sum_{1 \le k \le n - 1}
+	      \left(C(k - 1) + C(n - k)\right) \quad C(0)  = 0
+  \end{equation*}
+  Por simetría podemos simplificar la suma,
+  dado que estamos sumando los mismos términos
+  en orden creciente y decreciente.
+  Cambiando el rango de la suma y multiplicando por \(n\) queda:
+  \begin{equation*}
+    n C(n)
+      = n (n - 1) + 2 \sum_{0 \le k \le n - 1} C(k)
+  \end{equation*}
+  Ajustando los índices:
+  \begin{equation*}
+    (n + 1) C(n + 1)
+      = n (n + 1) + 2 \sum_{0 \le k \le n} C(k) \quad C(0) = 0
+  \end{equation*}
+
+  Definimos la función generatriz ordinaria:
+  \begin{equation*}
+    c(z)
+      = \sum_{n \ge 0} C(n) z^n
+  \end{equation*}
+  Aplicando las propiedades de funciones generatrices ordinarias
+  a la recurrencia
+  queda la ecuación diferencial:
+  \begin{align*}
+    \left( z \mathrm{D} + 1 \right) \, \frac{c(z)}{z}
+      &= \left( (z \mathrm{D})^2 + z D \right) \, \frac{1}{1 - z}
+	   + \frac{2 c(z)}{1 - z}
+	   \qquad c(0) = 0 \\
+    c'(z)
+      &= \frac{2 c(z)}{1 - z} + \frac{2 z}{(1 - z)^3}
+  \end{align*}
+  La solución a esta ecuación es:
+  \begin{equation*}
+    c(z)
+      = - 2 \, \frac{\ln (1 - z)}{(1 - z)^2}
+	   - \frac{2 z}{(1 - z)^2}
+  \end{equation*}
+  El primer término corresponde
+  a la suma parcial de la secuencia de números harmónicos
+  (derivamos su función generatriz
+   en la sección~\ref{sec:numeros-harmonicos}),
+  el segundo término da un coeficiente binomial:
+  \begin{align*}
+    C(n)
+      &= 2 \sum_{0 \le k \le n} H_k - 2 \, \binom{n}{1} \\
+      &= 2 \sum_{0 \le k \le n} H_k - 2 n
+  \end{align*}
+  Interesa obtener una fórmula más simple
+  para la suma de los números harmónicos.
+  Por la fórmula para la función generatriz de las sumas parciales:
+  \begin{equation*}
+    H(z)
+      = \sum_{n \ge 0} H_n z^n
+      = \frac{1}{1 - z} \, \ln \frac{1}{1 - z}
+  \end{equation*}
+  con lo que la función generatriz de las sumas de números harmónicos es:
+  \begin{equation}
+    \label{eq:Hn-sum-gf}
+    \frac{H(z)}{1 - z}
+      = \frac{1}{(1 - z)^2} \, \ln \frac{1}{1 - z}
+  \end{equation}
+  Esto se parece a la derivada de \(H(z)\):
+  \begin{equation*}
+    H'(z)
+      = \frac{1}{(1 - z)^2} \, \ln \frac{1}{1 - z} + \frac{1}{(1 - z)^2}
+  \end{equation*}
+  Pero sabemos que \(H'(z)\) es la función generatriz
+  de la secuencia \(\left\langle (n + 1) H_{n + 1} \right\rangle_{n \ge 0}\),
+  mientras \((1 - z)^{-2}\) corresponde simplemente
+  a \(\left\langle n + 1 \right\rangle_{n \ge 0}\).
+  De esta forma tenemos:
+  \begin{align}
+    \sum_{0 \le k \le n} H_k
+      &= (n + 1) H_{n + 1} - (n + 1)
+	   \notag \\
+      &= (n + 1) H_n - n
+	   \label{eq:Hn-sum}
+  \end{align}
+  Esto da finalmente:
+  \begin{equation*}
+    C(n)
+      = 2 (n + 1) H_n - 4 n
+  \end{equation*}
+  Vimos en el capítulo~\ref{cha:euler-maclaurin}%
+    \index{numeros harmonicos@números harmónicos!aproximacion@aproximación}
+  que \(H_n = \ln n + O(1)\),
+  con lo que \(C(n) = 2 n \ln n + O(n)\).
+
+  Pero podemos hacer más.
+  En el peor caso,%
+    \index{quicksort!analisis@análisis!peor caso}
+  al particionar en cada paso elegimos uno de los elementos extremos,
+  con lo que las particiones son de largo 0 y \(n - 1\),
+  lo que da lugar a la recurrencia:
+  \begin{equation*}
+    C_{\text{peor}}(n)
+      = n - 1 + C_{\text{peor}}(n - 1) \quad C_{\text{peor}}(0) = 0
+  \end{equation*}
+  Las técnicas estándar dan como solución:
+  \begin{align*}
+    C_{\text{peor}}(n)
+      &= \frac{n (n - 1)}{2} \\
+      &= \frac{1}{2} n^2 + O(n)
+  \end{align*}
+  El mejor caso es cuando en cada paso la división es equitativa,
+  lo que lleva casi a la situación de dividir y conquistar
+  analizada antes
+  (sección~\ref{sec:d&c:division-fija}),
+  con \(a = 2\), \(b = 2\) y \(d = 1\),
+  cuya solución sabemos es \(C_{\text{mejor}}(n) = O(n \log n)\).
+  Un análisis más detallado,
+  restringido al caso en que \(n = 2^k - 1\)
+  de manera que los dos rangos siempre resulten del mismo largo,
+  es como sigue.%
+    \index{quicksort!analisis@análisis!mejor caso}
+  La recurrencia original se reduce a:
+  \begin{equation*}
+    C_{\text{mejor}}(n)
+      = n - 1 + 2 C_{\text{mejor}}((n - 1) / 2)
+      \quad C_{\text{mejor}}(0) = 0
+  \end{equation*}
+  Con el cambio de variables:
+  \begin{equation*}
+    n = 2^k - 1 \quad F(k) = C_{\text{mejor}}(2^k - 1)
+  \end{equation*}
+  esto se transforma en:
+  \begin{equation*}
+    F(k)
+      = 2^k - 2 + 2 F(k - 1) \quad F(0) = 0
+  \end{equation*}
+  cuya solución es:
+  \begin{align*}
+    F(k)
+      &= k 2^k + 2^{k + 1} + 2 \\
+    C_{\text{mejor}}(n)
+      &= (n + 1) \log_2 (n + 1) + 2 (n + 1) + 2 \\
+      &= \frac{1}{\ln 2} \, n \ln n + O(n)
+  \end{align*}
+  La constante en este caso es aproximadamente \(1,443\),
+  el mejor caso no es demasiado mejor que el promedio;
+  pero el peor caso es mucho peor.
+
+  Una variante común
+  es usar un método de ordenamiento simple para rangos chicos.
+  Una opción es cortar la recursión
+  no cuando el rango se reduce a un único elemento
+  sino cuando cae bajo un cierto margen;
+  y luego se ordena todo mediante inserción,
+  que funciona muy bien si los datos vienen ``casi ordenados'',
+  como resulta de lo anterior.
+  Para analizar esto se requieren medidas más ajustadas
+  del costo de los métodos,
+  y se cambian las condiciones de forma que para valores de \(n\)
+  menor que el límite se usa el costo del método alternativo.
+  Esto puede hacerse,
+  pero es bastante engorroso y no lo veremos acá.
+
+  Para evitar el peor caso
+  (que se da cuando el pivote es uno de los elementos extremos)
+  una opción es tomar una muestra de elementos y usar la mediana
+  (el elemento del medio de la muestra)
+  como pivote.
+  La forma más simple de hacer esto es tomar tres elementos.
+  Como además es frecuente que se invoque el procedimiento con un arreglo
+  ``casi ordenado''
+  (o incluso ya ordenado),
+  conviene tomar como muestra el primero,
+  el último
+  y un elemento del centro,
+  de forma de elegir un buen pivote incluso en ese caso patológico.
+  A esta idea se le conoce como \emph{mediana de tres}.
+  Esta estrategia disminuye un tanto la constante
+  por efecto de una división más equitativa.
+  Tiene la ventaja adicional
+  que tener elementos menor que el pivote al comienzo del rango
+  y mayor al final
+  no es necesario comparar índices para determinar
+  si se llegó al borde del rango.
+  El análisis detallado se encuentra por ejemplo en Sedgewick y Flajolet~%
+    \cite{sedgewick13:_introd_anal_algor}.
+
+  Por el otro lado,
+  McIllroy~\cite{mcillroy99:_killer_adver_quicksort}
+  muestra cómo lograr que siempre tome el máximo tiempo posible.
+  Quicksort
+  (haciendo honor a su nombre)
+  es muy rápido
+  ya que las operaciones en sus ciclos internos
+  implican únicamente una comparación
+  y un incremento o decremento de un índice.
+  Es ampliamente usado,
+  y como su peor caso es muy malo,
+  vale la pena hacer un estudio detallado de la ingeniería del algoritmo,
+  como hacen Bentley y McIllroy~%
+    \cite{bentley93:_engin_sort_funct}.
+  Debe tenerse cuidado con Quicksort por su peor caso,
+  si un atacante puede determinar los datos
+  puede hacer que el algoritmo consuma muchísimos recursos.
+  Para evitar el peor caso se ha propuesto cambiar a Heapsort,%
+    \index{ordenamiento!heapsort}
+    debido a Williams~%
+    \cite{williams64:_alg_heapsort}
+  (garantizadamente \(O(n \log n)\),
+   pero mucho más lento que Quicksort)
+  si se detecta un caso malo,
+  como propone Musser~\cite{musser97:_introsort}.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

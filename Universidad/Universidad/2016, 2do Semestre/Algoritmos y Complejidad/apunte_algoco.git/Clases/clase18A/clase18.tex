@@ -1,0 +1,346 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{red!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+\renewcommand{\lstlistingname}{Listado}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#18\quad Complejidad}}
+
+
+\author{Aldo Berrios Valenzuela}
+
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#18\\Complejidad}
+
+\date{Martes 11 de octubre de 2016}
+
+\usepackage{tikz}
+\usetikzlibrary{babel}
+
+\begin{document}
+\maketitle
+
+\section{Métodos simples de ordenamiento}
+Algunos ejemplos:
+\begin{itemize}
+	\item Bubble Sort.
+	
+	\item Insertion Sort.
+	
+	\item Selection Sort.
+\end{itemize}
+\paragraph{Observación: } Decimos que son métodos \comillas{simples} de ordenamiento porque no son recursivos.
+
+\subsubsection{Bubble Sort}
+Sea $a$ un arreglo, donde $a\ncorchetes{i}$ corresponde al $i$-ésimo elemento de $a$. El algoritmo consiste en intercambiar $a\ncorchetes{i}$ con $a\ncorchetes{i+1}$ si están fuera de orden. Esto podemos lograrlo vía dos \texttt{for} anidados, $0 \leq i < n$ y $0 \leq j < i$, tal como muestra el listado \ref{18::Bubble:Sort}.
+
+\lstinputlisting[language = C,
+  firstline = 8,
+  caption = {Método de la burbuja},
+  label = 18::Bubble:Sort]
+  {bubblesort.c}
+  
+Analizamos el mejor y peor de este algoritmo:
+\begin{itemize}
+	\item \emph{Mejor caso -- }Los elementos de $a$ ya se encuentran ordenados, por lo tanto, se hacen 0 asignaciones (no hay intercambios).
+	
+	\item \emph{Peor caso -- }Los elementos de $a$ están todos al revés. Por lo tanto, tendríamos que hacer asignaciones para cada $a\ncorchetes{i}$. Esto se traduce a:
+	\begin{equation*}
+	\sum_{1 \leq i \leq n}\nparentesis{n - i} = n^2 - \dfrac{n\nparentesis{n+1}}{2} = \dfrac{n \nparentesis{n-1}}{2}
+	\end{equation*}
+	Por otro lado, una aproximación asintótica de las asignaciones que se hacen son:
+	\begin{equation}\label{18::Burbuja:Asintotica}
+	\dfrac{3n^2}{2}
+	\end{equation}
+	Note que el $3$ que viene de \eqref{18::Burbuja:Asintotica} es debido a que en cada iteración tenemos que hacer 3 asignaciones.
+	
+	\end{itemize}
+
+
+\subsubsection{Insertion Sort}
+Definimos el arreglo $a$, donde $a\ncorchetes{i}$ corresponde al $i$-ésimo elemento de $a$. Básicamente, este algoritmo en cada una de sus iteraciones divide $a$ en dos porciones: primero los elementos ordenados y luego los elementos que no están ordenados (figura \ref{18::Insertion:Primero}). 
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}[scale = 0.75]
+	\draw[thick] (0, 0) -- (13, 0)
+	(0, 1) -- (13, 1)
+	(0, 0) -- (0, 1);
+	\draw[thick, fill = blue!10] (0, 0) rectangle (5, 1);
+	\end{tikzpicture}
+	\caption{La parte izquierda del arreglo $a$ (la que está pintada) ya se encuentra ordenada. Todo lo que venga después se encuentra desordenado.}
+	\label{18::Insertion:Primero}
+\end{figure}
+Luego, cuando selection sort encuentra un elemento $a\ncorchetes{i}$ tal que $a\ncorchetes{i-1} > a\ncorchetes{i}$, el algoritmo traslada una porción del sector ya ordenado tal que $a\ncorchetes{i}$ quedará en una posición $j$ siempre y cuando $a\ncorchetes{j-1} < a\ncorchetes{i} < a\ncorchetes{j+1}$, con $i > j$. La figura \ref{18::Insertion:Operation} muestra esta operación.
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}[scale = 0.75]
+	\draw[thick] (0, 0) -- (13, 0)
+	(0, 1) -- (13, 1)
+	(0, 0) -- (0, 1);
+	\draw[thick] (2, 0) rectangle (3, 1);
+	\draw[thick, fill = blue!10] (3, 0) rectangle (9, 1);
+	\draw[thick] (8, 0) rectangle (9, 1);
+	\draw[thick] (8, 3) rectangle (9, 4);
+	\node at (9.1, 3.5) [right] {tmp};
+	
+	\draw[->] (8.5, 1.1) -- (8.5, 2.9);
+	\draw (8.6, 2) node[circle, inner sep = 0.5pt, draw, right] {\(1\)};
+	
+	\draw[->] (4, 0.5) -- (7, 0.5);
+	\draw (5.5, 1.15) node[circle, inner sep = 0.5pt, draw, above]
+	{\(2\)};
+	
+	\draw[->] (7.9, 3.5) to [in = 75, out = 180] (2.5, 1.1);
+	\draw (4, 3.3) node[circle, inner sep = 0.5pt, draw] {\(3\)};
+	\end{tikzpicture}
+	\caption{Operación del método de inserción. Importante destacar que el área pintada ya está ordenada.}
+	\label{18::Insertion:Operation}
+\end{figure}
+Puede observar el detalle de este algoritmo mirando el listado \ref{18::Insertion:Sort}.
+\lstinputlisting[language = C,
+firstline = 8,
+caption = {Método de la inserción},
+label = 18::Insertion:Sort]
+{insertion.c}
+
+
+Realizamos el análisis correspondiente para el mejor y peor caso:
+\begin{itemize}
+	\item \emph{Mejor caso -- } Todos los elementos de $a$ se encuentran ya ordenados, y entonces, este algoritmo hace $2n$ asignaciones.
+	
+	\item \emph{Peor caso -- } En este caso, se tiene que:
+	\begin{equation*}
+		\dfrac{n^2}{2}
+	\end{equation*}
+\end{itemize}
+
+\subsubsection{Selection Sort}
+El listado \ref{18::Selection:Sort} describe el algoritmo de selection sort. Dejamos el análisis para la casa.
+\lstinputlisting[language = C,
+firstline = 8,
+caption = {Método de selección},
+label = 18::Selection:Sort]
+{selection.c}
+
+
+\subsection{Caso Promedio}
+Requiere saber la distribución de los datos de entrada. Es mucho pedir, en general \ldots usar algún modelo \comillas{razonable} (simple de manejar). Para ordenamiento, resulta útil suponer que todos los elementos son diferentes, y que todos los posibles órdenes de datos son igualmente probables.
+
+Como los métodos comparan elementos (los valores no interesan, sólo el orden relativo), basta considerar permutaciones $1, \ldots, n$.
+
+\begin{definition}
+	En una permutación $\pi$, hay una \emph{inversión} si $\pi\nparentesis{i}  > \pi\nparentesis{j}$ para $i < j$.
+\end{definition}
+
+\begin{ejemplo}[Inversiones]
+	Supongamos que tenemos el siguiente arreglo:
+	\begin{equation}\label{18::ArregloInversion}
+	\ncorchetes{2, 4, 1, 3, 5}
+	\end{equation}
+	Como podemos observar, entre el 4 y el 1 hay una inversión, porque el 4 está antes que el 1. Cumple con la definición de inversión.
+	
+	Si aplicamos el método de la burbuja sobre el arreglo \eqref{18::ArregloInversion}, vemos que con cada intercambio que hace este algoritmo va eliminando una inversión del arreglo:
+	\begin{align*}
+	\ncorchetes{2, \textcolor{blue}{4, 1}, 3, 5} &\rightarrow \ncorchetes{2, \textcolor{green!50!black!90}{1, 4}, 3, 5}\\
+	\ncorchetes{\textcolor{blue}{2, 1}, 4, 3, 5} &\rightarrow \ncorchetes{ \textcolor{green!50!black!90}{1, 2}, 4, 3, 5}\\
+	\ncorchetes{1, 2, \textcolor{blue}{4, 3},  5} &\rightarrow \ncorchetes{ 1, 2, \textcolor{green!50!black!90}{3, 4},  5}
+	\end{align*}
+	por lo tanto, se concluye que el número de inversiones que hace el método de la burbuja es igual al número de intercambios que realiza.
+\end{ejemplo}
+
+Es central el número promedio de inversiones.
+
+\subsection{Funciones generatrices cumulativas}
+\begin{definition}[Objetos rotulados]
+	Son aquellos que les colocamos etiquetas que nos permiten identificar los elementos de una estructura de datos. Por ejemplo, las etiquetas de un nodo en un grafo cualquiera nos permite diferenciarlo entre los demás nodos.
+\end{definition}
+
+\begin{definition}[Objetos no rotulados]
+	Son todos aquellos objetos que no tienen etiquetas para identificarlos dentro de una estructura de datos. Por ejemplo, si a los nodos de un grafo no les colocamos estas etiquetas, intercambiar dos nodos entre sí al final del día no produce cambios, porque no tenemos la forma de cómo identificar si realmente se hizo algún cambio.
+\end{definition}
+
+Algunas cosas importantes que destacar sobre objetos rotulados y no rotulados:
+\begin{itemize}
+	\item Cuando la estructura de datos es rotulada, usamos funciones generatrices exponenciales.
+	
+	\item Cuando la estructura de datos es no rotulada, usaremos funciones generatrices ordinarias.
+\end{itemize}
+
+\paragraph{Idea:} Tengo una clase de objetos $\mathcal{A}$ (rotulado/no rotulado), con función generatriz:
+\begin{equation*}
+\hat{\mathcal{A}}\nparentesis{z}=\sum_{\alpha \in \mathcal{A}} \dfrac{z^{\nabsoluto{\alpha}}}{\nabsoluto{\alpha}!}
+\end{equation*}
+Para este caso, se tiene que $\mathcal{A}$ es el conjunto que tiene todas las permutaciones del arreglo $a$, y $\alpha$ es una de esas permutaciones.
+
+
+
+Nos interesa la característica $\chi\nparentesis{\alpha}$, que en nuestro caso corresponde al número de inversiones de la permutación $\alpha$ (en caso de un árbol, puede ser la altura del árbol), con lo que tiene sentido definir: 
+\begin{equation}\label{18::Sumatoria:propiedades}
+\hat X \nparentesis{z} = \sum_{a \in \mathcal{A}} \chi \nparentesis{\alpha} \dfrac{z^{\nabsoluto{\alpha}}}{\nabsoluto{\alpha}!}
+\end{equation}
+Es importante destacar, que la sumatoria de \eqref{18::Sumatoria:propiedades} representa a todas las características de $\mathcal{A}$.
+
+Continuamos con el desarrollo de \eqref{18::Sumatoria:propiedades}:
+\begin{align*}
+\ncorchetes{z^n} \hat X \nparentesis{z} &= \dfrac{1}{n!} \sum_{\nabsoluto{\alpha} = n}\chi \nparentesis{\alpha}
+\end{align*}
+Luego, el número promedio de características viene dado por:
+\begin{equation}
+\overline{\chi}_n = \dfrac{\ncorchetes{z^n} \hat X \nparentesis{z}}{\ncorchetes{z^n} \hat A \nparentesis{z}}
+\end{equation}
+
+
+En nuestro caso, sea $\iota\nparentesis{\pi}$ el número de inversiones en la permutación $\pi$. Sabemos que podemos describir la clase de permutaciones recursivamente como:
+\begin{equation*}
+P = E + P \star Z
+\end{equation*}
+Donde:
+\begin{equation*}
+A \star B = \llaves{\nparentesis{\alpha, \beta}: \alpha \in A, \beta \in B; \text{rótulos reasignados en forma consistente}}
+\end{equation*}
+% Por ejemplo:
+%\begin{itemize}
+%	\item $A$: árboles binarios.
+%	\item $B$: permutaciones.
+%\end{itemize}
+%\begin{center}
+%	\comentarioc{Dibujo}
+%\end{center}
+
+Por el método simbólico:
+\begin{align*}
+\hat P \nparentesis{z} &= 1  + z\hat P \nparentesis{z}\\
+\hat P \nparentesis{z} &= \dfrac{1}{1-z}\\
+\ncorchetes{z^n} \hat P \nparentesis{z} &= 1 \rightsquigarrow \dfrac{p_n}{n!}, p_n = n!
+\end{align*}
+Donde $p_n$ es el número de permutaciones de tamaño $n$.
+
+Para $\iota\nparentesis{\pi}$, nos interesa la suma sobre \emph{todas} las permutaciones que resultan de $\pi \star \nparentesis{1}$.
+
+Las permutaciones resultantes tienen las mismas inversiones que $\pi$ más las inversiones en que participa el último elemento agregado.
+
+El total de inversiones en este conjunto:
+\begin{align*}
+\underbrace{\nparentesis{\nabsoluto{\pi} + 1} \iota \nparentesis{\pi}}_{\text{Aporte de }\pi} &+ \underbrace{\sum_{1 \leq j \leq \nabsoluto{\pi}+ 1}\nparentesis{\nabsoluto{\pi} + 1 - j}}_{\text{Aporte de (1) según el rótulo }j}\\
+&+ \dfrac{\nabsoluto{\pi}\nparentesis{\nabsoluto{\pi}+1}}{2}
+\end{align*}
+De la descomposición:
+\begin{align*}
+\sum_{\pi \in P} \iota \nparentesis{\pi} \dfrac{z^{\nabsoluto{\pi}}}{\nabsoluto{\pi}!} = \iota \nparentesis{\epsilon} + \sum_{\pi \in P}\nparentesis{\nparentesis{\nabsoluto{\pi}+1}\iota \nparentesis{\pi}+\dfrac{\nabsoluto{\pi}\nparentesis{\nabsoluto{\pi}+1}}{2}}\dfrac{z^{\nabsoluto{\pi}+1}}{\nparentesis{\nabsoluto{\pi}+1}!}
+\end{align*}
+Y luego:
+\begin{align*}
+\hat I \nparentesis{z} &= 0 + \sum_{\pi \in P}\nparentesis{\nabsoluto{\pi}+1}\iota \nparentesis{\pi} \dfrac{z^{\nabsoluto{\pi}+1}}{\nparentesis{\nabsoluto{\pi}+1}!} + \sum_{\pi\in P}\dfrac{\nabsoluto{\pi}\nparentesis{\nabsoluto{\pi}+1}}{2}\dfrac{z^{\nabsoluto{\pi}+1}}{\nparentesis{\nabsoluto{\pi}+1}!}\\
+&=z\hat I \nparentesis{z} + z\sum_{\pi \in P} \dfrac{\nabsoluto{\pi}}{2}\cdot \dfrac{z^{\nabsoluto{\pi}}}{\nabsoluto{\pi}!}+ z\sum_{n \geq 0}\dfrac{n}{2}z^n\\
+\hat I \nparentesis{z} &=\dfrac{1}{2}\dfrac{z^2}{\nparentesis{1-z}^3}\\
+\ncorchetes{z^n} \hat I \nparentesis{z} &= \dfrac{n\nparentesis{n-1}}{4}
+\end{align*}
+
+
+
+\end{document}
+

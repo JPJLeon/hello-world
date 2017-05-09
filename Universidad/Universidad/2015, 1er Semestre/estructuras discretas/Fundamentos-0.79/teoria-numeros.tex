@@ -1,0 +1,2653 @@
+% teoria-numeros.tex
+%
+% Copyright (c) 2009-2015 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Teoría de números}
+\label{cha:teoria-numeros}
+\index{teoria de numeros@teoría de números}
+
+  El estudio de los números enteros tiene una larga y distinguida historia,
+  algo de la cual describe Ore~\cite{ore69:_invit_number_theo}.
+  La importancia de la teoría de números en informática
+  es porque mucho de lo que se hace en el computador
+  es trabajar con números
+  (o cosas que se representan como tales,
+   o debemos contar objetos con ciertas características
+   para determinar los recursos que se requieren).
+  Mucha de la tecnología criptográfica moderna%
+    \index{criptografia@criptología}
+  se basa en resultados de la teoría de números
+  y áreas afines.
+  Nuestra presentación sigue la de Richman~%
+    \cite{richman71:_number_theor}
+  en que explícitamente discute las estructuras algebraicas involucradas.
+
+\section{Algunas herramientas}
+\label{sec:algunas-herramientas}
+
+  Para calcular con números grandes
+  resulta cómodo el programa \texttt{bc(1)},%
+    \index{bc(1)@\texttt{bc(1)}}
+  para computaciones más complejas
+  son útiles \texttt{PARI/GP}~%
+    \cite{PARI:2.7.2}%
+    \index{PARI/GP@\texttt{PARI/GP}}
+  o \texttt{maxima}~%
+    \cite{maxima14b:_computer_algebra}.%
+    \index{maxima@\texttt{maxima}}
+  El sistema Sage~\cite{stein14:_Sage-6.3}%
+    \index{Sage@\texttt{Sage}}
+  agrupa varios sistemas para computación numérica y simbólica
+  (incluyendo los mencionados)
+  de código abierto bajo una interfaz común.%
+    \index{codigo abierto@código abierto}
+  Para uso en programas se recomiendan las bibliotecas GMP~%
+    \cite{granlund14:_gnu_multip_precis_arith_librar},%
+    \index{GMP@\texttt{GMP}}
+ CLN~%
+    \cite{haible14:_CLN_1.3.4}%
+    \index{CLN@\texttt{CLN}}
+  o NTL~%
+    \cite{shoup14:_ntl}.%
+    \index{NTL@\texttt{NTL}}
+  Detalles de muchos algoritmos en \cplusplus{}%
+    \index{C++ (lenguaje de programacion)@\cplusplus{} (lenguaje de programación)}
+  da Arndt~%
+    \cite{arndt11:_matters_computational}.
+
+\section{Propiedades básicas}
+\label{sec:propiedades-basicas}
+\index{Z (numeros enteros)@\(\mathbb{Z}\) (números enteros)}
+
+  Ya sabemos
+  (ver el capítulo~\ref{cha:relaciones-funciones})
+  que la relación ``divide a'' es una relación de orden en \(\mathbb{N}\)%
+    \index{relacion@relación!orden}
+  (en \(\mathbb{Z}\) no es antisimétrica,
+   ya que por ejemplo \(-3 \mid 3\) y \(3 \mid -3\),
+   pero \(3 \ne -3\)).
+  Algunas propiedades adicionales son:
+  \begin{enumerate}
+  \item
+    Si \(a \mid b\),
+    entonces \(a \mid b \cdot c\)
+  \item
+    Si \(a \mid b\) y \(a \mid c\),
+    entonces \(a \mid (s b + t c)\)
+    para todo \(s, t \in \mathbb{Z}\)
+  \item
+    Siempre que \(c \ne 0\),
+    \(a \mid b\) si y solo si \(a c \mid b c\)
+  \end{enumerate}
+  Si \(a \mid b\),
+  decimos que \(b\) es múltiplo de \(a\),
+  o que \(a\) es un factor de \(b\).
+
+  Una propiedad básica de los enteros es la siguiente:
+  \begin{theorem}[Algoritmo de división]
+    \index{algoritmo de division@algoritmo de división}
+    \label{theo:division}
+    Sean \(n, d \in \mathbb{Z}\)
+    con \(d > 0\).
+    Entonces existen enteros \(q, r\) únicos tales que:
+    \begin{equation*}
+      n = q \cdot d + r \quad 0 \le r < d
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    El conjunto de ``restos'' es:
+    \begin{equation}
+      \mathcal{R} = \{n - s d \colon s \in \mathbb{Z} \wedge n - s d \ge 0\}
+    \end{equation}
+    Este conjunto no es vacío,
+    siempre será \(n + (\lvert n \rvert + 1) \cdot d > 0\),
+    y esto está en \(\mathcal{R}\).
+    Siendo \(\mathcal{R}\) un conjunto de enteros acotado por debajo,
+    contiene su mínimo,
+    llamémosle \(r\),
+    que podemos expresar \(r = n - q \cdot d\).
+    Debemos demostrar que \(r < d\).
+    Esto lo haremos por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Si suponemos \(r \ge d\),
+    podemos escribir:
+    \begin{equation*}
+      r - d = n - (q + 1) \cdot d
+    \end{equation*}
+    donde \(r - d \ge 0\),
+    pertenece a \(\mathcal{R}\)
+    y es menor que \(r\),
+    contradiciendo la elección de \(r\) como el menor elemento
+    en \(\mathcal{R}\).
+
+    Falta demostrar que \(q\) y \(r\) son únicos.
+    Nuevamente procedemos por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Supongamos dos soluciones diferentes \(q_1, r_1\) y \(q_2, r_2\),
+    donde podemos tomar \(r_2 \ge r_1\) sin pérdida de generalidad.
+    Entonces:
+    \begin{align}
+      n
+	&= q_1 \cdot d + r_1 \notag \\
+      n
+	&= q_2 \cdot d + r_2 \notag \\
+      0
+	&= (q_2 - q_1) \cdot d + (r_2 - r_1) \label{eq:(q2-q1)*d+(r2-r1)}
+    \end{align}
+    Sabemos que \(0 \le r_2 < d\) por lo anterior.
+    Como asumimos \(r_1 \le r_2\),
+    tenemos que \(0 \le r_2 - r_1\).
+    Pero también,
+    dado que \(0 \le r_1 < d\):
+    \begin{align*}
+      r_2
+	&< d \\
+      r_2 - r_1
+	&< d - r_1
+	  \le d
+    \end{align*}
+    En resumen,
+    resulta:
+    \begin{equation}
+      \label{eq:r2-r1}
+      0 \le r_2 - r_1 < d
+    \end{equation}
+    Pero de la ecuación~\eqref{eq:(q2-q1)*d+(r2-r1)} tenemos:
+    \begin{equation}
+      \label{eq:q1-q2}
+      (q_1 - q_2) \cdot d
+	= r_2 - r_1
+    \end{equation}
+    Como el lado izquierdo de~\eqref{eq:q1-q2} es divisible por \(d\)
+    también lo es el derecho;
+    pero por~\eqref{eq:r2-r1} esto es menor que \(d\),
+    y la única posibilidad es que sea cero.
+    Concluimos que \(r_1 = r_2\).
+    Pero siendo cero el lado derecho de~\eqref{eq:q1-q2},
+    y el izquierdo el producto de \(d\)
+    y \(q_1 - q_2\),
+    concluimos que \(q_1 - q_2 = 0\),
+    o sea \(q_1 = q_2\).
+    Pero habíamos supuesto que \((q_1, r_1) \ne (q_2, r_2)\),
+    contradicción que demuestra que \(q\) y \(r\) son únicos.
+  \end{proof}
+
+  Es común que queramos hablar del resto de la división,%
+    \index{modulo@módulo|textbfhy}
+  para ello introducimos la notación:
+  \begin{equation*}
+    r = a \bmod b
+  \end{equation*}
+  El cociente respectivo puede expresarse simplemente como:%
+    \index{cociente entero}
+  \begin{equation*}
+    q = \left\lfloor \frac{a}{b} \right\rfloor
+  \end{equation*}
+  No se requiere una notación especial para esto,
+  se usa con menos frecuencia que el resto.
+
+\section{Máximo común divisor}
+\label{sec:GCD}
+\index{maximo comun divisor@máximo común divisor|textbfhy}
+\index{GCD@\emph{GCD}|see{máximo común divisor}}
+
+  Sean \(a, b \in \mathbb{Z}\),
+  y consideremos
+  \(\mathcal{I} = \{u a + v b \colon u, v \in \mathbb{Z}\}\).%
+    \index{ideal}
+  Si \(a = b = 0\),
+  entonces \(\mathcal{I} = \{0\}\).
+  En caso contrario,
+  este conjunto no es vacío,
+  y contiene elementos positivos
+  (siempre es \(a^2 + b^2 \in \mathcal{I}\)).
+  Consideremos el mínimo elemento positivo de \(\mathcal{I}\),
+  llamémosle \(m\).
+  Entonces hay \(s, t \in \mathbb{Z}\)
+  tales que:
+  \begin{equation}
+    \label{eq:base-Bezout}
+    m = s a + t b
+  \end{equation}
+  Demostraremos que \(m\) divide a todos los elementos de \(\mathcal{I}\).
+
+  Sea \(n \in \mathcal{I}\),
+  que significa \(n = s' a + t' b\) para algún \(s'\) y \(t'\).
+  Por el algoritmo de división:%
+    \index{algoritmo de division@algoritmo de división}
+  \begin{equation}
+    \label{eq:n=qm+r}
+    n = q m + r \quad 0 \le r < m
+  \end{equation}
+  Pero:
+  \begin{align*}
+    n
+      &= s' a + t' b \\
+      &= q (s a + t b) + r	 \\
+    r
+      &= (s' - q s) a + (t' - q t) b
+  \end{align*}
+  con lo que \(r \in \mathcal{I}\).
+  Como \(m\) es el mínimo elemento positivo de \(\mathcal{I}\),
+  por~\eqref{eq:n=qm+r}
+  solo puede ser \(r = 0\),
+  y \(m \mid n\);
+  e \(\mathcal{I}\) es el conjunto de los múltiplos de \(m\).
+  Como \(a\) y \(b\) pertenecen a \(\mathcal{I}\),
+  \(m\) es un divisor común de ambos.
+  Pero por otro lado,
+  cualquier divisor de \(a\) y \(b\) debe dividir a \(m = s a + t b\),
+  con lo que \(m\) es máximo.
+  Este número lo anotaremos \(\gcd(a, b)\)
+  (por \emph{\foreignlanguage{english}{greatest common divisor}} en inglés).
+  Otra notación común es \((a, b)\).
+  Para completar la definición de esta función,
+  el máximo común divisor entre \(a \ne 0\) y \(0\) es simplemente \(a\),
+  y podemos definir \(\gcd(0, 0) = 0\).
+  A la importante relación \(\gcd(a, b) = s a + t b\)
+  se le llama \emph{identidad de Bézout}.
+    \index{Bezout, identidad de@Bézout, identidad de|textbfhy}%
+    \index{Bezout, Etienne@Bézout, Étienne}
+  En caso que \(\gcd(a, b) = 1\) se dice que \(a\) y \(b\)
+  son \emph{relativamente primos}%
+    \index{relativamente primos}%
+  o \emph{coprimos}.%
+    \index{coprimos|see{relativamente primos}}
+
+  Nótese que si:
+  \begin{equation}
+    \label{eq:Bezout}
+    \gcd(a, b)
+      = s a + t b
+  \end{equation}
+  también son soluciones a \(\gcd(a, b) = s' a + t' b\)
+  para todo \(k \in \mathbb{Z}\):
+  \begin{equation}
+    \label{eq:Bezout-coefficients}
+    \begin{split}
+      s' &= s + \frac{k b}{\gcd(a, b)} \\
+      t' &= t - \frac{k a}{\gcd(a, b)}
+    \end{split}
+  \end{equation}
+  Esto es fácil de ver substituyendo~\eqref{eq:Bezout-coefficients}.
+
+  \begin{lemma}
+    \index{maximo comun divisor@máximo común divisor!propiedades}
+    \index{operacion@operación!maximo comun divisor@máximo común divisor}
+    \label{lem:gcd}
+    Tenemos las siguientes propiedades del máximo común divisor:
+    \begin{enumerate}
+    \item
+      \label{lem:gcd:conmutativo}
+      \(\gcd(a, b) = \gcd(b, a)\)
+    \item
+      \label{lem:gcd:signos}
+      \(\gcd(a, b) = \gcd(\pm a, \pm b)\)
+    \item
+      \label{lem:gcd:gcd_maximal}
+      Todo divisor común de \(a\) y \(b\) divide a \(\gcd(a, b)\).
+    \item
+      \label{lem:gcd:factor_comun}
+      \(\gcd(k a, k b) = \lvert k  \rvert \cdot \gcd(a, b)\).
+    \item
+      \label{lem:gcd:dividir_gcd}
+      Si \(m = \gcd(a, b)\),
+      entonces \(\gcd(a / m, b / m) = 1\).
+      Nótese que \(a / m\) y \(b / m\) son enteros acá,
+      la división es exacta.
+    \item
+      \label{lem:gcd:producto}
+      Si \(\gcd(a, b) = 1\) y \(\gcd(a, c) = 1\),
+      entonces \(\gcd(a, b c) = 1\).
+    \item
+      \label{lem:gcd:divisor}
+      Si \(a \mid b c\) y \(\gcd(a, b) = 1\),
+      entonces \(a \mid c\).
+    \item
+      \label{lem:gcd:producto-coprimos-divide}
+      Si \(\gcd(a, b) = 1\),
+      y \(a \mid c\) y \(b \mid c\),
+      entonces \(a b \mid c\).
+    \end{enumerate}
+  \end{lemma}
+  \begin{proof}
+    Demostramos cada parte por turno.
+    \begin{enumerate}
+    \item
+      Los elementos de
+      \(\mathcal{I} = \{u a + v b \colon u, v \in \mathbb{Z}\}\)
+      e \(\mathcal{I}' = \{u b + v a \colon u, v \in \mathbb{Z}\}\)
+      son los mismos,
+      y lo son sus mínimos elementos positivos.
+    \item
+      Nuevamente,
+      los elementos del conjunto \(\mathcal{I}\) respectivo
+      son los mismos para ambos lados de la ecuación.
+    \item
+      Esto lo vimos antes.
+    \item
+      De la identidad de Bézout%
+	\index{Bezout, identidad de@Bézout, identidad de}
+      sabemos que hay \(s, t \in \mathbb{Z}\)
+      tales que:
+      \begin{align*}
+	\gcd(k a, k b)
+	  &= s (\lvert k  \rvert \cdot a)
+	       + t (\lvert k  \rvert \cdot b) \\
+	  &= \lvert k  \rvert \cdot (s a + t b)
+      \end{align*}
+      En particular,
+      este es el mínimo de todos los valores positivos
+      que se pueden obtener eligiendo \(s, t \in \mathbb{Z}\),
+      por lo que \(s a + t b\)
+      debe también ser el mínimo positivo de esta última expresión,
+      \(s a + t b = \gcd(a, b)\).
+    \item
+      De la identidad de Bézout
+      sabemos que hay \(s\) y \(t\) que dan \(m = \gcd(a, b)\) como:
+      \begin{align*}
+	m &= s a + t b \\
+	1 &= s (a / m) + t (b / m)
+      \end{align*}
+      con lo que \(\gcd(a / m, b / m) = 1\).
+      Esto también implica que \(\gcd(s, t) = 1\).
+    \item
+      Si \(\gcd(a, b) = \gcd(a, c) = 1\)
+      existen \(s, t, u, v \in \mathbb{Z}\)
+      tales que:
+      \begin{align*}
+	1 &= s a + t b \\
+	1 &= u a + v c
+      \end{align*}
+      Entonces:
+      \begin{align*}
+	t b
+	  &= 1 - s a \\
+	v c
+	  &= 1 - u a \\
+	t v b c
+	  &= 1 - (s + u) a + su a^2 \\
+	1
+	  &= (s + u - s u a) a + (t v) b c
+      \end{align*}
+      Esto es el mínimo positivo,
+      y por tanto es \(\gcd(a, b c)\).
+    \item
+      \(a \mid b c\) significa que existe \(k\) tal que \(b c = k a\).
+      Tenemos:
+      \begin{align*}
+	1
+	  &= s a + t b \\
+	c
+	  &= s a c + t b c \\
+	  &= (s c + t k) \cdot a
+      \end{align*}
+      y esto último dice que \(a \mid c\).
+    \item
+      Existen \(x, y \in \mathbb{Z}\) tales que \(c = a x = b y\).
+      Por la identidad de Bézout
+      existen \(u, v \in \mathbb{Z}\) con:
+      \begin{align*}
+	a u + b v
+	  &= 1 \\
+	a c u + b c v
+	  &= c \\
+	a b u y + a b v x
+	  &= c \\
+	a b (u y + v x)
+	  &= c
+      \end{align*}
+      con lo que \(a b \mid c\).
+      \qedhere
+    \end{enumerate}
+  \end{proof}
+
+  Como ejemplo
+  demostramos \(\gcd(x^2, y^2) = \left(\gcd(x, y)\right)^2\).
+  Si \(\gcd(x, y) = 1\),
+  aplicando la propiedad~(\ref{lem:gcd:producto})
+  con \(a = x\), \(b = c = y\)
+  tenemos \(\gcd(x, y^2) = 1\).
+  Repitiendo esto con \(a = y^2\) y \(b = c = x\)
+  resulta \(\gcd(x^2, y^2) = 1\).
+  En realidad,
+  podemos demostrar de la misma forma que \(\gcd(x^m, y^n) = 1\),
+  para \(m \ge 1\) y \(n \ge 1\).
+  Ahora,
+  por~(\ref{lem:gcd:factor_comun}),
+  si \(x = k u\) y \(y = k v\),
+  donde \(k = \gcd(u, v)\) tendremos \(\gcd(u, v) = 1\),
+  y \(\gcd(x^2, y^2) = \gcd(k^2 u^2, k^2 v^2)
+		     = k^2 \cdot \gcd(u^2, v^2)
+		     = \left(\gcd(x, y)\right)^2\).
+  Queda como ejercicio demostrar de forma similar
+  que \(\gcd(x^m, y^m) = \left(\gcd(x, y)\right)^m\).
+
+  El máximo común divisor es muy importante,
+  interesa obtener una forma de calcularlo eficientemente.
+  De partida,
+  sabemos que si \(m = \gcd(a, b)\),
+  entonces \(m \mid u \cdot a + v \cdot b\)
+  para todo par \(u, v\).
+  En particular,
+  \(m \mid a \bmod b\),
+  ya que \(a \bmod b = a - q \cdot b\).
+  Al revés,
+  cualquier divisor común de \(a \bmod b\) y \(b\)
+  divide a \(a = a \bmod b + q b\) y a \(b\),
+  y por lo tanto a su máximo común divisor.
+  Así \(\gcd(a, b) = \gcd(b, a \bmod b)\).
+  Esto lleva directamente al algoritmo de Euclides~\ref{alg:Euclides}%
+    \index{maximo comun divisor@máximo común divisor!algoritmo|see{Euclides, algoritmo de}}%
+    \index{Euclides, algoritmo de}%
+    \index{algoritmo!Euclides|see{Euclides, algoritmo de}}%
+    \index{Euclides}
+  (los 13 tomos de los \emph{Elementos} de este alejandrino del siglo III~AC%
+    \index{Euclides, Elementos}
+   incluyen teoría de números en los tomos 7 a 9).
+  El algoritmo de Euclides de interés histórico también,
+  es el algoritmo más antiguo que involucra ciclos,
+  y fue el primer algoritmo cuyo rendimiento se analizó matemáticamente
+  (por Gabriel Lamé en 1844).%
+    \index{Lame, Gabriel Leon Jean Baptiste@Lamé, Gabriel Léon Jean Baptiste}
+  El análisis lo discutiremos en la sección~\ref{sec:gcd}.
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{Gcd}{gcd}
+
+    \KwFunction \Gcd{\(a,\; b\)} \;
+    \BlankLine
+    \While{\(b > 0\)}{
+      \((a, \; b) \leftarrow (b, \; a \bmod b)\) \;
+    }
+    \Return \(a\) \;
+    \caption{Algoritmo de Euclides para calcular $\gcd(a, b)$}
+    \label{alg:Euclides}
+  \end{algorithm}
+
+  Una función íntimamente relacionada con el máximo común divisor
+  es el mínimo común múltiplo,
+  que anotaremos \(\lcm(a, b)\)%
+    \index{minimo comun multiplo@mínimo común múltiplo}%
+    \index{LCM@\texttt{LCM}|see{mínimo común múltiplo}}
+  (por \emph{\foreignlanguage{english}{least common multiple}} en inglés).
+  Sea \(m\) un múltiplo común de \(a\) y \(b\),
+  vale decir \(m = h a = k b\).
+  Sean \(a = a_1 \gcd(a, b)\) y \(b = b_1 \gcd(a, b)\),
+  dividiendo la relación para \(m\) por \(\gcd(a, b)\)
+  resulta \(h a_1 = k b_1\).
+  Como por el lema~\ref{lem:gcd} parte~\ref{lem:gcd:dividir_gcd}
+  es \(\gcd(a_1, b_1) = 1\),
+  por la parte~\ref{lem:gcd:divisor} debe ser  \(a_1 \mid k\),
+  y obtenemos el mínimo cuando \(a_1 = k\),
+  vale decir:
+  \begin{equation}
+    \label{eq:compute-lcm}
+    \lcm(a, b) = \frac{\lvert a b  \rvert}{\gcd(a, b)}
+  \end{equation}
+
+  Una aplicación simple de lo anterior es el siguiente teorema:
+  \begin{theorem}[Criterio de cero racional]
+    \index{polinomio!criterio de cero racional}
+    \label{theo:polinomial-rational-roots}
+    Sea \(p(x) = a_n x^n + \dotsb + a_0\)
+    un polinomio de coeficientes enteros.
+    Todo cero racional \(r = u / v\) de \(p(x)\)
+    expresada en mínimos términos cumple
+    \(u \mid a_0\) y \(v \mid a_n\).
+  \end{theorem}
+  \begin{proof}
+    Sin pérdida de generalidad
+    podemos suponer que los \(a_i\) no tienen factores en común,
+    que \(a_n \ne 0\) y que \(a_0 \ne 0\).
+    Substituyendo \(u / v\) en \(p(x) = 0\),
+    y multiplicando por \(v^n\),
+    resulta:
+    \begin{equation*}
+      a_n u^n + a_{n - 1} u^{n - 1} v + \dotsb a_1 u v^{n - 1} + a_0 v^n
+	= 0
+    \end{equation*}
+    Observamos que todos los términos,
+    salvo posiblemente el primero,
+    son divisibles por \(v\).
+    En consecuencia,
+    como la expresión completa es divisible por \(v\),
+    tiene que serlo el primer término,
+    o sea \(v \mid a_n\),
+    ya que supusimos que \(u\) y \(v\) no tienen factores en común.
+    Asimismo,
+    todos los términos,
+    salvo posiblemente el último,
+    son divisibles por \(u\).
+    Por el mismo razonamiento anterior,
+    la única forma que esto se puede cumplir es que
+    \(u \mid a_0\).
+  \end{proof}
+  El teorema~\ref{theo:polinomial-rational-roots}
+  restringe los posibles ceros racionales del polinomio a un número finito.
+  En el caso de polinomios mónicos
+    \index{polinomio!monico@mónico}
+  (cuyo coeficiente del término de mayor grado es uno)
+  vemos que los ceros son enteros
+  de ser racionales.
+  Esto da una manera adicional de demostrar que \(\sqrt{2}\) es irracional:%
+   \index{numero@número!irracional!\(\sqrt{2}\)}
+  Es cero de \(x^2 - 2\),
+  como \(\sqrt{2}\) no es entero,
+  es irracional.
+  Incluso más,
+  toda raíz de un entero o es entera o es irracional,%
+    \index{numero@número!irracional}
+  por un razonamiento similar.
+
+\subsection{Obtener los coeficientes de Bézout}
+\label{sec:coeficientes-Bezout}
+
+  Sabemos por la identidad de Bézout que existen enteros \(s, t\)
+  tales que:%
+    \index{Bezout, identidad de@Bézout, identidad de}
+  \begin{equation*}
+    \gcd(a, b) = s a + t b
+  \end{equation*}
+  y encontrar estos es de interés también.
+  Una manera de proceder es ir registrando paso a paso los valores
+  en el algoritmo de Euclides,%
+    \index{Euclides, algoritmo de}
+  y luego ir reemplazando en reversa.
+  Por ejemplo,
+  para calcular \(\gcd(40\,902, 24\,140)\) hacemos:
+
+  \begin{center}
+    \begin{tabular}[htbp]{>{\(}r<{\)}
+			  @{${} = {}$}>{\(}r<{\)}
+			     @{${} \cdot {}$}>{\(}r<{\)}
+			     @{${} + {}$}>{\(}r<{\)}}
+      40\,902 & 24\,140 & 1 & 16\,762 \\
+      24\,140 & 16\,762 & 1 &  7\,378 \\
+      16\,762 &	 7\,378 & 2 &  2\,006 \\
+       7\,378 &	 2\,006 & 3 &  1\,360 \\
+       2\,006 &	 1\,360 & 1 &	  646 \\
+       1\,360 &	    646 & 2 &	   68 \\
+	  646 &	     68 & 9 &	   34 \\
+	   68 &	     34 & 2 &	    0
+    \end{tabular}
+  \end{center}
+  Sabemos entonces que \(\gcd(40\,902, 24\,140) = 34\).
+  De lo anterior también tenemos que:
+  \begin{center}
+    \begin{tabular}[htbp]{>{\(}r<{\)}
+			  @{${} = {}$}>{\(}r<{\)}
+			     @{${} - {}$}>{\(}r<{\)}
+			     @{${} \cdot {}$}>{\(}r<{\)}}
+	    34 &      646 &	 68 & 9 \\
+	    68 &   1\,360 &	646 & 2 \\
+	   646 &   2\,006 &  1\,360 & 1 \\
+	1\,360 &   7\,378 &  2\,006 & 3 \\
+	2\,006 &  16\,762 &  7\,378 & 2 \\
+	7\,378 &  24\,140 & 16\,762 & 1 \\
+       16\,762 &  40\,902 & 24\,140 & 1
+    \end{tabular}
+  \end{center}
+  Substituyendo las expresiones para los restos
+  finalmente obtenemos \(34 = 337 \cdot 40\,902 - 571 \cdot 24\,140\).
+
+  Una manera de organizar mejor el trabajo es el algoritmo~\ref{alg:xgcd},
+  debido a Blankinship~%
+    \cite{blankinship63:_new_version_euclid_algor}.%
+    \index{Euclides, algoritmo de!extendido}%
+    \index{Blankinship, algoritmo de|see{Euclides, algoritmo de!extendido}}%
+    \index{Blankinship, W. A.}
+  Usa vectores auxiliares
+  \((x_1, x_2, x_3)\), \((y_1, y_2, y_3)\) y \((t_1, t_2, t_3)\),
+  que manipula
+  de forma que siempre se cumple que:
+  \begin{align*}
+    x_1 a + x_2 b &= x_3 \\
+    y_1 a + y_2 b &= y_3 \\
+    t_1 a + t_2 b &= t_3
+  \end{align*}
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+
+    \KwFunction \FuncSty{xgcd(}\ArgSty{\(a, \; b\)}\FuncSty{)} \;
+    \BlankLine
+    \((x_1, x_2, x_3) \leftarrow (1, 0, a)\) \;
+    \((y_1, y_2, y_3) \leftarrow (0, 1, b)\) \;
+    \While{\(y_3 \ne 0\)}{
+       \(q \leftarrow \lfloor x_3 / y_3 \rfloor\) \;
+       \((t_1, t_2, t_3)
+	    \leftarrow (x_1, x_2, x_3) - q \cdot (y_1, y_2, y_3)\) \;
+       \((x_1, x_2, x_3) \leftarrow (y_1, y_2, y_3)\) \;
+       \((y_1, y_2, y_3) \leftarrow (t_1, t_2, t_3)\) \;
+    }
+    \Return \(x_3 = x_1 \cdot a + x_2 \cdot b\) \;
+    \caption{Algoritmo extendido de Euclides}
+    \label{alg:xgcd}
+  \end{algorithm}
+  El algoritmo~\ref{alg:xgcd} es exactamente el mismo
+  que el algoritmo~\ref{alg:Euclides}
+  respecto de la manipulación de \(x_3\) e \(y_3\),
+  con lo que calcula \(\gcd(a, b)\) correctamente;
+  por la relación que se mantiene
+  entre \(a\), \(b\), \(x_1\), \(x_2\) y \(x_3\)
+  obtenemos los coeficientes de Bézout.
+
+  Podemos eliminar buena parte de la computación
+  del algoritmo~\ref{alg:xgcd}
+  si omitimos \(x_2\), \(y_2\) y \(t_2\),
+  y obtenemos \(x_2\) de la relación \(x_1 a + x_2 b = x_3\)
+  al final.
+  Manejar los casos de \(a\) o \(b\) negativos queda de ejercicio.
+
+  La traza del algoritmo~\ref{alg:xgcd}
+  para \(\gcd(40\,902, 24\,140)\)
+  da el cuadro~\ref{tab:traza-xgcd}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|>{\(}r<{\)}|*{6}{>{\(}r<{\)}|}}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\(\boldsymbol{x_1}\)} &
+	\multicolumn{1}{|c|}{\(\boldsymbol{x_2}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{x_3}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{y_1}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{y_2}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{y_3}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{q}\)} \\
+      \hline\rule[-0.7ex]{0pt}{3ex}%
+	1  &	 0  & 40\,902  &     0	&     1	 & 24\,140  &	  1 \\
+	0  &	 1  & 24\,140  &     1	&    -1	 & 16\,762  &	  1 \\
+	1  &	-1  & 16\,762  &    -1	&     2	 &  7\,378  &	  2 \\
+       -1  &	 2  &  7\,378  &     3	&    -5	 &  2\,006  &	  3 \\
+	3  &	-5  &  2\,006  &   -10	&    17	 &  1\,360  &	  1 \\
+      -10  &	17  &  1\,360  &    13	&   -22	 &     646  &	  2 \\
+       13  &   -22  &	  646  &   -36	&    61	 &	68  &	  9 \\
+      -36  &	61  &	   68  &   337	&  -571	 &	34  &	  2 \\
+      337  &  -571  &	   34  &  -710	&  1203	 &	 0  &	    \\
+      \hline
+    \end{tabular}
+    \caption{Traza del algoritmo extendido de Euclides}
+    \label{tab:traza-xgcd}
+  \end{table}
+  nuevamente:
+  \begin{equation*}
+    \gcd(40\,902, 24\,140) = 34 = 337 \cdot 40\,902 - 571 \cdot 24\,140
+  \end{equation*}
+
+\subsection{Números primos}
+\label{sec:primos}
+
+  \begin{definition}
+    \index{numero@número!primo|textbfhy}
+    \label{def:Z:prime}
+    Un entero positivo \(p \ge 2\) se llama \emph{primo}
+    si siempre que \(p \mid a b\)
+    es \(p \mid a\) o \(p \mid b\).
+  \end{definition}
+  Esto lo usamos al demostrar antes
+  que \(\sqrt{2}\) es irracional
+  (teorema~\ref{theo:sqrt2-irracional}):%
+    \index{numero@número!irracional!\(\sqrt{2}\)}
+  Si \(2 \mid a^2\),
+  debe ser \(2 \mid a\) ya que \(2\) es primo.
+
+  La definición más tradicional es que \(p\) es primo
+  si sus únicos divisores positivos son \(1\) y \(p\):
+  \begin{definition}
+    \index{irreductible}
+    \label{def:Z:irreducible}
+    A un entero \(e\) se le llama \emph{irreductible}
+    si siempre que \(e = a b\) es \(a = \pm 1\) o \(b = \pm 1\).
+  \end{definition}
+  Notar que si \(p\) es primo,
+  es irreductible:
+  Si escribimos \(p = a b\) por la definición de primo
+  \(p\) divide \(a\) o \(b\).
+  Sin pérdida de generalidad,
+  supongamos que divide a \(b\),
+  de forma que \(b = p c\).
+  Entonces \(p = a c p\),
+  y \(a c = 1\).
+  O sea,
+  \(a = \pm 1\).
+
+  Y resulta:
+  \begin{theorem}
+    \label{theo:Z:irreductible=>prime}
+    Si \(p\) es irreductible,
+    \(p\) es primo.
+  \end{theorem}
+  \begin{proof}
+    Por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Supongamos \(p\) primo y reductible,
+    con lo que \(p = a b\)
+    para \(a \ne \pm 1\) y \(b \ne \pm 1\).
+    Así \(p \mid a b\),
+    con lo que por definición de primo \(p \mid a\) o \(p \mid b\).
+    Si \(p \mid a\),
+    es \(a = m p\) para un entero \(m\).
+    Pero entonces:
+    \begin{equation*}
+      p = a b = m p b
+    \end{equation*}
+    con lo que:
+    \begin{equation*}
+      p (1 - m b) = 1
+    \end{equation*}
+    O sea,
+    \(p \mid 1\),
+    lo que es absurdo.
+  \end{proof}
+
+  Todo número natural se puede escribir como un producto de primos.
+  Para demostrarlo usamos un truco bastante común:
+  Nos fijamos en el mínimo supuesto contraejemplo
+  y usamos contradicción.
+  \begin{theorem}
+    \label{theo:natural=producto-primos}
+    Todo número natural se puede expresar como producto de números primos.
+  \end{theorem}
+  \begin{proof}
+    Por convención,
+    \(1\) es el producto de cero primos.
+
+    Para números mayores a \(1\),
+    la demostración es por contradicción.
+    Llamémosle \(m\) al mínimo número que no es un producto de primos.
+    Entonces \(m\) no puede ser primo,
+    ya que de serlo sería el producto de primos
+    (uno solo);
+    así podemos escribir \(m = a \cdot b\),
+    donde \(1 < a, b < m\)
+    y por tanto \(a\) y \(b\) son productos de primos.
+    Pero entonces podemos escribir \(m\) como producto de primos,
+    contrario a nuestra suposición de que tal cosa no era posible.
+  \end{proof}
+
+  Nuestro siguiente objetivo es demostrar
+  que la factorización en primos es única.
+  Un paso clave en esa dirección es:
+  \begin{lemma}
+    \label{lem:p-product}
+    Sea \(p\) primo y \(x_1, x_2, \dotsc, x_n\) enteros
+    tales que \(p \mid x_1 x_2 \dotsm x_n\).
+    Entonces \(p \mid x_i\) para algún \(i\).
+  \end{lemma}
+  \begin{proof}
+    Usamos inducción.%
+      \index{induccion@inducción}
+    \begin{description}
+    \item[Base:]
+      Cuando \(n = 1\),
+      el supuesto se reduce a \(p \mid x_1\),
+      y el resultado es inmediato.
+      Por la definición de primo,
+      para  \(n = 2\)
+      si \(p \mid x_1 x_2\),
+      divide a uno de los dos.
+    \item[Inducción:]
+      Supongamos que el resultado es cierto para \(n\),
+      y queremos demostrar que es válido para \(n + 1\).
+      Tenemos \(p \mid x_1 \dotsm x_n \cdot x_{n + 1}\).
+      Por la definición de primo,
+      es \(p \mid x_1 \dotsm x_n\)
+      o \(p \mid x_{n + 1}\).
+      En el primer caso (por inducción) \(p \mid x_i\)
+      para algún \(1 \le i \le n\),
+      en el segundo \(p \mid x_{n + 1}\).
+      En resumen,
+      \(p \mid x_i\) para algún \(1 \le i \le n + 1\).
+      \qedhere
+    \end{description}
+  \end{proof}
+
+  \begin{theorem}[Teorema fundamental de la aritmética]
+    \index{fundamental de la aritmetica, teorema@fundamental de la aritmética, teorema|textbfhy}
+    \label{theo:fundamental-aritmetica}
+    Todo entero positivo
+    tiene una factorización única en números primos,
+    salvo el orden de los factores.
+  \end{theorem}
+  \begin{proof}
+    El número \(1\) es un caso especial,
+    se factoriza en \(0\) primos.
+
+    Para los demás procedemos por contradicción,%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    aplicando el mismo truco anterior.
+    Si hay enteros para los que esto no es cierto,
+    hay uno mínimo,
+    llamémosle \(N\).
+    Vale decir,
+    podemos escribir \(N = p_1 p_2 \dotsm p_k\)
+    y también \(N = q_1 q_2 \dotsm q_l\),
+    donde los \(p_i\) son primos
+    (no necesariamente distintos),
+    y similarmente los \(q_j\).
+    Ahora bien,
+    como \(p_1 \mid N\),
+    sabemos que \(p_1 \mid q_1 q_2 \dotsm q_l\),
+    y por tanto \(p_1 \mid q_j\) para algún \(1 \le j \le l\).
+    Como \(q_j\) es primo,
+    es irreductible y esto significa que \(p_1 = q_j\).
+    Pero entonces tenemos
+    \begin{equation*}
+      N'
+	= p_2 p_3 \dotsm p_k
+	= q_1 q_2 \dotsm q_{j - 1} q_{j + 1} \dotsm q_l
+    \end{equation*}
+    y  \(N' < N\) también tendría dos factorizaciones diferentes,
+    contrario a la elección de \(N\) como el mínimo natural
+    con esa característica.
+  \end{proof}
+
+  Otro hecho fundamental fue demostrado primeramente por Euclides.%
+    \index{Euclides}
+  De este importante resultado se da una variedad de bonitas demostraciones,
+  basadas en conceptos totalmente diferentes,
+  en Aigner y Ziegler~\cite{aigner14:_proof_the_book}.
+  Nuestra variante de la demostración clásica de Euclides
+  se debe a Ernst Kummer.%
+    \index{Kummer, Ernst}
+  \begin{theorem}
+    \label{theo:infinitos-primos}
+    Hay infinitos números primos.
+  \end{theorem}
+  \begin{proof}
+    Procedemos por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Supongamos que hay un número finito de primos,
+    \(p_1, p_2, \dotsc p_r\) en orden creciente,
+    donde sabemos que \(r > 1\).
+    Consideremos:
+    \begin{equation*}
+      N = p_1 p_2 \dotsm p_r
+    \end{equation*}
+    El número \(N - 1\) es compuesto,
+    ya que es mayor que \(p_r\) y no es primo
+    (no aparece en nuestra lista).
+    Luego tiene un factor primo \(p\),
+    y este factor lo tiene en común con \(N\).
+    Entonces \(p\) divide tanto a \(N\) como a \(N - 1\),
+    y divide a su diferencia,
+    que es decir \(p \mid 1\),
+    lo que es absurdo.
+  \end{proof}
+
+  Incluso se puede demostrar más.
+  El siguiente resultado se debe a Leonhard Euler,%
+    \index{Euler, Leonhard}
+  la brillante demostración siguiente es de Paul Erdős~%
+    \cite{erdos38:_ueber_reihe_1/p}.%
+    \index{Erdos, Paul@Erdős, Paul}
+  La importancia del mismo radica en que la divergencia de la serie
+  da un indicio de la tasa de crecimiento de los números primos.
+  Como dijo el mismo Euler,
+  ``hay más primos que cuadrados''
+  (por el teorema~\ref{theo:Basilea-converge} la serie de
+   recíprocos de los cuadrados converge).%
+     \index{Basilea, problema de}
+  \begin{theorem}
+    \label{theo:sum-1/p}
+    La serie
+    \begin{equation*}
+      \sum_p \frac{1}{p}
+    \end{equation*}
+    (donde la suma es sobre los números primos)
+    diverge.
+  \end{theorem}
+  \begin{proof}
+    Por contradicción.%
+      \index{demostracion@demostración!contradiccion@contradicción}
+    Enumeremos los primos como \(p_1, p_2, \dotsc\) en orden creciente.
+    Si la serie converge,
+    hay un punto a partir del cual la suma es menor que \(1/2\),
+    con lo que podemos escribir:
+    \begin{equation*}
+      \sum_{i \ge k + 1} \frac{1}{p_i} < \frac{1}{2}
+    \end{equation*}
+    Llamaremos \emph{primos chicos} a \(p_1, p_2, \dotsc p_k\)
+    y \emph{primos grandes} a \(p_{k + 1}, p_{k + 2}, \dotsc\).
+    Tomemos algún \(N > p_k\) a determinar más adelante,
+    y llamemos \(N_1\) a la cantidad de números hasta \(N\)
+    divisibles solo por primos chicos,
+    y similarmente \(N_2\) los que tienen divisores grandes.
+    Debe ser \(N = N_1 + N_2\),
+    pero dada la suposición de arriba
+    veremos que podemos elegir \(N\)
+    tal que al acotar \(N_1\) y \(N_2\) de forma suficientemente precisa
+    concluimos que \(N_1 + N_2 < N\).
+
+    Como \(\lfloor N / p \rfloor\) de los números entre 1 y \(N\)
+    son divisibles por el primo \(p\)
+    y \(\lfloor x \rfloor \le x\),
+    tenemos que:
+    \begin{align}
+      N_2
+	&\le \sum_{i \ge k + 1} \left\lfloor \frac{N}{p_i} \right\rfloor
+	   \notag \\
+	&\le \sum_{i \ge k + 1} \frac{N}{p_i}
+	   \notag \\
+	&=    N \sum_{i \ge k + 1} \frac{1}{p_i}
+	   \notag \\
+	&<  \frac{N}{2}
+	   \label{eq:suma-primos-reciprocos-N2}
+    \end{align}
+    Consideremos ahora los números menores que \(N\)
+    que solo tienen factores primos chicos.
+    Si tomamos uno cualquiera de ellos y le llamamos \(x\),
+    podemos escribir \mbox{\(x = y \cdot z^2\)},
+    donde \(y\) no es divisible por el cuadrado de ningún primo.
+    Obviamente \(z^2 \le N\),
+    con lo que hay a lo más \(\sqrt{N}\) valores posibles de \(z\).
+    Como hay \(k\) primos chicos,
+    hay a lo más \(2^k\) posibles valores distintos de \(y\).
+    Esto da una sobre estimación bastante burda,
+    pero suficiente para nuestras necesidades presentes:
+    \begin{equation}
+      \label{eq:suma-primos-reciprocos-N1}
+      N_1 \le 2^k \cdot \sqrt{N}
+    \end{equation}
+    Ahora queremos elegir \(N\) de forma que \(N_1 < N / 2\),
+    o sea por la cota~\eqref{eq:suma-primos-reciprocos-N1}:
+    \begin{align}
+      2^k \cdot \sqrt{N}
+	&< \frac{N}{2} \notag \\
+      2^{2 k + 2}
+	&< N
+      \label{eq:suma-primos-reciprocos-N}
+    \end{align}
+    Combinando~\eqref{eq:suma-primos-reciprocos-N}
+    con nuestra estimación~\eqref{eq:suma-primos-reciprocos-N2},
+    para el valor elegido de \(N\) tenemos:
+    \begin{equation*}
+      N
+	= N_1 + N_2
+	  < \frac{N}{2} + \frac{N}{2}
+	    = N
+    \end{equation*}
+    Esto es ridículo.
+  \end{proof}
+  Nuevamente,
+  si la serie diverge no puede tener finitos términos
+  y hay infinitos números primos.
+
+\section{Congruencias}
+\label{sec:congruencias}
+
+  El concepto de \emph{congruencia} está íntimamente relacionado
+  con el resto de la división,
+  e incluso usan notaciones similares.
+  De todas formas es importante distinguirlos.
+  \begin{definition}
+    \index{congruencia|textbfhy}
+    \label{def:Z:congruence}
+    Sean \(a, b, m \in \mathbb{Z}\),
+    con \(m \ne 0\).
+    Definimos:
+    \begin{equation*}
+      a \equiv b \pmod{m}
+    \end{equation*}
+    si \(m \mid a - b\).
+    Esto se expresa diciendo
+    que \emph{\(a\) es congruente con \(b\) módulo \(m\)}.
+  \end{definition}
+  Esta es una relación de equivalencia:%
+    \index{relacion@relación!equivalencia}
+  \begin{description}
+  \item[Reflexiva:]
+    Si \(a = b\),
+    la definición se reduce a \(m \mid 0\),
+    lo que siempre es cierto.
+  \item[Simétrica:]
+    \(a \equiv b \pmod{m}\) significa que \(m \mid a - b\),
+    pero entonces \(m \mid b - a\),
+    que es decir \(b \equiv a \pmod{m}\).
+  \item[Transitiva:]
+    \(a \equiv b \pmod{m}\) y \(b \equiv c \pmod{m}\)
+    significan \(m \mid a - b\) y \(m \mid b - c\),
+    que es \(a - b = k_1 m\) y \(b - c = k_2 m\);
+    pero entonces \(a - c = (k_1 + k_2) m\),
+    o sea \(m \mid a - c\),
+    que es decir \(a \equiv c \pmod{m}\).
+  \end{description}
+  Los siguientes teoremas dan algunas propiedades importantes.
+
+  \begin{theorem}
+    \index{congruencia!propiedades}
+    \label{theo:+*mod}
+    Sea \(m\) un entero positivo
+    y sean \(x_1, x_2, y_1, y_2\) enteros tales que:
+    \begin{align*}
+      x_1
+	&\equiv x_2 \pmod{m} \\
+      y_1
+	&\equiv y_2 \pmod{m}
+    \end{align*}
+    Entonces:
+    \begin{align*}
+      x_1 + y_1
+	&\equiv x_2 + y_2 \pmod{m} \\
+      x_1 \cdot y_1
+	&\equiv x_2 \cdot y_2 \pmod{m} \\
+    \end{align*}
+  \end{theorem}
+  \begin{proof}
+    Nos dieron que
+    \(x_1 - x_2 = m a\),
+    \(y_1 - y_2 = m b\),
+    para algunos \(x, y \in \mathbb{Z}\).
+    Entonces para la suma
+    \begin{align*}
+      (x_1 + y_1) - (x_2 + y_2)
+	&= (x_1 - x_2) + (y_1 - y_2) \\
+	&= m a + m b \\
+	&= m (a + b)
+    \end{align*}
+    lo que es decir
+    \begin{equation*}
+      x_1 + y_1
+	\equiv x_2 + y_2 \pmod{m}
+    \end{equation*}
+
+    Similarmente,
+    para el producto:
+    \begin{align*}
+      x_1 y_1 - x_2 y_2
+	&= x_1 y_1 - x_2 y_1 + x_2 y_1 - x_2 y_2 \\
+	&= (x_1 - x_2) y_1 + x_2 (y_1 -y_2) \\
+	&= m a y_1 + x_2 m b \\
+	&= m (a y_1 + b x_2)
+    \end{align*}
+    con lo que
+    \begin{equation*}
+      x_1 \cdot y_1 \equiv x_2 \cdot y_2 \pmod{m}
+      \qedhere
+    \end{equation*}
+  \end{proof}
+
+  \begin{theorem}
+    \index{congruencia!propiedades}
+    \label{theo:congruencia-mn}
+    Sean \(m\), \(n\) enteros positivos.
+    Entonces,
+    si
+    \begin{equation*}
+      a \equiv b \pmod{m n}
+    \end{equation*}
+    tenemos
+    \begin{align*}
+      a &\equiv b \pmod{m} \\
+      a &\equiv b \pmod{n}
+    \end{align*}
+    Además,
+    si
+    \begin{align*}
+      a &\equiv b \pmod{m} \\
+      a &\equiv b \pmod{n}
+    \end{align*}
+    entonces
+    \begin{equation*}
+      a \equiv b \pmod{\lcm(m, n)}
+    \end{equation*}
+    En particular,
+    si \(\gcd(m, n) = 1\),
+    entonces:
+    \begin{equation*}
+      a \equiv b \pmod{m n}
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Para la primera aseveración,
+    tenemos por definición que \(m n \mid a - b\),
+    pero en tal caso \(m \mid a - b\)
+    y también \(n \mid a - b\).
+
+    Para la segunda,
+    tenemos que:
+    \begin{align*}
+      m &\mid a - b \\
+      n &\mid a - b
+    \end{align*}
+    Como tanto \(m\) y \(n\) dividen a \(a - b\),
+    el mínimo común múltiplo lo divide:
+    \begin{equation*}
+      \lcm(m, n) \mid a - b
+    \end{equation*}
+    y obtenemos nuestro resultado.
+  \end{proof}
+
+% Fixme: ¿Más propiedades de congruencias? ~~-> TAoCP
+
+\section[Aritmética \texorpdfstring{en $\mathbb{Z}_m$}{con congruencias}]
+	{\protect\boldmath
+	   Aritmética \texorpdfstring{en $\mathbb{Z}_m$}{con congruencias}%
+       \protect\unboldmath}
+\label{sec:aritmetica-Zm}
+
+  Para cualquier entero \(x\) y un entero positivo \(m\)
+  anotaremos \([x]_m\) para la clase de equivalencia de \(x\)
+  en la relación de congruencia módulo \(m\).
+  Vale decir,
+  \([x]_m\) es el conjunto de todos los enteros \(x'\)
+  tales que \(x - x'\) es múltiplo de \(m\):
+  \begin{align*}
+    [5]_3
+      &= \{\dotsc, -4, -1, 2, 5, 8, \dotsc\} \\
+    [-3]_7
+      &= \{\dotsc, -10, -3, 4, 11, \dotsc\}
+  \end{align*}
+  Sabemos que las clases de equivalencia particionan \(\mathbb{Z}\).
+  Por ejemplo:
+  \begin{equation*}
+    \mathbb{Z} = [0]_3 \cup [1]_3 \cup [2]_3
+  \end{equation*}
+  Para cualquier \(m\) dado,
+  las clases son \([0]_m\), \([1]_m\), \ldots, \([m - 1]_m\),
+  lo que sigue del algoritmo de división,
+  ya que cualquier entero \(x\) puede expresarse como:
+  \begin{equation*}
+    x = q \cdot m + r
+  \end{equation*}
+  con \(0 \le r < m\),
+  y \(x \in [r]_m\) en tal caso.
+  Esto motiva:
+  \begin{definition}
+    \label{def:Zm}
+    Sea \(m\) un entero positivo.
+    El \emph{conjunto de enteros módulo \(m\)},
+    anotado \(\mathbb{Z}_m\),
+    es el conjunto de las clases de equivalencia \([x]_m\).
+  \end{definition}
+  Vale decir,
+  \(\mathbb{Z}_m = \{[0]_m, [1]_m, \dotsc, [m - 1]_m\}\).
+
+  Cabe enfatizar que los elementos de \(\mathbb{Z}_m\)
+  son subconjuntos de \(\mathbb{Z}\),
+  pero muchas veces resulta conveniente
+  considerarlos como los enteros \(0, 1, \dotsc, m - 1\)
+  (aunque podríamos elegir otro conjunto de representantes
+   si resulta conveniente)
+  con una estructura aritmética diferente.
+  A los elementos de \(\mathbb{Z}_m\) se les suele llamar \emph{residuos}
+  (módulo \(m\)).%
+    \index{residuo}
+
+  Definimos las operaciones:
+  \begin{align*}
+    [x]_m \oplus [y]_m
+      &= [x + y]_m \\
+    [x]_m \odot	 [y]_m
+      &= [x \cdot y]_m
+  \end{align*}
+  Por nuestro teorema~\ref{theo:+*mod}
+  estas operaciones están bien definidas.
+  \begin{theorem}
+    \label{theo:mod-rules}
+    Sea \(m\) un entero positivo,
+    y sean \(a, b, c \in \mathbb{Z}_m\) cualquiera.
+    Para simplificar anotaremos \(0 = [0]_m\), \(1 = [1]_m\).
+    Entonces:
+    \begin{enumerate}[label=\textbf{G\arabic{*}:}, ref=G\arabic{*}]
+    \item\label{G:asociativa}
+      \(a \oplus (b \oplus c) = (a \oplus b) \oplus c\)
+    \item\label{G:neutro}
+      Hay\/ \(0 \in \mathbb{Z}_m\)
+      tal que para todo \(a \in \mathbb{Z}_m\)
+      se cumple \(a \oplus 0 = a\)
+    \item\label{G:inverso}
+      Para todo \(a \in \mathbb{Z}_m\) existe \(-a \in \mathbb{Z}_m\)
+      tal que \(a \oplus (-a) = 0\)
+    \item\label{G:conmutativa}
+      \(a \oplus b = b \oplus a\)
+    \end{enumerate}
+    \begin{enumerate}[label=\textbf{R\arabic{*}:}, ref=R\arabic{*}]
+    \item\label{R:asociativa}
+      \((a \odot b) \odot c = a \odot (b \odot c)\)
+    \item\label{R:distributiva}
+      \(a \odot (b \oplus c) = (a \odot b) \oplus (a \odot c)\)
+      y
+      \((a \oplus b) \odot c = (a \odot c) \oplus (b \odot c)\)
+    \item\label{R:neutro}
+      Hay\/ \(1 \in \mathbb{Z}_m\)
+      tal que para todo \(a \in \mathbb{Z}_m\)
+      se cumple \(a \odot 1 = 1 \odot a = a\)
+    \item\label{R:conmutativa}
+      \(a \odot b = b \odot a\)
+    \end{enumerate}
+  \end{theorem}
+  Hay una curiosa asimetría entre~\ref{G:neutro} y~\ref{R:neutro},
+  generalmente se indica que \(a \oplus 0 = 0 \oplus a = a\).
+  Demostraremos esto en el teorema~\ref{theo:group-two-sided-identity}.
+  Asimismo,
+  suele agregarse que \(a \oplus (-a) = (-a) \oplus a = 0\),
+  lo que también sigue de las anteriores
+  (teorema~\ref{theo:group-mutuality}).
+  \begin{proof}
+    Demostraremos algunas cosas,
+    dejamos el resto a la imaginación del lector.
+
+    Para \ref{G:conmutativa},
+    sean \(a = [x]_m\) y \(b = [y]_m\).
+    Entonces:
+    \begin{equation*}
+      \begin{array}{l@{{}={}}ll}
+	a \oplus b
+	  & [x]_m \oplus [y]_m & \\
+	  & [x + y]_m	       & \text{(definición de \(\oplus\))} \\
+	  & [y + x]_m	       & \text{(en \(\mathbb{Z}\))} \\
+	  & [y]_m \oplus [x]_m & \text{(definición de \(\oplus\))} \\
+	  & b \oplus a
+      \end{array}
+    \end{equation*}
+
+    Para \ref{G:inverso},
+    tomamos \(-[x]_m = [-x]_m\),
+    que cumple lo solicitado.
+  \end{proof}
+  Si un conjunto \(G\) con una operación \(\oplus\) cumple~\ref{G:asociativa}
+  a~\ref{G:inverso}
+  para algún elemento \(0\)
+  se le llama \emph{grupo},%
+    \index{grupo|textbfhy}%
+    \index{axioma!grupo}
+  y se anota \(\langle G, \oplus \rangle\).
+  Un grupo que cumple~\ref{G:conmutativa}
+  es un \emph{grupo conmutativo} o \emph{abeliano}.%
+    \index{grupo!abeliano|textbfhy}%
+    \index{grupo!conmutativo|see{grupo!abeliano}}%
+    \index{axioma!grupo!abeliano}
+  Si es un grupo abeliano con \(\oplus\)
+  y hay una segunda operación \(\odot\) y un elemento \(1\)
+  que cumple con~\ref{R:asociativa} hasta~\ref{R:neutro}
+  se le llama \emph{anillo},%
+    \index{anillo|textbfhy}%
+    \index{axioma!anillo}
+  y se anota \(\langle G, \oplus, \odot \rangle\).
+  Si además cumple~\ref{R:conmutativa}
+  es un \emph{anillo conmutativo}.%
+    \index{anillo!conmutativo|textbfhy}%
+    \index{axioma!anillo!conmutativo}
+  Nuestro teorema afirma entonces que \(\mathbb{Z}_m\)
+  con las operaciones \(\oplus\) y \(\odot\) es un anillo conmutativo.
+  Cuidado,
+  hay quienes omiten el axioma~\ref{R:neutro} al definir anillos,
+  y le llaman \emph{anillos con unidad} a lo que nosotros llamamos anillos.%
+    \index{anillo!con unidad}
+  En inglés algunos usan el nombre \emph{\foreignlanguage{english}{ring}}%
+    \index{ring@\emph{\foreignlanguage{english}{ring}}|see{anillo}}
+  para nuestros anillos,
+  y usan \emph{\foreignlanguage{english}{rng}}
+  (por \emph{\foreignlanguage{english}{ring}} sin identidad).
+    \index{rng@\emph{\foreignlanguage{english}{rng}}|see{anillo}}
+  Asimismo,
+  exigiremos que \(0 \ne 1\),
+  para evitar los casos especiales
+  que produce un anillo con un único elemento.
+  Para abreviar,
+  generalmente solo se nombra el conjunto,
+  omitiendo las operaciones como obvias.
+  Así,
+  en vez de hablar del grupo \(\langle \mathbb{Z}_m, \oplus \rangle\)
+  o de los anillos \(\langle \mathbb{Z}_m, \oplus, \odot \rangle\)
+  o \(\langle \mathbb{C}, +, \cdot \rangle\)
+  se habla simplemente de \(\mathbb{Z}_m\) o \(\mathbb{C}\),
+  subentendiendo las operaciones tradicionales.
+  Esto no debiera llevar a confusión.
+  Temas como este son el ámbito del álgebra abstracta,%
+    \index{algebra abstracta@álgebra abstracta}
+  para profundizar en ellos se recomienda el texto de Pinter~%
+    \cite{pinter10:_book_abstr_algeb}
+  o el de Judson~\cite{judson14:_abstr_algeb}.
+
+  En el caso de grupos abelianos%
+    \index{grupo!abeliano}
+  por convención se le llama o anota como ``suma'' a la operación,
+  y al neutro se le designa con \(0\).
+  Al inverso \(-a\)  de la ``suma''
+  se le llama \emph{inverso aditivo} en tal caso.%
+    \index{operacion@operación!inverso}
+  Escribiremos \(a \ominus b = a \oplus (-b)\) para grupos abelianos.
+  Por convención se anota como ``multiplicación''
+  la operación en grupos generales,
+  al neutro se le llama \(1\)
+  y el inverso de \(a\) en tal caso se anota \(a^{-1}\).
+
+  Los elementos que llamamos \(0\) y \(1\) arriba
+  (axiomas~\ref{G:neutro} y~\ref{R:neutro})%
+    \index{operacion@operación!elemento neutro}
+  no son necesariamente los enteros cero y uno,
+  simplemente los usamos como nombres convenientes.
+  Nótese que en el caso de grupos y anillos las operaciones son esenciales,
+  debiera anotarse \((R, +)\) y \((R, +, \cdot)\)
+  para explicitar las operaciones.
+  Los elementos especiales resultan de las operaciones,
+  no vale la pena nombrarlos.
+  En anillos se anota \(-a\) para el inverso aditivo de \(a\)
+  y \(a^{-1}\) para su inverso multiplicativo
+  (si existe).
+
+  Generalmente se indica únicamente el conjunto.
+
+  Al número de elementos de un grupo o de un anillo \(R\)
+  se le llama su \emph{orden},%
+    \index{grupo!orden|textbfhy}%
+    \index{anillo!orden|textbfhy}
+  anotado \(\lvert R \rvert\).
+  Si un subconjunto del grupo es a su vez un grupo con la operación del caso
+  se le llama \emph{subgrupo}.%
+    \index{subgrupo|textbfhy}
+  De la misma forma podemos definir \emph{subanillos},%
+    \index{subanillo|textbfhy}
+  claro que insistiremos en que incluyan a \(1\)
+  para evitar que el subanillo tenga estructura incompatible con el anillo.
+  Por ejemplo,
+  en \(\mathbb{Z}_6\),
+  el subconjunto \(\{0, 3\}\) es cerrado respecto de suma y multiplicación,
+  con neutro multiplicativo \(3\).
+  Pero en \(\mathbb{Z}_6\) \(3\) ni siquiera tiene inverso multiplicativo.
+  .
+  Si \(A\) es subgrupo (o subanillo) de \(B\),
+  se anota \(A \le B\).
+
+  Un caso es el conjunto de un único elemento \(e\),
+  y definimos \(e = e \circ e\).
+  Por razones obvias se le llama el \emph{grupo trivial}.%
+    \index{grupo!trivial}
+
+  Otro grupo es el de las operaciones en el cubo de Rubik,%
+    \index{Rubik, cubo de (grupo)}
+  que intercambian las posiciones de las caras de colores de los cubitos.
+  Joyner~\cite{joyner08:_adven_group_theory}
+  usa este juguete como excusa para introducir la teoría de grupos,
+  y muestra cómo aplicarla para resolver este puzzle
+  y otros similares.
+
+  Un ejemplo importante lo proveen
+  las simetrías de objetos al moverse en el espacio.%
+    \index{grupo!simetrias@simetrías}
+  Por ejemplo,
+  si consideramos un cuadrado
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/cuadrado}
+    \caption{Un cuadrado}
+    \label{fig:simetria-cuadrado}
+  \end{figure}
+  (como el de la figura~\ref{fig:simetria-cuadrado}),
+  tenemos las siguientes operaciones
+  que lo hacen coincidir con su posición original:
+  \begin{itemize}
+  \item
+    No hacer nada
+    (identidad, \(\iota\)).
+  \item
+    Girar en sentido contra reloj en
+    \(\pi / 2\), \(\pi\), \(3 \pi / 2\)
+    (\(r_1\), \(r_2\) y	 \(r_3\)).
+  \item
+    Reflejar verticalmente
+    (\(f_v\)),
+    horizontalmente (\(f_h\)),
+    y a través de las diagonales \(1\;3\) y \(2\;4\)
+    (\(f_c\) y \(f_d\)).
+  \end{itemize}
+  Podemos componer estas operaciones vía efectuar una y luego la otra.%
+    \index{grupo!simetrias@simetrías}
+  En otras palabras,
+  \(b \bullet a\) describe aplicar \(a\) y luego \(b\).
+  Como una combinación de operaciones
+  vuelve el cuadrado a su posición original
+  (aunque intercambiando vértices),
+  la composición es cerrada.
+  Por ejemplo,
+  si rotamos el cuadrado en \(3 \pi / 2\)
+  y luego lo reflejamos en la horizontal
+  el efecto es el mismo que si lo reflejamos en una diagonal:
+  \begin{align*}
+    f_h \bullet r_3 = f_d
+  \end{align*}
+  Esto lleva al cuadro~\ref{tab:D8},
+  que describe al grupo conocido como \(\mathtt{D}_8\).
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{>{\(}c<{\)}|*{8}{>{\(}c<{\)}}}
+      \bullet & \iota & r_1 & r_2 & r_3 & f_v & f_h & f_d & f_c \\
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+      \iota & \iota & r_1   & r_2   & r_3   & f_v   & f_h   & f_d   & f_c \\
+      r_1   & r_1   & r_2   & r_3   & \iota & f_v   & f_h   & f_d   & f_c \\
+      r_2   & r_2   & r_3   & \iota & r_1   & f_c   & f_d   & f_v   & f_h \\
+      r_3   & r_3   & \iota & r_1   & r_2   & f_d   & f_c   & f_h   & f_v \\
+      f_v   & f_v   & f_d   & f_h   & f_c   & \iota & r_2   & r_1   & r_3 \\
+      f_h   & f_h   & f_c   & f_v   & f_d   & r_2   & \iota & r_3   & r_1 \\
+      f_d   & f_d   & f_h   & f_c   & f_v   & r_3   & r_1   & \iota & r_2 \\
+      f_c   & f_c   & f_v   & f_d   & f_h   & r_1   & r_3   & r_2   & \iota
+    \end{tabular}
+    \caption{El grupo $\mathtt{D}_8$}
+    \label{tab:D8}
+  \end{table}
+  Es \(\mathtt{D}\) por \emph{diedro},%
+    \index{grupo!dihedral|textbfhy}
+  el \(8\) por el número de operaciones del grupo.
+  En general,
+  el polígono regular de \(n\) lados%
+    \index{poligono@polígono!regular}
+  da lugar al grupo denominado \(\mathtt{D}_{2 n}\),
+  hay \(n\) rotaciones y \(n\) reflexiones
+  para un total de \(2 n\) operaciones.
+  Estos grupos no son conmutativos.
+
+  Un poco más de la teoría elemental de grupos
+  provee Chen~%
+    \cite[capítulo 4]{chen08:_misc_topics_first_year_math}.
+  En particular,
+  construye sistemáticamente todos los grupos de orden hasta \(7\).
+  Resultados importantes son los siguientes:
+  \begin{theorem}
+    \label{theo:group-unique-identity}
+    El elemento neutro de un grupo es único.
+  \end{theorem}
+  \begin{proof}
+    Supongamos que en el grupo \((G, \odot)\)
+    los elementos \(a\) y \(b\) son ambos neutros.
+    Entonces:
+    \begin{equation*}
+      a = a \odot b = b
+      \qedhere
+    \end{equation*}
+  \end{proof}
+  \begin{theorem}[Ley de cancelación]
+    \index{grupo!cancelacion@cancelación}
+    \label{theo:group-cancellation}
+    Si \(a, b, c \in G\) son tales que
+    \(a \odot c = b \odot c\),
+    entonces \(a = b\).
+  \end{theorem}
+  \begin{proof}
+    Tenemos:
+    \begin{equation*}
+      a
+	= a \odot 1
+	= a \odot (c \odot c^{-1})
+	= (a \odot c) \odot c^{-1}
+	= (b \odot c) \odot c^{-1}
+	= b \odot (c \odot c^{-1})
+	= b
+      \qedhere
+    \end{equation*}
+  \end{proof}
+  Puede aplicarse exactamente la misma técnica
+  para demostrar cancelación a la izquierda.
+  \begin{theorem}[Mutualidad]
+    \index{grupo!mutualidad}
+    \label{theo:group-mutuality}
+    Si en un grupo \(a \odot b = 1\),
+    entonces \(b \odot a = 1\).
+  \end{theorem}
+  \begin{proof}
+    Escribamos:
+    \begin{equation*}
+      1 \odot b
+	= b \odot 1
+	= b \odot (a \odot b)
+	= (b \odot a) \odot b
+    \end{equation*}
+    Luego aplicamos la ley de cancelación.
+  \end{proof}
+  Esto nos dice que \((a^{-1})^{-1} = a\).
+  \begin{theorem}
+    \label{theo:group-two-sided-identity}
+    En un grupo,
+    \(1 \odot a = a\)
+  \end{theorem}
+  \begin{proof}
+    Podemos escribir:
+    \begin{equation*}
+      1 \odot a
+	= (a \odot a^{-1}) \odot a
+	= a \odot (a^{-1} \odot a)
+	= a \odot 1
+	= a
+      \qedhere
+    \end{equation*}
+  \end{proof}
+  \begin{theorem}
+    \label{theo:group-inverse-unique}
+    El inverso de un elemento es único.
+  \end{theorem}
+  \begin{proof}
+    Sea \(a \in G\) un elemento cualquiera,
+    y supongamos que se cumplen \(a \odot b = 1\) y \(a \odot c = 1\).
+    Por cancelación por la izquierda,
+    \(b = c\).
+    Por mutualidad,
+    si \(a \odot b = 1\) entonces \(b \odot a = 1\),
+    y \(b = a^{-1}\).
+  \end{proof}
+
+  En lo que sigue consideraremos un grupo \(G\) con operación \(\odot\)
+  (o simplemente se omite).
+  El elemento neutro de \(G\) lo denotaremos \(1\).
+  Para simplificar notación,
+  en un grupo con operación multiplicación
+  usaremos la definición para potencias enteras,%
+    \index{grupo!potencia}
+  donde \(a\) es un elemento cualquiera del grupo:
+  \begin{align}
+    a^n
+      &= \underbrace{a \odot a \odot \dotsm \odot a}_{\text{\(n\) veces}}
+	   \notag \\
+  \intertext{Formalmente:}
+    a^0
+      &= 1 \label{eq:definicion-a^0} \\
+    a^{k + 1}
+      &= a^k \odot a \qquad \text{si \(k \ge 0\)}
+	   \label{eq:definicion-a^k}
+  \end{align}
+  Es fácil ver que si definimos:
+  \begin{equation}
+    \label{definicion-a^-k}
+    a^{-k}
+      = \left( a^{-1} \right)^k
+  \end{equation}
+  se cumplen las propiedades tradicionales de las potencias:
+  \begin{align}
+    a^{m + n}
+      &= a^m \odot a^n \label{eq:propiedad-potencias-+} \\
+    (a^m)^n
+      &= a^{m n}       \label{eq:propiedad-potencias-*}
+  \end{align}
+  Si la operación es suma
+  usamos la notación \(n \cdot a\)
+  (o simplemente \(n a\))
+  con \(n \in \mathbb{Z}\);
+  si anotamos \(0\) para el neutro aditivo:
+  \begin{align*}
+    n \cdot a
+      &= \underbrace{a \oplus a \oplus \dotsb \oplus a}_{\text{\(n\) veces}}
+	   \notag \\
+  \intertext{Formalmente:}
+    0 \cdot a
+      &= 0 \\
+    (k + 1) \cdot a
+      &= k \cdot a \oplus a \qquad \text{si \(k \ge 0\)} \\
+    -k \cdot a
+      &= k \cdot (-a)
+  \end{align*}
+
+  Sea \(a\) un elemento de un grupo \(G\),
+  en el cual usamos notación de multiplicación.
+  Los elementos \(a^k\) con \(k \in \mathbb{Z}\)
+  forman un subgrupo abeliano de \(G\).%
+    \index{subgrupo!generado}
+  Si \(G\) es finito,
+  el conjunto de los \(a^n\) para \(n \in \mathbb{N}\)
+  tiene que contener repeticiones,
+  ya que son todos elementos de \(G\).
+  Si resulta que \(a^m = a^n\) con \(m > n\),
+  tendremos \(a^{m - n} = 1\).
+  El mínimo \(n > 0\) tal que \(a^n = 1\)
+  (siempre existe si \(G\) es finito,
+   aunque incluso hay grupos infinitos
+   todos cuyos elementos son de orden finito)
+  se llama el \emph{orden de \(a\)},%
+    \index{grupo!orden de un elemento|textbfhy}
+  que se anota \(\ord_G(a)\)
+  (o simplemente \(\ord(a)\),
+   si el grupo se subentiende).
+  Más aún,
+  si \(a^k = 1\),
+  entonces \(\ord_G(a) \mid k\).
+  Para demostrar esto,
+  usamos el algoritmo de división.%
+    \index{algoritmo de division@algoritmo de división}
+  Con \(n = \ord_G(a)\)
+  podemos escribir \(k = q n + r\),
+  donde \(0 \le r < n\),
+  y:
+  \begin{align}
+    a^k
+      &= a^{q n + r} \notag \\
+    1
+      &= a^{q n} \odot a^r \notag \\
+      &= (a^n)^q \odot a^r \notag \\
+      &= a^r  \label{eq:a^k=r}
+  \end{align}
+  Como \(0 \le r < n\),
+  por la definición de orden la única opción en~\eqref{eq:a^k=r} es \(r = 0\),
+  y \(n \mid k\).
+
+  \begin{definition}
+    \index{grupo!ciclico@cíclico|textbfhy}
+    \label{def:grupo-ciclico}
+    Sea \(G\) un grupo.
+    Si todos los elementos de \(G\) se pueden escribir como
+    \(g^k\) para algún elemento \(g \in G\) y \(k \in \mathbb{Z}\)
+    a \(G\) se le llama \emph{grupo cíclico},
+    y a \(g\) se le llama
+    \emph{generador} del grupo.%
+      \index{grupo!generador}
+  \end{definition}
+  Si \(a\) tiene orden finito \(n\),
+  los elementos \(1 = a^0, a, \dotsc, a^{n - 1}\)
+  forman un grupo cíclico de orden \(n\),
+  llamado \emph{el grupo generado por \(a\)},
+  que se anota \(\langle a \rangle\).
+  Tenemos \(a^{n - 1} = a^{-1}\),
+  lo que completa la condición de subgrupo que dimos antes
+  en el teorema~\ref{theo:sugroup}.
+
+  Vamos ahora a anillos,
+  que son las estructuras que realmente nos interesan acá.
+  \begin{definition}
+    \index{anillo!unidad|textbfhy}
+    \label{def:ring-unit}
+    En un anillo \(R\),
+    si para \(r\) hay un \(x\) tal que \(r \odot x = x \odot r = 1\),
+    se dice que \(r\) es \emph{invertible},
+    que \(x\) es su \emph{inverso}
+    y escribimos \(x = r^{-1}\).
+    Nótese que también es \(x^{-1} = r\).
+    A los elementos invertibles del anillo \(R\)
+    se les llama \emph{unidades},
+    y su conjunto se denota \(R^\times\).
+  \end{definition}
+  Notaciones alternativas para el grupo de unidades de \(R\) son
+  \(U(R)\), \(R^*\) y \(E(R)\).
+
+  \begin{theorem}
+    \index{anillo!grupo de unidades}
+    El conjunto de unidades de un anillo forma un grupo con la multiplicación.
+  \end{theorem}
+  \begin{proof}
+    La multiplicación es asociativa en \(R\),
+    así que lo es en el subconjunto \(R^\times\).
+    Toda unidad tiene inverso por definición,
+    y \(1\) siempre es una unidad.
+    Si \(a\) y \(b\) son invertibles,
+    entonces \(a \odot b\) tiene inverso \(b^{-1} \odot a^{-1}\),
+    y la multiplicación es cerrada en \(R^\times\).
+    Estas son las propiedades que definen a un grupo.
+  \end{proof}
+
+  Un caso especial muy importante es:
+  \begin{definition}
+    \index{campo (algebra)@campo (álgebra)|textbfhy}
+    \index{axioma!campo}
+    \label{def:field}
+    \glossary{Campo}
+	     {Anillo conmutativo en el cual
+	      todos los elementos distintos de cero
+	      son invertibles.}
+    Un anillo conmutativo en el que todos los elementos distintos de \(0\)
+    son invertibles se llama \emph{campo}.
+  \end{definition}
+  \noindent
+  Ya habíamos encontrado este concepto al discutir \(\mathbb{R}\)
+  en el capítulo~\ref{cha:numeros-reales}.
+
+  Para simplificar la notación usaremos \(x\) con \(0 \le x \le m - 1\)
+  para denotar al conjunto \([x]_m\),
+  y usaremos \(+\) y \(\cdot\)
+  (o simplemente omitiremos la multiplicación)
+  en vez de \(\oplus\) y \(\odot\).
+  Para eliminar paréntesis,
+  usaremos la convención común de ``multiplicaciones antes de sumas''.
+  El valor de \(m\) se debe indicar o quedar claro por el contexto.
+
+  Nótese que en \(\mathbb{Z}_m\)
+  no hay orden ni idea de ``positivo''.
+  Como en \(\mathbb{Z}_m\) es
+  \begin{equation*}
+    0, 1, \dotsc, m - 1, 0, 1, \dotsc
+  \end{equation*}
+  (al llegar al final comienza nuevamente)
+  a veces se le llama ``aritmética de reloj''.%
+    \index{aritmetica de reloj@aritmética de reloj|see{congruencias}}
+
+  Algunas de las propiedades conocidas de \(\mathbb{Z}\)
+  no siempre valen en \(\mathbb{Z}_m\).
+  Por ejemplo,
+  en \(\mathbb{Z}\)
+  si \(a \cdot c = b \cdot c\) con \(c \ne 0\)
+  entonces \(a = b\).
+  Sin embargo,
+  en \(\mathbb{Z}_{15}\)
+  tenemos
+  \begin{equation*}
+    4 \cdot 9 =	 14 \cdot 9 = 6
+  \end{equation*}
+  e incluso
+  \begin{equation*}
+    12 \cdot 10 = 0
+  \end{equation*}
+  También pueden haber elementos que tienen más de dos raíces cuadradas.
+  Por ejemplo:
+  \begin{equation*}
+    4 = 2 \cdot 2 = 7 \cdot 7 = 8 \cdot 8 = 13 \cdot 13
+  \end{equation*}
+  Nótese que módulo \(15\) tenemos \(13 \equiv -2\) y \(8 \equiv -7\),
+  con lo que las raíces cuadradas de \(4\) en \(\mathbb{Z}_{15}\)
+  son \(\pm 2\) y \(\pm 7\),
+  mientras en \(\mathbb{Z}\) solo están \(\pm 2\).
+  Algunos elementos tienen inverso multiplicativo
+  en \(\mathbb{Z}_{15}\),
+  como:
+  \begin{equation*}
+    7 \cdot 13 = 8 \cdot 2 = 1
+  \end{equation*}
+  Otros no lo tienen,
+  por ejemplo \(6\),
+  como es fácil verificar revisando todos los productos \(6 \cdot k\)
+  con \(0 \le k < 15\) módulo \(15\).
+  Hay elementos con una única raíz cuadrada,
+  como \(15 = 15 \cdot 15\) en \(\mathbb{Z}_{30}\),
+  que incluso es su propia raíz cuadrada.
+  \begin{definition}
+    \index{anillo!divisor de cero|textbfhy}
+    \label{def:ring-zero-divisor}
+    Si en un anillo hay elementos \(a\), \(b\)
+    tales que \(a \odot b = 0\)
+    se les llama \emph{divisor izquierdo de cero} a \(a\)
+    y \emph{divisor derecho de cero} a \(b\).
+    A ambos se les llama \emph{divisores de cero}.
+  \end{definition}
+  \noindent
+  Nótese que \(0\) siempre es un divisor de cero.
+
+  Casos muy importantes de anillos son:
+  \begin{definition}
+    \index{dominio integral|textbfhy}
+    \glossary{Dominio integral}
+	     {Un anillo conmutativo sin divisores propios de cero.}
+    \label{def:ID}
+    Un anillo conmutativo en el cual sólo \(0\) es divisor de cero
+    se llama \emph{dominio integral}.
+  \end{definition}
+  \noindent
+  El ejemplo clásico de dominio integral es \(\mathbb{Z}\).
+  En un dominio integral podemos cancelar en productos:
+  \begin{theorem}
+    \label{theo:ID-*-cancellation}
+    En un dominio integral,
+    si \(a x = b x\) con \(x \ne 0\)
+    entonces \(a = b\).
+  \end{theorem}
+  \begin{proof}
+    Tenemos:
+    \begin{align*}
+      a x
+	&= b x \\
+      a x - b x
+	&= 0 \\
+      (a - b) x
+	&= 0
+    \end{align*}
+    Como \(x \ne 0\) es \(a - b = 0\),
+    o sea \(a = b\).
+  \end{proof}
+
+  Veamos criterios para identificar subgrupos.
+  \begin{theorem}
+    \index{grupo!subgrupo}
+    \label{theo:sugroup}
+    Sea \(G\) un grupo,
+    y \(H \subset G\).
+    Si para todo \(a, b \in H\) es \(a \odot b^{-1} \in H\),
+    \(H\) es un subgrupo de \(G\).
+  \end{theorem}
+  \begin{proof}
+    Que \(H\) sea subgrupo de \(G\) significa simplemente
+    que ese subconjunto es cerrado respecto de la operación e inversos
+    (las demás propiedades se ``heredan'' del grupo),
+    y que contiene al neutro \(e\).
+
+    Si \(a \in H\),
+    por hipótesis está \(a \odot a^{-1} = e\).
+    Pero así también está \(e \odot a^{-1} = a^{-1}\).
+    Con esto,
+    si \(a, b \in H\),
+    tenemos que \(a \odot (b^{-1})^{-1} = a \odot b \in H\),
+    completando la demostración.
+  \end{proof}
+  Por ejemplo,
+  podemos ver que en el grupo \(D_8\) mostrado en el cuadro~\ref{tab:D8}
+  los elementos \(\{\iota, r_1, r_2, r_3\}\) forman un subgrupo.
+  \begin{lemma}
+    \label{lem:intersection-subgroups}
+    Sean \(A\) y \(B\) subgrupos de \(G\).
+    Entonces \(A \cap B\) es un subgrupo de \(G\).
+  \end{lemma}
+  \begin{proof}
+    Supongamos \(x, y \in A \cap B\).
+    Entonces \(y^{-1} \in A\) y también \(y^{-1} \in B\),
+    por ser grupos.
+    Pero entonces \(y^{-1} \in A \cap B\).
+    De forma similar,
+    \(x \cdot y^{-1} \in A \cap B\),
+    y por el teorema~\ref{theo:sugroup} \(A \cap B\) es un subgrupo de \(G\).
+  \end{proof}
+  También para anillos:
+  \begin{lemma}
+    \label{lem:intersection-subrings}
+    Sean \(A\) y \(B\) subanillos de \(R\).
+    Entonces \(A \cap B\) es un subanillo de \(R\).
+  \end{lemma}
+  La demostración se omite,
+  sigue la misma idea que la del lema~\ref{lem:intersection-subgroups}.
+
+  Los axiomas de anillo tienen algunas consecuencias simples.
+  \begin{theorem}
+    \label{theo:ring-01}
+    En un anillo,
+    \(0\) y \(1\) son únicos,
+    y para cada \(a\) hay un único \(-a\).
+  \end{theorem}
+  \begin{proof}
+    Para la suma,
+    el que \(0\) es único
+    no es más que el teorema~\ref{theo:group-unique-identity};
+    la misma técnica de la demostración puede aplicarse
+    a \(1\) y la multiplicación.
+
+    Que hay un único \(-a\) es el teorema~\ref{theo:group-inverse-unique}
+    aplicado a la suma.
+  \end{proof}
+
+  Para evitar paréntesis,
+  usaremos la convención tradicional
+  que las operaciones son asociativas izquierdas,
+  y que \(\odot\) tiene mayor precedencia que \(\oplus\).
+  A veces anotaremos \(a \ominus b\) para \(a \oplus (-b)\).
+
+  Otras consecuencias simples son:
+  \begin{theorem}
+    \label{theo:ring-0a}
+    En un anillo,
+    para todo \(a\) tenemos
+    \(0 \odot a = a \odot 0 = 0\)
+  \end{theorem}
+  \begin{proof}
+    Es aplicar los axiomas de anillo.
+    Para \(0 \odot a\):
+    \begin{align*}
+      0 \odot a
+	&= (0 \oplus 0) \odot a \\
+	&= (0 \odot a) \oplus (0 \odot a)
+    \end{align*}
+    Sumando \(-(0 \odot a)\) a ambos lados obtenemos la conclusión buscada.
+    La otra parte se demuestra de forma similar.
+  \end{proof}
+  De acá,
+  si \(a\) es una unidad del anillo,
+  entonces no es un divisor de cero,
+  ya que si:
+  \begin{align*}
+    a \odot b
+      &= 0 \\
+    a^{-1} \odot (a \odot b)
+      &= (a^{-1} \odot a) \odot b \\
+      &= 1 \odot b \\
+      &= b \\
+  \intertext{Por el otro lado:}
+    a^{-1} \odot 0
+      &= 0
+  \end{align*}
+  O sea,
+  \(b = 0\),
+  y \(a\) no es divisor de cero.
+  \begin{theorem}
+    \label{theo:ring-(a*-b)}
+    En un anillo,
+    tenemos \((-a) \odot b = a \odot (-b) = -(a \odot b)\).
+  \end{theorem}
+  \begin{proof}
+    Primero demostramos \((-1) \odot a = a \odot (-1) = -a\).
+    \begin{align*}
+      (-1) \odot a \oplus a
+	&= (-1) \odot a \oplus 1 \odot a \\
+	&= ((-1) \oplus 1) \odot a \\
+	&= 0 \odot a \\
+	&= 0
+    \end{align*}
+    Por conmutatividad de la suma en un anillo
+    \(a \oplus ((-1) \odot a) = 0\),
+    y en conjunto estas dos corresponden precisamente
+    a la definición de \(-a\) en un grupo.
+    La otra parte se demuestra de forma afín.
+
+    Usando esto:
+    \begin{align*}
+      (-a) \odot b
+	&= ((-1) \odot a) \odot b \\
+	&= (-1) \odot (a \odot b) \\
+	&= -(a \odot b)
+    \end{align*}
+    La otra parte se demuestra de la misma forma.
+  \end{proof}
+  Tenemos también:
+  \begin{theorem}
+    \label{theo:finite-ring-units}
+    En un anillo finito \(R\),
+    los elementos son unidades o divisores de cero.
+  \end{theorem}
+  \begin{proof}
+    Tomemos \(a \ne 0\) del anillo,
+    y consideremos el conjunto \(a R = \{a \odot x \colon x \in R\}\).
+    Supongamos que hay elementos repetidos en \(a R\),
+    digamos \(a \odot x_1 = a \odot x_2\) con \(x_1 \ne x_2\).
+    Entonces:
+    \begin{align*}
+      a \odot x_1
+	&= a \odot x_2 \\
+      a \odot x_1 \ominus a \odot x_2
+	&= 0 \\
+      a \odot (x_1 \ominus x_2)
+	&= 0
+    \end{align*}
+    Como \(x_1 \ominus x_2 \ne 0\),
+    \(a\) es un divisor de cero.
+
+    Si no hay elementos repetidos en \(a R\),
+    como hay \(\lvert R \rvert\) elementos en ese conjunto
+    tiene que estar 1,
+    digamos \(a b = 1\).
+    Entonces:
+    \begin{align*}
+      a \odot b
+	&= 1 \\
+      (a \odot b) \odot a
+	&= a \\
+      a \odot (b \odot a) \ominus a
+	&= 0 \\
+      a \odot ((b \odot a) \ominus 1)
+	&= 0
+    \end{align*}
+    Sabemos que \(a \odot 0 = 0\),
+    como en \(a R\) no hay elementos repetidos es:
+    \begin{align*}
+      b \odot a \ominus 1
+	&= 0 \\
+      b \odot a
+	&= 1
+    \end{align*}
+    y \(b\) es el inverso de \(a\),
+    \(a\) es un una unidad.
+  \end{proof}
+  Una consecuencia inmediata del teorema~\ref{theo:finite-ring-units}
+  es:
+  \begin{corollary}
+    \label{cor:finite-ID=field}
+    Todo dominio integral finito es un campo.
+  \end{corollary}
+
+  Ejemplos adicionales de anillo los ponen los enteros \(\mathbb{Z}\),%
+    \index{Z (numeros enteros)@\(\mathbb{Z}\) (números enteros)}%
+    \index{anillo}
+  los complejos \(\mathbb{C}\)
+    \index{C (numeros complejos)@\(\mathbb{C}\) (números complejos)}
+  y matrices cuadradas sobre \(\mathbb{R}\).
+    \index{anillo!matrices}
+
+\input{curvas-elipticas}
+
+\subsection{Anillos cuadráticos}
+\label{sec:anillos-cuadraticos}
+
+  Un ejemplo menos conocido de anillo conmutativo lo pone
+  \(\mathbb{Z}[\sqrt{2}]\),%
+    \index{anillo!cuadratico@cuadrático}
+  definido como el conjunto \(\{a + b \sqrt{2} \colon a, b \in \mathbb{Z}\}\),
+  con las operaciones tradicionales de los reales.
+  Primeramente,
+  las operaciones en \(\mathbb{Z}[\sqrt{2}]\) están bien definidas:
+  \begin{align*}
+    (a_1 + b_1 \sqrt{2}) + (a_2 + b_2 \sqrt{2})
+      &= (a_1 + a_2) + (b_1 + b_2) \sqrt{2} \\
+    (a_1 + b_1 \sqrt{2}) \cdot (a_2 + b_2 \sqrt{2})
+      &= (a_1 a_2 + 2 b_1 b_2) + (a_1 b_2 + a_2 b_1) \sqrt{2}
+  \end{align*}
+  Los coeficientes en estas expresiones son todos enteros,
+  y al ser \(\sqrt{2}\) irracional no hay maneras alternativas%
+    \index{numero@número!irracional!\(\sqrt{2}\)}
+  de representar el mismo elemento.
+  Como los elementos son simplemente números reales,
+  las asociatividades y conmutatividades de las operaciones,
+  y la distributividad,
+  se ``heredan'' de  \(\mathbb{R}\).%
+    \index{R (números reales)@\(\mathbb{R}\) (números reales)}
+  Podemos representar:
+  \begin{align*}
+    0 &= 0 + 0 \cdot \sqrt{2} \\
+    1 &= 1 + 0 \cdot \sqrt{2}
+  \end{align*}
+  Tenemos
+  \begin{equation*}
+    \left(a + b \sqrt{2}\right) + \left((-a) + (-b) \sqrt{2}\right)
+      = 0
+  \end{equation*}
+  lo que provee de un inverso aditivo.
+  Como este es un subanillo de los reales,
+  no hay divisores de cero salvo \(0\),
+  y es un dominio integral.%
+    \index{dominio integral}
+
+  Busquemos el inverso de \(a + b \sqrt{2}\) en \(\mathbb{Z}[\sqrt{2}]\):
+  \begin{equation}
+    \label{eq:inverso-Z[sqrt(2)]-1}
+    \frac{1}{a + b \sqrt{2}}
+      = \frac{a - b \sqrt{2}}{a^2 - 2 b^2}
+  \end{equation}
+  Para que~\eqref{eq:inverso-Z[sqrt(2)]-1} pertenezca a nuestro anillo,
+  debe ser:
+  \begin{equation}
+    \label{eq:inverso-Z[sqrt(2)]-2}
+    a^2 - 2 b^2
+      = \pm 1
+  \end{equation}
+  Una solución es \(a = b = 1\),
+  con lo que \(1 + \sqrt{2}\) es una unidad.
+
+  A ecuaciones de la forma
+  \begin{equation}
+    \label{eq:Pell}
+    x^2 - d y^2
+      = 1
+  \end{equation}
+  con \(d > 1\) se les llama \emph{ecuaciones de Pell}%
+    \footnote{Euler%
+		\index{Euler, Leonhard}
+	      erróneamente se la atribuyó
+	      a John Pell~(1611--1685),%
+		\index{Pell, John}
+	      probablemente confundiéndolo con
+	      William Brounker~(1620--1684)%
+		\index{Brounker, William}
+	      quien fue el primer europeo en estudiarla.
+	      Brahmagupta%
+		\index{Brahmagupta}
+	      en la India en 628 ya describe cómo resolverla.
+	      Los números de Pell%
+		\index{Pell, numeros de@Pell, números de}
+	      (soluciones para el caso \(d = 2\))
+	      se conocen desde Pitágoras.%
+		\index{Pitagoras@Pitágoras}},%
+    \index{Pell, ecuacion de@Pell, ecuación de}
+  discutimos el caso \(d = 2\) más arriba.
+  La discusión siguiente sigue esencialmente a Djukić~%
+      \cite{djukic07:_Pell_equation}.
+
+  Vemos que si \(d\) es un cuadrado perfecto,
+    \index{cuadrado perfecto}
+  solo es posible la \emph{solución trivial} \(x = 1\), \(y = 0\).
+    \index{Pell, ecuacion de@Pell, ecuación de!solucion trivial@solución trivial}
+  Enseguida,
+  podemos suponer que \(x\) e \(y\) son no negativos,
+  por los cuadrados sus signos no importan.
+  Podemos factorizar el lado derecho de la ecuación~\eqref{eq:Pell}
+  \begin{equation*}
+    x^2 - d y^2
+      = (x + y \sqrt{d}) (x - y \sqrt{d})
+  \end{equation*}
+  lo que nos lleva de vuelta al anillo \(\mathbb{Z}[\sqrt{d}]\).%
+    \index{anillo!cuadratico@cuadrático}
+
+  \begin{definition}
+    \index{anillo!cuadratico@cuadrático!conjugado}
+    \index{anillo!cuadratico@cuadrático!norma}
+    En el anillo \(\mathbb{Z}[\sqrt{d}]\)
+    el \emph{conjugado} de \(z = a + b \sqrt{d}\)
+    es \(\overline{z} = a - b \sqrt{d}\),
+    y su \emph{norma} es \(N(z) = z \cdot \overline{z} = a^2 - d b^2\).
+    Llamamos \emph{parte entera} a \(a\)
+    y \emph{parte irracional} a \(b\).
+  \end{definition}
+  En estos términos,
+  son unidades de \(\mathbb{Z}[\sqrt{d}]\)
+  exactamente los elementos de norma~\(\pm 1\).
+  El inverso de la unidad \(z\) es \(\pm \overline{z}\),
+  dependiendo del signo de \(N(z)\).
+  Resulta:
+  \begin{theorem}
+    En \(\mathbb{Z}[\sqrt{d}]\)
+    la norma y el conjugado son multiplicativos,
+    o sea \(N(z_1 z_2) = N(z_1) \cdot N(z_2)\)
+    y \(\overline{z_1 z_2} = \overline{z_1} \cdot \overline{z_2}\)
+  \end{theorem}
+  \begin{proof}
+    Primeramente,
+    con \(z_1 = a_1 + b_1 \sqrt{d}\) y \(z_2 = a_2 + b_2 \sqrt{d}\),
+    tenemos:
+    \begin{align}
+      \overline{z_1} \cdot \overline{z_2}
+	&= (a_1 - b_1 \sqrt{d}) \cdot (a_2 - b_2 \sqrt{d}) \notag \\
+	&= (a_1 a_2 + d b_1 b_2) - (a_1 b_2 + a_2 b_1) \sqrt{d} \notag \\
+	&= \overline{z_1 z_2} \label{eq:conjugado-producto}
+    \end{align}
+    Con esto:
+    \begin{align}
+      N(z_1 z_2)
+	&= (z_1 z_2) \cdot (\overline{z_1 z_2}) \notag \\
+	&= (z_1 \overline{z_1}) \cdot (z_2 \overline{z_2}) \notag \\
+	&= N(z_1) \cdot N(z_2) \label{eq:norma-producto}
+	\qedhere
+    \end{align}
+  \end{proof}
+  Pero también:
+  \begin{theorem}
+    Si \(z_0\) es el elemento mínimo de \(\mathbb{Z}[\sqrt{d}]\)
+    con \(z_0 > 1\) y \(N(z_0) = 1\),
+    todos los elementos \(z \in \mathbb{Z}[\sqrt{d}]\) con \(N(z) = 1\)
+    están dados por \(z = \pm z_0^n\) con \(n \in \mathbb{Z}\).
+  \end{theorem}
+  \begin{proof}
+    Suponga que \(N(z) = z \cdot \overline{z} = 1\) para \(z > 1\),
+    con lo que \(z^{-1} = \overline{z}\).
+    Hay un único \(k \in \mathbb{N}_0\)
+    tal que \(z_0^k \le z < z_0^{k + 1}\).
+    Así \(z_1 = z z_0^{-k} = z (\overline{z_0})^k\)
+    cumple \(1 \le z_1 < z_0\),
+    y tenemos \(N(z_1) = N(z) \cdot N(z_0)^{-k} = 1\).
+    Por la minimalidad de \(z_0\),
+    es \(z_1 = 1\)
+    y \(z = z_0^k\).
+  \end{proof}
+  Al par \((x_0, y_0)\) o a \(z_0 = x_0 + y_0 \sqrt{d}\)
+  se le llama \emph{solución fundamental} de la ecuación de Pell.%
+    \index{Pell, ecuacion de@Pell, ecuación de!solucion fundamental@solución fundamental}
+
+  Todos los anillos \(\mathbb{Z}[\sqrt{d}]\)
+  tienen infinitas unidades.
+  \begin{theorem}[Dirichlet]
+    \label{theo:Dirichlet}
+    Sea \(\alpha\) un número irracional%
+      \index{numero@número!irracional}
+    y \(n\) un entero positivo.
+    Entonces hay \(p \in \mathbb{Z}\) y \(q \in [1, n]\)
+    tales que:
+    \begin{equation}
+      \label{eq:desigualdad-Dirichlet}
+      \left\lvert \alpha - \frac{p}{q} \right\rvert < \frac{1}{(n + 1) q}
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    La desigualdad~\eqref{eq:desigualdad-Dirichlet}
+    es equivalente a \(\lvert q \alpha - p \rvert < 1 / (n + 1)\).
+    Entre los \(n + 2\) números
+      \(0, \{\alpha\}, \{2 \alpha\}, \dotsc, \{n \alpha\}, 1\),
+    por el principio del palomar%
+      \index{principio del palomar}
+    (teorema~\ref{theo:pigeonhole})
+    en el segmento \([0, 1]\) hay dos que difieren en menos de \(1 / (n + 1)\)
+    (si \(\alpha\) es racional podrían diferir en exactamente \(1 / (n + 1)\)).
+    Si éstos son \(\{a \alpha\}\) y \(\{b \alpha\}\)
+    basta hacer \(q = \lvert a - b \rvert\);
+    si son \(\{a \alpha\}\) y 0 o 1,
+    basta hacer \(q = a\).
+    En cualquiera de los casos,
+    \(p\) es el entero más cercano a \(a \alpha\).
+  \end{proof}
+  De acá,
+  como \(n + 1 > q\) es \(1 / ((n + 1) q) < 1 / q^2\),
+  sigue inmediatamente:
+  \begin{corollary}
+    \label{cor:Dirichlet}
+    Si \(\alpha\) es un real arbitrario,
+    hay infinitos pares de enteros positivos \((p, q)\) tales que:
+    \begin{equation*}
+       \left\lvert \alpha - \frac{p}{q} \right\rvert
+	 < \frac{1}{q^2}
+    \end{equation*}
+  \end{corollary}
+  Así resulta:
+  \begin{theorem}
+    \label{theo:Pell-soluble}
+    La ecuación de Pell
+    \begin{equation*}
+      x^2 - d y^2
+	= 1
+    \end{equation*}
+    donde \(d\) no es un cuadrado
+    tiene una solución no trivial en los enteros.
+  \end{theorem}
+  \begin{proof}
+    Aplicando el corolario~\ref{cor:Dirichlet} a \(\alpha = \sqrt{d}\),
+    vemos que hay infinitos pares \((a, b)\) tales que:
+    \begin{equation*}
+      \left\lvert a - b \sqrt{d} \right\rvert
+	< \frac{1}{b}
+    \end{equation*}
+    Notamos que por la desigualdad triangular,%
+      \index{desigualdad triangular}
+    teorema~\ref{theo:desigualdad-triangular}:
+    \begin{equation*}
+      \left\lvert a + b \sqrt{d} \right\rvert
+	\le \left\lvert a - b \sqrt{d} \right\rvert
+	      + \left\lvert 2 b \sqrt{d} \right\rvert
+	\le \frac{1}{b} + 2 b \sqrt{d}
+    \end{equation*}
+    Con esto:
+    \begin{equation*}
+      \left\lvert a^2 - b^2 d \right\rvert
+	= \left\lvert a + b \sqrt{d} \right\rvert
+	    \cdot \left\lvert a - b \sqrt{d} \right\rvert
+	\le \left( \frac{1}{b} + 2 b \sqrt{d} \right) \cdot \frac{1}{b}
+	\le 2 \sqrt{d} + 1
+    \end{equation*}
+    Pero al haber infinitos pares
+    con normas
+      \(\left\lvert N(a + b \sqrt{d}) \right\rvert \le 2 \sqrt{d} + 1\),
+    y siendo enteras las normas
+    por el principio del palomar%
+      \index{principio del palomar}
+    hay infinitos pares
+    con una misma norma \(N\).
+    Acá \(N \ne 0\),
+    ya que solo para \(z = 0\) es \(N(z) = 0\).
+    Si ahora consideramos todos los pares de norma \(N\),
+    nuevamente por el principio del palomar hay infinitos pares
+    \(z_1 = (a_1, b_1)\) y \(z_2 = (a_2, b_2)\)
+    tales que \(a_1 \equiv a_2\) y \(b_1 \equiv b_2 \pmod{N}\),
+    por lo que debe haber \(z_1 \ne \pm z_2\) entre ellos.
+    Consideremos:
+    \begin{align*}
+      z
+	&= a + b \sqrt{d}
+	 = \frac{z_1}{z_2}
+	 = \frac{z_1 \overline{z_2}}{N(z_2)} \\
+      N(z)
+	&=\frac{N(z_1)}{N(z_2)}
+	 = 1
+    \end{align*}
+    Como \(z_1 \ne \pm z_2\),
+    sabemos que \(z \ne \pm 1\).
+    Como \(N(z_2) = N\),
+    resultan:
+    \begin{align*}
+      a
+	&= \frac{a_1 a_2 - d b_1 b_2}{N} \\
+      b
+	&= \frac{a_1 b_2 - a_2 b_1}{N}
+    \end{align*}
+    Observamos que,
+    ya que \(a_1 \equiv a_2 \pmod{N}\) y \(b_1 \equiv b_2 \pmod{N}\):
+    \begin{align*}
+      a_1 a_2 - d b_1 b_2
+	&\equiv a_1 a_1 - d b_1 b_1
+	 \equiv 0 \pmod{N} \\
+      a_1 b_2 - a_2 b_1
+	&\equiv a_1 b_1 - a_1 b_1 \phantom{d}
+	 \equiv 0 \pmod{N}
+    \end{align*}
+    con lo que \(a, b \in \mathbb{Z}\),
+    o sea \(z \in \mathbb{Z}[\sqrt{d}]\) con \(N(z) = 1\).
+  \end{proof}
+  También nos interesa saber
+  si hay soluciones a \(x^2 - d y^2 = -1\),
+  ya que también son unidades de \(\mathbb{Z}[\sqrt{d}]\).
+  \begin{theorem}
+    \label{theo:Pell-neg-soluble}
+    La ecuación \(x^2 - d y^2 = -1\) tiene solución si y solo si
+    existe \(z_1 \in \mathbb{Z}[\sqrt{d}]\)
+    tal que \(z_1^2 = z_0\).
+  \end{theorem}
+  \begin{proof}
+    Demostramos implicancias en ambas direcciones.
+    Si hay tal \(z_1\)
+    es menor que \(z_0\),
+    y como \(N(z_0) = N(z_1^2) = N(z_1)^2 = 1\),
+    debe ser \(N(z_1) = -1\).
+
+    Si \(z\) es solución de \(N(z) = -1\),
+    entonces \(N(z^2) = 1\).
+    En particular,
+    la mínima solución \(z_1 \in \mathbb{Z}[\sqrt{d}]\)
+    de la ecuación \(N(z) = -1\) tal que \(z_1 > 1\)
+    da lugar a la mínima solución \(z_0 = z_1^2\) de \(N(z) = 1\).
+  \end{proof}
+  Hace falta determinar raíces cuadradas en \(\mathbb{Z}[\sqrt{d}]\):
+  \begin{equation*}
+    (x_1 + y_1 \sqrt{d})^2
+      = (x_1^2 + d y_1^2) + 2 x_1 y_1 \sqrt{d}
+      = (2 d y_1 - 1) + 2 x_1 y_1 \sqrt{d}
+      = x_0 + y_0 \sqrt{d}
+  \end{equation*}
+  Acá usamos \(x_1^2 + d y_1^2 = 1\).
+  O sea:
+  \begin{align*}
+    y_1
+      &= \frac{x_0 + 1}{2 d} \\
+    x_1
+      &= \frac{y_0}{2 y_1}
+       = \frac{d y_0}{x_0 + 1}
+  \end{align*}
+  En \(\mathbb{Z}[\sqrt{2}]\) la solución fundamental es \((3, 2)\),
+  como su raíz cuadrada resulta el par \((1, 1) \in \mathbb{Z}[\sqrt{2}]\),
+  con \(N(1 + \sqrt{2}) = -1\),
+  con lo que todas las unidades
+  son \(\pm (1 + \sqrt{2})^n\) para \(n \in \mathbb{Z}\).
+
+  Lenstra~%
+    \cite{lenstra02:_solving_pell_equat}
+  da algo de la historia de la ecuación de Pell%
+    \index{Pell, ecuacion de@Pell, ecuación de}
+  y describe algoritmos para obtener la solución fundamental.
+  Mayores detalles de la fascinante teoría relacionada con estos anillos
+  da por ejemplo Djukić~%
+    \cite{djukic07:_arith_exten_Q}.
+
+\subsection{Cuaterniones}
+\label{sec:cuaterniones}
+\index{cuaterniones|textbfhy}
+
+  Otro ejemplo interesante de anillo lo ponen los \emph{cuaterniones}~%
+    \cite{hamilton44:_quaternions},
+  una extensión de los números complejos
+  inventada para manejar posiciones en el espacio
+  como se pueden manejar puntos en el plano con números complejos.
+  Hoy han sido reemplazados casi universalmente por vectores,
+    \index{vector}
+  más flexibles y generales.
+  Considerados una curiosidad histórica por mucho tiempo,
+  últimamente han encontrado utilidad en diversas áreas,
+  como representación eficiente de movimientos y rotaciones en el espacio%
+    \index{cuaterniones!en computacion grafica@en computación gráfica}
+  en computación gráfica,
+  ver por ejemplo Dorst, Fontijne y Mann~%
+    \cite{dorst07:_geometric_algebra_comp_sci}.
+
+  Con \(a, b, c, d \in \mathbb{R}\)
+  el cuaternión \(z \in \mathbb{H}\) puede describirse
+  \begin{equation}
+    \label{eq:definicion-cuaternion}
+    z = a + b \mathrm{i} + c \mathrm{j} + d \mathrm{k}
+  \end{equation}
+  donde
+  \begin{equation}
+    \label{eq:cuaterniones-unidades}
+    \mathrm{i}^2
+      = \mathrm{j}^2
+      = \mathrm{k}^2
+      = \mathrm{i} \mathrm{j} \mathrm{k} = -1
+  \end{equation}
+  Definimos las operaciones con estos objetos
+  como para polinomios en \(\mathrm{i}\), \(\mathrm{j}\) y \(\mathrm{k}\),
+  aplicando~\eqref{eq:cuaterniones-unidades} luego.
+
+  Resulta que el anillo de cuaterniones no es conmutativo,
+    \index{anillo!cuaterniones|see{cuaterniones}}
+  la tabla de multiplicación de los elementos unitarios
+  es el cuadro~\ref{tab:cuaterniones},
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{>{\(}c<{\)}|*{4}{>{\(}r<{\)}}}
+      \cdot & 1 & \mathrm{i} & \mathrm{j} & \mathrm{k} \\
+      \hline
+      1		 & 1	      & \mathrm{i}	& \mathrm{j}  &
+	  \mathrm{k}  \\
+      \mathrm{i} & \mathrm{i} & -1		& \mathrm{k}  &
+	  -\mathrm{j} \\
+      \mathrm{j} & \mathrm{j} & -\mathrm{k} & -1	  &
+	  \mathrm{i}  \\
+      \mathrm{k} & \mathrm{k} & \mathrm{j}	& -\mathrm{i} &
+	  -1
+    \end{tabular}
+    \caption{Multiplicación de cuaterniones}
+    \label{tab:cuaterniones}
+  \end{table}
+  pero todo elemento diferente de cero tiene inverso multiplicativo.
+  En detalle,
+  si definimos el \emph{conjugado} del cuaternión%
+    \index{cuaterniones!conjugado}
+    \(q = a + b \mathrm{i} + c \mathrm{j} + d \mathrm{k}\)
+  como \(\overline{q} = a - b \mathrm{i} - c \mathrm{j} - d \mathrm{k}\),
+  resulta que \(q \overline{q} = a^2 + b^2 + c^2 + d^2\);
+  y la \emph{norma} de \(q\)%
+    \index{cuaterniones!norma}
+  se define como \(\lVert q \rVert = \sqrt{q \overline{q}}\).
+  Nótese que \(\overline{p q} = \overline{q} \cdot \overline{p}\).
+  Con esto,
+  resulta que la norma es multiplicativa,
+  ya que la multiplicación entre un cuaternión cualquiera y un real
+  conmuta:
+  \begin{align*}
+    \lVert p q \rVert^2
+      &= (p q) \cdot \overline{(p q)} \\
+      &= p \cdot q \overline{q} \cdot \overline{p} \\
+      &= \lVert p \rVert^2 \cdot \lVert q \rVert^2
+  \end{align*}
+  Así resulta el \emph{recíproco}%
+    \index{cuaterniones!reciproco@recíproco}
+  \begin{equation*}
+    q^{-1}
+      = \frac{\overline{q}}{\lVert q \rVert}
+  \end{equation*}
+  que claramente cumple \(q q^{-1} = q^{-1} q = 1\).
+  La notación \(p / q\) no tiene sentido en cuaterniones,
+  ya que \(p q^{-1} \ne q^{-1} p\) en general.
+
+\section{Los teoremas de Lagrange, Euler y Fermat}
+\label{sec:Lagrange-Euler-Fermat}
+
+  Un resultado importante que relaciona grupos y subgrupos es el siguiente:%
+    \index{grupo!subgrupo}
+  \begin{theorem}[Lagrange]
+    \index{Lagrange, teorema de}
+    \index{Lagrange, Joseph-Louis}
+    \label{theo:Lagrange}
+    Sea \(G\) un grupo finito,
+    y \(H\) un subgrupo de \(G\).
+    Entonces \(\lvert H \rvert\) divide a \(\lvert G \rvert\).
+  \end{theorem}
+  \begin{proof}
+    Sea \(a \in G\).
+    Al conjunto \(a H = \{a \odot h \colon h \in H\}\)
+    se le llama \emph{coset (izquierdo) de \(H\)}%
+      \index{coset|textbfhy}
+    (de forma afín el \emph{coset derecho}
+     \(H a = \{h \odot a \colon h \in H\}\)).
+    Demostraremos que todos los cosets tienen el mismo número de elementos,
+    y que particionan \(G\),
+    de lo que el resultado es inmediato.
+
+    Primeramente,
+    el coset \(a H = \{a \odot h \colon h \in H\}\)
+    no tiene elementos repetidos,
+    porque supongamos que hay \(h, g \in H\) tales que
+    \(a \odot h = a \odot g\),
+    por la ley de cancelación es \(h = g\).
+    Resulta simplemente \(\lvert a H \rvert = \lvert H \rvert\).
+
+    Definamos la relación \(R\) sobre \(G\) mediante
+    \(x \mathrel{R} y\) si y solo si
+    hay \(h \in H\) tal que \(x = y \odot h\).
+    Entonces \(R\) es una relación de equivalencia:%
+      \index{relacion@relación!equivalencia}
+    \begin{description}
+    \item[Reflexiva:]
+      Necesariamente \(1 \in H\),
+      con lo que \(x \mathrel{R} x\).
+    \item[Simétrica:]
+      Esto porque \(x \mathrel{R} y\) corresponde a \(x = y \odot h\)
+      para \(h \in H\),
+      pero entonces también \(y = x \odot h^{-1}\),
+      y como \(h^{-1} \in H\) tenemos \(y \mathrel{R} x\).
+    \item[Transitiva:]
+      Si \(x \mathrel{R} y\) y \(y \mathrel{R} z\)
+      entonces hay \(h_1, h_2 \in H\) tales que
+      \(x = y \odot h_1\) y \(y = z \odot h_2\).
+      Combinando éstos,
+      \(x = z \odot (h_2 \odot h_1)\),
+      y \(h_2 \odot h_1 \in H\),
+      con lo que \(x \mathrel{R} z\).
+    \end{description}
+    Las clases de equivalencia de \(R\) son precisamente los cosets de \(H\):
+    \(x \in [y]\) siempre que podemos escribir \(x = y \odot h\)
+    con \(h \in H\),
+     o sea, \(x \in y H\),
+     con lo que \([y] = y H\).
+    Pero \(\lvert a H \rvert = \lvert H \rvert\)
+    como vimos antes,
+    y tenemos nuestro resultado.
+  \end{proof}
+
+  En particular,
+  consideremos el subgrupo generado por el elemento \(a \in G\),%
+    \index{grupo!subgrupo generado}%
+    \index{grupo!orden}
+    \index{grupo!orden de un elemento}
+  vale decir,
+  si el orden de \(a\) es \(n\)
+  los elementos \(a^0\), \(a^1\), \ldots, \(a^{n - 1}\).
+  Este subgrupo tiene orden \(n\),
+  con lo que \(n\) divide a \(\lvert G \rvert\).
+
+  Nos abocaremos a un estudio más detallado de \(\mathbb{Z}^\times_m\),
+  una vez adquiridas algunas herramientas algebraicas adicionales.
+  \begin{theorem}
+    \label{theo:a-invertible}
+    El elemento \(a \in \mathbb{Z}_m\) es invertible
+    si y solo si \(a\) y \(m\) son coprimos.
+    En particular,
+    si \(p\) es primo todos los elementos de \(\mathbb{Z}_p\)
+    (salvo \(0\))
+    son invertibles,
+    y \(\mathbb{Z}_p\) es un campo.%
+      \index{campo (algebra)@campo (álgebra)}
+  \end{theorem}
+  \begin{proof}
+    Demostramos implicancia en ambos sentidos.
+    Supongamos \(a\) invertible.
+    Entonces existen enteros \(b\) y \(k\) tales que \(a b - 1 = k m\),
+    que es decir \(a b - k m = 1\).
+    Pero si existen tales \(b\) y \(k\) entonces \(\gcd(a, m) = 1\).
+
+    Al revés,
+    supongamos \(\gcd(a, m) = 1\).
+    Entonces
+    (por la identidad de Bézout)%
+      \index{Bezout, identidad de@Bézout, identidad de}
+    existen \(s\), \(t\) tales que:
+    \begin{align*}
+      s \cdot a + t \cdot m
+	&=	1\\
+      s \cdot a
+	&\equiv 1 \pmod{m}
+    \end{align*}
+    y \(s\) es el inverso de \(a\).
+  \end{proof}
+  Resulta que el número de unidades de \(\mathbb{Z}_m\)
+  es una cantidad muy importante.
+  Por el teorema~\ref{theo:a-invertible},
+  no es más que la cantidad de números en \(1, 2, \dotsc, m\)
+  que son relativamente primos a \(m\),
+  que se anota \(\phi(m)\)
+  (función \(\phi\) de Euler).%
+    \index{\(\phi\) de Euler}%
+    \index{Euler, Leonhard}
+
+  Un ejemplo lo pone \(\mathbb{Z}_{12}\),
+  donde tenemos la tabla de multiplicación~\ref{tab:Z12}.
+  \begin{table}[htbp]
+    \centering
+    \renewcommand{\tabcolsep}{3pt}
+    \begin{tabular}{>{\(}r<{\)}|*{12}{>{\(}r<{\)}}}
+      \multicolumn{1}{c|}{\(\cdot\)} &
+	    \;0 & \phantom{0}1 & \phantom{0}2 & \phantom{0}3 & \phantom{0}4
+		& \phantom{0}5 & \phantom{0}6 & \phantom{0}7 & \phantom{0}8
+		& \phantom{0}9 & 10 & 11 \\
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+       0 &  0 &	 0 &  0 &  0 &	0 &  0 &  0 &  0 &  0 &	 0 &  0 &  0 \\
+       1 &  0 &	 1 &  2 &  3 &	4 &  5 &  6 &  7 &  8 &	 9 & 10 & 11 \\
+       2 &  0 &	 2 &  4 &  6 &	8 & 10 &  0 &  2 &  4 &	 6 &  8 & 10 \\
+       3 &  0 &	 3 &  6 &  9 &	0 &  3 &  6 &  9 &  0 &	 3 &  6 &  9 \\
+       4 &  0 &	 4 &  8 &  0 &	4 &  8 &  0 &  4 &  8 &	 0 &  4 &  8 \\
+       5 &  0 &	 5 & 10 &  3 &	8 &  1 &  6 & 11 &  4 &	 9 &  2 &  7 \\
+       6 &  0 &	 6 &  0 &  6 &	0 &  6 &  0 &  6 &  0 &	 6 &  0 &  6 \\
+       7 &  0 &	 7 &  2 &  9 &	4 & 11 &  6 &  1 &  8 &	 3 & 10 &  5 \\
+       8 &  0 &	 8 &  4 &  0 &	8 &  4 &  0 &  8 &  4 &	 0 &  8 &  4 \\
+       9 &  0 &	 9 &  6 &  3 &	0 &  9 &  6 &  3 &  0 &	 9 &  6 &  3 \\
+      10 &  0 & 10 &  8 &  6 &	4 &  2 &  0 & 10 &  8 &	 6 &  4 &  2 \\
+      11 &  0 & 11 & 10 &  9 &	8 &  7 &  6 &  5 &  4 &	 3 &  2 &  1
+    \end{tabular}
+    \caption{La tabla de multiplicación en $\mathbb{Z}_{12}$}
+    \label{tab:Z12}
+  \end{table}
+  Pueden apreciarse los elementos invertibles
+  \(\mathbb{Z}^\times_{12} = \{1, 5, 7, 11\}\),
+  con lo que \(\phi(12) = 4\).
+  Se ve también que los demás son todos divisores de cero,
+  como asegura el teorema~\ref{theo:finite-ring-units}.
+
+  Al considerar el subgrupo de \(\mathbb{Z}^\times_m\) generado por \(a\)
+  tenemos del teorema de Lagrange%
+    \index{Lagrange, teorema de}
+  que el orden de \(a\) divide al orden de \(\mathbb{Z}^\times_m\),
+  que es \(\phi(m)\),
+  y así:
+  \begin{theorem}[Euler]
+    \index{Euler, teorema de}
+    \index{Euler, Leonhard}
+    \label{theo:Euler}
+    Si \(a\) y \(m\) son relativamente primos,
+    entonces
+    \begin{equation*}
+      a^{\phi(m)}
+	\equiv 1 \pmod{m}
+    \end{equation*}
+  \end{theorem}
+  En el caso de que \(m\) sea primo,
+  como \(\phi(p) = p - 1\) para \(p\) primo,
+  el teorema de Euler se reduce a:
+  \begin{theorem}[Pequeño teorema de Fermat]
+    \index{Fermat, pequeno teorema de@Fermat, pequeño teorema de}
+    \label{theo:Fermat}
+    Si	\(p\) es primo,
+    y \(p \centernot\mid a\)
+    entonces
+    \begin{equation*}
+      a^{p - 1}
+	\equiv 1 \pmod{p}
+    \end{equation*}
+  \end{theorem}
+  El hecho de que a este se le llame ``pequeño''
+  no tiene ninguna relación con su importancia,
+  veremos una gran variedad de aplicaciones en lo que sigue.
+% Fixme: Un poquito de historia
+  El ``gran'' (o ``último'') teorema de Fermat%
+    \index{Fermat, ultimo teorema@Fermat, último teorema}
+  es uno de los resultados más famosos de las matemáticas.
+  Fermat anotó por 1637%
+    \index{Fermat, Pierre de}
+  en el margen de una copia de la Aritmética de Diofanto%
+    \index{Diofanto}
+  que había descubierto una demostración verdaderamente maravillosa
+  de que \(a^n + b^n = c^n\)
+  no tiene soluciones
+  para números naturales \(a\), \(b\), \(c\) si \(n > 2\),
+  pero que esta no cabía en el margen
+  (tenía esta mala costumbre,
+   la publicación del libro rayado después de su muerte
+   dio trabajo a ejércitos de matemáticos durante bastante tiempo).
+  Se le llamó el ``último teorema''
+  no por ser la última de sus innumerables conjeturas,
+  sino por ser la última importante que quedaba sin resolver
+  una vez que Euler terminó de trabajar en ellas.
+  Recién en 1995 Andrew Wiles con la ayuda de su estudiante Richard Taylor~%
+    \cite{taylor95:_ring_theor_proper_hecke_alg,
+	  wiles95:_modul_ellip_curves_Fermat}
+  demostró el último teorema de Fermat,
+  aunque mediante métodos muy recientes
+  (y no es precisamente una demostración ``maravillosa'').
+  Generalmente se piensa que Fermat se equivocó
+  al creer que tenía una demostración.
+
+% Fixme: Determinar órdenes, etc
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

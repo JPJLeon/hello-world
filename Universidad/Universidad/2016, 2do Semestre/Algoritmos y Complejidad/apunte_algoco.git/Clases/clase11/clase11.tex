@@ -1,0 +1,413 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#11\quad Programación Dinámica}}
+
+\author{Aldo Berrios Valenzuela}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#11\\Programación Dinámica}
+\date{Martes 6 de septiembre de 2016}
+
+\begin{document}
+\maketitle
+\section{Programación Dinámica}
+Queremos calcular el producto de $n$ matrices, $A_1\cdot A_2\cdot \ldots \cdot A_n$, donde $A_i$ es $n_i\times n_{i+1}$ (si no es $A_i\cdot A_{i+1}$ imposible)
+
+La técnica tradicional de multiplicar una matriz de $r\times s$ por otra $s\times t$ toma $rst$ multiplicaciones, y usaremos esto como medida de costo. Nuestro resultado no depende realmente del detalle de ésto.
+
+Sabemos que la multiplicación de matrices es asociativa:
+\begin{equation*}
+A\cdot \nparentesis{B\cdot C} = \nparentesis{A\cdot B}\cdot C
+\end{equation*}
+
+El trabajo total depende del orden:
+\begin{align*}
+	A&:2\times 12\\
+	B&:12\times 3\\
+	C&:3\times 4
+\end{align*}
+Entonces, el costo de calcular $\nparentesis{A\cdot B}\cdot C$ es:
+\begin{equation*}
+\nparentesis{A\cdot B}\cdot C\rightsquigarrow 2\cdot 12\cdot 3+2\cdot 3\cdot 4=96
+\end{equation*}
+Explicamos de donde vienen los números anteriores:
+\begin{itemize}
+	\item Comenzamos multiplicando $A\cdot B$. Como ambas matrices son de $2\times 12$ y $12\times 3$ respectivamente. Es claro que la cantidad de multiplicaciones que tenemos que hacer para obtener la matriz resultante es $2\cdot 12\cdot 3=72$. Dado lo anterior, se tiene  que la dimensión de $A\cdot B$ es $2\times 3$.
+	
+	\item Llegados a este punto, consideramos la matriz $A\cdot B$ como una sola, la que llamaremos $X$. Entonces, siguiendo lo anterior, vemos que $X\cdot C$ nos toma una cantidad de $2\cdot 3\cdot 4=24$ multiplicaciones.
+	
+	\item Finalmente, sumamos la cantidad de multiplicaciones que nos llevó a obtener $A\cdot B=X$ y $X\cdot C$, lo que se traduce a:
+	\begin{equation}
+	\nparentesis{A\cdot B}\cdot C\rightsquigarrow 2\cdot 12\cdot 3+2\cdot 3\cdot 4=96
+	\end{equation}
+\end{itemize}
+
+Continuamos con el cálculo del costo de obtener $A\cdot \nparentesis{B\cdot C}$:
+\begin{equation*}
+A\cdot \nparentesis{B\cdot C}\rightsquigarrow 2\cdot 12+4+12\cdot 3\cdot 4 = 240
+\end{equation*}
+
+Consideremos \comillas{de afuera adentro}: Si el último producto es:
+\begin{equation}\label{11::ExplicacionOptimo}
+\underbrace{\nparentesis{A_1\cdot A_2\cdot \ldots \cdot A_i}}_{\text{óptimo}}\underbrace{\nparentesis{A_{i+1}\cdot \ldots \cdot A_n}}_{\text{óptimo}}
+\end{equation}
+Nótese que $\nparentesis{A_1\cdot A_2\cdot \ldots \cdot A_i}$ y $\nparentesis{A_{i+1}\cdot \ldots \cdot A_n}$ también deben calcularse de forma óptima, de lo contrario el cuento no sirve. En consecuencia, tendremos que dividir nuevamente lo que está entre paréntesis sucesivamente hasta obtener un producto de dos matrices. Es importante destacar que no conocemos $i$\ldots  así que tendremos que probar todas las opciones. Ojo, muchos subproblemas se repiten.
+
+Idea de programación no recursiva:
+\begin{itemize}
+	\item $T\ncorchetes{i, j}$: costo de calcular el producto $A_i\cdot \ldots \cdot A_j$.
+\end{itemize}
+Inicialmente:
+\begin{equation*}
+T\ncorchetes{i, i}=0
+\end{equation*}
+Sabemos que:
+\begin{equation}\label{11::MinimoIteracion}
+T\ncorchetes{i, j}=\min_k\{T\ncorchetes{i, k}+T\ncorchetes{k+1, j}+\underbrace{n_i\cdot n_{k+1}\cdot n_{j+1}}_{\text{costo del producto}}\hspace{-0.2mm}\}
+\end{equation}
+Donde $k$ corresponde a la $k$-ésima matriz que hicimos el corte (donde dividimos con los paréntesis. Por ejemplo, en \eqref{11::ExplicacionOptimo} se tiene que $k=i$) y que dio el valor mínimo de \eqref{11::MinimoIteracion}. Además, $n$ corresponde al valor izquierdo de la dimensión de la matriz. Por ejemplo, si nuestra $A_i$ tiene dimensión $a\times b$, $A_{k+1}:c\times d$ y $A_{j+1}:e\times f$, se tiene que $n_i=a$, $n_{k+1}=c$ y $n_{j+1}=e$ respectivamente.
+
+Nos interesa: $T\ncorchetes{1, n}$. Calculamos:
+\begin{align*}
+&T\ncorchetes{i, i}\\
+&T\ncorchetes{i, i+1}\\
+&\quad\vdots
+\end{align*}
+Esta da sólo el costo\ldots hay que registrar con cada $T\ncorchetes{i, j}$ cuál fue el $k$ que dio el mínimo. Siguiendo esos desde $T\ncorchetes{1, n}$ da el orden óptimo.
+
+\begin{ejemplo} 
+	Supongamos que queremos calcular el producto de matrices:
+	\begin{equation*}
+	A\cdot B\cdot C\cdot D\cdot E\cdot F
+	\end{equation*}
+	donde cada uno de los tamaños son:
+	\begin{itemize}
+		\item $A=A_1: 1\times 2$
+		\item $B=A_2: 2\times 7$
+		\item $C=A_3: 7\times 4$
+		\item $D=A_4: 4\times 2$
+		\item $E=A_5: 2\times 9$
+		\item $F=A_6: 9\times 1$
+	\end{itemize}
+	Para la primera iteración, es decir, $T\ncorchetes{i, i}$ es claro que intentamos calcular la cantidad de productos que son necesarios para hacer la multiplicación $A_i$. Cómo no lo estamos multiplicando con nada más, se tiene que la cantidad de multiplicaciones necesarias es $T\ncorchetes{i, i}=0$ para cualquier $i$.  Agregamos esta información al Cuadro \ref{11::Iteracion1}.
+	\newcolumntype{M}{>{$}c<{$}}
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{*{6}{M|}M}
+			&1&2&3&4&5&6\\
+			\hline
+			\multirow{2}{*}{1}&0&&&&&\\
+			&1&&&&&\\
+			\hline
+			\multirow{2}{*}{2}&&0&&&&\\
+			&&2&&&&\\
+			\hline
+			\multirow{2}{*}{3}&&&0&&&\\
+			&&&3&&&\\
+			\hline
+			\multirow{2}{*}{4}&&&&0&&\\
+			&&&&4&&\\
+			\hline
+			\multirow{2}{*}{5}&&&&&0&\\
+			&&&&&5&\\
+			\hline
+			\multirow{2}{*}{6}&&&&&&0\\
+			&&&&&&6\\
+			\hline
+		\end{tabular}
+		\caption{Para la primera iteración no necesitamos realizar multiplicaciones.}
+		\label{11::Iteracion1}
+	\end{table}
+	Nótese que cada casilla del Cuadro \ref{11::Iteracion1} está configurado de la forma que se logra apreciar en el Cuadro \ref{11::ExplicacionCuadro} independientemente de la iteración en la que vayamos.
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{*{6}{M|}M}
+			&1&2&3&4&5&6\\
+			\hline
+			\multirow{2}{*}{1}&T\ncorchetes{1, 1}&T\ncorchetes{1, 2}&T\ncorchetes{1, 3}&T\ncorchetes{1, 4}&T\ncorchetes{1, 5}&T\ncorchetes{1, 6}\\
+			&k&k&k&k&k&k\\
+			\hline
+			\multirow{2}{*}{2}&&T\ncorchetes{2, 2}&T\ncorchetes{2, 3}&T\ncorchetes{2, 4}&T\ncorchetes{2, 5}&T\ncorchetes{2, 6}\\
+			&&k&k&k&k&k\\
+			\hline
+			\multirow{2}{*}{3}&&&T\ncorchetes{3, 3}&T\ncorchetes{3, 4}&T\ncorchetes{3, 5}&T\ncorchetes{3, 6}\\
+			&&&k&k&k&k\\
+			\hline
+			\multirow{2}{*}{4}&&&&T\ncorchetes{4, 4}&T\ncorchetes{4, 5}&T\ncorchetes{4, 6}\\
+			&&&&k&k&k\\
+			\hline
+			\multirow{2}{*}{5}&&&&&T\ncorchetes{5, 5}&T\ncorchetes{5, 6}\\
+			&&&&&k&k\\
+			\hline
+			\multirow{2}{*}{6}&&&&&&T\ncorchetes{6, 6}\\
+			&&&&&&k\\
+			\hline
+		\end{tabular}
+		\caption{En cada iteración, los $T\ncorchetes{i, j}$ con $j>i$ se calculan a través de la ecuación \eqref{11::MinimoIteracion}. Por otro lado, $k$ al corte de la $k$-ésima matriz con la cual obtuvimos el mínimo valor de $T\ncorchetes{i, j}$.}
+		\label{11::ExplicacionCuadro}
+	\end{table}
+	
+	Para la segunda iteración, tenemos que calcular todos los $T\ncorchetes{i, i+1}$, es decir, la mínima cantidad de multiplicaciones para obtener $A_i\cdot A_{i+1}$. Como solo tenemos dos matrices involucradas, es bastante fácil realizar este cálculo:
+	\begin{itemize}
+		\item $T\ncorchetes{1, 2}=1\cdot 2\cdot 7 = 14$
+		\item $T\ncorchetes{2, 3}=2\cdot 7\cdot 4 = 56$
+		\item $T\ncorchetes{3, 4}=7\cdot 4\cdot 2=56$
+		\item $T\ncorchetes{4, 5}=4\cdot 2\cdot 9=72$
+		\item $T\ncorchetes{5, 6}=2\cdot 9\cdot 1=18$
+	\end{itemize}
+	Luego, agregamos estos valores al Cuadro \ref{11::Iteracion1}. Los cambios se pueden apreciar en el Cuadro \ref{11::Iteracion2}.
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{*{6}{M|}M}
+			&1&2&3&4&5&6\\
+			\hline
+			\multirow{2}{*}{1}&0&14&&&&\\
+			&1&1&&&&\\
+			\hline
+			\multirow{2}{*}{2}&&0&56&&&\\
+			&&2&2&&&\\
+			\hline
+			\multirow{2}{*}{3}&&&0&56&&\\
+			&&&3&3&&\\
+			\hline
+			\multirow{2}{*}{4}&&&&0&72&\\
+			&&&&4&4&\\
+			\hline
+			\multirow{2}{*}{5}&&&&&0&18\\
+			&&&&&5&5\\
+			\hline
+			\multirow{2}{*}{6}&&&&&&0\\
+			&&&&&&6\\
+			\hline
+		\end{tabular}
+		\caption{Se agregan los valores correspondientes a la segunda iteración. Es importante destacar, que el para el cálculo de $A_i\cdot A_{i+1}$ lo hacemos entre $i$ e $i+1$, es decir, $k=i$ para cualquier valor de $i$.}
+		\label{11::Iteracion2}
+	\end{table}
+	
+	Seguimos con la tercera iteración. En esta ocasión, tendremos que calcular los $T\ncorchetes{i, i+2}$, es decir, la cantidad de multiplicaciones mínima para obtener $A_i\cdot A_{i+1}\cdot A_{i+2}$. Para ello, comenzamos calculando $T\ncorchetes{1, 3}$, es decir:
+	\begin{equation}\label{11::PrimerMinimo}
+	T\ncorchetes{1, 3}=\min_k\llaves{T\ncorchetes{1, k}+T\ncorchetes{k+1, 3}+n_1\times n_{k+1}\times n_4}
+	\end{equation}
+	Vamos por partes:
+	\begin{itemize}
+		\item Para $k=1$:
+		\begin{align*}
+		T\ncorchetes{1, 3}\nparentesis{k=1}&=T\ncorchetes{1, 1}+T\ncorchetes{2, 3}+n_1\cdot n_2\cdot n_4\\
+		&=0+56+1\cdot 2\cdot 4=64
+		\end{align*}
+		\item Para $k=2$:
+		\begin{align*}
+		T\ncorchetes{1, 3}\nparentesis{k=2}&=T\ncorchetes{1, 2}+T\ncorchetes{3, 3}+n_1\cdot n_{3}\cdot n_4\\
+		&=14+0+1\cdot 7\cdot 4=42
+		\end{align*}
+	\end{itemize}
+	Por lo tanto, de acuerdo a lo anterior la ecuación \eqref{11::PrimerMinimo} obtiene el mínimo cuando hacemos el corte en $k=2$. Es decir, obtenemos el mínimo de productos para $A_1\cdot A_2\cdot A_3$ si hacemos un corte
+	\begin{equation}
+	\nparentesis{A_1\cdot A_2}\cdot \nparentesis{A_3}
+	\end{equation}
+	En otras palabras, si resolvemos primero $A_1\cdot A_2$ y luego, la matriz resultante se la multiplicamos a $A_3$ obtendremos el mínimo para $T\ncorchetes{1, 3}$.	 Más adelante agregaremos esto a la tabla.
+	
+	Para dejar más en claro cómo calcular \eqref{11::MinimoIteracion} repetiremos los pasos anteriores, pero para calcular $T\ncorchetes{2, 4}$, el que se puede obtener a través de:
+	\begin{equation}\label{11::SegundoMinimo}
+	T\ncorchetes{2, 4}=\min_k\llaves{T\ncorchetes{2, k}+T\ncorchetes{k+1, 4}+n_2\times n_{k+1}\times n_5}
+	\end{equation}
+	Vamos por partes:
+	\begin{itemize}
+		\item Para $k=2$:
+		\begin{align*}
+		T\ncorchetes{2, 4}\nparentesis{k=2}&=T\ncorchetes{2, 2}+T\ncorchetes{3, 4}+n_2\times n_3\times n_5\\
+		&=0+56+2\cdot 7\cdot 2=84
+		\end{align*}
+		
+		\item Para $k=3$:
+		\begin{align*}
+		T\ncorchetes{2, 4}\nparentesis{k=3}&=T\ncorchetes{2, 3}+T\ncorchetes{4, 4}+n_2\cdot n_4\cdot n_5\\
+		&=56+0+2\cdot 4\cdot 2=72
+		\end{align*}
+	\end{itemize}
+	Nuevamente, de acuerdo a la ecuación \eqref{11::SegundoMinimo} el mínimo para $T\ncorchetes{2, 4}$ se obtiene para  $k=3$, lo que implica que la cantidad mínima de productos para $A_2\cdot A_3\cdot A_4$ se obtiene al hacer un corte en $k=3$, es decir,
+	\begin{equation}
+	\nparentesis{A_2\cdot A_3}\cdot \nparentesis{A_4}
+	\end{equation}
+	Esto nos dice que si resolvemos primero el producto $A_2\cdot A_3$ y luego la matriz resultante se la multiplicamos a $A_4$, vamos a hacerlo en la menor cantidad de operaciones posibles.
+	
+	El objetivo de este ejemplo es mostrar cómo funciona el algoritmo de Programación Dinámica, por lo que no es necesario explicar paso a paso cómo obtener el resto de las casillas de la tabla. Así que agregamos los valores obtenidos al Cuadro \ref{11::Iteracion2}, cuyo resultado se refleja en el Cuadro \ref{11::Iteracion3}.
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{*{6}{M|}M}
+			&1&2&3&4&5&6\\
+			\hline
+			\multirow{2}{*}{1}&0&14&42&&&\\
+			&1&1&2&&&\\
+			\hline
+			\multirow{2}{*}{2}&&0&56&72&&\\
+			&&2&2&3&&\\
+			\hline
+			\multirow{2}{*}{3}&&&0&56&&\\
+			&&&3&3&&\\
+			\hline
+			\multirow{2}{*}{4}&&&&0&72&\\
+			&&&&4&4&\\
+			\hline
+			\multirow{2}{*}{5}&&&&&0&18\\
+			&&&&&5&5\\
+			\hline
+			\multirow{2}{*}{6}&&&&&&0\\
+			&&&&&&6\\
+			\hline
+		\end{tabular}
+		\caption{Se agregan algunos valores correspondientes de la tercera iteración. No es necesario explicar cómo rellenar el resto de la tabla.}
+		\label{11::Iteracion3}
+	\end{table}
+	
+	Nuestro principal interés en esto es obtener el último producto representado en \eqref{11::ExplicacionOptimo}. Para efectos de nuestra tablita, este último producto está ubicado en la casilla pintada marcada con un $\times$ del Cuadro \ref{11::IteracionFinal}.
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{*{6}{M|}M}
+			&1&2&3&4&5&6\\
+			\hline
+			\multirow{2}{*}{1}&0&14&42&&&\cellcolor{blue!10}\times\\
+			&1&1&2&&&\cellcolor{blue!10}k\\
+			\hline
+			\multirow{2}{*}{2}&&0&56&72&&\\
+			&&2&2&3&&\\
+			\hline
+			\multirow{2}{*}{3}&&&0&56&&\\
+			&&&3&3&&\\
+			\hline
+			\multirow{2}{*}{4}&&&&0&72&\\
+			&&&&4&4&\\
+			\hline
+			\multirow{2}{*}{5}&&&&&0&18\\
+			&&&&&5&5\\
+			\hline
+			\multirow{2}{*}{6}&&&&&&0\\
+			&&&&&&6\\
+			\hline
+		\end{tabular}
+		\caption{A final de cuentas, lo que nos interesa es obtener el \comillas{último producto}. Este se obtiene en $T\ncorchetes{1, 6}$, ya que nos dice el valor de $k$ para hacer el corte.}
+		\label{11::IteracionFinal}
+	\end{table}
+	
+		
+	
+\end{ejemplo}
+
+\newpage
+\begin{proof}[Demostración (programación dinámica)]
+	Como siempre, demostramos que cumple con:
+	\begin{itemize}
+		\item \emph{Estructura inductiva:} Dada la selección $k$ (última) se subdivide en problemas, cuyas soluciones viables $+k$ dan una solución viable para todo.
+		
+		\item \emph{Subestructura óptima:} Con soluciones óptimas para $1\ldots k$ y $k+1\ldots n$ obtenemos la solución óptima para $1\ldots n$, \emph{suponiendo $k$.}
+		
+		\item \emph{Elección completa:} Elegimos aquel $k$ que da el mejor \comillas{último paso} (en el fondo a nosotros no nos interesa obtener el valor del costo mínimo, si no que averiguar cómo obtener ese valor).
+	\end{itemize}
+\end{proof}
+
+\end{document}

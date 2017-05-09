@@ -1,0 +1,1028 @@
+% series-formales.tex
+%
+% Copyright (c) 2009, 2012-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Series formales de potencias}
+\label{cha:series-formales}
+\index{serie formal|textbfhy}
+
+  Nuestro interés en las series de potencias%
+    \index{serie de potencias}
+  no es en su capacidad de definir funciones,
+  sino simplemente como una representación compacta
+  de una secuencia infinita.
+  El desarrollo de la teoría de series formales
+  nació de la observación que ciertas manipulaciones de series
+  ``como si fueran polinomios''
+  entregaban resultados correctos,
+  incluso cuando una revisión más detallada demostraba
+  que las operaciones no tenían validez.
+  Resumiremos los resultados más importantes del área,
+  que corroboran nuestras manipulaciones,
+  a primera vista irresponsables y sin justificación,
+  en los capítulos anteriores.
+  Incluso veremos que las manipulaciones pueden justificarse
+  si los coeficientes de la serie pertenecen a un anillo,
+  no necesariamente son números reales o complejos.
+  Esto es notable,
+  estamos usando sumas infinitas
+  en ámbitos en los cuales el concepto de límite
+  necesario para justificar convergencia
+  no es aplicable directamente.
+
+\section{Un primer ejemplo}
+\label{sec:un-primer-ejemplo}
+
+  Si dejamos de lado el requerimiento de que la serie converja
+  (y defina una función),
+  podemos darle sentido incluso a series como:
+  \begin{equation}
+    \label{eq:gf-n!}
+    f(z)
+      =\sum_{n \ge 0} n! z^n
+  \end{equation}
+  que solo convergen para \(z = 0\),
+  y para las que el análisis no tiene ningún uso.
+  Podemos considerar la serie~\eqref{eq:gf-n!}
+  como la función generatriz ordinaria de los factoriales.%
+    \index{generatriz!ordinaria}%
+    \index{factorial}
+  Así:
+  \begin{align*}
+    z f(z)
+      &= \sum_{n \ge 0} n! z^{n + 1} \\
+    \mathrm{D}(z f(z))
+      &= \sum_{n \ge 0} (n + 1)! z^n
+       = \frac{f(z) - 1}{z} \\
+  \intertext{Por el otro lado, derivando el producto:}
+    \mathrm{D}(z f(z))
+      &= f(z) + z f'(z) \\
+    z f'(z)
+      &= \frac{f(z) - 1}{z} - f(z) \\
+  \intertext{El lado derecho es la función generatriz de \((n + 1)! - n!\),
+	     e invita a sumar
+	     (dividir por \(1 - z\) en funciones generatrices):}
+    \frac{z f'(z)}{1 - z}
+      &= \frac{1}{1 - z} \,
+	   \left(
+	     \frac{f(z) - 1}{z} - (f(z) - 1) - 1
+	   \right) \\
+      &= \frac{1}{1 - z} \,
+	   \left(
+	     (f(z) - 1) \, \left( \frac{1}{z} - 1 \right)
+	   \right)
+	   - \frac{1}{1 - z} \\
+      &= \frac{1}{1 - z} \,
+	   \left(
+	     (f(z) - 1) \, \frac{1 - z}{z}
+	   \right)
+	   - \frac{1}{1 - z} \\
+      &= \frac{f(z) - 1}{z} - \frac{1}{1 - z}
+  \end{align*}
+  Como:
+  \begin{align*}
+    z f'(z)
+      &\ogf \langle n \, n! \rangle_{n \ge 0} \\
+    \frac{z f'(z)}{1 - z}
+      &\ogf \left\langle
+	      \sum_{0 \le k \le n} k \cdot k!
+	    \right\rangle_{n \ge 0}
+  \end{align*}
+  Aplicando nuevamente las propiedades,
+  vemos que:
+  \begin{equation}
+    \label{eq:sn}
+    \sum_{\mathclap{0 \le k \le n}} k \cdot k!
+      = (n + 1)! - 1
+  \end{equation}
+  A pesar de su espeluznante derivación
+  (no falta un paso en que no hagamos operaciones al menos dudosas
+   con series infinitas que solo para \(z = 0\) convergen)
+  la relación~\eqref{eq:sn} es correcta,
+  cosa que el lector escéptico demostrará por inducción.%
+    \index{demostracion@demostración!induccion@inducción}
+  Resulta que estas operaciones pueden justificarse rigurosamente,
+  tema que nos ocupará en este capítulo.
+
+  Parte de lo que sigue viene de Shoup~%
+    \cite{shoup09:_comput_introd_number_theor_algeb},
+  las justificaciones siguen a Kauers~%
+    \cite{kauers11:_concr_tetrah}.
+  Operaciones con series pueden efectuarse con paquetes de álgebra simbólica,%
+    \index{algebra simbolica@álgebra simbólica}
+  como \texttt{maxima}~\cite{maxima14b:_computer_algebra},%
+    \index{maxima@\texttt{maxima}}
+  o aún mejor con sistemas especializados como \texttt{PARI/GP}~%
+    \cite{PARI:2.7.2}.%
+    \index{PARI/GP@\texttt{PARI/GP}}
+  La biblioteca GiNaC~%
+    \cite{bauer02:_ginac_fram_symbol_comput, GiNaC:1.6.2}%
+    \index{GiNaC@\texttt{GiNaC}}
+  permite manipular expresiones simbólicas,
+  incluyendo series formales,
+  y numéricas
+  directamente en \cplusplus.%
+    \index{C++ (lenguaje de programacion)@\cplusplus{} (lenguaje de programación)}
+
+\section{Definición de serie formal}
+\label{sec:serie-formal-def}
+
+  Sea la serie:
+  \begin{equation*}
+    \sum_{n \ge 0} a_n z^n
+  \end{equation*}
+  donde los elementos \(a_n\) pertenecen a un anillo \(R\).%
+    \index{anillo}
+
+  Acá como en polinomios formales
+  (capítulo~\ref{cha:anillos-polinomios})
+  \(z\) es simplemente un \emph{símbolo}
+  (también llamado \emph{indeterminada} o \emph{variable}).
+  La consideramos como una construcción puramente formal,
+  sin darle sentido a \(z\)
+  ni preocuparse por convergencia.%
+    \index{serie de potencias!convergencia}
+  La única restricción que impone esto
+  es que toda vez que se calcula un coeficiente
+  deben efectuarse un número finito de operaciones
+  (en un anillo arbitrario no son aplicables
+   las ideas de límite y convergencia,
+   necesarias para darle sentido a un número infinito de operaciones).
+  Trataremos el caso en que \(R\) es un campo,%
+    \index{campo (algebra)@campo (álgebra)}
+  o al menos un dominio integral%
+    \index{dominio integral}
+  (un anillo conmutativo sin divisores de cero distintos de cero).
+  Para evitar tener que mencionarlo infinidad de veces,
+  usaremos la convención que \(R\) es un anillo general,
+  \(D\) es un dominio integral
+  y \(F\) es un campo.
+
+  Definimos la igualdad entre series formales sobre el anillo \(R\):%
+    \index{serie formal!igualdad}
+  \begin{equation*}
+    \sum_{n \ge 0} a_n z^n
+       = \sum_{n \ge 0} b_n z^n \quad
+	     \text{cuando \(a_n = b_n\) para todo \(n \ge 0\)}
+  \end{equation*}
+  Definimos además las operaciones:%
+    \index{serie formal!operaciones}
+  \begin{align*}
+    \alpha \sum_{n \ge 0} a_n z^n
+       &= \sum_{n \ge 0} (\alpha a_n) z^n
+	    \qquad \text{para \(\alpha \in R\) o \(\alpha \in \mathbb{Z}\)} \\
+    \sum_{n \ge 0} a_n z^n + \sum_{n \ge 0} b_n z^n
+       &= \sum_{n \ge 0} (a_n + b_n) z^n \\
+    \biggl( \, \sum_{r \ge 0} a_r z^r \biggr) \cdot
+      \biggl( \, \sum_{s \ge 0} b_s z^s \biggr)
+       &= \sum_{\substack{
+		  r \ge 0 \\
+		  s \ge 0
+	       }} a_r b_s z^{r + s} \\
+       &= \sum_{\mathclap{\substack{
+			    n \ge 0 \\
+			    0 \le k \le n
+	       }}} a_k b_{n - k} z^n \\
+       &= \sum_{n \ge 0} \biggl( \,
+			    \sum_{0 \le k \le n} a_k b_{n - k}
+			  \biggr) z^n
+  \end{align*}
+  Notar que en particular,
+  para constantes \(\alpha\) y \(\beta\):
+  \begin{equation*}
+    \alpha \sum_{n \ge 0} a_n z^n + \beta \sum_{n \ge 0} b_n z^n
+      = \sum_{n \ge 0} (\alpha a_n + \beta b_n) z^n
+  \end{equation*}
+  Las series formales como generalmente usadas hasta acá
+  son un espacio vectorial de dimensión infinita%
+    \index{espacio vectorial}
+  sobre el campo \(\mathbb{R}\)
+  (con base \(\{z^k\}_{k \ge 0}\)),
+  con la operación adicional de multiplicación.
+
+  Es rutina verificar que las series formales de potencias
+  sobre el dominio integral \(D\) con variable \(z\)
+  son un dominio integral,
+  con:
+  \begin{align*}
+    0 &= \sum_{n \ge 0} 0 \, z^n \\
+    1 &= \sum_{n \ge 0} [n = 0] \, z^n
+  \end{align*}
+  Al anillo de series formales sobre el anillo \(R\)
+  lo llamaremos \(R \llbracket z \rrbracket\)
+  (recuérdese que llamamos \(R[z]\)
+   al anillo de polinomios en \(z\) sobre \(R\)).
+  Para evitar distinciones inútiles
+  consideramos \(R[z]\)
+  subanillo de \(R\llbracket z \rrbracket\) de la forma natural.
+
+\section{Unidades y recíprocos}
+\label{sec:series:unidades-reciprocos}
+\index{serie formal!unidad}
+\index{serie formal!reciproco@recíproco}
+
+  Sea \(F\) un campo.
+  En el anillo de series formales \(F \llbracket z \rrbracket\)
+  hay unidades que no son simplemente constantes
+  (como ocurre en el correspondiente anillo de polinomios formales).
+  Por ejemplo,
+  en \(\mathbb{C}\llbracket z \rrbracket\):
+  \begin{equation*}
+    (1 - z) \cdot (1 + z + z^2 + z^3 + \dotsb)
+      = (1 + z + z^2 + \dotsb) - (z + z^2 + z^3 + \dotsb)
+      = 1
+  \end{equation*}
+  Si \(a_0 = 0\) la serie no puede tener recíproco,
+  ya que no hay forma
+  de crear un término constante del producto en tal caso.
+
+  Por otro lado,
+  supongamos que \(a_0 \ne 0\):
+  \begin{align*}
+    \biggl( \, \sum_{n \ge 0} a_n z^n \biggr) \cdot
+      \biggl( \, \sum_{n \ge 0} b_n z^n \biggr)
+       &= 1 \\
+    \sum_{n \ge 0} \biggl( \,
+		     \sum_{0 \le k \le n} a_{n -k} b_k
+		   \biggr) z^n
+       &= 1
+  \end{align*}
+  Para \(n = 0\) debe ser \(a_0 b_0 = 1\),
+  o sea,
+  \(b_0 = 1 / a_0\);
+  luego para \(n > 0\) las sumas deben anularse:
+  \begin{equation*}
+    b_n
+      = -\frac{1}{a_0} \, \sum_{0 \le k \le n - 1} a_{n - k} b_k
+  \end{equation*}
+  Con esto último se obtiene la secuencia de todos los \(b_n\),
+  que es la secuencia de coeficientes del recíproco de la serie \(A(z)\).
+
+\section{Secuencias de series}
+\label{sec:series-secuencias}
+\index{serie formal!secuencia}
+
+  Para justificar rigurosamente el operar con series formales
+  debemos desarrollar el marco adecuado.
+  En términos generales,
+  las operaciones son válidas siempre que el cálculo de cada coeficiente
+  involucre un número finito de operaciones.
+  Por ejemplo,
+  en la sección~\ref{sec:series:unidades-reciprocos}
+  vimos que el \(n\)\nobreakdash-ésimo coeficiente
+  del recíproco de una serie cuyo término constante no es cero
+  es una combinación lineal de los coeficientes \(0\) al \(n - 1\)
+  de la serie,
+  una suma finita.
+  En contraste,
+  ``evaluar'' la serie \(A(z)\) en algún ``punto'' implica una suma infinita.
+  Usaremos \(A(0)\) como una notación cómoda
+  para \(\left[ z^0 \right] A(z)\),
+  eso sí.
+
+  Por otro lado,
+  sí tiene sentido reemplazar \(z\)
+  por \(z + z^2\) en la serie formal \(A(z)\)
+  (note que en la serie que estamos reemplazando
+   el coeficiente de \(z^0\) se anula).
+  Observamos que:
+  \begin{equation*}
+    (z + z^2)^n
+      = z^n (z + 1)^n
+      = z^n \sum_{0 \le k \le n} \binom{n}{k} \, z^k
+  \end{equation*}
+  Para:
+  \begin{equation*}
+    A(z)
+      = \sum_{n \ge 0} a_n z^n
+  \end{equation*}
+  resulta:
+  \begin{equation*}
+    A(z + z^2)
+      = \sum_{n \ge 0} a_n z^n \sum_{0 \le k \le n} \binom{n}{k} \, z^k
+      = \sum_{n \ge 0}
+	  \left(
+	    \sum_{0 \le k \le n} \binom{n - k}{k} \, a_{n - 1}
+	  \right) z^n
+  \end{equation*}
+  Como cada coeficiente de la nueva serie
+  se calcula con un número finito de operaciones,
+  tenemos una serie formal perfectamente definida.
+
+  Para generalizar esto,
+  requerimos definir
+  la noción de límite de secuencias en \(R \llbracket z \rrbracket\).
+  Informalmente,
+  consideramos dos series como ``cercanas'' si coinciden sus primeros términos.
+  \begin{definition}
+    El \emph{orden} de una serie,%
+      \index{serie formal!orden|textbfhy}
+    \(\ord A(z)\),
+    es el índice del primer coeficiente no cero.
+  \end{definition}
+  \begin{definition}
+    La secuencia de series
+    \(\left\langle A_k(z) \right\rangle_{k \ge 0}\)
+    \emph{converge} a la serie \(A(z)\) si%
+      \index{serie formal!secuencia!convergencia|textbfhy}
+    \begin{equation*}
+      \lim_{k \rightarrow \infty} \ord (A(z) - A_k(z))
+	= \infty
+    \end{equation*}
+    En tal caso
+    escribimos \(\lim_{k \rightarrow \infty} A_k(z) =  A(z)\).
+  \end{definition}
+  Si \(a_{n k} = \left[ z^n \right] A_k(z)\),
+  hay un número finito de \(a_{n k}\)
+  que difiere de \(\left[ z^n \right] A(z)\),
+  y en un número finito de operaciones podemos calcular \(a_n\).
+
+  Algunas consecuencias son las siguientes.
+  \begin{theorem}
+    \label{theo:series-operaciones}
+    Sean \(\left\langle A_n(z) \right\rangle_{n \ge 0}\)
+    y \(\left\langle B_n(z) \right\rangle_{n \ge 0}\) secuencias de series
+    que convergen a \(A(z)\) y \(B(z)\) en \(R \llbracket z \rrbracket\),
+    respectivamente.
+    Entonces:
+    \begin{enumerate}
+    \item
+     \(\displaystyle \left\langle A_n(z) + B_n(z) \right\rangle_{n \ge 0}\)
+     converge,
+     y \(\displaystyle \lim_{n \rightarrow \infty} A_n(z) + B_n(z)
+	    = A(z) + B(z)\)
+   \item
+     \(\displaystyle
+	  \left\langle A_n(z) \cdot B_n(z) \right\rangle_{n \ge 0}\)
+     converge,
+     y \(\displaystyle \lim_{n \rightarrow \infty} A_n(z) \cdot B_n(z)
+	    = A(z) \cdot B(z)\)
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    La demostración es aplicar hechos simples como:
+    \begin{align*}
+      \ord (A(z) + B(z))
+	&\ge \min \{ \ord A(z), \ord B(z) \} \\
+      \ord (A(z) \cdot B(z))
+	&\ge \ord A(z) + \ord B(z)
+    \end{align*}
+    Omitiremos los detalles.
+  \end{proof}
+
+  Para series en \(R \llbracket z \rrbracket\):
+  \begin{equation*}
+    A(z)
+      = \sum_{n \ge 0} a_n z^n
+    \hspace{3em}
+    B(z)
+      = \sum_{n \ge 0} b_n z^n
+  \end{equation*}
+  Si \(b_0 = 0\),
+  \(\ord (B(z))^k \ge k\).
+  Consideremos la secuencia:
+  \begin{align*}
+    C_0(z)
+      &= a_0 \\
+    C_1(z)
+      &= a_0 + a_1 B(z) \\
+    C_2(z)
+      &= a_0 + a_1 B(z) + a_2 (B(z))^2 \\
+      &\vdots \\
+    C_k(z)
+      &= a_0 + a_1 B(z) + a_2 (B(z))^2 + \dotsb + a_k (B(z))^k \\
+  \end{align*}
+  Los coeficientes de \(C_k(z)\) coinciden hasta el de orden \(k\)
+  con todos los sucesores en la secuencia,
+  luego esta converge a una serie \(C(z)\).%
+    \index{serie formal!secuencia!convergencia}
+  \begin{definition}
+    \index{serie formal!composicion@composición|textbfhy}
+    Definimos la \emph{composición} de las series \(A(z)\) y \(B(z)\),
+    donde \(b_0 = 0\),
+    como:
+    \begin{equation*}
+      A(B(z))
+	= \sum_{n \ge 0} a_n (B(z))^n
+	= \lim_{k \rightarrow \infty} C_k(z)
+    \end{equation*}
+  \end{definition}
+
+  Un teorema importante es:
+  \begin{theorem}
+    \label{theo:series-composicion-homomorfismo}
+    \index{anillo!homomorfismo}
+    Para todo \(U(z) \in R \llbracket z \rrbracket\)
+    con \(U(0) = 0\),
+    el mapa
+      \(\Phi_U \colon
+	  R \llbracket z \rrbracket \rightarrow R \llbracket z \rrbracket\)
+    definido mediante \(\Phi_U(A(z)) = A(U(z))\)
+    es un homomorfismo de anillo.
+  \end{theorem}
+  \begin{proof}
+    Sean:
+    \begin{equation*}
+      A(z)
+	= \sum_{n \ge 0} a_n z^n
+      \hspace{3em}
+      B(z)
+	= \sum_{n \ge 0} b_n z^n
+    \end{equation*}
+    Demostrar que \(\Phi_U(A(z) + B(z)) = \Phi_U(A(z)) + \Phi_U(B(z))\)
+    es simple,
+    y queda de ejercicio.
+
+    Para la multiplicación:
+    \begin{align*}
+      \Phi_U(A(z) \cdot &B(z)) - \Phi_U(A(z)) \cdot \Phi_U(B(z)) \\
+	&= \sum_{n \ge 0}
+	     \left(
+	       \sum_{0 \le k \le n} a_k b_{n - k}
+	     \right) U^n
+	    - \left(
+		\sum_{n\ge 0} a_n U^n
+	      \right) \cdot
+		\left(
+		  \sum_{n\ge 0} b_n U^n
+		\right) \\
+	&= \lim_{N \rightarrow \infty}
+	     \sum_{0 \le n \le N}
+	       \left(
+		 \sum_{0 \le k \le n} a_k b_{n - k}
+	       \right) U^n \\
+	&\hspace{3em}
+	    - \lim_{N \rightarrow \infty}
+		\left(
+		  \sum_{0 \le n \le N} a_n U^n
+		\right) \cdot
+		  \lim_{N \rightarrow \infty}
+		    \left(
+		      \sum_{0 \le n \le N} b_n U^n
+		    \right) \\
+	 &= \lim_{N \rightarrow \infty}
+	      \left(
+		\sum_{0 \le n \le N}
+		  \left(
+		    \sum_{0 \le k \le n} a_k b_{n - k}
+		  \right) U^n
+		- \left(
+		    \sum_{0 \le n \le N} a_n U^n
+		  \right) \cdot
+		    \left(
+		      \sum_{0 \le n \le N} b_n U^n
+		    \right)
+	      \right) \\
+	 &= - \lim_{N \rightarrow \infty}
+		\sum_{N + 1 \le n \le 2 N}
+		  \left(
+		    \sum_{0 \le k \le n} a_k b_{n - k}
+		  \right) U(z)^n
+    \end{align*}
+    En esto hemos usado el teorema~\ref{theo:series-operaciones}.
+    Resta demostrar que el último límite es infinito:
+    \begin{equation*}
+      \ord
+	\left(
+	  \sum_{N + 1 \le n \le 2 N}
+	    \left(
+	      \sum_{0 \le k \le n} a_k b_{n - k}
+	    \right) U(z)^n
+	\right)
+	\ge \ord U(z)^{N + 1}
+    \end{equation*}
+    Esto tiende a infinito cuando \(N \rightarrow \infty\),
+    y es \(\Phi_U(A(z) \cdot B(z)) = \Phi_U(A(z)) \cdot \Phi_U(B(z))\).
+  \end{proof}
+  O sea,
+  operar con las series \(A(z)\) y \(B(z)\)
+  es lo mismo que operar con las series \(A(U(z))\) y \(B(U(z))\).
+  La importancia del teorema~\ref{theo:series-composicion-homomorfismo}
+  radica en que expresiones como:
+  \begin{equation*}
+    \frac{1}{1 - z - z^2}
+  \end{equation*}
+  son ambiguas:
+  ¿Es el recíproco de la serie \(1 - z - z^2\),
+  o es tal vez la composición de \(1 / (1 - u)\) con \(u = z + z^2\)?
+  El teorema asegura que ambas son la misma serie.
+
+  Con las mismas herramientas se pueden justificar sumas y productos infinitos
+  de series formales.
+  \begin{definition}
+    Sea la secuencia \(\left\langle A_k(z) \right\rangle_{k \ge 0}\)
+    de series formales en \(R \llbracket z \rrbracket\).
+    Decimos que la suma infinita
+    \begin{equation*}
+      \sum_{k \ge 0} A_k(z)
+    \end{equation*}
+    \emph{converge} si la secuencia
+    \begin{equation*}
+      \sum_{0 \le k \le N} A_k(z)
+    \end{equation*}
+    converge en el sentido definido antes cuando \(N \rightarrow \infty\).
+    Igualmente,
+    decimos que el producto infinito
+    \begin{equation*}
+      \prod_{k \ge 0} A_k(z)
+    \end{equation*}
+    \emph{converge} si la secuencia
+    \begin{equation*}
+      \prod_{0 \le k \le N} A_k(z)
+    \end{equation*}
+    converge cuando \(N \rightarrow \infty\).
+  \end{definition}
+  Con esto:
+  \begin{theorem}
+    \label{theo:formal-series-convergence:sum+product}
+    Sea \(\left\langle A_k(z) \right\rangle_{k \ge 0}\)
+    una secuencia en \(R \llbracket z \rrbracket\).
+    Entonces las siguientes son equivalentes:
+    \begin{enumerate}
+    \item\label{item:lfs:infty}
+      \(\displaystyle \lim_{k \rightarrow \infty} \ord A_k(z) = \infty\)
+    \item\label{item:lfs:sum}
+      \(\displaystyle \sum_{k \ge 0} A_k(z)\) converge
+    \item\label{item:lfs:prod}
+      \(\displaystyle \prod_{k \ge 0} (1 + A_k(z))\) converge
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Demostraremos que (\ref{item:lfs:infty}) equivale a (\ref{item:lfs:sum}),
+    la demostración que (\ref{item:lfs:infty}) equivale a (\ref{item:lfs:prod})
+    es similar y se omite.
+
+    Definamos:
+    \begin{equation*}
+      C_n(z)
+	= \sum_{0 \le k \le n} A_k(z)
+    \end{equation*}
+    Primero demostramos
+    (\ref{item:lfs:infty})~\(\implies\)~(\ref{item:lfs:sum}).
+    Tenemos:
+    \begin{equation*}
+      \forall n \exists k_0 \forall k \ge k_0 \colon \ord A_k(z) > n
+    \end{equation*}
+    Esto es equivalente a decir:
+    \begin{equation*}
+      \forall n \exists k_0 \forall k \ge k_0
+	\colon \ord (C_{k + 1}(z) - C_k(z)) > n
+    \end{equation*}
+    O sea,
+    para cada \(n\) hay \(k_0\) tal que
+    para todo \(k \ge k_0\) el valor de \(\left[ z^n \right] C_k(z)\)
+    es fijo,
+    llamémosle \(c_n\).
+    Consideremos:
+    \begin{equation*}
+      C(z)
+	= \sum_{r \ge 0} c_r z^r
+    \end{equation*}
+    Por construcción:
+    \begin{equation*}
+      \forall n \exists k_0 \forall k \ge k_0
+	\colon \ord (C_k(z) - C(z)) > n
+    \end{equation*}
+    y la secuencia \(C_k(z)\) converge.
+
+    Ahora demostramos
+    (\ref{item:lfs:sum})~\(\implies\)~(\ref{item:lfs:infty}).
+    Si \(C_k(z)\) converge a \(C(z)\),
+    entonces:
+    \begin{equation*}
+      \forall n \exists k_0 \forall k \ge k_0
+	\colon \ord (C_k(z) - C(z)) > n
+    \end{equation*}
+    Para tales \(n\) y \(k\)
+    tenemos \(C_k(z) - C(z) > n\),
+    y:
+    \begin{equation*}
+      \left[ z^n \right] A_k(z)
+	= \left[ z \right] (C_{k + 1}(z) - C_k(z))
+	= \left[ z \right] C_{k + 1}(z) - \left[ z \right] C_k(z))
+	= 0
+    \end{equation*}
+    lo que es equivalente a:
+    \begin{equation*}
+      \forall n \exists k_0 \forall k \ge k_0
+	\colon \ord A_k(z) > n
+    \end{equation*}
+    que es lo que había que demostrar.
+  \end{proof}
+  Nótese que en el ámbito de los reales \(a_n \rightarrow 0\)
+  no asegura que \(\sum a_n\) ni \(\prod (1 + a_n)\) converjan.
+
+\section{El principio de transferencia}
+\label{sec:series-principio-transferencia}
+\index{serie formal!principio de transferencia|textbfhy}
+\index{serie de potencias}
+
+  Cuando \(R = \mathbb{R}\) o \(R = \mathbb{C}\),
+  es obvio preguntarse sobre la relación entre la serie formal
+  y la función definida por la serie de potencias.
+  Es claro que no toda serie formal corresponde a una función analítica,
+  por ejemplo la serie
+  \begin{equation*}
+    \sum_{n \ge 0} n! z^n
+  \end{equation*}
+  converge únicamente para \(z = 0\).
+  Pero como \(0! = 1\),
+  tiene un recíproco como serie formal:
+  \begin{equation*}
+    \left( \sum_{n \ge 0} n! z^n \right)^{-1}
+      = 1 - z - z^2 - 3 z^3 - 13 z^4 - 71 z^5 - 461 z^6 - \dotsb
+  \end{equation*}
+  Razonamientos válidos para series formales
+  no necesariamente tienen sentido para series de potencias.
+
+  Por el otro lado,
+  si dos series de potencias son idénticas como funciones analíticas
+  lo son como series formales:
+  \begin{theorem}[Principio de transferencia]
+    \label{theo:series-principio-transferencia}
+    Sean:
+    \begin{equation*}
+      A(z)
+	= \sum_{n \ge 0} a_n z^n
+      \hspace{3em}
+      B(z)
+	= \sum_{n \ge 0} b_n z^n
+    \end{equation*}
+    funciones reales o complejas,
+    analíticas en un vecindario \(\mathcal{U}\) no vacío de cero.%
+      \index{funcion@función!analitica@analítica}
+    Si \(A(z) = B(z)\) para todo \(z \in \mathcal{U}\),
+    entonces \(a_n = b_n\) para todo \(n \in \mathbb{N}_0\).
+  \end{theorem}
+  \begin{proof}
+    Bajo las suposiciones,
+    \(C(z) = A(z) - B(z)\) es analítica
+    e idénticamente \(0\) en \(\mathcal{U}\).
+    Por el teorema de Taylor,%
+      \index{Taylor, teorema de}
+    esto significa que todos los coeficientes de \(C(z)\) son cero:
+    \begin{equation*}
+      \left[ z^n \right] C(z)
+	= \left[ z^n \right] (A(z) - B(z))
+	= \left[ z^n \right] A(z) - \left[ z^n \right] B(z)
+	= a_n - b_n
+	= 0
+      \qedhere
+    \end{equation*}
+  \end{proof}
+  Esto permite demostrar algunas identidades en forma simple.
+  Por ejemplo,
+  tenemos las expansiones:
+  \begin{align*}
+    \mathrm{e}^z
+      &= \sum_{n \ge 0} \frac{z^n}{n!}
+	   && \text{para todo \(z \in \mathbb{C}\)} \\
+    \ln (1 + z)
+      &= \sum_{n \ge 1} \frac{z^n}{n}
+	   && \text{para \(\lvert z \rvert < 1\)}
+  \end{align*}
+  Como para las funciones analíticas respectivas
+  \(\exp(\ln (1 + z)) = 1 + z\),
+  esto vale para las series formales.
+  Verificarlo en forma directa involucra largos y complicados cálculos.
+
+\section{Derivadas e integrales formales}
+\label{sec:series:derivadas-integrales}
+
+  Definimos:%
+    \index{serie formal!derivada}
+  \begin{equation*}
+    \frac{\mathrm{d}}{\mathrm{d} z} \,
+      \biggl( \, \sum_{n \ge 0} a_n z^n \biggr)
+      = \sum_{n \ge 1} n a_n z^{n - 1}
+      = \sum_{n \ge 0} (n + 1) a_{n + 1} z^n
+  \end{equation*}
+  Esta es una definición puramente formal,
+  no intervienen límites ni el significado de la serie como función.
+  Definimos además para una serie formal \(f(z)\):
+  \begin{align*}
+    f^{(0)}(z)
+      &= f(z) \\
+    f^{(n + 1)}(z)
+      &= \frac{\mathrm{d}}{\mathrm{d} z} \, f^{(n)}(z)
+  \end{align*}
+  Una notación alternativa útil es:
+  \begin{equation*}
+    \mathrm{D} f(z)
+      = \frac{\mathrm{d}}{\mathrm{d} z} \, f(z)
+  \end{equation*}
+  bajo el entendido \(\mathrm{D}^n f(z) = f^{(n)}(z)\).
+  Para las primeras derivadas se suele usar:
+  \begin{equation*}
+    f'(z)
+      = \frac{\mathrm{d} f}{\mathrm{d} x}
+    \hspace{3em}
+    f''(z)
+      = \frac{\mathrm{d}^2 f}{\mathrm{d} x^2}
+    \hspace{3em}
+    f'''(z)
+      = \frac{\mathrm{d}^3 f}{\mathrm{d} x^3}
+  \end{equation*}
+
+  Tenemos también:
+  \begin{theorem}
+    \label{theo:derivadas-series}
+    Sean \(f(z)\) y \(g(z)\) series formales.
+    Entonces:
+    \begin{align*}
+      \mathrm{D}^n \left( a f(z) + b g(z)\right)
+	&= a f^{(n)}(z) + b g^{(n)}(z) \\
+      \mathrm{D}^n \left(f(z) \cdot g(z)\right)
+	&= \sum_{0 \le k \le n} \binom{n}{k} \, f^{(k)}(z) \cdot g^{(n - k)}(z)
+    \end{align*}
+  \end{theorem}
+  La fórmula para las derivadas de un producto
+  se conoce bajo el nombre de Leibniz.
+  Las demostraciones son rutinarias,
+  y quedan de ejercicio.
+
+  Para la composición de series definida antes
+  \begin{theorem}[Regla de la cadena]
+    \label{theo:cadena-series}
+    Sean \(f(z)\) y \(g(z)\) series formales,
+    con \(g(0) = 0\).
+    Entonces:
+    \begin{equation*}
+      \frac{\mathrm{d}}{\mathrm{d} z} f(g(z))
+	= f'(g(z)) \cdot g'(z)
+    \end{equation*}
+  \end{theorem}
+  Para demostrarlo,
+  primeramente se demuestra la derivada de una potencia de una serie,
+  y usando esto se aplica término a término.
+  Nuevamente es rutina,
+  y nos ahorraremos los detalles.
+
+  De la misma manera que obtenemos derivadas término a término,
+  podemos calcular integrales:%
+    \index{serie formal!integral}
+  \begin{equation*}
+    \int_0^z f(t) \, \mathrm{d} t
+      = \sum_{n \ge 1} \frac{a_{n - 1}}{n} \, z^n
+  \end{equation*}
+  Es claro que se cumplen las relaciones fundamentales:
+  \begin{equation*}
+    \frac{\mathrm{d}}{\mathrm{d} z} \, \int_0^z f(t) \, \mathrm{d} t
+      = \int_0^z \frac{\mathrm{d}}{\mathrm{d} t} \, f(t) \, \mathrm{d} t
+      = f(z)
+  \end{equation*}
+  Podemos anotar para la antiderivada:
+  \begin{equation*}
+    \mathrm{D}^{-1} f(z)
+      = \int_0^z f(z) \, \mathrm{d} z
+  \end{equation*}
+
+\section{Series en múltiples variables}
+\label{sec:series-multivariables}
+\index{serie formal!multivariada}
+
+  Podemos también considerar series en más de una variable,
+  si las variables son \(x\) e \(y\)
+  anotaremos \(R\llbracket x, y \rrbracket\).
+  Esto es,
+  por ejemplo:
+  \begin{equation*}
+    A(x, y)
+      = \sum_{\substack{
+		r \ge 0 \\
+		s \ge 0
+	     }} a_{r, s} x^r y^s
+  \end{equation*}
+  Es simple
+  (aunque engorroso)
+  demostrar que \(R \llbracket x, y \rrbracket\)
+  es isomorfo a \(R \llbracket x \rrbracket \llbracket y \rrbracket\)%
+    \index{anillo!homomorfismo}
+  y a \(R \llbracket y \rrbracket \llbracket x \rrbracket\),
+  pero no nos detendremos en tales detalles.
+
+  Para desarrollar una teoría de secuencias en series multivariables,
+  definimos el \emph{orden total}%
+    \index{serie formal!orden total|textbfhy}
+  del término \(x_1^{n_1} x_2^{n_2} x_3^{n_3} \dotso x_m^{n_m}\)
+  como \(n_1 + n_2 + \dotsb + n_m\).
+  El orden (total) de la serie \(\ord A(x_1, x_2, \dotsc, x_m)\)
+  es el orden total del término
+  de orden total mínimo en \(A(x_1, x_2, \dotsc, x_m)\).
+  Con esta definición
+  si para una secuencia
+  de series formales multivariadas \(A_k(x_1, x_2, \dotsc, x_n)\):
+  \begin{equation*}
+    \lim_{k \rightarrow \infty} \ord A_k (x_1, x_2, \dotsc, x_n)
+      = \infty
+  \end{equation*}
+  sabemos que solo en un número finito de los \(A_k(x_1, x_2, \dotsc, x_n)\)
+  el coeficiente de \(x_1^{m_1} x_2^{m_2} \dotsm x_n^{m_n}\)
+  difiere,
+  y lo podemos calcular en un número finito de pasos.
+  Omitimos los detalles
+  de teoremas análogos a los para el caso univariado,
+  solo notamos que esto permite justificar
+  en \(R \llbracket x, y \rrbracket\)
+  series como:
+  \begin{equation*}
+    \exp(x + y)
+      = \sum_{n \ge 0} \frac{(x + y)^n}{n!}
+  \end{equation*}
+  Esto no resulta del caso univariado,
+  en \(R \llbracket x \rrbracket \llbracket y \rrbracket\)
+  la serie \(x + y\) tiene término constante \(x\),
+  que no es cero.
+  Podemos definir derivadas (parciales) e integrales
+  de forma similar al caso univariado.
+  Usaremos la notación \(\mathrm{D}_x f\) para la derivada parcial
+  respecto de \(x\) de la serie \(f\),
+  también \(f_{x y}\) para la derivada respecto de \(x\) e \(y\).
+
+  \begin{theorem}[Funciones implícitas]
+    \index{serie formal!funcion implicita@función implícita}
+    \label{theo:series-funciones-implicitas}
+    Sea \(A(x, y) \in F \llbracket x, y \rrbracket\)
+    tal que \(A(0, 0) = 0\)
+    y \(\mathrm{D}_y A(0, 0) \ne 0\).
+    Entonces existe
+    una única serie formal \(f(x) \in F \llbracket x \rrbracket\)
+    con \(f(0) = 0\)
+    tal que \(A(x, f(x)) = 0\).
+  \end{theorem}
+  \begin{proof}
+    Escribamos
+    \begin{equation*}
+      A(x, y)
+	= \sum_{n \ge 0} a_n(x) y^n
+	= \sum_{\substack{n \ge 0 \\ k \ge 0}} a_{n k} x^k y^n
+    \end{equation*}
+    donde \(a_n(x) \in F \llbracket x \rrbracket\).
+    Las condiciones sobre \(A(x, y)\) resultan en
+    \(a_0(x) = 0\) y \(a_1(x) \ne 0\).
+    Mostraremos cómo calcular sucesivamente los coeficientes \(f_n\) de
+    \begin{equation*}
+      f(x)
+	= \sum_{n \ge 0} f_n x^n
+    \end{equation*}
+    Como \(f(0) = 0\),
+    ya tenemos \(f_0 = 0\).
+    Enseguida:
+    \begin{equation*}
+      \left[ x \right] \sum_{n \ge 0} a_n(x) f(x)^n
+	= 0
+    \end{equation*}
+    hace que baste considerar
+    \begin{equation*}
+      \left[ x \right] ( a_0(x) + a_1(x) f(x) )
+	= \left[ x \right]
+	     (a_{0 0} + a_{0 1} x + a_{1 0} f_1 x + a_{1 1} f_0 x + \dotsb)
+	= 0
+    \end{equation*}
+    de donde despejamos
+    \begin{equation*}
+      f_1
+	= - \frac{a_{0 1}}{a_{1 1}}
+    \end{equation*}
+    Esto es válido,
+    ya que \(a_{1 1} = \mathrm{D}_y A(0, 0) \ne 0\).
+    Continuamos:
+    \begin{equation*}
+      \left[ x^k \right] \sum_{n \ge 0} a_n(x) f(x)^n
+	= 0
+    \end{equation*}
+    donde \(f(0) = 0\) permite truncar la suma,
+    y se traduce en
+    \begin{equation*}
+      \left[ x^k \right]
+	\sum_{0 \le n \le k} a_n(x) f(x)^n
+    \end{equation*}
+    Observamos que el único término en esto que depende de \(f_k\)
+    viene de \(a_1(0) f_k\),
+    todos los demás solo involucran \(f_0\), \ldots, \(f_{k - 1}\).
+    Despejando,
+    tenemos \(f_k\) en términos de los coeficientes anteriores,
+    y \(f(x)\) queda determinada mediante un proceso convergente.
+  \end{proof}
+
+  Junto con el teorema~\ref{theo:series-composicion-homomorfismo},
+  el teorema~\ref{theo:series-funciones-implicitas}
+  nos dice que la substitución
+  \(z \leadsto U(z)\) es un isomorfismo
+  de \(F \llbracket z \rrbracket\) a sí mismo
+  (un \emph{automorfismo})%
+    \index{anillo!automorfismo}
+  si \(\ord U(z) = 1\).
+  Es claro que los coeficientes de tales funciones implícitas
+  normalmente resultan bastante locos.
+
+  Por ejemplo,
+  podemos definir:
+  \begin{equation*}
+    W(z) \mathrm{e}^{W(z)}
+      = z
+  \end{equation*}
+  con \(W(0) = 0\).
+  Para esto tomamos
+    \(A(x, y) = y \mathrm{e}^y - x \in \mathbb{R} \llbracket x, y \rrbracket\),
+  como \(A(0, 0) = 0\) y \(\mathrm{D}_y A(0, 0) = 1 \ne 0\),
+  se cumplen las condiciones del teorema~\ref{theo:series-funciones-implicitas}
+  y tal serie de potencias \(W(z)\) existe.
+  La demostración da una receta para obtener los coeficientes.
+
+  Es relativamente sencillo el caso particular de ecuaciones de la forma
+  \begin{equation*}
+    u = t \phi(u)
+  \end{equation*}
+  donde \(\phi\) es una función dada de \(u\).
+  Esta relación define \(u\) en función de \(t\),
+  y ``estamos despejando \(u\) en términos de \(t\)''.
+  Fue demostrada por Lagrange%
+    \index{Lagrange, inversion de@Lagrange, inversión de|textbfhy}%
+    \index{Lagrange-Burmann, inversion de@Lagrange-Bürmann, inversión de|see{Lagrange, inversión de}}
+  y casi simultáneamente por Bürmann,%
+    \index{Burmann, Hans Heinrich@Bürmann, Hans Heinrich}
+  la forma dada acá es la de Bürmann.
+  \begin{theorem}[Fórmula de inversión de Lagrange]
+    \label{theo:LIF}
+    Sean \(f(u)\) y \(\phi(u)\) series formales de potencias en \(u\)
+    sobre un campo \(F\),
+    con \(\phi(0) = 1\).
+    Entonces hay una única serie formal \(u = u(t)\) que cumple:
+    \begin{equation*}
+      u = t \phi(u)
+    \end{equation*}
+    Además,
+    el valor \(f(u(t))\) de \(f\) en el cero \(u = u(t)\),
+    expandido en serie alrededor de \(t = 0\),
+    cumple:
+    \begin{equation*}
+      \left[ t^n \right] \left\{ f(u(t)) \right\}
+	 = \frac{1}{n} \, \left[ u^{n - 1} \right] \,
+			    \left\{ f'(u) \phi(u)^n \right\}
+    \end{equation*}
+  \end{theorem}
+  Dadas \(f\) y \(\phi\),
+  esta fórmula da los coeficientes de \(f(u(t))\) en bandeja.
+  No demostraremos este resultado,
+  ya que nos llevaría demasiado fuera del rango de este ramo.
+  La demostración del teorema puede encontrarse en el texto de Wilf~%
+    \cite{wilf06:_gfology}.
+
+  La razón del nombre es que si \(t = A(u)\),
+  esta fórmula da \(u = u(t)\) mediante:
+  \begin{equation*}
+    u = t \frac{u}{A(u)}
+  \end{equation*}
+
+  Una aplicación entretenida provee la función de Cayley,%
+    \index{Cayley, funcion de@Cayley, función de}
+  definida por:
+  \begin{equation}
+    \label{eq:Cayley-function}
+    C(z)
+      = z \mathrm{e}^{C(z)}
+  \end{equation}
+  Con \(f(u) = u\)
+  y \(\phi(u) = \mathrm{e}^u\) tenemos directamente los coeficientes:
+  \begin{align}
+    [z^n] C(z)
+      &= \frac{1}{n} [u^{n - 1}] \mathrm{e}^{n u} \notag \\
+      &= \frac{1}{n} \frac{n^{n - 1}}{(n - 1)!} \notag \\
+      &= \frac{n^{n - 1}}{n!}
+	    \label{eq:Cayley-coeff}
+  \end{align}
+  Por otro lado,
+  con \(f(u) = \mathrm{e}^{\gamma u}\)
+  y \(\phi(u) = \mathrm{e}^u\) resulta:
+  \begin{align*}
+    [z^n] \mathrm{e}^{\gamma C(z)}
+      &= \frac{1}{n} [u^{n - 1}]
+	   \left(
+	     \frac{\mathrm{d}}{\mathrm{d} u} \mathrm{e}^{\gamma u}
+	       \cdot \mathrm{e}^{n u}
+	   \right) \\
+      &= \frac{\gamma (\gamma + n)^{n - 1}}{n!}
+  \end{align*}
+  Comparando coeficientes de:
+  \begin{equation*}
+    \mathrm{e}^{(\alpha + \beta) C(z)}
+      = \mathrm{e}^{\alpha C(z)} \cdot \mathrm{e}^{\beta C(z)}
+  \end{equation*}
+  se obtiene la fórmula binomial de Abel~\cite{abel26:_identity}:%
+    \index{Abel, formula binomial de@Abel, fórmula binomial de}
+  \begin{equation}
+    \label{eq:Abel-binomial}
+    (\alpha + \beta) (\alpha + \beta + n)^{n - 1}
+      = \alpha \beta
+	  \sum_{0 \le k \le n}
+	    \binom{n}{k}
+	      (\alpha + k)^{k - 1}
+	      (\beta + n - k)^{n - k - 1}
+  \end{equation}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

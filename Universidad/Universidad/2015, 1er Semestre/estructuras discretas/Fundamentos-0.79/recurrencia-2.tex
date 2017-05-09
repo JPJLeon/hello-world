@@ -1,0 +1,237 @@
+% recurrencia-2.tex
+%
+% Copyright (c) 2013-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section{Otras recurrencias de dos índices}
+\label{sec:recurrencia-2-indices}
+
+  Consideremos el problema de calcular
+  cuántos subconjuntos de \(k\) elementos de \(\{1, 2, \dotsc, n\}\)
+  hay tal que no contienen números consecutivos.
+  Llamemos \(s(n, k)\) a este valor.
+  Para construir una recurrencia para ellos,
+  aplicamos el método general de ver qué pasa al incluir o excluir \(n\).
+  \begin{description}
+  \item[\boldmath No incluye \(n\):\unboldmath]
+    Esto es simplemente elegir \(k\) de entre los primeros \(n - 1\),
+    o sea \(s(n - 1, k)\).
+  \item[\boldmath Incluye \(n\):\unboldmath]
+    Quedan por agregar \(k - 1\) elementos,
+    que no pueden incluir a \(n - 1\),
+    o sea corresponde a \(s(n - 2, k - 1)\).
+  \end{description}
+  Esto nos da la recurrencia:
+  \begin{equation*}
+    s(n, k)
+      = s(n - 1, k) + s(n - 2, k - 1)
+  \end{equation*}
+  Ajustando índices:
+  \begin{equation}
+    \label{eq:recurrence-s-1}
+    s(n + 2, k + 1)
+      = s(n + 1, k + 1) + s(n, k)
+  \end{equation}
+  Es claro que para \(n \ge 1\):
+  \begin{equation}
+    s(n, 1)
+      = n
+	   \label{eq:recurrence-s(n,1)-boundary}
+  \end{equation}
+  Requeriremos
+  los valores \(s(0, 0)\), \(s(n, 0)\), \(s(0, k)\), \(s(1, k)\).
+  De la recurrencia,
+  con \(n \ge 0\):
+  \begin{align*}
+    s(n + 2, 1)
+      &= s(n + 1, 1) + s(n, 0) \\
+    n + 2
+      &= n + 1 + s(n, 0)
+  \end{align*}
+  Por tanto,
+  definimos \(s(n, 0) = 1\).
+  Similarmente:
+  \begin{equation*}
+    s(2, k + 1)
+      = s(1, k + 1) + s(0, k)
+  \end{equation*}
+  Para \(k \ge 1\) resulta \(s(0, k) = 0\),
+  con lo que \(s(0, k) = [k = 0]\).
+  Además,
+  uniendo los casos \(s(1, 0) = s(1, 1) = 1\)
+  con \(s(1, k) = 0\) para \(k > 1\):
+  \begin{equation*}
+    s(1, k)
+      = [ 0 \le k \le 1 ]
+  \end{equation*}
+
+  Definamos la función generatriz:
+  \begin{equation}
+    \label{eq:recurrence-s-GF}
+    S(x, y)
+      = \sum_{n, k \ge 0} s(n, k) x^n y^k
+  \end{equation}
+  Para aplicar nuestra técnicas de solución de recurrencias,
+  necesitaremos las sumas:
+  \begin{align*}
+    x^2 y \sum_{n, k \ge 0} s(n + 2, k + 1) x^n y^k
+      &= S(x, y)
+	   - \sum_{k \ge 0} s(0, k) y^k
+	   - \sum_{k \ge 0} s(1, k) x y^k
+	   - \sum_{n \ge 0} s(n, 0) x^n \\
+      &\hspace{6em}
+	   + s(0, 0)
+	   + s(1, 0) x \\
+      &= S(x, y)
+	   - 1
+	   - x (1 + y)
+	   - \frac{1}{1 - x}
+	   + 1
+	   + x \\
+      &= S(x, y) - x y - \frac{1}{1 - x} \\
+    x y \sum_{n, k \ge 0} s(n + 1, k + 1) x^n y^k
+      &= S(x, y)
+	   - \sum_{k \ge 0} s(0, k) y^k
+	   - \sum_{n \ge 0} s(n, 0) x^n
+	   + s(0, 0) \\
+      &= S(x, y)
+	   - 1
+	   - \frac{1}{1 - x}
+	   + 1 \\
+      &= S(x, y) - \frac{1}{1 - x}
+  \end{align*}
+  Los términos que se suman se han restado dos veces,
+  y deben reponerse.
+  Esto con la recurrencia da:
+  \begin{equation*}
+    \frac{S(x, y)
+	    - x (1 + y)
+	    - \frac{1}{1 - x}}
+	 {x^2 y}
+      = \frac{S(x, y) - \frac{1}{1 - x}}{x y}
+	  + S(x, y)
+  \end{equation*}
+  Despejando:
+  \begin{equation}
+    \label{eq:GF-s}
+    S(x, y)
+      = \frac{1 + x y}{1 - x - x^2 y}
+  \end{equation}
+  Podemos escribir~\eqref{eq:GF-s} como:
+  \begin{align*}
+    S(x, y)
+      &= \frac{1 + x y}{1 - x (1 + x y)} \\
+      &= \sum_{r \ge 0} x^r (1 + x y)^{r + 1} \\
+      &= \sum_{r \ge 0} x^r
+	   \sum_{s \ge 0} \binom{r + 1}{s} \, x^s y^s \\
+      &= \sum_{r, s \ge 0} \binom{r + 1}{s} \, x^{r + s} y^s
+  \end{align*}
+  De aquí:
+  \begin{equation}
+    \label{eq:s(n,k)}
+    s(n, k)
+      = \left[ x^n y^k \right] \, S(x, y)
+      = \binom{n - k + 1}{k}
+  \end{equation}
+
+  Para \(y = 1\) la función generatriz~\eqref{eq:GF-s} da:
+  \begin{equation*}
+    S(x, 1)
+      = \frac{1 + x}{1 - x - x^2}
+      = \frac{F(x) - x}{x^2}
+  \end{equation*}
+  Acá \(F(x)\) es la función generatriz
+  de los números de Fibonacci~\eqref{eq:gf-Fibonacci}.
+  Esto concuerda con sumar la recurrencia~\eqref{eq:recurrence-s-1}
+  sobre todo \(k\),
+  como \(s(0, 0) = 1 = F_2\) y \(s(1, 0) + s(1, 1) = 2 = F_3\).
+
+  Otro caso de interés son los números de Delannoy~%
+    \cite{delannoy95:_quest_probab}
+  (ver también la discusión de Banderier y Schwer~%
+    \cite{banderier05:_why_delannoy_numbers}).
+  Se define \(D(m, n)\)
+  como el número de caminos entre \((0, 0)\) y \((m, n)\)
+  en una cuadrícula,
+  si se permiten únicamente pasos hacia el norte, el nordeste o este.
+  De la definición es clara la recurrencia:
+  \begin{equation}
+    \label{eq:Delannoy-recurrence}
+    D(m, n)
+      = D(m - 1, n) + D(m, n - 1) + D(m - 1, n - 1)
+    \qquad D(0, 0) = 1
+  \end{equation}
+  Para aplicar nuestra técnica requeriremos:
+  \begin{equation}
+    \label{eq:Delannoy-boundary}
+    D(m, 0) = D(0, n) = 1
+  \end{equation}
+  Definiendo la función generatriz ordinaria:
+  \begin{equation}
+    \label{eq:Delannoy-GF-definition}
+    d(x, y)
+      = \sum_{m, n \ge 0} D(m, n) x^m y^n
+  \end{equation}
+  obtenemos la ecuación funcional:
+  \begin{equation}
+    \label{eq:Delannoy-FE}
+    \frac{d(x, y) - d(0, y) - d(y, 0) + d(0, 0)}{x y}
+      = \frac{d(x, y) - d(0, y)}{x} + \frac{d(x, y) - d(x, 0)}{y} + d(x, y)
+  \end{equation}
+  Las condiciones de contorno dan:
+  \begin{equation}
+    \label{eq:Delannoy-boundary-GF}
+    d(0, y)
+      = \frac{1}{1 - y}
+    \hspace{3em}
+    d(x, 0)
+      = \frac{1}{1 - x}
+  \end{equation}
+  Substituyendo~\eqref{eq:Delannoy-boundary-GF} en~\eqref{eq:Delannoy-FE}
+  y despejando \(d(x, y)\) resulta:
+  \begin{equation}
+    \label{eq:Delannoy-GF}
+    d(x, y)
+      = \frac{1}{1 - x - y - x y}
+  \end{equation}
+  El lector interesado verificará que expandir como serie geométrica
+  y extraer los coeficientes respectivos resulta en:
+  \begin{equation}
+    \label{eq:Delannoy}
+      D(m, n)
+	= \sum_t \binom{m + n - t}{n} \, \binom{n}{t}
+  \end{equation}
+  La asimetría de~\eqref{eq:Delannoy}
+  ofende las sensibilidades del autor.
+  Puede escribirse en forma simétrica en términos de coeficientes trinomiales,
+  eso sí.
+
+  La siguiente idea da una expansión más simétrica:
+  \begin{align*}
+    d(x, y)
+      &= \frac{1}{(1 - x) (1 - y) - 2 x y} \\
+      &= \frac{(1 - x) (1 - y)}{1 - \frac{2 x y}{(1 - x) (1 - y)}} \\
+      &= (1 - x) (1 - y)
+	   \sum_{r \ge 0} \left( \frac{2 x y}{(1 - x) (1 - y)} \right)^r \\
+      &= \sum_{r \ge 0}
+	  \frac{2^r x^r y^r}{(1 - x)^{r - 1} \, (1 - y)^{r - 1}} \\
+      &= \sum_{r \ge 0} 2^r \,
+	   \sum_{s \ge 0} \binom{r + s}{s} \, x^{r + s}
+	   \sum_{t \ge 0} \binom{r + t}{t} \, y^{r + t}
+  \end{align*}
+  Al extraer el coeficiente de \(x^m y^n\)
+  solo sobreviven los términos con \(r + s = m\) y \(r + t = n\),
+  aprovechando la simetría de los coeficientes binomiales:
+  \begin{equation}
+    \label{eq:Delannoy-alt}
+    D(m, n)
+      = \sum_{r \ge 0} 2^r \, \binom{m}{r} \, \binom{n}{r}
+  \end{equation}
+  En todo caso,
+  ya habíamos demostrado esta identidad como~\eqref{eq:so:binomial-identity}
+  usando aceite de serpiente.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

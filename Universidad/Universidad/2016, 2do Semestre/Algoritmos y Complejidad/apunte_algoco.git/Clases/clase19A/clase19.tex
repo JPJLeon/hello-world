@@ -1,0 +1,465 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{subcaption} % para las subfigures
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221 \quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#19\quad Método Simbólico}}
+
+\DeclareMathOperator{\Seq}{\textsc{Seq}}
+\DeclareMathOperator{\Cyc}{\textsc{Cyc}}
+\DeclareMathOperator{\Set}{\textsc{Set}}
+\DeclareMathOperator{\MSet}{\textsc{MSet}}
+
+
+\author{Aldo Berrios Valenzuela}
+
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase 19\\Método Simbólico}
+
+\date{Miércoles 12 de octubre de 2016}
+
+\usepackage{tikz,ifthen}
+\usetikzlibrary{automata,positioning, babel}
+\definecolor{navyblue}{RGB}{0,148,222}
+\usetikzlibrary{fit}
+\tikzset{shorten >=1pt,node distance=1.8cm,on grid, >=stealth, initial text=Inicio,
+	every state/.style={ draw=black ,fill=black, minimum size=2mm},
+	bend angle=35, every loop/.style={looseness=13}}
+
+
+
+\begin{document}
+\maketitle
+\section{Método Simbólico}
+\paragraph{Idea:} Describir cómo se construyen objetos, obtener funciones generatrices \emph{directamente}.
+
+\begin{definition}[Clase Combinatoria]
+	Una \emph{clase} (combinatoria) es un conjunto $\mathcal{A}$, de \emph{objetos} $\alpha \in \mathcal{A}$. Un objeto tiene un \emph{tamaño} $\nabsoluto{\alpha}\in\mathbb{N}_0$. Por ejemplo, $\mathcal{A}$ pueden ser todas las permutaciones de un arreglo $a\ncorchetes{n}$, donde $\alpha \in \mathcal{A}$ es una permutación.
+\end{definition}
+
+Al conjunto de objetos de tamaño $n$ lo llamaremos $\mathcal{A}_n$, el número de objetos de tamaño $n$ es $\nabsoluto{\mathcal{A}_n}=a_n$. Exigimos $a_n$ finito para todo $n\in\mathbb{N}_0$.
+
+Las funciones generatrices asociadas son:
+\begin{itemize}
+	\item Ordinaria:
+	\begin{equation}
+	A\nparentesis{z} = \sum_{\alpha \in \mathcal{A}} z^{\nabsoluto{\alpha}} = \sum_{n \geq 0}a_nz^n
+	\end{equation}
+	
+	\item Exponencial:
+	\begin{equation}
+	\hat A \nparentesis{z} = \sum_{\alpha \in \mathcal{A}} \dfrac{z^{\nabsoluto{k}}}{\nabsoluto{\alpha}!} = \sum_{n \geq 0} a_n \dfrac{z^n}{n!}
+	\end{equation}
+\end{itemize}
+Clases básicas:
+\begin{itemize}
+	\item $\emptyset$: Vacía. Funciones generatrices 0.
+	
+	\item $\mathcal{E}$: Contiene un único objeto de tamaño 0, llamado $\epsilon$ (¡sorpresa!); La función generatriz correspondiente es:
+	\begin{equation*}
+	A\nparentesis{z} = 1
+	\end{equation*}
+	
+	\item $\mathcal{Z}$: Contiene un único objeto de tamaño 1, llamado $\zeta$ (zeta); La función generatriz asociada a esta clase es:
+	\begin{equation*}
+	A\nparentesis{z} = z
+	\end{equation*}
+
+\end{itemize}
+Operaciones:
+\begin{itemize}
+	\item $\mathcal{A} + \mathcal{B}$: Unión combinatoria; se permiten repetidas (objetos se \comillas{decoran} con su origen)
+	
+	\item $\mathcal{A} \times \mathcal{B}$: Objetos $\nparentesis{\alpha, \beta}$ con $\alpha \in \mathcal{A}$, $\beta \in \mathcal{B}$; $\nabsoluto{\nparentesis{\alpha, \beta}}=\nabsoluto{\alpha} + \nabsoluto{\beta}$
+	
+	\item $\Seq\nparentesis{\mathcal{A}}$: Secuencia de $\mathcal{A}$, o sea:
+	\begin{equation*}
+	\llaves{\epsilon, \alpha, \nparentesis{\alpha_1, \alpha_2}, \nparentesis{\alpha_1, \alpha_2, \alpha_3}, \ldots}
+	\end{equation*}
+	
+	\item $\Set\nparentesis{\mathcal{A}}$: Subconjuntos de $\mathcal{A}$. Esto es como el conjunto de potencia.
+	
+	\item $\MSet\nparentesis{\mathcal{A}}$: Multisubcojuntos de $\mathcal{A}$
+	
+	\item $\Cyc\nparentesis{\mathcal{A}}$: Consiste en ordenar elementos de $\mathcal{A}$ en un círculo (una secuencia de inicio y fin). Consideremos el arreglo $\ncorchetes{a, b, b, b, b, a}$, dos ciclos para este arreglo se pueden apreciar en la figura \ref{19::EjemploCiclo}.
+	\begin{figure}[!h]
+		\centering
+		\begin{subfigure}[!h]{0.3\textwidth}
+			\centering
+			\begin{tikzpicture}
+			\node (a1) {$a$};
+			\node [below left of = a1] (b1) {$b$};
+			\node [below right of = a1] (b2) {$b$};
+			\node [below of = b1] (b3) {$b$};
+			\node [below of = b2] (b4) {$b$};
+			\node [below right of = b3] (a2) {$a$};
+			
+			\path (a1) edge (b1)
+			edge (b2)
+			(b1) edge (b3)
+			(b2) edge (b4)
+			(b3) edge (a2)
+			(b4) edge (a2);
+			\end{tikzpicture}
+			\caption{}
+		\end{subfigure}
+		\begin{subfigure}[!h]{0.3\textwidth}
+			\centering
+			\begin{tikzpicture}
+			\node (a1) {$b$};
+			\node [below left of = a1] (b1) {$b$};
+			\node [below right of = a1] (b2) {$a$};
+			\node [below of = b1] (b3) {$a$};
+			\node [below of = b2] (b4) {$b$};
+			\node [below right of = b3] (a2) {$b$};
+			
+			\path (a1) edge (b1)
+			edge (b2)
+			(b1) edge (b3)
+			(b2) edge (b4)
+			(b3) edge (a2)
+			(b4) edge (a2);
+			\end{tikzpicture}
+			\caption{}
+		\end{subfigure}
+		\caption{Ejemplo de ciclos para el arreglo $\ncorchetes{a, b, b, b, b, a}$.}
+		\label{19::EjemploCiclo}
+	\end{figure}
+\end{itemize}
+Note que para las cuatro últimas operaciones se tiene que $\mathcal{A}$ \emph{no} contiene objetos de tamaño 0.
+
+
+\subsection{Objetos no rotulados}
+
+\begin{definition}[Objetos no rotulados]
+	Formados por \emph{átomos} (tamaño de $\alpha$ es el número de átomos) indistinguibles / intercambiables.
+\end{definition}
+
+\begin{teorema}\label{19::Propiedades:No:Rotulados}
+	Sean $\mathcal{A}$, $\mathcal{B}$ calses, con funciones generatrices ordinarias $A\nparentesis{z}$, $B\nparentesis{z}$. La función generatriz de:
+	\begin{enumerate}
+		\item
+		Para enumerar \(\mathcal{A} + \mathcal{B}\):
+		\begin{equation*}
+		A(z) + B(z)
+		\end{equation*}
+		\item
+		Para enumerar \(\mathcal{A} \times \mathcal{B}\):
+		\begin{equation*}
+		A(z) \cdot B(z)
+		\end{equation*}
+		\item
+		Para enumerar \(\Seq(\mathcal{A})\):
+		\begin{equation*}
+		\frac{1}{1 - A(z)}
+		\end{equation*}
+		\item
+		Para enumerar \(\Set(\mathcal{A})\):
+		\begin{equation*}
+		\prod_{\alpha \in \mathcal{A}}
+		\left( 1 + z^{\lvert \alpha \rvert} \right)
+		= \prod_{n \ge 1} (1 + z^n)^{a_n}
+		= \exp \left(
+		\sum_{k \ge 1} \frac{(-1)^{k + 1}}{k} \, A(z^k)
+		\right)
+		\end{equation*}
+		\item
+		Para enumerar \(\MSet(\mathcal{A})\):
+		\begin{equation*}
+		\prod_{\alpha \in \mathcal{A}}
+		\frac{1}{1 - z^{\lvert \alpha \rvert}}
+		= \prod_{n \ge 1} \frac{1}{(1 - z^n)^{a_n}}
+		= \exp\left(
+		\sum_{k \ge 1} \frac{A(z^k)}{k}
+		\right)
+		\end{equation*}
+		\item
+		Para enumerar \(\Cyc(\mathcal{A})\):
+		\begin{equation*}
+		\sum_{n \ge 1} \frac{\phi(n)}{n} \, \ln \nparentesis{\frac{1}{1 - A(z^n)}}
+		\end{equation*}
+	\end{enumerate}
+\end{teorema}
+
+\begin{proof}
+	Usamos funciones generatrices para demostrar cada una de las propiedades del teorema \ref{19::Propiedades:No:Rotulados}.
+	\begin{enumerate}
+		\item Usando funciones generatrices:
+		\begin{equation*}
+		\sum_{\gamma \in \mathcal{A} + \mathcal{B}} z^{\nabsoluto{\gamma}} = \sum_{\gamma \in \mathcal{A}} z^{\nabsoluto{\gamma}} + \sum_{\gamma \in \mathcal{B}} z^{\nabsoluto{\gamma}} = A\nparentesis{z} + B\nparentesis{z}
+		\end{equation*}
+		
+		\item De la misma forma que el anterior, usamos propiedades de funciones generatrices:
+		\begin{equation*}
+		\sum_{\gamma \in \mathcal{A} \times \mathcal{B}} z ^{\nabsoluto{\gamma}} = \sum_{\substack{\alpha \in \mathcal{A} \\ \beta \in \mathcal{B}}} z^{\nabsoluto{\nparentesis{\alpha, \beta}}} = \sum_{\substack{\alpha \in \mathcal{A} \\ \beta \in \mathcal{B}}}z^{\nabsoluto{\alpha} + \nabsoluto{\beta}} = \nparentesis{\sum_{\alpha \in \mathcal{A}} z^{\nabsoluto{\alpha}}} \cdot \nparentesis{\sum_{\beta \in \mathcal{B}} z^{\nabsoluto{\beta}}} = A\nparentesis{z} \cdot B \nparentesis{z}
+		\end{equation*}
+		
+		\item Sea $\Seq \nparentesis{A} = S$. Por lo tanto, podemos describir la clase $\Seq \nparentesis{A}$ como sigue:
+		\begin{equation*}
+		S = \epsilon + S \times A
+		\end{equation*}
+		Pasamos lo anterior a funciones generatrices, con lo que se tiene:
+		\begin{align*}
+		S\nparentesis{z} &= 1 + S\nparentesis{z} A\nparentesis{z}\\
+		S\nparentesis{z} &= \dfrac{1}{1 - A\nparentesis{z}}
+		\end{align*}
+		
+		\item La clase de los subconjuntos finitos de \(\mathcal{A}\)
+		queda representada por el producto simbólico:
+		\begin{equation*}
+		\prod_{\alpha \in \mathcal{A}} (\mathcal{E} + \{\alpha\})
+		\end{equation*}
+		ya que
+		al distribuir los productos de todas las formas posibles
+		aparecen todos los subconjuntos de \(\mathcal{A}\).
+		Directamente obtenemos entonces:
+		\begin{equation*}
+		\prod_{\alpha \in \mathcal{A}}
+		\left( 1 + z^{\lvert \alpha \rvert} \right)
+		= \prod_{n \ge 0} (1 + z^n)^{a_n}
+		\end{equation*}
+		Otra forma de verlo es que cada objeto de tamaño \(n\)
+		aporta un factor \(1 + z^n\),
+		si hay \(a_n\) de estos
+		el aporte total es \((1 + z^n)^{a_n}\).
+		Esta es la primera parte de lo aseverado.
+		Aplicando logaritmo:
+		\begin{align*}
+		\sum_{\alpha \in \mathcal{A}}
+		\ln \left(1 + z^{\lvert \alpha \rvert} \right)
+		&= -\sum_{\alpha \in \mathcal{A}}
+		\sum_{k \ge 1}
+		\frac{(-1)^k z^{\lvert \alpha \rvert k}}{k}  \\
+		&= -\sum_{k \ge 1} \frac{(-1)^k}{k} \,
+		\sum_{\alpha \in \mathcal{A}}
+		z^{\lvert \alpha \rvert k} \\
+		&= \sum_{k \ge 1} \frac{(-1)^{k + 1} \, A(z^k)}{k}
+		\end{align*}
+		Exponenciando lo último
+		resulta equivalente a la segunda parte.
+		
+		\item Podemos considerar un multiconjunto finito
+		como la combinación de una secuencia
+		para cada tipo de elemento:
+		\begin{equation*}
+		\prod_{\alpha \in \mathcal{A}} \Seq(\{ \alpha \})
+		\end{equation*}
+		La función generatriz buscada es:
+		\begin{equation*}
+		\prod_{\alpha \in \mathcal{A}}
+		\frac{1}{1 - z^{\lvert \alpha \rvert}}
+		= \prod_{n \ge 0} \frac{1}{(1 - z^n)^{a_n}}
+		\end{equation*}
+		Esto provee la primera parte.
+		Nuevamente aplicamos logaritmo para simplificar:
+		\begin{align*}
+		\ln \prod_{\alpha \in \mathcal{A}}
+		\frac{1}{1 - z^{\lvert \alpha \rvert}}
+		&= - \sum_{\alpha \in \mathcal{A}}
+		\ln \left( 1 - z^{\lvert \alpha \rvert} \right) \\
+		&= \sum_{\alpha \in \mathcal{A}}
+		\sum_{k \ge 1}
+		\frac{z^{k \lvert \alpha \rvert}}{k} \\
+		&= \sum_{k \ge 1}
+		\frac{1}{k} \,
+		\sum_{\alpha \in \mathcal{A}}
+		z^{k \lvert \alpha \rvert} \\
+		&= \sum_{k \ge 1}
+		\frac{A(z^k)}{k}
+		\end{align*}
+	\end{enumerate}
+	
+	
+\end{proof}
+
+
+
+\subsection{Algunas Aplicaciones}
+
+\begin{ejemplo}[Árbol binario]
+Un árbol binario está conformado de:
+\begin{itemize}
+	\item Vacío
+	
+	\item Raíz y árbol binario derecho y árbol binario izquierdo.
+\end{itemize}
+Sea $\mathcal{B}$ la clase árbol binario:
+\begin{align*}
+\mathcal{B} = \mathcal{E} + \mathcal{Z} \times \mathcal{B}\times \mathcal{B}
+\end{align*}
+Entonces:
+\begin{equation}
+B\nparentesis{z} = 1 + zB^2\nparentesis{z}
+\end{equation}
+y en consecuencia:
+\begin{equation}
+b_n = C_n = \dfrac{1}{n+1}
+\begin{pmatrix}
+2n\\n
+\end{pmatrix}
+\end{equation}
+Entonces:
+\begin{equation}
+B\nparentesis{z} = \dfrac{1 \pm \sqrt{1-4z}}{2z}
+\end{equation}
+Condición adicional: $b_0$ es \emph{finito}. Una vez que estamos en eso, aplicamos la receta de nuestro amigo Vicente, el teorema del binomio:
+\begin{equation}
+B\nparentesis{z} = \dfrac{1 - \sqrt{1-4z}}{2z}
+\end{equation}
+\end{ejemplo}
+
+
+\begin{ejemplo}[Números Naturales]
+	Podemos representar un natural como $|||| = 4$ (palito, palito, palito, palito). Entonces, podemos representar los números naturales como una secuencia de palitos, es decir:
+	\begin{equation*}
+	\mathbb{N}_0 = \Seq \nparentesis{Z}
+	\end{equation*}
+	Por otro lado, si queremos representar números naturales partiendo de $1$ tenemos:
+	\begin{equation*}
+	\mathbb{N} = Z \times \Seq \nparentesis{z}
+	\end{equation*}
+	donde $Z$ es la secuencia de al menos 1 palito.
+	
+	
+	Una \emph{combinación} de $n$ es escribirlo como una suma de naturales:
+	\begin{align*}
+	4&= 1 + 1 + 1 + 1\\
+	&= 1 + 1 + 2\\
+	&= 1+ 2+ 1\\
+	&= 2+ 1 + 1\\
+	&= 2 + 2\\
+	&= 3 + 1\\
+	&= 1 + 3\\
+	&= 4
+	\end{align*}
+	Combinación: Secuencia de $\mathbb{N}$, por lo tanto:
+	\begin{equation*}
+	C = \Seq\nparentesis{Z \times \Seq\nparentesis{Z}}
+	\end{equation*}
+	Por lo tanto:
+	\begin{align*}
+	C_n\nparentesis{z} &= \dfrac{1}{1-\dfrac{z}{1-z}}\\
+	&=\dfrac{1-z}{1-\nparentesis{L\pi\rfloor -1}z}\\
+	&=\nparentesis{1-z}\sum_{k\geq 0} \left\lceil\sqrt{2} \right\rceil^k z^k\\
+	&=\dfrac{1-z}{1-2z}\\
+	\ncorchetes{z^n} C\nparentesis{z} &= \ncorchetes{z^n}\dfrac{1}{1-2z}-\ncorchetes{z^n}\dfrac{z}{1-2z}\\
+	&=2^n - \ncorchetes{n \geq 1} \ncorchetes{z^{n-1}} \dfrac{1}{1-2z}\\
+	&=2^n - \ncorchetes{n \geq 1} 2^{n-1}\\
+	&=\begin{cases}
+	1&\text{si } n= 0\\
+	2^{n-1}&\text{si } n \geq 1
+	\end{cases}
+	\end{align*}
+	
+\end{ejemplo}
+
+
+
+
+
+\end{document}
+

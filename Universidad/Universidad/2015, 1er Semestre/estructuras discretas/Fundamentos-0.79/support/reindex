@@ -1,0 +1,61 @@
+#!/usr/bin/perl
+
+# reindex
+#
+# Copyright (c) 2014 Horst H. von Brand
+# Bajo licencia MIT. Vea LICENSE-MIT para detalles
+
+
+# Fix up \index{} in *.tex to make up ASCII-only index keys that
+# makeindex(1) doesn't misssort too badly
+
+sub munge {
+  my $arg = shift;
+
+  if($arg =~ /@/) {
+    return $arg;
+  }
+  if($arg =~ /[^[:ascii:]]/) {
+    $arg = toascii($arg) . "@" . $arg;
+  }
+  return $arg;
+}
+
+sub toascii {
+  my $arg = shift;
+
+  $arg =~ s/á|à|â/a/g;
+  $arg =~ s/Á|À|Â/A/g;
+  $arg =~ s/é|è|ê/e/g;
+  $arg =~ s/É|È|Ê/E/g;
+  $arg =~ s/í|ì|î/i/g;
+  $arg =~ s/Í|Ì|Î/I/g;
+  $arg =~ s/ó|ò|ô|ő/o/g;
+  $arg =~ s/Ó|Ò|Ô/O/g;
+  $arg =~ s/ú|ù|û|ü/u/g;
+  $arg =~ s/Ú|Ù|Û|Ü/U/g;
+  $arg =~ s/ç/c/g;
+  $arg =~ s/Ç/C/g;
+  $arg =~ s/ñ|ń/n/g;
+  $arg =~ s/Ñ/N/g;
+  $arg =~ s/ß/ss/g;
+
+  return $arg;
+}
+
+while(<>){
+  if(/^(\s*\\index\{)([^|]+)(|\|.*)(\}%?)$/) {
+    $a = $1; $b = $2; $c = "$3$4\n";
+    print $a;
+    $b	=~ /([^!|]+)/g;
+    print munge($1);
+    while($b =~/([^!|]+)/g) {
+      print "!";
+      print munge($1);
+    }
+    print $c;
+  }
+  else {
+    print;
+  }
+}

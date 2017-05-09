@@ -1,0 +1,400 @@
+% reales.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Números reales}
+\label{cha:numeros-reales}
+\index{numero@número!real|textbfhy}
+\index{R (numeros reales)@\(\mathbb{R}\) (números reales)}
+
+  Los números reales son fundamentales en mucha de la matemática
+  que usamos diariamente.
+  No nos detendremos en un estudio detallado de ellos,
+  los exploraremos como ejemplo de campo,
+  estructura algebraica que trataremos en algún detalle más adelante
+  (mostrando el funcionamiento del método axiomático
+   y algunas técnicas de demostración).
+
+\section{Axiomas de los reales}
+\label{sec:axiomas-reales}
+\index{R (numeros reales)@\(\mathbb{R}\) (números reales)!axioma}
+
+  Daremos una breve introducción a los números reales y sus propiedades,
+  siguiendo en lo general a Chen~%
+    \cite[capítulo 1]{chen08:_first_year_calculus}.
+  Anotamos \(\mathbb{R}\) para el conjunto de números reales,%
+    \index{R (números reales)@\(\mathbb{R}\) (números reales)}
+  con operaciones \(+\) y \(\cdot\).
+  Los números reales con sus operaciones cumplen los siguientes axiomas,%
+    \index{axioma!numeros reales@números reales|textbfhy}%
+    \index{numero@número!real!axiomas|see{axioma!números reales}}
+  que simplemente daremos por hechos.
+  Estos axiomas describen lo que se conoce como un \emph{campo}%
+    \index{campo (algebra)@campo (álgebra)}
+  (en inglés \emph{\foreignlanguage{english}{field}}).%
+    \index{field@\emph{\foreignlanguage{english}{field}}|see{campo (álgebra)}}
+  En esta lista \(a\), \(b\), \(c\) son reales cualquiera.
+  \begin{enumerate}[label=\textbf{R\arabic{*}:}, ref=R\arabic{*}]
+  \item\label{Re:suma-asociativa}%
+    \index{operacion@operación!asociativa}
+    La suma es asociativa:
+    \((a + b) + c = a + (b + c)\).
+  \item\label{Re:cero}%
+    \index{operacion@operación!elemento neutro}
+    Hay un \emph{elemento neutro para la suma} \(0 \in \mathbb{R}\)
+    tal que \(a + 0 = a\)
+  \item\label{Re:inverso-aditivo}%
+    \index{operacion@operación!inverso}
+    Hay un elemento \(-a \in \mathbb{R}\)
+    tal que \(a + (-a) = 0\).
+    A \(-a\) se le llama \emph{inverso aditivo} de \(a\).
+  \item\label{Re:suma-conmutativa}%
+    \index{operacion@operación!conmutativa}
+    La suma es conmutativa:
+    \(a + b = b + a\).
+  \item\label{Re:multiplicacion-asociativa}%
+    \index{operacion@operación!asociativa}
+    La multiplicación es asociativa:
+    \((a \cdot b) \cdot c = a \cdot (b \cdot c)\)
+  \item\label{Re:distributiva}%
+    \index{operacion@operación!distributiva}
+    La multiplicación distribuye sobre la suma:
+    \((a + b) \cdot c = (a \cdot c) + (b \cdot c)\).
+  \item\label{Re:uno}
+    Hay un elemento \emph{neutro para la multiplicación} \(1 \in \mathbb{R}\)
+    tal que \(a \cdot 1 = a\).
+  \item\label{Re:multiplicacion-conmutativa}
+    La multiplicación es conmutativa:
+    \(a \cdot b = b \cdot a\).
+  \item\label{Re:inverso-multiplicativo}
+    Para \(a \ne 0\) hay un elemento \(a^{-1} \in \mathbb{R}\)
+    tal que \(a \cdot a^{-1} = 1\).
+    A \(a^{-1}\) se le llama \emph{inverso multiplicativo} de \(a\).
+  \end{enumerate}
+
+  Entre los reales tenemos además un orden,%
+    \index{relacion@relación!orden}
+  una relación \(<\) que cumple los siguientes axiomas adicionales,
+  donde \(a\), \(b\) y \(c\) nuevamente denotan números reales cualquiera.
+  Anotamos \(a > b\) si \(b < a\),
+  como es convencional.
+  \begin{enumerate}[label=\textbf{O\arabic{*}:}, ref=O\arabic{*}]
+  \item\label{Re:tricotomia}%
+    \index{relacion@relación!orden!tricotomia@tricotomía}
+    Se cumple exactamente uno de \(a < b\), \(a = b\) o \(a > b\).
+    Esta propiedad se conoce como \emph{tricotomía}.
+  \item\label{Re:transitidad<}%
+    \index{relacion@relación!transitiva}
+    Si \(a < b\) y \(b < c\) entonces \(a < c\).
+  \item\label{Re:>+}
+    Si \(a < b\),
+    entonces \(a + c < b + c\).
+  \item\label{Re:>*}
+    Si \(a < b\) y \(c > 0\)
+    entonces \(a \cdot c < b \cdot c\).
+  \end{enumerate}
+  En términos de las propiedades de relaciones,
+  diríamos que \(<\) es transitiva e irreflexiva,%
+    \index{relacion@relación!irreflexiva}
+  y que la relación \(\le\) en \(\mathbb{R}\),
+  definida mediante \mbox{\(a \le b \equiv (a < b) \vee (a = b)\)},
+  es un orden total.%
+    \index{relacion@relación!orden total}
+
+  Un subconjunto de los reales
+  es el conjunto de los números naturales,%
+    \index{N (números naturales)@\(\mathbb{N}\) (números naturales)}
+  \(\mathbb{N} = \{1, 2, 3, \dotsc\}\).
+  Los siguientes axiomas dan sus principales características.%
+    \index{axioma!numeros naturales@números naturales|textbfhy}
+  Primeramente,
+  \(\mathbb{N} \subseteq \mathbb{R}\) con las mismas operaciones
+  y relación de orden.
+  Enseguida:
+  \begin{enumerate}[label=\textbf{N\arabic{*}:}, ref=N\arabic{*}]
+  \item\label{N:uno}
+    \(1 \in \mathbb{N}\)
+  \item\label{N:sucesor}
+    Si \(n \in \mathbb{N}\),
+    entonces \(n + 1 \in \mathbb{N}\).
+    A \(n + 1\) se le llama el \emph{sucesor} de \(n\).
+  \item\label{N:solo-sucesores}
+    Todo \(n \in \mathbb{N}\) tal que \(n \ne 1\)
+    es el sucesor de un único número natural.
+  \item\label{N:buen-orden}
+    Todo subconjunto no vacío de \(\mathbb{N}\) contiene un elemento mínimo.
+    Esto se conoce como \emph{principio de buen orden}.%
+      \index{buen orden, principio de}
+  \end{enumerate}
+  Puede demostrarse que el principio de buen orden
+  es equivalente al \emph{principio de inducción},
+    \index{induccion@inducción!principio de}
+  acá demostraremos este último partiendo de buen orden:
+  \begin{theorem}[Principio de inducción]
+    \label{theo:principio-induccion}
+    Sea \(p(\cdot)\) un predicado que cumple:
+    \begin{enumerate}[label=(\roman{*})]
+    \item
+      \(p(1)\) es verdadero
+    \item
+      \(p(n) \implies p(n + 1)\)
+    \end{enumerate}
+    Entonces \(p(n)\) es verdadero para todo \(n \in \mathbb{N}\).
+  \end{theorem}
+  \begin{proof}
+    Por contradicción.
+    Supongamos un conjunto no vacío
+    \(\mathcal{C} \subseteq \mathbb{N}\) para el que \(p(\cdot)\) no vale.
+    Por el principio del buen orden,
+    \(\mathcal{C}\) contiene su elemento mínimo,
+    llamémosle \(m\).
+    Sabemos que \(p(1)\) es cierto,
+    así que \(m > 1\) y es el sucesor de un natural \(n\).
+    Como \(m\) es el mínimo para el que no vale \(p(\cdot)\),
+    \(p(n)\) es cierto,
+    pero entonces es cierto \(p(n + 1) = p(m)\),
+    contradiciendo la elección de \(m\).
+  \end{proof}
+
+  El conjunto \(\mathbb{Z}\) de los enteros
+  es la extensión de \(\mathbb{N}\)
+  para incluir a \(0\)
+  y los números de la forma \(-n\) para \(n \in \mathbb{N}\).
+  El conjunto \(\mathbb{Q}\) de los racionales
+  es el conjunto de números de la forma \(a \cdot b^{-1}\),
+  con \(a \in \mathbb{Z}\) y \(b \in \mathbb{N}\).
+
+  Los axiomas de campo y de orden valen para \(\mathbb{Q}\).%
+    \index{Q (números racionales)@\(\mathbb{Q}\) (números racionales)}
+  Pero vimos que \(\mathbb{Q}\) es incompleto
+  (por el teorema~\ref{theo:sqrt2-irracional},
+   \(\sqrt{2} \notin \mathbb{Q}\)).
+  Veremos una propiedad que distingue a \(\mathbb{R}\) de \(\mathbb{Q}\).
+  Se le conoce como \emph{axioma de completitud},%
+    \index{completitud, axioma de}
+  que nosotros definiremos en términos de cotas.
+  \begin{definition}
+    \index{numero@número!irracional|textbfhy}
+    A un número \(x \in \mathbb{R} \smallsetminus \mathbb{Q}\)
+    se le llama \emph{irracional}.%
+      \index{numero@número!irracional|textbfhy}
+  \end{definition}
+
+  \begin{definition}
+    Un conjunto no vacío \(\mathcal{S}\) de números reales
+    se dice \emph{acotado por arriba} si hay \(C \in \mathbb{R}\)
+    tal que \(x \le C\) para todo \(x \in \mathcal{S}\).
+    A \(C\) se le llama \emph{cota superior} de \(\mathcal{S}\).%
+      \index{cota!superior}
+    Si hay \(c \in \mathbb{R}\)
+    tal que \(x \ge c\) para todo \(x \in \mathcal{S}\),
+    se dice \emph{acotado por abajo}
+    y a \(c\) se le llama \emph{cota inferior} de \(\mathcal{S}\).%
+      \index{cota!inferior}
+    Si \(\mathcal{S}\) es acotado por abajo y por arriba,
+    de dice \emph{acotado}.%
+      \index{acotado}%
+      \index{cota}
+  \end{definition}
+  Por ejemplo,
+  \(\mathbb{N}\) es acotado por abajo pero no por arriba
+  (cosa que demostraremos en el teorema~\ref{theo:arquimedeana}),
+  el conjunto \(\mathbb{Q}\) no tiene cota inferior ni superior,
+  mientras \(\{x \in \mathbb{R} \colon 1 < x \le 3\}\) es acotado.
+
+  \begin{axiom}[Supremo]
+    \label{Re:supremo}
+    \index{supremo, axioma de|textbfhy}
+    Sea \(\mathcal{S} \subseteq \mathbb{R}\) no vacío,
+    acotado por arriba.
+    Entonces existe \(M \in \mathbb{R}\) tal que
+    \begin{enumerate}[label=(\alph{*})]
+    \item
+      \(M\) es cota superior de \(\mathcal{S}\).
+    \item
+      Para todo \(\epsilon > 0\) hay \(s \in \mathcal{S}\)
+      tal que \(s > M - \epsilon\).
+    \end{enumerate}
+  \end{axiom}
+  Esto dice que no pueden haber cotas superiores menores que \(M\),
+  y asegura que \(M\) es un número real.
+  \begin{definition}
+    A \(M\) se le llama el \emph{supremo}
+    (o mínima cota superior)
+    de \(\mathcal{S}\),
+    se anota \(M = \sup \mathcal{S}\).
+  \end{definition}
+  El axioma del supremo puede expresarse en la forma obviamente equivalente:
+  \begin{axiom}[Ínfimo]
+    \label{Re:infimo}
+    \index{infimo, axioma de@ínfimo, axioma de|textbfhy}
+    Sea \(\mathcal{S} \subseteq \mathbb{R}\) no vacío,
+    acotado por abajo.
+    Entonces existe \(m \in \mathbb{R}\) tal que
+    \begin{enumerate}[label=(\alph{*})]
+    \item
+      \(m\) es cota inferior de \(\mathcal{S}\).
+    \item
+      Para todo \(\epsilon > 0\) hay \(s \in \mathcal{S}\)
+      tal que \(s > m + \epsilon\).
+    \end{enumerate}
+  \end{axiom}
+  \begin{definition}
+    A este \(m\) se le llama \emph{ínfimo}
+    (máxima cota inferior)
+    de \(\mathcal{S}\),
+    se anota \mbox{\(m = \inf \mathcal{S}\)}.
+  \end{definition}
+
+  Como un ejemplo,
+  demostraremos que \(\sqrt{2}\) es real,%
+    \index{numero@número!irracional!\(\sqrt{2}\)}
+  y por tanto irracional.
+  \begin{theorem}
+    \label{theo:sqrt(2)-real}
+    Hay un real positivo \(r\) que cumple \(r^2 = 2\).
+  \end{theorem}
+  \begin{proof}
+    Sea \(\mathcal{S} = \{x \in \mathbb{R} \colon x^2 < 2\}\).
+    Entonces \(\mathcal{S}\) no es vacío,
+    ya que \(1^2 < 2\);
+    y tiene a \(2\) como cota superior,
+    ya que si \(x > 2\) entonces \(x^2 > 4 > 2\).
+    Por el axioma del supremo,
+    hay \(r \in \mathbb{R}\) tal que \(r = \sup \mathcal{S}\).
+    Claramente \(r > 0\),
+    ya que \(1 \in \mathcal{S}\).
+    Demostraremos por contradicción que \(r^2 = 2\).
+    Supongamos \(r^2 \ne 2\).
+    Por el axioma~\ref{Re:tricotomia},
+    debe ser entonces \(r^2 < 2\) o \(r^2 > 2\).
+    Para demostrar que estas no se cumplen,
+    basta exhibir un \(\epsilon > 0\) para cada caso
+    para el cual falla.
+    Por turno:
+    \begin{description}
+    \item[\boldmath\(r^2 < 2\):\unboldmath]
+      Sea \(\epsilon > 0\)
+      y consideremos:
+      \begin{equation}
+	\label{eq:r+eps}
+	(r + \epsilon)^2
+	  = r^2 + 2 r \epsilon + \epsilon^2
+	  < r^2 + (2 r + 1) \epsilon
+      \end{equation}
+      Si ahora \(\epsilon < (2 - r^2) / (2 r + 1)\),
+      la última expresión en~\eqref{eq:r+eps} es menor a \(2\),
+      lo que contradice la elección de \(r\) como supremo.
+    \item[\boldmath\(r^2 > 2\):\unboldmath]
+      Para \(\epsilon > 0\)
+      calculamos:
+      \begin{equation}
+	\label{eq:r-eps}
+	(r - \epsilon)^2
+	  = r^2 - 2 r \epsilon + \epsilon^2
+	  > r^2 - 2 r \epsilon
+      \end{equation}
+      Si elegimos \(\epsilon < (r^2 - 2) / (2 r)\),
+      la última expresión de~\eqref{eq:r-eps} es mayor a \(2\),
+      nuevamente contradiciendo la elección de \(r\) como supremo.
+    \end{description}
+    En consecuencia,
+    debe ser \(r^2 = 2\).
+  \end{proof}
+
+  Algunas consecuencias de la completitud de los reales son las siguientes.
+  \begin{theorem}[Propiedad arquimedeana]
+    \index{propiedad arquimedeana}
+    \label{theo:arquimedeana}
+    Para todo \(x \in \mathbb{R}\)
+    hay \(n \in \mathbb{N}\)
+    tal que \(n > x\).
+  \end{theorem}
+  \begin{proof}
+    La demostración es por contradicción.
+    Supongamos que \(x \in \mathbb{R}\),
+    y que para todo \(n \in \mathbb{N}\) es \(n \le x\).
+    Entonces \(x\) es una cota superior para \(\mathbb{N}\),
+    y el conjunto \(\mathbb{N}\) tiene un supremo por completitud,
+    sea \(M = \sup \mathbb{N}\).
+    Así \(M \ge n\) para \(n \in \mathbb{N}\),
+    en particular es \(M \ge n\) para \(n = 2, 3, 4, \dotsc\).
+    Pero cada número natural
+    (salvo \(1\))
+    es el sucesor de un número natural,
+    con lo que \(M \ge k + 1\) para \(k = 1, 2, 3, \dotsc\),
+    o \(M - 1 \ge k\) para todo \(k \in \mathbb{N}\).
+    Pero habíamos elegido \(M\) como el supremo de \(\mathbb{N}\),
+    no puede tener cotas superiores menores.
+  \end{proof}
+  Esta demostración completa nuestra aseveración anterior que \(\mathbb{N}\)
+  no tiene cota superior.
+
+  \begin{theorem}
+    \label{theo:Q-dense}
+    Los racionales e irracionales son densos en \(\mathbb{R}\),
+      \index{conjunto!denso|textbfhy}
+    o sea entre cada par de reales distintos hay un racional y un irracional.
+  \end{theorem}
+  \begin{proof}
+    Supongamos \(x, y \in \mathbb{R}\),
+    con \(x < y\).
+    Primero hay \(r \in \mathbb{Q}\) tal que \(x < r < y\).
+    Supongamos \(x > 0\) por ahora.
+    Por la propiedad arquimedeana,%
+      \index{propiedad arquimedeana}
+    teorema~\ref{theo:arquimedeana},
+    existe \(b \in \mathbb{N}\) tal que \(b > (y - x)^{-1}\),
+    de manera que \(b (y - x) > 1\).
+    Por la propiedad arquimedeana existe \(n \in \mathbb{N}\)
+    tal que \(n > b x\),
+    con lo que el conjunto
+      \(\mathcal{S} = \{n \in \mathbb{N} \colon n > b x\}\)
+    no es vacío,
+    y por el axioma~\ref{N:buen-orden} contiene su mínimo,%
+      \index{buen orden, principio de}
+    llamémosle \(a\).
+    Entonces \(a - 1 \le b x\):
+    Si fuera \(a = 1\),
+    \(a - 1 = 0 < b x\);
+    en caso contrario \(a - 1 > b x\)
+    contradice la elección de \(a\) como mínimo.
+    Se sigue:
+    \begin{equation*}
+      b x
+	< a
+	= (a - 1) + 1
+	< b x + b (y - x)
+	= b y
+    \end{equation*}
+    de forma que:
+    \begin{equation*}
+      x < a \cdot b^{-1} < y
+    \end{equation*}
+    Veamos ahora el caso \(x \le 0\).
+    Por la propiedad arquimedeana,
+    existe \(k \in \mathbb{N}\) tal que \(k > -x\),
+    de manera que \(k + x > 0\).
+    Por lo anterior,
+    hay \(s \in \mathbb{Q}\) tal que \(x + k < s < y + k\),
+    y \(x < s - k < y\)
+    donde \(s - k \in \mathbb{Q}\).
+
+    Para hallar un irracional entre \(x\) e \(y\),
+    vemos por lo anterior que hay \(r_1 \in \mathbb{Q}\)
+    tal que \(x < r_1 < y\);
+    de la misma forma hay \(r_2 \in \mathbb{Q}\)
+    tal que \(r_1 < r_2 < y\).
+    Como \(1 < \sqrt{2} < 2\),
+    es:
+    \begin{equation*}
+      x < r_1 < r_1 + (r_2 - r_1) / \sqrt{2} < r_2 < y
+    \end{equation*}
+    y \(r_1 + (r_2 - r_1) / \sqrt{2}\) claramente es irracional.
+  \end{proof}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

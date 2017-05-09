@@ -1,0 +1,885 @@
+% combinatoria-elemental.tex
+%
+% Copyright (c) 2010-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Combinatoria elemental}
+\label{cha:combinatoria-elemental}
+\index{combinatoria}
+
+  Consideremos el problema de contar sistemáticamente
+  los elementos de colecciones de objetos.
+  Nuestro interés en el tema es que por ejemplo
+  el comportamiento de un algoritmo de ordenamiento
+  dependerá del número de disposiciones distintas
+  en que pueden venir los datos,
+  y ciertas características de dicho orden.
+  Contar éstos,
+  particularmente para conjuntos de datos de tamaño interesante,
+  generalmente no es posible manualmente.
+  Acá nos concentraremos en algunas técnicas simples,
+  de aplicabilidad sorprendentemente amplia.
+  Más adelante veremos herramientas adicionales.
+
+\section{Técnicas básicas}
+\label{sec:tecnicas-basicas-conteo}
+\index{combinatoria!tecnicas basicas@técnicas básicas}
+
+  Las herramientas básicas son:
+  \begin{description}
+  \item[Biyecciones (funciones 1--1):]
+    \index{combinatoria!biyecciones}
+    Si hay una función \(1\) a \(1\)
+    como \(f \colon \mathcal{X} \rightarrow \mathcal{Y}\!\),
+    entonces \(\lvert \mathcal{X} \rvert
+		 = \lvert \mathcal{Y} \rvert\)
+    (esto incluso lo usamos para definir cardinalidades
+     en el capítulo~\ref{cha:numerabilidad}).
+    Más en general para funciones \(k\) a \(1\):
+    Si hay tal función
+      \(g \colon \mathcal{X} \rightarrow \mathcal{Y}\!\),
+    entonces
+      \(\lvert \mathcal{X} \rvert
+	  = k \cdot \lvert \mathcal{Y} \rvert\).
+  \item[Regla de la suma:]
+    \index{combinatoria!regla de la suma}
+    Si \(\mathcal{A} \cap \mathcal{B} = \varnothing\),
+    entonces
+      \(\lvert \mathcal{A} \cup \mathcal{B} \rvert
+	   = \lvert \mathcal{A} \rvert
+	       + \lvert \mathcal{B} \rvert\).
+    Esto se generaliza en forma obvia a un número mayor
+    de conjuntos disjuntos a pares:
+    \begin{equation*}
+      \lvert \mathcal{A}_1 \cup \mathcal{A}_2
+	\cup \dotso \cup \mathcal{A}_r \rvert
+	  = \lvert \mathcal{A}_1 \rvert
+	      + \lvert \mathcal{A}_2 \rvert
+	      + \dotsb + \lvert \mathcal{A}_r \rvert
+    \end{equation*}
+    Si la intersección no es vacía,
+    al sumar los tamaños estamos contando la intersección dos veces,
+    o sea para dos conjuntos debemos hacer:
+    \begin{equation*}
+      \lvert \mathcal{A} \cup \mathcal{B} \rvert
+	 = \lvert \mathcal{A} \rvert + \lvert \mathcal{B} \rvert
+	   - \lvert \mathcal{A} \cap \mathcal{B} \rvert
+    \end{equation*}
+    Más adelante
+    (capítulo~\ref{cha:pie})%
+      \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de}
+    veremos cómo se puede manejar esto
+    si hay más de dos conjuntos involucrados.
+  \item[Contar por filas y por columnas:]
+    \index{combinatoria!contar por filas y columnas}
+    Si \(\mathcal{S} \subseteq \mathcal{X} \times \mathcal{Y}\),
+    y para \(x \in \mathcal{X}\) e \(y \in \mathcal{Y}\) definimos:
+    \begin{align*}
+      r_x(\mathcal{S})
+	&= \lvert \{(x, y) \in \mathcal{S}
+		      \colon y \in \mathcal{Y}\} \rvert \\
+      c_y(\mathcal{S})
+	&= \lvert \{(x, y) \in \mathcal{S}
+		      \colon x \in \mathcal{X}\} \rvert
+    \end{align*}
+    Entonces:
+    \begin{equation*}
+      \lvert \mathcal{S} \rvert
+	 = \sum_{x \in \mathcal{X}} r_x(\mathcal{S})
+	 = \sum_{y \in \mathcal{Y}} c_y(\mathcal{S})
+    \end{equation*}
+
+    En forma más general,
+    si hay dos (o más) maneras de contar algo,
+    debieran coincidir los resultados.
+  \item[Regla del producto:]
+    \index{combinatoria!regla del producto}
+    Si al contar por filas y columnas
+    tomamos \(\mathcal{S} = \mathcal{X} \times \mathcal{Y}\),
+    resulta:
+    \begin{equation*}
+      \lvert \mathcal{S} \rvert
+	= \lvert \mathcal{X} \rvert
+	    \cdot \lvert \mathcal{Y} \rvert
+    \end{equation*}
+    dado que en ese caso
+    \(r_x(\mathcal{S}) = \lvert \mathcal{Y} \rvert \)
+    y \(c_y(\mathcal{S}) = \lvert \mathcal{X} \rvert\).
+  \end{description}
+
+  Algunos ejemplos simples:
+  \begin{itemize}
+  \item
+    ¿Cuántas patentes antiguas
+    (\(2\) letras, pero no \(\mathtt{Q}\) ni \(\mathtt{W}\);
+    y \(4\) dígitos)
+    hay?
+
+    Podemos considerarlo como una tupla.
+    Como hay \(24\) letras permitidas y \(10\) dígitos,
+    por la regla del producto esto corresponde a:
+    \begin{equation*}
+      24 \cdot 24 \cdot 10 \cdot 10 \cdot 10 \cdot 10
+	= 5\,760\,000
+    \end{equation*}
+    posibilidades.
+  \item
+    Se estaban acabando los números con el esquema anterior,
+    se agregó la letra \(\mathtt{W}\).
+    ¿Cuántos números se agregan?
+
+    Nuevamente una tupla,
+    pero ahora de \(25\) letras y \(10\) dígitos.
+    La regla del producto da para el nuevo total:
+    \begin{equation*}
+      25 \cdot 25 \cdot 10 \cdot 10 \cdot 10 \cdot 10
+	= 6\,250\,000
+    \end{equation*}
+    Por la regla de la suma,
+    las patentes actuales son las antiguas y las agregadas,
+    con lo que las agregadas son:
+    \begin{equation*}
+      6\,250\,000 - 5\,760\,000
+	= 490\,000
+    \end{equation*}
+  \item
+    ¿Cuántas patentes nuevas
+    (\(4\) consonantes y \(2\) dígitos)
+    hay?
+
+    Otra vez una tupla.
+    Son \(21 \cdot 21 \cdot 21 \cdot 21 \cdot 10 \cdot 10
+	    = 19\,448\,100\).
+  \item
+    ¿Cuántas patentes hay en total?
+
+    Son el conjunto de patentes antiguas y las nuevas,
+    lo que da por la regla de la suma:
+    \begin{equation*}
+      6\,250\,000 + 19\,448\,100
+	= 25\,698\,100
+    \end{equation*}
+  \item
+    En la Universidad de Miskatonic,
+    el decano Halsey insiste en que
+    todos los estudiantes
+    deben tomar exactamente cuatro cursos por semestre.
+    Pide a los profesores
+    que le hagan llegar las listas de los alumnos en sus cursos,
+    pero estos solo le informan los números de estudiantes,
+    ver el cuadro~\ref{tab:numero-cursos}.
+    \begin{table}[htbp]
+      \centering
+      \begin{tabular}[htbp]{|l|l|>{\(}r<{\)}|}
+	\hline
+	\multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\textbf{Profesor}} &
+	   \multicolumn{1}{c|}{\textbf{Materia}} &
+	\multicolumn{1}{c|}{\textbf{Nº}} \\
+	\hline
+	\rule[-0.7ex]{0pt}{3ex}%
+	Ashley	 & Física      &  45 \\
+	Dexter	 & Zoología    &  29 \\
+	Dyer	 & Geología    &  33 \\
+	Ellery	 & Química     &   2 \\
+	Lake	 & Biología    &  12 \\
+	Morgan	 & Arqueología &   5 \\
+	Pabodie	 & Ingeniería  & 103 \\
+	Upham	 & Matemáticas &  95 \\
+	Wilmarth & Inglés      &   7 \\
+	\hline
+      \end{tabular}
+      \caption{Número de alumnos por curso}
+      \label{tab:numero-cursos}
+    \end{table}
+    ¿Qué puede decir el decano Halsey con estos datos?
+
+    Si consideramos los pares (alumno, curso),
+    la suma de cada fila es el número de cursos que el alumno toma.
+    Por tanto,
+    si cada alumno toma cuatro cursos,
+    la suma total debe ser divisible por cuatro.
+    La suma de cada columna es el número de alumnos en el curso.
+    Pero en este caso la suma total
+    de los alumnos por curso es \(331\),
+    así que la condición del decano no se está cumpliendo.
+  \end{itemize}
+
+  Como un ejemplo más complejo,
+  usando estas ideas podemos demostrar nuevamente
+  para la función \(\phi\) de Euler:
+  \begin{theorem}[Identidad de Gauß]
+    \index{Gauss, identidad de@Gauß, identidad de}
+    \label{theo:Gauss-identity-2}
+    Para todo entero \(n\),
+    tenemos:
+    \begin{equation*}
+      n = \sum_{d \mid n} \phi(d)
+    \end{equation*}
+    donde la suma se extiende
+    sobre los enteros \(d\) que dividen a \(n\).
+  \end{theorem}
+  La idea de la siguiente demostración
+  viene del conjunto de fracciones:
+  \begin{equation*}
+    \left\{ \frac{1}{n}, \frac{2}{n},
+	    \dotsc, \frac{n - 1}{n} \right\}
+      = \left\{
+	  \frac{a_1}{b_1}, \frac{a_2}{b_2}, \dotsc,
+	    \frac{a_{n - 1}}{b_{n - 1}}
+	\right\}
+  \end{equation*}
+  donde \(a_r / b_r\) está en mínimos términos,
+  o sea con \(d_r = \gcd(r, n)\):
+  \begin{equation*}
+    \frac{a_r}{b_r}
+      = \frac{r / d_r}{n / d_r}
+  \end{equation*}
+  Cada \(b_r\) aparece exactamente \(\phi(b_r)\) veces.
+  \begin{proof}
+    Sean \(\mathcal{S}\) los pares \((d, f)\)
+    tales que \(d \mid n\), \(1 \le f \le d\) y \(\gcd(f, d) = 1\).
+    Sumando por filas tenemos:
+    \begin{equation*}
+      \lvert \mathcal{S} \rvert
+	= \sum_{d \mid n} \phi(d)
+    \end{equation*}
+    Para demostrar que \(n = \lvert \mathcal{S} \rvert\),
+    construimos una biyección \(\beta\)
+    entre \(\mathcal{S}\) y los enteros entre \(1\) y \(n\).
+
+    Sea \(\beta(d, f) =	 f n / d\).
+    Esto siempre es un entero positivo,
+    ya que \(d \mid n\);
+    y como \(1 \le f \le d\),
+    es a lo más \(n\).
+    Para demostrar que es una inyección,
+    consideremos:
+    \begin{align*}
+      \beta(d, f)
+	&= \beta(d', f') \\
+      f n / d
+	&= f' n / d' \\
+      f d'
+	&= f' d
+    \end{align*}
+    Esto último es \(d \mid f d'\),
+    y como \(f\) y \(d\) son relativamente primos,
+    por el lema~\ref{lem:gcd}
+    significa que \(d \mid d'\).
+    De la misma forma \(d' \mid d\),
+    y resulta \(d = d'\).
+    Con esto también es \(f = f'\).
+
+    Para demostrar que es sobre,
+    supongamos dado \(1 \le k \le n\),
+    y sean:
+    \begin{align*}
+      g_k
+	&= \gcd(k, n) \\
+      d_k
+	&= n / g_k    \\
+      f_k
+	&= k / g_k
+    \end{align*}
+    Tanto \(d_k\) como \(f_k\) son enteros,
+    y además \(\gcd(d_k, f_k) = 1\).
+    Resulta:
+    \begin{align*}
+      \beta(d_k, f_k)
+	&= \frac{f_k n}{d_k} \\
+	&= \frac{k n / g_k}{n / g_k} \\
+	&= k
+	   \qedhere
+    \end{align*}
+  \end{proof}
+
+\section{Situaciones recurrentes}
+\label{sec:conteos-recurrentes}
+
+  Según Albert~%
+    \cite{albert09:_basic_count_princ}
+  algunas circunstancias comunes
+  se organizan bajo las siguientes ideas:
+  \begin{description}
+  \item[Objetos distinguibles o no:]
+    Al jugar cartas interesa fundamentalmente su pinta y valor,
+    mientras al discutir un canasto de frutas
+    no interesa la identidad de cada una de las manzanas.
+  \item[Repeticiones o no:]
+    En un juego de cartas
+    se considera de bastante mal gusto
+    que una misma carta aparezca varias veces;
+    si nos preguntamos
+    de cuántas formas pueden entregarse \$\,\(100\)
+    usando monedas de \$\,\(1\), \$\,\(5\) y \$\,\(10\),
+    claramente se permite que una moneda se repita.
+  \item[Orden interesa:]
+    Al jugar cartas,
+    una mano queda determinada por el conjunto de cartas
+    (el orden no importa),
+    al discutir números escritos en decimal
+    el orden de los dígitos es fundamental.
+  \end{description}
+  Esto da lugar a varias situaciones diferentes,
+  ordenadas aproximadamente en orden de complejidad creciente
+  del análisis:
+  \begin{description}
+  \item[Secuencias:]
+    Se dan siempre que el orden interesa.
+    Pueden darse tanto situaciones donde se permiten repeticiones
+    como cuando no se permiten.
+  \item[Conjuntos:]
+    No hay repetición
+    y no interesa el orden,
+    solo si el elemento pertenece a la colección o no.
+  \item[Multiconjuntos:]
+    Se permiten repeticiones
+    y no interesa el orden.
+    Un elemento dado puede pertenecer varias veces a la colección.
+  \end{description}
+  Veamos las distintas situaciones por turno,
+  buscando expresiones simples
+  para el número total de posibilidades
+  suponiendo que estamos tomando \(k\) elementos
+  de entre \(n\) opciones.
+  \begin{description}
+  \item[Secuencias sin repeticiones:]
+    Esta situación se conoce como \emph{permutaciones},
+    suele anotarse \(P(n, k)\) para el número de permutaciones
+    de \(k\) objetos tomados entre un total de \(n\).
+    El primer elemento puede elegirse de \(n\)~formas,
+    el segundo de \(n - 1\) maneras,
+    y así hasta llegar al último,
+    que se puede elegir de \(n - k + 1\) maneras.
+    Aplicando la regla del producto,
+    tenemos:
+    \begin{align}
+      P(n, k)
+	&= n \cdot (n - 1) \dotsm (n - k + 1) \notag \\
+	&= n^{\underline{k}} \label{eq:Perm=ff}
+    \end{align}
+    En el caso particular en que \(k = n\) resulta:
+    \begin{align}
+      P(n, n)
+	&= n^{\underline{n}} \notag \\
+	&= n! \label{eq:Perms=n!}
+    \end{align}
+  \item[Secuencias con repeticiones:]
+    Generalmente se llaman
+    usando el término inglés
+      \emph{\foreignlanguage{english}{strings}}%
+      \index{string@\emph{\foreignlanguage{english}{string}}|see{palabra}}
+    (también \emph{palabras},%
+      \index{palabra}
+     o las podemos considerar como tuplas
+     cuyos elementos se toman todos del mismo conjunto).
+    No hay notación en uso común para este caso.
+    Aplicando la regla de multiplicación,
+    viendo que cada uno de los \(k\) elementos
+    puede elegirse de \(n\) maneras independientemente,
+    en este tenemos:
+    \begin{equation*}
+      n^k
+    \end{equation*}
+    Un caso de interés
+    es contar todas las secuencias hasta cierto largo \(k\).
+    Vimos que hay \(n^r\) secuencias de largo \(r\),
+    con lo que por el teorema~\ref{theo:suma-geometrica}
+    el número buscado es:
+    \begin{equation*}
+      \sum_{0 \le r \le k} n^r
+	= \frac{n^{k + 1} - 1}{n - 1}
+    \end{equation*}
+  \item[Conjuntos:]
+    Para elegir \(k\) elementos de entre \(n\)
+    sin interesar el orden
+    (lo que se llaman \emph{combinaciones},%
+      \index{combinatoria!combinacion@combinación|textbfhy}
+     y suele anotarse \(C(n, k)\))
+    podemos elegirlos en orden
+    (hay \(P(n, k)\) maneras de hacer esto),
+    y luego considerar que hay \(P(k, k) = k!\) maneras de ordenar
+    los \(k\) elementos elegidos
+    (un mapa \(k!\) a \(1\)
+     entre las secuencias ordenadas
+     y el conjunto de \(k\) elementos elegidos).
+    Vale decir,
+    el número buscado es:
+    \begin{align}
+      C(n, k)
+	&= \frac{P(n, k)}{P(k, k)} \label{eq:Comb=Perm/Perm} \\
+	&= \frac{n^{\underline{k}}}{k!} \label{eq:Comb=ff/f} \\
+	&= \frac{n!}{k! (n - k)!} \label{eq:Comb=f/f*f} \\
+	&= \binom{n}{k} \label{eq:Comb=binomial}
+    \end{align}
+    Debido a esto suele leerse \(\binom{n}{k}\)
+    como ``\(n\) elija \(k\)''%
+      \index{coeficiente binomial}
+    (en inglés
+      \emph{\(n\) \foreignlanguage{english}{choose} \(k\)}).
+    Nótese que:
+    \begin{equation*}
+      \binom{n}{k} = \binom{n}{n - k}
+    \end{equation*}
+    lo que puede interpretarse
+    diciendo que al elegir
+    los \(k\) elementos incluidos en el subconjunto,
+    lo que en realidad estamos haciendo
+    es elegir los \(n - k\) elementos
+    que estamos dejando fuera.
+    A esta clase de razonamiento
+    se le llama \emph{demostración combinatoria}.%
+      \index{demostracion@demostración!combinatoria|textbfhy}
+  \item[Multiconjuntos:]
+    \index{combinatoria!multiconjunto|see{multiconjunto!número}}
+    \index{multiconjunto!numero@número|textbfhy}
+    No hay una notación especial aceptada comúnmente para este caso.
+    Algunos autores usan:
+    \begin{equation*}
+      \multiset{n}{k}
+    \end{equation*}
+    para el caso en que tenemos \(n\) tipos de elementos
+    de los cuales tomamos en total \(k\).
+    Una manera de representar esta situación
+    es mediante variables \(x_r\),
+    donde \(x_r\) representa el número de elementos
+    de tipo \(r\) elegidos.
+    Entonces el número de multiconjuntos de tamaño \(k\)
+    tomando de entre \(n\) alternativas
+    es el número de soluciones en números naturales
+    a la ecuación:
+    \begin{equation*}
+      x_1 + x_2 + \dotsb + x_n = k
+    \end{equation*}
+    \begin{figure}[ht]
+      \centering
+      \pgfimage{images/stars-bars}
+      \caption{Una distribución de \(6\) elementos en \(4\) grupos}
+      \label{fig:stars-bars}
+    \end{figure}
+    La solución \(x_1 = 2\), \(x_2 = 0\), \(x_3 = 3\), \(x_4 = 1\)
+    al caso \(n = 4\) y \(k = 6\)
+    queda ilustrada en la figura~\ref{fig:stars-bars}.
+    Esta distribución puede describirse
+    con un total de \(n = 6\) asteriscos para la suma,
+    separados por \(k - 1 = 3\) barras para marcar las separaciones
+    (los extremos son fijos,
+     y los omitimos):
+    \begin{equation*}
+      ** | | *** | *
+    \end{equation*}
+    Visto de esta forma,
+    lo que estamos haciendo es distribuir \(n - 1\) barras
+    en \(n + k - 1\) posiciones,
+    un total de \(C(n + k - 1, n - 1)\).
+    A este tipo de razonamiento se le conoce
+    como \emph{\foreignlanguage{english}{stars and bars}}%
+      \index{stars and bars@\emph{\foreignlanguage{english}{stars and bars}}}
+    en inglés.
+    Así,
+    el número de soluciones se expresa:
+    \begin{equation*}
+      \multiset{n}{k}
+	= \binom{n + k - 1}{n - 1}
+    \end{equation*}
+    Nótese que puede escribirse,
+    de forma afín a los coeficientes binomiales:
+    \begin{equation*}
+      \multiset{n}{k}
+	= \binom{n + k - 1}{k}
+	= \frac{n^{\overline{k}}}{k!}
+    \end{equation*}
+    Como \(n^{\overline{k}} = (-1)^k \, (-n)^{\underline{k}}\)
+    se cumple la curiosa identidad:
+    \begin{equation}
+      \label{eq:multiset=negative-binomial}
+      \multiset{n}{k}
+	= (-1)^k \binom{-n}{k}
+    \end{equation}
+  \end{description}
+
+  Determinemos el número de subconjuntos
+  de \(k\) elementos de \([n]\)
+  que no contienen elementos consecutivos.%
+    \index{combinatoria!subconjuntos sin elementos consecutivos}
+  Es claro que si \(k = 0\) hay un único subconjunto
+  (el vacío),
+  si \(k = 1\) hay \(n\).
+  Otros casos simples son:
+  \begin{align*}
+    n = 3, k = 2 &\colon 1 \quad \{1, 3\} \\
+    n = 4, k = 2 &\colon 3 \quad \{1, 3\}, \{1, 4\}, \{2, 4\} \\
+    n = 5, k = 2 &\colon 6 \quad \{1, 3\}, \{1, 4\}, \{1, 5\},
+				 \{2, 4\}, \{2, 5\},
+				 \{3, 5\} \\
+    n = 5, k = 3 &\colon 1 \quad \{1, 3, 5\}
+  \end{align*}
+
+  Podemos nombrar un subconjunto de \([n]\)
+  como \(\{ a_1, a_2, \dotsc, a_k \}\),
+  con \(1 \le a_1 < a_2 < \dotsb < a_k \le n\).
+  La restricción que no contenga elementos adyacentes
+  se traduce en \(a_{r + 1} \ge a_r + 2\)
+  para \(1 \le r < k\).
+  Definamos nuevas variables:
+  \begin{align*}
+    d_1
+      &= a_1 - 1 \\
+    d_{r + 1}
+      &= a_{r + 1} - a_r - 2 \quad \text{para \(1 \le r < k\)} \\
+    d_{k + 1}
+      &= n - a_k
+  \end{align*}
+  Es claro que la restricción es que \(d_r \ge 0\),
+  y suman \(n - (k - 1) \cdot 2 - 1 = n - 2 k + 1\).
+  Por lo anterior,
+  el número de soluciones a esto es:
+  \begin{equation*}
+    \multiset{k + 1}{n - 2 k + 1}
+      = \binom{n - k + 1}{k}
+  \end{equation*}
+  Esto coincide con los valores obtenidos antes.
+
+  Una aplicación simple de los resultados anteriores
+  es la siguiente:
+  \begin{theorem}
+    \index{combinatoria!numero de funciones@número de funciones|see{función!número}}
+    \index{funcion@función!numero@número|textbfhy}
+    \label{theo:numero-funciones}
+    Sean \(\mathcal{X}\) e \(\mathcal{Y}\) conjuntos finitos.
+    Entonces el número total
+    de funciones
+      \(f \colon \mathcal{X} \rightarrow \mathcal{Y}\) es:
+    \begin{equation*}
+      \lvert \mathcal{Y} \rvert^{\lvert \mathcal{X} \rvert}
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Supongamos que \(\lvert \mathcal{X} \rvert = m\).
+    Entonces podemos considerar esta situación
+    como contar las tuplas
+    \((f(1), f(2), \dotsc, f(m))\),
+    en las cuales cada elemento
+    toma un valor de entre \(\lvert \mathcal{Y} \rvert = n\),
+    con lo que por la regla del producto hay \(n^m\) funciones.
+  \end{proof}
+  Es por este resultado que una notación común
+  para el conjunto de funciones de \(\mathcal{X}\) a \(\mathcal{Y}\)
+  es \(\mathcal{Y}^{\mathcal{X}}\).
+
+  Una manera de describir un subconjunto \(\mathcal{S}\)
+  de un conjunto \(\mathcal{U}\)
+  es mediante su \emph{función característica}%
+    \index{funcion caracteristica@función característica|see{conjunto!función característica}}%
+    \index{conjunto!funcion caracteristica@función característica|textbfhy}
+  \(\chi_{\mathcal{S}} \colon \mathcal{U} \rightarrow \{0, 1\}\),
+  donde \(\chi_{\mathcal{S}}(u) = 0\)
+  significa que \(u\) no pertenece al subconjunto,
+  y \(\chi_{\mathcal{S}}(u) = 1\) que pertenece.
+  Esta forma de ver las cosas lleva a:
+  \begin{corollary}
+    \index{combinatoria!numero de subconjuntos@número de subconjuntos|see{conjunto!subconjunto!número}}
+    \index{conjunto!subconjunto!numero@número|textbfhy}
+    \label{cor:numero-subconjuntos}
+    Sea \(\mathcal{A}\) un conjunto finito.
+    Entonces hay \(2^{\lvert \mathcal{A} \rvert}\)
+    subconjuntos de \(\mathcal{A}\).
+  \end{corollary}
+  \begin{proof}
+    Aplicar el teorema~\ref{theo:numero-funciones}
+    al conjunto de funciones características.
+  \end{proof}
+  Es por esta razón que el conjunto
+  de los subconjuntos de \(\mathcal{A}\)
+  suele anotarse \(2^{\mathcal{A}}\).
+  \begin{corollary}
+    \index{combinatoria!numero de relaciones@número de relaciones|see{relación!número}}
+    \index{relacion@relación!numero@número|textbfhy}
+    \label{cor:numero-relaciones}
+    Sean \(\mathcal{A}\) y \(\mathcal{B}\) conjuntos finitos.
+    Entonces hay \(2^{\lvert \mathcal{A} \rvert
+		      \cdot \lvert \mathcal{B} \rvert}\)
+    relaciones de \(\mathcal{A}\) a \(\mathcal{B}\).
+  \end{corollary}
+  \begin{proof}
+    \index{relacion@relación}
+    Una relación entre \(\mathcal{A}\) y \(\mathcal{B}\)
+    no es más que un subconjunto
+    de \(\mathcal{A} \times \mathcal{B}\),
+    aplicando la regla del producto
+    y luego~(\ref{cor:numero-subconjuntos}) obtenemos lo prometido.
+  \end{proof}
+
+  Otro caso importante es contabilizar el número de inyecciones.
+  \begin{theorem}
+    \index{combinatoria!numero de inyecciones@número de inyecciones|see{función!inyectiva!nùmero}}
+    \index{funcion@función!inyectiva!numero@número|textbfhy}
+    \label{theo:numero-inyecciones}
+    Sean \(\mathcal{X}\) e \(\mathcal{Y}\) conjuntos finitos,
+    de cardinalidades \(\lvert \mathcal{X} \rvert = m\)
+    e \(\lvert \mathcal{Y} \rvert = n\).
+    Entonces el número total de funciones inyectivas
+    \(i \colon \mathcal{X} \rightarrow \mathcal{Y}\)
+    es \(n^{\underline{m}} = n! / (n - m)!\)
+  \end{theorem}
+  \begin{proof}
+    Si es una inyección,
+    no se repiten valores de la función
+    (y por tanto \(m \le n\)).
+    Si consideramos que \(\mathcal{X}\) son índices
+    (definen las posiciones),
+    estamos frente a permutaciones de \(n\) elementos
+    de los que se eligen \(m\),
+    vale decir es:
+    \begin{equation*}
+      P(n, m)
+	= n^{\underline{m}}
+	= \frac{n!}{(n - m)!}
+      \qedhere
+    \end{equation*}
+  \end{proof}
+  Directamente resulta:
+  \begin{corollary}
+    \index{combinatoria!numero de biyecciones@número de biyecciones|see{biyección!número}}
+    \index{biyeccion@biyección!numero@número|textbfhy}
+    \label{cor:numero-biyecciones}
+    Sean \(\mathcal{X}\) e \(\mathcal{Y}\) conjuntos finitos
+    tales que
+      \(\lvert \mathcal{X} \rvert = \lvert \mathcal{Y} \rvert = n\).
+    Entonces el número de biyecciones
+      \(b \colon \mathcal{X} \rightarrow \mathcal{Y}\)
+    es \(n!\).
+  \end{corollary}
+  \begin{proof}
+    Para el caso \(n = m\)
+    el teorema~\ref{theo:numero-inyecciones}
+    da \(n^{\underline{n}} = n!\).
+  \end{proof}
+
+  Otra forma de interpretar
+  el corolario~\ref{cor:numero-biyecciones}
+  es que hay \(n!\) maneras de ordenar \(n\) elementos diferentes.
+
+  Los números de combinaciones cumplen una colección inmensa
+  de equivalencias curiosas.
+  \begin{theorem}[Identidad de Pascal]
+    \index{Pascal, identidad de|textbfhy}
+    \label{theo:identidad-Pascal}
+    Para \(n, k \in \mathbb{N}\) se cumplen:
+    \begin{align*}
+      \binom{n}{0}
+	&= \binom{n}{n} = 1 \\
+      \binom{n + 1}{k + 1}
+	&= \binom{n}{k + 1} + \binom{n}{k}
+     \end{align*}
+  \end{theorem}
+  \begin{proof}
+    Primero:
+    \begin{align*}
+      \binom{n}{n}
+	&= \binom{n}{n - n}
+	 = \binom{n}{0} \\
+      \binom{n}{0}
+	&= \frac{n!}{n! \; 0!}
+	 = 1
+    \end{align*}
+    Por el otro lado,
+    podemos considerar que \(\binom{n + 1}{k + 1}\)
+    corresponde a elegir \(k + 1\) elementos de entre \(n + 1\),
+    cosa que se puede hacer fijando uno de los elementos,
+    y luego considerar aquellos conjuntos de \(k + 1\) elementos
+    que lo incluyen
+    (corresponde a elegir los demás \(k\)
+     de entre los \(n\) restantes,
+     hay \(\binom{n}{k}\) casos de éstos),
+    y los que no
+    (corresponde a elegir \(k + 1\) elementos de entre los \(n\)
+     que son elegibles,
+     hay \(\binom{n}{k + 1}\) de estos casos).
+    Como el conjunto de los subconjuntos
+    que incluyen al elemento seleccionado
+    y los que no son disjuntos,
+    podemos aplicar la regla de la suma
+    para obtener la recurrencia indicada.
+  \end{proof}
+  Una demostración alternativa es:
+  \begin{proof}
+    Primeramente,
+    siempre es:
+    \begin{align*}
+      \binom{n}{0}
+	&= \frac{n^{\underline{0}}}{0!}
+	= 1 \\
+      \binom{n}{n}
+	&= \frac{n^{\underline{n}}}{n!}
+	= \frac{n!}{n!}
+	= 1
+    \end{align*}
+    Luego:
+    \begin{align*}
+      \binom{n}{k + 1} + \binom{n}{k}
+	&= \frac{n^{\underline{k + 1}}}{(k + 1)!}
+	     + \frac{n^{\underline{k}}}{k!} \\
+	&= \frac{n^{\underline{k}} (n - k)
+		   + (k + 1) n^{\underline{k}}}
+		{(k + 1)!} \\
+	&= \frac{n^{\underline{k}} (n + 1)}{(k + 1)!} \\
+	&= \frac{(n + 1)^{\underline{k + 1}}}{(k + 1)!} \\
+	&= \binom{n + 1}{k + 1}
+      \qedhere
+    \end{align*}
+  \end{proof}
+  \noindent
+  Nótese que salvo en \(\binom{n}{n} = 1\)
+  no presupone \(n \in \mathbb{N}_0\).
+
+  Un resultado extremadamente importante
+  es el que sigue:
+  \begin{theorem}[Binomio]
+    \index{binomio, teorema del|textbfhy}
+    \label{theo:binomio}
+    Para \(n \in \mathbb{N}\) tenemos:
+    \begin{equation*}
+      (a + b)^n
+	= \sum_{0 \le k \le n} \binom{n}{k} a^k b^{n - k}
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Por inducción sobre \(n\).%
+      \index{demostracion@demostración!induccion@inducción}
+    \begin{description}
+    \item[Base:]
+      Cuando \(n = 0\),
+      tenemos:
+      \begin{equation*}
+	\sum_{0 \le k \le 0}
+	  \binom{0}{k} a^k b^{0 - k}
+	  = \binom{0}{0} a^0 b^0
+	  = 1
+      \end{equation*}
+    \item[Inducción:]
+      Nótese que en las sumatorias siguientes
+      el rango de las sumas
+      es exactamente los índices
+      para los cuales
+      no se anulan los coeficientes binomiales respectivos,
+      con lo que podemos obviar los límites de las sumas.
+
+      Tenemos:
+      \begin{align*}
+	(a + b)^{n + 1}
+	  &= (a + b)^n \cdot (a + b) \\
+	  &= \left(\sum_k \binom{n}{k} a^k b^{n - k}\right)
+	       \cdot (a + b) \\
+	  &= \sum_k \binom{n}{k} a^{k + 1} b^{n - k}
+	       + \sum_k \binom{n}{k} a^k b^{n + 1 - k} \\
+	  &= \sum_k \binom{n}{k - 1} a^k b^{n + 1 - k}
+	       + \sum_k \binom{n}{k} a^k b^{n + 1 - k} \\
+	  &= \sum_k
+	       \left(
+		 \binom{n}{k - 1}
+		   + \binom{n}{k}
+	       \right) \, a^k b^{n + 1} \\
+	  &= \sum_k \binom{n + 1}{k} \, a^k b^{n + 1 - k} \\
+	  &= \sum_{0 \le k \le n + 1}
+	       \binom{n + 1}{k} \, a^k b^{n + 1 - k}
+      \end{align*}
+    \end{description}
+    Por inducción,
+    vale para \(n \in \mathbb{N}_0\).
+  \end{proof}
+  Por el teorema~\ref{theo:binomio}
+  es que los números \(\binom{n}{k}\)
+  se llaman \emph{coeficientes binomiales}.%
+    \index{coeficiente binomial|textbfhy}
+
+  Otro resultado importante es el siguiente.
+  \begin{theorem}[Multinomio]
+    \index{multinomio, teorema del|textbfhy}
+    \label{theo:multinomio}
+    Para \(n \in \mathbb{N}\)
+    tenemos:
+    \begin{equation*}
+      (a_1 +a_2 + \dotsb a_r)^n
+	 = \sum_{k_1 + k_2 + \dotsb + k_r = n}
+	      \binom{n}{k_1, k_2, \dotsc, k_r}
+		  a_1^{k_1} a_2^{k_2} \dotsb a_r^{k_r}
+    \end{equation*}
+    donde:
+    \begin{equation*}
+      \binom{n}{k_1, k_2, \dotsc, k_r}
+	= \frac{n!}{k_1! k_2! \dotsm k_r!}
+    \end{equation*}
+    Esta expresión está definida
+    solo si \(n = k_1 + k_2 + \dotsb + k_r\).
+  \end{theorem}
+  \begin{proof}
+    Por inducción fuerte sobre \(r\).%
+      \index{demostracion@demostración!induccion@inducción}
+    \begin{description}
+    \item[Base:]
+      Cuando \(r = 2\),
+      se reduce al teorema del binomio:
+      \begin{equation*}
+	\sum_{k_1 + k_2 = n}
+	     \binom{n}{k_1, k_2} a_1^{k_1} a_2^{k_2}
+	  = \sum_{0 \le k \le n}
+	      \binom{n}{k, n - k} a_1^k a_2^{n - k}
+	  = \sum_{0 \le k \le n} \binom{n}{k} a_1^k a_2^{n - k}
+      \end{equation*}
+    \item[Inducción:]
+      Tenemos:
+      \begin{align*}
+	((a_1 &+ \dotsb + a_r) + a_{r + 1})^n \\
+	  &= \sum_{0 \le k_{r + 1} \le n}
+	       \binom{n}{k_{r + 1}} \,
+		 \left(
+		   \sum_{k_1 + k_2 + \dotsb + k_r = n - k_{r + 1}}
+		   \binom{n - k_{r + 1}}{k_1, k_2, \dotsc, k_r}
+		     a_1^{k_1} a_2^{k_2} \dotsm a_r^{k_r}
+		 \right)
+	       \cdot a_{r + 1}^{n - k_{r + 1}} \\
+	  &= \sum_{k_1 + \dotsb + k_{r + 1} = n}
+	       \binom{n}{k_{r + 1}}
+		 \binom{n - k_{r + 1}}{k_1, k_2, \dotsc, k_r} \,
+		   a_1^{k_1} a_2^{k_2} \dotsm a_{k_{r + 1}} \\
+	  &= \sum_{k_1 + \dotsb + k_{r + 1} = n}
+	       \binom{n}{k_1, k_2, \dotsc, k_{r + 1}} \,
+		 a_1^{k_1} a_2^{k_2} \dotsm a_{k_{r + 1}}
+      \end{align*}
+      Acá usamos:
+      \begin{align*}
+	\binom{n}{k_{r + 1}}
+	  \binom{n - k_{r + 1}}{k_1, k_2, \dotsc, k_r}
+	  &= \frac{n!}{k_{r + 1}! (n - k_{r + 1})!}
+	       \cdot \frac{(n - k_{r + 1})!}
+			  {k_1! \; k_2! \dotsm k_r!} \\
+	  &= \frac{n!}{k_1! \; k_2! \dotsm k_{r + 1}!} \\
+	  &= \binom{n}{k_1, k_2, \dotsc, k_{r + 1}}
+      \end{align*}
+    \end{description}
+    Por inducción es válido para \(r \ge 2\),
+    y claramente es válido para \(r = 0\) y \(r = 1\),
+    con lo que vale para \(r \in \mathbb{N}_0\).
+  \end{proof}
+  Por razones obvias,
+  a los \(\binom{n}{k_1, k_2, \dotsc, k_r}\)
+  se les llama \emph{coeficientes multinomiales},%
+    \index{coeficiente multinomial|textbfhy}
+  y tenemos también:
+  \begin{equation*}
+    \binom{n}{k, n - k} = \binom{n}{k}
+  \end{equation*}
+
+\input{manos-poker}
+
+\input{tao-bookkeeper}
+
+\input{juegos-completos}
+
+\input{secuencias-restringidas}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

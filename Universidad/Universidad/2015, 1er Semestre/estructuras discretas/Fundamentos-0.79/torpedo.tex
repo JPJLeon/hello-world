@@ -1,0 +1,874 @@
+% torpedo.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\documentclass[fleqn, spanish]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{fourier, stmaryrd}
+\usepackage{dcolumn}
+\usepackage{babel}
+\usepackage[top=2.5cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+\linespread{1.1}
+
+\newtheorem*{theorem}{Teorema}
+
+\newcommand{\cycle}[2]{\genfrac{[}{]}{0pt}{}{#1}{#2}}	 % Stirling 1a especie
+\newcommand{\classes}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}} % Stirling 2a especie
+\newcommand{\lah}[2]{\genfrac{\lfloor}{\rfloor}{0pt}{}{#1}{#2}}	 % Lah
+
+\newcommand{\multiset}[2]{\left( \!\!\! \binom{#1}{#2} \!\!\! \right)}
+
+\newcommand{\E}{\mathbb{E}}
+
+\DeclareMathOperator{\var}{var}
+
+\DeclareMathOperator{\Seq}{\textsc{Seq}}
+\DeclareMathOperator{\Cyc}{\textsc{Cyc}}
+\DeclareMathOperator{\Set}{\textsc{Set}}
+\DeclareMathOperator{\MSet}{\textsc{MSet}}
+
+\DeclareMathOperator{\ogf}{\stackrel{\text{ogf}}{\longleftrightarrow}}
+\DeclareMathOperator{\egf}{\stackrel{\text{egf}}{\longleftrightarrow}}
+
+\DeclareMathOperator{\res}{res}
+\DeclareMathOperator{\pp}{pp}
+
+\title{Torpedo Oficial\\
+       Fundamentos de Informática II\\
+       {\normalsize Versión \classversion}}
+\author{ILI-153}
+
+\begin{document}
+\input{class-version}
+\maketitle
+\thispagestyle{empty}
+
+\section*{Potencias factoriales}
+\label{sec:potencias-factoriales}
+
+  \begin{equation*}
+    x^{\underline{k}}
+      = \prod_{0 \le r	\le k} (x - r)
+      = x \cdot (x - 1) \cdot \dotsm \cdot (x - k + 1)
+    \hspace{3em}
+    x^{\overline{k}}
+      = \prod_{0 \le r	\le k} (x + r)
+      = x \cdot (x + 1) \cdot \dotsm \cdot (x + k - 1)
+  \end{equation*}
+  \begin{equation*}
+    (-x)^{\underline{k}}
+      = (-1)^k x^{\overline{k}}
+    \qquad
+    (-x)^{\overline{k}}
+      = (-1)^k x^{\underline{k}}
+    \hspace{3em}
+    x^{\underline{k}}
+      = (x - k + 1)^{\overline{k}}
+    \qquad
+    x^{\overline{k}}
+      = (x + k - 1)^{\underline{k}}
+  \end{equation*}
+  \begin{equation*}
+    n!
+      = n^{\underline{n}}
+      = 1^{\overline{n}}
+    \hspace{3em}
+    n^{\underline{k}}
+      = \frac{n!}{(n - k)!}
+    \hspace{3em}
+    n^{\overline{k}}
+      = \frac{(n + k - 1)!}{(n - 1)!}
+    \hspace{3em}
+    \frac{\mathrm{d}^k}{\mathrm{d} x^k} x^u
+      = u^{\underline{k}} x^{u - k}
+  \end{equation*}
+
+\section*{Funciones generatrices}
+\label{sec:funciones-generatrices}
+
+  Las \emph{funciones generatrices}
+  de la secuencia \(\left\langle a_n \right\rangle_{n \ge 0}\) son:
+  \begin{description}
+  \item[Ordinaria:]
+    \(A \ogf \left\langle a_n \right\rangle_{n \ge 0}\)
+    si \(A(z) = \sum_{n \ge 0} a_n z^n\)
+  \item[Exponencial:]
+    \(\widehat{A}
+	\egf \left\langle a_n \right\rangle_{n \ge 0}\)
+    si \(\widehat{A}(z) = \sum_{n \ge 0} a_n \, \frac{z^n}{n!}\)
+  \end{description}
+
+  Sean
+  \(A(z)
+      \ogf \left\langle a_n \right\rangle_{n \ge 0}\) y
+  \(B(z)
+      \ogf \left\langle b_n \right\rangle_{n \ge 0}\),
+  \(\widehat{A}(z)
+      \egf \left\langle a_n \right\rangle_{n \ge 0}\) y
+  \(\widehat{B}(z)
+      \egf \left\langle b_n \right\rangle_{n \ge 0}\),
+  \(p(x)\) un polinomio.
+  Entonces:
+  \begin{alignat*}{3}
+    &A(z) \cdot B(z)
+      \ogf
+	 \left\langle
+	   \sum_{k \ge 0} a_k b_{n - k}
+	 \right\rangle_{n \ge 0} &&\qquad&
+    &\widehat{A}(z) \cdot \widehat{B}(z)
+      \egf
+	 \left\langle
+	   \sum_{k \ge 0} \binom{n}{k} a_k b_{n - k}
+	 \right\rangle_{n \ge 0} \\
+    &\frac{A(z) - a_0 - a_1 z - \dotsb - a_{m - 1} z^{m - 1}}{z^m}
+      \ogf
+	 \left\langle a_m, a_{m + 1}, \dotsc \right\rangle &&\qquad&
+    &\frac{\mathrm{d}^m}{\mathrm{d} z^m} \, \widehat{A}(z)
+      \egf
+	 \left\langle a_m, a_{m + 1}, \dotsc \right\rangle \\
+    &p(z \mathrm{D}) A(z)
+      \ogf \left\langle p(n) a_n \right\rangle_{n \ge 0} &&\qquad&
+    &p(z \mathrm{D}) \widehat{A}(z)
+      \egf \left\langle p(n) a_n \right\rangle_{n \ge 0} \\
+    &\frac{1}{1 - z} \cdot \sum_{n \ge 0} a_n z^n
+      = \sum_{n \ge 0}
+	  \biggl( \,
+	    \sum_{0 \le k \le n} a_k
+	  \biggr) z^n
+  \end{alignat*}
+
+\section*{Extracción de coeficientes}
+\label{sec:coefficient-extraction}
+
+  \begin{align*}
+    \left[ z^n \right] \, (\alpha A(z) + \beta B(z))
+      &= \alpha \left[ z^n \right] A(z) + \beta \left[ z^n \right] B(z) \\
+    \left[ z^n \right] \, A(z) \cdot B(z)
+      &= \sum_{0 \le k \le n} a_k b_{n - k} \\
+    \sum_{0 \le k \le n} \binom{n}{k} \, a_k
+      &= \left[ z^n \right] \,
+	   \frac{1}{1 - z} \,
+	     A \left(
+		 \frac{z}{1 - z}
+	       \right)
+  \end{align*}
+
+\section*{Algunas series notables}
+\label{sec:series}
+
+  En lo que sigue,
+  \(m, n \in \mathbb{N}\),
+  \(k \in \mathbb{N}_0\)
+  y \(\alpha, \beta \in \mathbb{C}\).
+  \begin{equation*}
+    \frac{1}{1 - a z}
+      = \sum_{n \ge 0} a^n z^n
+	 \qquad \frac{1 - z^{m + 1}}{1 - z}
+	    = \sum_{0 \le n \le m} z^n
+  \end{equation*}
+  \begin{equation*}
+    (1 + z)^\alpha
+      = \sum_{n \ge 0} \binom{\alpha}{n} z^n
+	 \qquad \binom{\alpha}{n}
+	     = \frac{\alpha^{\underline{n}}}{n!}
+	     = \frac{\alpha (\alpha - 1) \dotsm (\alpha - n + 1)}{n!}
+	 \qquad
+    \binom{n}{k}
+	     = \frac{n!}{k! (n - k)!}
+  \end{equation*}
+  \begin{equation*}
+    \binom{1/2}{n}
+      = \frac{(-1)^{n - 1}}{n 2^{2 n - 1}} \, \binom{2 n - 2}{n - 1}
+	    \quad \text{\ (si \(n \ge 1\))}
+      \qquad
+    \binom{-1/2}{n}
+      = \frac{(-1)^n}{2^{2 n}} \, \binom{2 n}{n} \qquad
+    \binom{-n}{k}
+      = (-1)^k \, \binom{n + k - 1}{n - 1}
+  \end{equation*}
+  \begin{equation*}
+    \frac{1}{(1 - z)^{n + 1}}
+      = \sum_{k \ge 0} \binom{n + k}{n} z^k
+      = \frac{1}{n!}
+	   \sum_{k \ge 0} (k + 1) (k + 2) \dotsm (k + n) z^k
+      = \frac{1}{n!} \sum_{k \ge 0} (k + 1)^{\bar{n}} z^k
+  \end{equation*}
+  \begin{equation*}
+    \sum_{n \ge 0} \binom{n}{k} z^n
+      = \frac{z^k}{(1 - z)^{k + 1}}
+  \end{equation*}
+  \begin{equation*}
+    (\alpha + \beta) (\alpha + \beta + n)^{n - 1}
+      = \sum_{0 \le k \le n}
+	  \binom{n}{k}
+	    (\alpha + k)^{k - 1}
+	    (\beta + n - k)^{n - k - 1}
+  \end{equation*}
+  \begin{equation*}
+    \mathrm{e}^z
+      = \sum_{n \ge 0} \frac{z^n}{n!}
+      \qquad
+    \mathrm{e}^{u + \mathrm{i} v}
+      = \mathrm{e}^u (\cos v + \mathrm{i} \sin v)
+      \quad (u, v \in \mathbb{C})
+      \qquad
+    \ln (1 - z)
+      = - \sum_{n \ge 1} \frac{z^n}{n}
+  \end{equation*}
+  \begin{equation*}
+    \sin z = \sum_{n \ge 0} \frac{(-1)^n z^{2 n + 1}}{(2 n + 1)!}
+      \qquad
+    \cos z = \sum_{n \ge 0} \frac{(-1)^n z^{2 n}}{(2 n)!}
+      \hspace{3em}
+    \sinh z = \sum_{n \ge 0} \frac{z^{2 n + 1}}{(2 n + 1)!}
+      \qquad
+    \cosh z = \sum_{n \ge 0} \frac{z^{2 n}}{(2 n)!}
+  \end{equation*}
+
+\section*{Secuencias notables}
+\label{sec:funciones-notables}
+
+\begin{description}
+  \item[Números de Fibonacci:]
+    \begin{align*}
+      &F_{n + 2} = F_{n + 1} + F_n \quad F_0 = 0, F_1 = 1
+	\qquad \sum_{n \ge 0} F_n z^n = \frac{z}{1 - z - z^2}
+	\qquad \sum_{n \ge 0} F_{n + 1} z^n = \frac{1}{1 - z - z^2} \\
+      &F_n = \frac{\tau^n - \phi^n}{\sqrt{5}}
+	\qquad
+	\tau = \frac{1 + \sqrt{5}}{2} \approx 1,61803
+	\quad \phi = 1 - \tau = -1 / \tau \approx -0,61803
+    \end{align*}
+
+    \noindent
+    0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987,
+    1\,597, 2\,584, 4\,181, 6\,765, 10\,946, \ldots
+  \item[Números harmónicos:]
+    \begin{align*}
+      &H_n
+	 = \sum_{1 \le k \le n} \frac{1}{k} \qquad
+       H_n = \ln n + \gamma
+	       + \frac{1}{2 n}
+	       - \frac{1}{12 n^2}
+	       + \frac{1}{120 n^4}
+	       - \frac{1}{252 n^6}
+	       + O(n^{-8})
+       \qquad
+       \gamma = 0,5772156649 \\
+      &H(z)
+	 = \frac{1}{1 - z} \, \ln \frac{1}{1 - z}
+    \end{align*}
+  \item[Números de Catalan:]
+    \begin{equation*}
+      C_{n + 1} = \!\! \sum_{0 \le k \le n} C_k C_{n - k} \quad C_0 = 1
+	\qquad C_n = \frac{1}{n + 1} \, \binom{2 n}{n}
+	\qquad C(z) = 1 + z C^2(z)
+	\qquad \sum_{n \ge 0} C_n z^n = \frac{1 - \sqrt{1 - 4 z}}{2 z} \\
+    \end{equation*}
+
+    \noindent
+    1, 1, 2, 5, 14, 42, 132, 429, 1\,430, 4\,862, 16\,796, 58\,786, 208\,012,
+    742\,900, 2\,674\,440, 9\,694\,845, 35\,357\,670, \ldots
+  \item[Números de Motzkin:]
+    \begin{equation*}
+      m_{n + 2} = m_{n + 1} + \sum_{0 \le k \le n} m_k m_{n - k}
+	\quad m_0 = m_1 = 1
+	\qquad \sum_{n \ge 0} m_n z^n
+		 = \frac{1 - z - \sqrt{1 - 2 z - 3 z^2}}{2 z}
+    \end{equation*}
+
+    \noindent
+    1, 1, 2, 4, 9, 21, 51, 127, 323, 835, 2\,188, 5\,798, 15\,511,
+    41\,835, 113\,634, 310\,572, 853\,467, 2\,356\,779, \ldots
+  \item[Coeficientes binomiales:]
+    Cuentan subconjuntos de \(k\) elementos tomados de \(n\)
+    \begin{align*}
+      &\binom{n}{0} = 1 \quad \binom{0}{k} = [k = 0]
+      \qquad
+       \binom{n + 1}{k + 1}
+	 = \binom{n}{k + 1} + \binom{n}{k}
+      \hspace*{4em}
+      \binom{\alpha}{k} = \frac{\alpha^{\underline{k}}}{k!}
+      \qquad
+       \binom{n}{k} = \frac{n!}{k! \, (n - k)!} \\
+      &\sum_{k, n} \binom{n}{k} x^k y^n
+	 = \frac{1}{1 - (1 + x) y}
+      \qquad
+       \sum_{k \ge 0} \binom{n}{k} x^k
+	 = (1 + x)^n
+      \qquad
+       \sum_{n \ge 0} \binom{n}{k} y^n
+	 = \frac{y^k}{(1 - y)^{k + 1}} \\
+      &\binom{\alpha}{k} = \frac{\alpha^{\underline{k}}}{k!}
+      \qquad
+       \binom{n}{k} = \frac{n!}{k! \, (n - k)!}
+    \end{align*}
+    \begin{table}[htbp]
+      \centering
+      \begin{tabular}{r*{12}{c@{\hspace{1ex}}}c}
+	$n=0$:& \phantom{00}
+		  & \phantom{00}
+		      & \phantom{00}
+			  & \phantom{00}
+			      & \phantom{00}
+				   & \phantom{00}
+					&	 1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=1$:& &   &	&   &	 &  1 &	   &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=2$:& &   &	&   & 1	 &    &	 2 & \phantom{00}
+						 &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=3$:& &   &	& 1 &	 &  3 &	   &  3 & \phantom{00}
+						      &	 1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=4$:& &   & 1 &   & 4	 &    &	 6 &	&  4 & \phantom{00}
+							   &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=5$:& & 1 &	& 5 &	 & 10 &	   & 10 &    &	5 & \phantom{00}
+								&	 1
+		& \phantom{00} \\
+	   \noalign{\smallskip\smallskip}
+	$n=6$:& 1 &   & 6	 &  & 15 &    & 20 &	& 15 &	  & 6
+		& \phantom{00} & 1 \\
+	   \noalign{\smallskip\smallskip}
+      \end{tabular}
+      \caption{Triángulo de Pascal}
+      \label{tab:triangulo-Pascal}
+    \end{table}
+  \item[Multiconjuntos:]
+    Cuentan multiconjuntos de \(k\) elementos elegidos entre \(n\)
+    \begin{align*}
+      &\multiset{n}{0} = 1 \quad \multiset{0}{k} = [k = 0]
+      \qquad
+       \multiset{n + 1}{k + 1}
+	 = \multiset{n}{k + 1} + \multiset{n + 1}{k}
+      \hspace*{4em}
+       \multiset{n}{k}
+	 = \binom{n - 1 + k}{n - 1} \\
+      &\sum_{k, n} \multiset{n}{k} x^k y^n
+	 = \frac{1 - x}{1 - x - y}
+      \qquad
+       \sum_{k \ge 0} \multiset{n}{k} x^k
+	 = \frac{1}{(1 - x)^n}
+      \qquad
+       \sum_{n \ge 0} \multiset{n}{k} y^n
+	 = \frac{y^{[k > 0]}}{(1 - y)^k}
+    \end{align*}
+  \item[Números de Stirling de primera especie:]
+    Cuentan el número de permutaciones de \(n\) elementos con \(k\) ciclos.
+    \begin{equation*}
+      \cycle{n}{0}
+	= [n = 0]
+      \quad
+      \cycle{n}{n}
+	= 1
+      \qquad
+      \cycle{n + 1}{k + 1}
+	= n \cycle{n}{k + 1} + \cycle{n}{k}
+    \end{equation*}
+    \begin{equation*}
+      z^{\underline{n}}
+	= \sum_{k \ge 0}
+	    (-1)^{n - k}
+	    \cycle{n}{k} z^k
+      \qquad
+      z^{\overline{n}}
+	= \sum_k \cycle{n}{k} z^k
+      \qquad
+      C(z, u)
+	 = \sum_{\substack{
+		   n \ge 0 \\
+		   k \ge 0
+		}} \cycle{n}{k} u^k \, \frac{z^n}{n!}
+	 = (1 - z)^{-u}
+    \end{equation*}
+    \begin{table}[htbp]
+      \centering
+      \begin{tabular}{r*{12}{c@{\hspace{1ex}}}c}
+	$n=0$:& \phantom{000}
+		    & \phantom{000}
+			 & \phantom{000}
+			      & \phantom{000}
+				   & \phantom{000}
+					& \phantom{000}
+					     &	1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=1$:&	  &    &    &	 &    &	 0 & \phantom{000}
+						  &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=2$:&	  &    &    &	 &  0 &	   &  1 & \phantom{000}
+						       &	1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=3$:&	  &    &    &  0 &    &	 2 &	&  3 & \phantom{000}
+							    &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=4$:&	  &    &  0 &	 &  6 &	   & 11 &    &	6 & \phantom{000}
+								 &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=5$:&	  &  0 &    & 24 &    & 50 &	& 35 &	  & 10 & \phantom{000}
+								      &	 1
+		 & \phantom{000} \\
+	   \noalign{\smallskip\smallskip}
+	$n=6$:& 0	  &    &120 &	 &274 &	   &225 &    & 85 &    & 15
+		 & \phantom{000} &  1 \\
+	   \noalign{\smallskip\smallskip}
+      \end{tabular}
+      \caption{Números de Stirling de primera especie}
+      \label{tab:triangulo-Stirling-1}
+    \end{table}
+  \item[Números de Stirling de segunda especie:]
+    Cuentan el número de particiones de \(n\) elementos en \(k\) clases.
+    \begin{equation*}
+      \classes{n}{0}
+	= [n = 0]
+      \quad
+      \classes{n}{n}
+	= 1
+      \qquad
+      \classes{n + 1}{k + 1}
+	= (k + 1) \classes{n}{k + 1} + \classes{n}{k}
+   \end{equation*}
+   \begin{equation*}
+      z^n
+	= \sum_k \classes{n}{k} z^{\underline{k}}
+      \qquad
+      z^n
+	= \sum_k (-1)^{n - k} \classes{n}{k} z^{\overline{k}}
+      \qquad
+      S_k(y)
+	= \sum_{n \ge 0} \classes{n}{k} y^n
+	= \sum_{1 \le r \le k}
+	    \frac{(-1)^{k - r}r^{k - 1}}
+		 {(r - 1)! (k - r)!}
+	      \cdot \frac{y^k}{1 - r y}
+   \end{equation*}
+   \begin{equation*}
+      S(z, u)
+	= \sum_{\substack{
+		   n \ge 0 \\
+		   k \ge 0
+		}} \classes{n}{k} u^k \, \frac{z^n}{n!}
+	= \exp \left( u (\mathrm{e}^z - 1) \right)
+    \end{equation*}
+    \begin{table}[htbp]
+      \centering
+      \begin{tabular}{r*{12}{c@{\hspace{1ex}}}c}
+	$n=0$:& \phantom{00}
+		  & \phantom{00}
+		      & \phantom{00}
+			  & \phantom{00}
+			      & \phantom{00}
+				   & \phantom{00}
+					& 1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=1$:& &   &	&   &	 &  0 & \phantom{00}
+					    &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=2$:& &   &	&   &  0 &    &	 1 & \phantom{00}
+						 &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=3$:& &   &	& 0 &	 &  1 &	   &  3 & \phantom{00}
+						      &	 1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=4$:& &   & 0 &   &  1 &    &	 7 &	&  6 & \phantom{00}
+							   &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=5$:& & 0 &	& 1 &	 & 15 &	   & 25 &    & 10 & \phantom{00}
+								&	 1
+		& \phantom{00} \\
+	   \noalign{\smallskip\smallskip}
+	$n=6$:& 0 &   & 1 &   & 31 &	& 90 &	& 65 &	  & 15 & \phantom{00}
+								      &	 1 \\
+	   \noalign{\smallskip\smallskip}
+      \end{tabular}
+      \caption{Números de Stirling de segunda especie}
+      \label{tab:triangulo-Stirling-2}
+    \end{table}
+  \item[Números de Lah:]
+    Cuentan el número de formas
+    de organizar \(n\) elementos en \(k\) secuencias.
+    \begin{equation*}
+      \lah{n}{0}
+	= [n = 0]
+      \quad
+      \lah{n}{n}
+	= 1
+      \qquad
+      \lah{n + 1}{k + 1}
+	= (n + k + 1) \lah{n}{k + 1} + \lah{n}{k}
+   \end{equation*}
+   \begin{equation*}
+     z^{\overline{n}}
+       = \sum_k \lah{n}{k} z^{\underline{k}}
+     \qquad
+     z^{\underline{n}}
+       = \sum_k (-1)^{n - k} \lah{n}{k} z^{\overline{k}}
+     \quad
+     \lah{n}{k}
+       = \frac{n!}{k!} \, \binom{n - 1}{k - 1}
+   \end{equation*}
+   \begin{equation*}
+     L(z, u)
+	= \sum_{\substack{
+		   n \ge 0 \\
+		   k \ge 0
+		}} \lah{n}{k} u^k \, \frac{z^n}{n!}
+       = \exp \left( u z (1 - z)^{-1} \right)
+   \end{equation*}
+   \begin{table}[htbp]
+      \centering
+      \begin{tabular}{r*{12}{c@{\hspace{1ex}}}c}
+	$n=0$:& \phantom{0000}
+		    & \phantom{0000}
+			 & \phantom{0000}
+			      & \phantom{0000}
+				   & \phantom{0000}
+					& \phantom{0000}
+					     &	1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=1$:&	  &    &     &	  &	 &   0 & \phantom{0000} &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=2$:&	  &    &     &	  &    0 &     &  1 & \phantom{0000} &	 1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=3$:&	  &    &     &	 0 &	 &   6 &	 &   6
+		 & \phantom{0000} &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=4$:&	  &    &   0 &	  &   24 &     & 36 &	  & 12
+		 & \phantom{0000} &  1 \\
+	   \noalign{\smallskip\smallskip}
+	$n=5$:&	  &  0 &     & 120 &	 & 240 &	  & 120 &    &	20
+		 & \phantom{0000} & 1 & \phantom{0000} \\
+	   \noalign{\smallskip\smallskip}
+	$n=6$:& 0	  &    & 720 &	   &1800 &	   &1200 &    & 300 &	 & 30
+		 & \phantom{0000} &  1 \\
+	   \noalign{\smallskip\smallskip}
+      \end{tabular}
+      \caption{Números de Lah}
+      \label{tab:triangulo-Lah}
+    \end{table}
+  \item[Números de Bell:]
+    Número total de formas de particionar \(n\) elementos.
+    \begin{align*}
+      &B_n
+	 = \sum_{0 \le k \le n} \classes{n}{k}
+      \qquad
+	B_0 = 1
+      \quad
+	B_{n + 1}
+	  = \sum_{0 \le k \le n} \binom{n}{k} B_k \\
+      &\widehat{B}(z)
+	 = \sum_{n \ge 0} B_n \, \frac{z^n}{n!}
+	 = \mathrm{e}^{\mathrm{e}^z - 1}
+    \end{align*}
+    \noindent
+    1, 1, 2, 5, 15, 52, 203, 877, 4\,140, 21\,147, 115\,975, 678\,570,
+    4\,213\,597, 27\,644\,437, 190\,899\,322, 1\,382\,958\,545, \ldots
+  \item[Números de Bell ordenados:]
+    Número de formas de particionar \(n\) elementos,
+    el orden de las particiones importa
+    (``competencias con empate'').
+    \begin{align*}
+      &R_n
+	 = \sum_{k \ge 0} \frac{k^n}{2^{k + 1}}
+      \qquad
+      2 R_n
+	= [n = 0] + \sum_{ 1 \le k \le n} \binom{n}{k} \, R_{n - k} \\
+      &\widehat{R}(z)
+	= \sum_{n \ge 0} R_n \frac{z^n}{n!}
+	= \frac{1}{2 - \mathrm{e}^z}
+    \end{align*}
+    \noindent
+    1, 1, 3, 13, 75, 541, 4\,683, 47\,293, 545\,835, 7\,087\,261,
+    102\,247\,563, 1\,622\,632\,573, 28\,091\,567\,595, 526\,858\,348\,381,
+    \ldots
+  \end{description}
+
+\section*{Método simbólico}
+\label{sec:metodo-simbolico}
+
+  \begin{theorem}[Método simbólico, OGF; objetos no rotulados]
+    \label{theo:ms-OGF}
+    Sean \(\mathcal{A}\) y \(\mathcal{B}\) clases de objetos,
+    con funciones generatrices ordinarias
+    respectivamente \(A(z)\) y \(B(z)\).
+    Entonces funciones generatrices ordinarias enumeran:
+    \\[1ex]
+    \begin{tabular}{l*{4}{@{\hspace{2em}}l}}
+      1. \(\mathcal{A} + \mathcal{B}\):
+	  \(A(z) + B(z)\) &
+      2. \(\mathcal{A} \times \mathcal{B}\):
+	  \(A(z) \cdot B(z)\) &
+      3. \(\mathcal{A}^\bullet\):
+	   \(z A'(z)\) &
+      4. \(\mathcal{A} \circ \mathcal{B}\):
+	   \(A(B(z))\) &
+      5. \(\Seq(\mathcal{A})\):
+	  \(1 / (1 - A(z))\)  \\[0.5ex]
+      \multicolumn{5}{l}{
+	6. \(\Set(\mathcal{A})\):
+	      \(\prod_{n \ge 0} (1 + z^n)^{a_n}
+		  = \exp\left(
+			  \sum_{k \ge 1} (-1)^{k + 1} A(z^k) / k
+			 \right)\)
+	\hspace{2em}
+	7. \(\MSet(\mathcal{A})\):
+	    \(\prod_{n \ge 1} (1 - z^n)^{-a_n}
+		= \exp\left(
+			\sum_{k \ge 1} A(z^k) / k
+		      \right)\)
+      } \\[0.5ex]
+      \multicolumn{5}{l}{
+	8. \(\Cyc(\mathcal{A})\):
+	    \(\sum_{n \ge 1}
+	       \frac{\phi(n)}{n} \, \ln \frac{1}{1 - A(z^n)}\)
+      }
+    \end{tabular}
+  \end{theorem}
+
+  \begin{theorem}[Método simbólico, EGF; objetos rotulados]
+    \label{theo:ms-EGF}
+    Sean \(\mathcal{A}\) y \(\mathcal{B}\) clases de objetos,
+    con funciones generatrices exponenciales
+    \(\widehat{A}(z)\) y \(\widehat{B}(z)\),
+    respectivamente.
+    Entonces funciones generatrices exponenciales enumeran:
+    \\[1ex]
+    \begin{tabular}{l*{4}{@{\hspace{2em}}l}}
+      1. \(\mathcal{A} + \mathcal{B}\):
+	   \(\widehat{A}(z) + \widehat{B}(z)\) &
+      2. \(\mathcal{A} \star \mathcal{B}\):
+	   \(\widehat{A}(z) \cdot \widehat{B}(z)\) &
+      3. \(\mathcal{A}^\bullet\):
+	  \(z \widehat{A}'(z)\) &
+      4. \(\mathcal{A} \circ \mathcal{B}\):
+	   \(\widehat{A}(\widehat{B}(z))\) &
+      5. \(\Seq(\mathcal{A})\):
+	   \(1 / (1 - \widehat{A}(z))\) \\[0.5ex]
+      6. \(\MSet(\mathcal{A})\):
+	   \(\exp(\widehat{A}(z))\) &
+      7. \(\Cyc(\mathcal{A})\):
+	   \(-\ln (1 - \widehat{A}(z))\) &
+      \multicolumn{3}{l}{
+	 8. \(\mathcal{A}^\square \star \mathcal{B}\):
+	      \(\int_0^z \widehat{A}'(u)
+		    \cdot \widehat{B}(u) \, \mathrm{d} u\)
+      }
+    \end{tabular}
+  \end{theorem}
+
+\section*{Fórmula de inversión de Lagrange}
+\label{sec:LIF}
+
+\begin{theorem}
+  Sean \(f(u)\) y \(\phi(u)\) series formales de potencias en \(u\),
+  con \(\phi(0) = 1\).
+  Hay una única serie formal \(u = u(t)\) tal que \(u = t \phi(u)\).
+  El valor \(f(u(t))\) expandido en serie alrededor de \(t = 0\) es:
+  \begin{equation*}
+    \left[ t^n \right] \left\{ f(u(t)) \right\}
+    = \frac{1}{n} \, \left[ u^{n - 1} \right]
+    \left\{ f'(u) \phi(u)^n \right\}
+  \end{equation*}
+\end{theorem}
+
+\section*{Principio de Inclusión y Exclusión}
+\label{sec:PIE}
+
+  Sea \(\Omega\) un conjunto de objetos,
+  \(\mathcal{P}\) un conjunto de propiedades de los objetos.
+  Para \(\mathcal{S} \subseteq \mathcal{P}\)
+  sea \(N(\supseteq \mathcal{S})\) el número de objetos
+  con las propiedades en \(\mathcal{S}\),
+  y \(e_t\) el número de objetos con exactamente \(t\) propiedades.
+  \begin{equation*}
+    N_r
+      = \sum_{\lvert \mathcal{S} \rvert = r} N(\supseteq{\mathcal{S}})
+	 \qquad
+    N(z)
+      = \sum_r N_r z^r \qquad E(z) = \sum_t e_t z^t
+	 \qquad
+    E(z) = N(z - 1)
+  \end{equation*}
+  \begin{equation*}
+    e_0
+      = E(0)
+      = N(-1)
+    \qquad
+    e_t
+      = \frac{E^{(t)}(0)}{t!}
+      = \frac{N^{(t)}(-1)}{t!}
+    \qquad
+    \E[t]
+      = \frac{N_1}{N_0}
+    \qquad
+    \var[t]
+      = \frac{2 N_2 + N_1}{N_0} - \frac{N_1^2}{N_0^2}
+  \end{equation*}
+
+\section*{Fórmula de Euler-Maclaurin}
+\label{sec:Euler-Maclaurin}
+
+  \begin{equation*}
+    \sum_{1 \le k < a} f(k)
+      = \int_1^a f(z) \, \mathrm{d} z
+	 + \gamma_f
+	 + B_1 f(a)
+	 + \sum_{1 \le k \le n} \frac{B_{2 k}}{(2 k)!} \, f^{(2 k - 1)}(a)
+	 + R_n(a)
+  \end{equation*}
+  \begin{equation*}
+    \gamma_f
+      = \lim_{a \rightarrow \infty}
+	  \sum_{1 \le k < a} f(k)
+	  - \int_1^a f(z) \, \mathrm{d} z
+     \hspace{3em}
+     \lvert R_n(a) \rvert
+	\le \frac{\lvert B_{2 n + 2} \rvert}{(2 n + 2)!}
+	      \, \lvert f^{(2 n + 2)}(a) \rvert
+  \end{equation*}
+  \begin{equation*}
+    B_0(x)
+      = 1 \hspace{3em}
+    B'_n (x)
+      = n B_{n - 1} (x)
+    \hspace{3em}
+    \int_0^1 B_n(x) \, \mathrm{d} x
+      = [n = 0]
+    \hspace{3em}
+    B_n = B_n(0) = B_n(1) \text{\ si \(n \ne 1\)}
+  \end{equation*}
+  \begin{equation*}
+    B(x, y)
+      = \sum_{n \ge 0} B_n(x) y^n
+      = \frac{y \mathrm{e}^{x y}}{\mathrm{e}^y - 1}
+  \end{equation*}
+  \begin{equation*}
+    B_n (x + y)
+      = \sum_{0 \le k \le n} \binom{n}{k} B_{n - k} (x) y^k
+  \end{equation*}
+
+\section*{Análisis complejo}
+\label{sec:analisis-complejo}
+
+\subsection*{Derivadas}
+\label{sec:derivadas}
+
+  \begin{equation*}
+    f(z)
+      = f(x + \mathrm{i} y)
+      = u(x, y) + \mathrm{i} v(x, y)
+    \qquad
+    \frac{\mathrm{d} f}{\mathrm{d} z}
+      = \frac{\partial u}{\partial x}
+	  + \mathrm{i} \, \frac{\partial v}{\partial x}
+      = \frac{\partial v}{\partial y}
+	  - \mathrm{i} \, \frac{\partial u}{\partial y}
+    \qquad
+    \frac{\partial u}{\partial x} = \frac{\partial v}{\partial y}
+    \quad
+    \frac{\partial u}{\partial y} = - \frac{\partial v}{\partial x}
+  \end{equation*}
+
+\subsection*{Teorema de Cauchy}
+\label{sec:Cauchy}
+
+  Si \(f\) es holomorfa sobre la curva simple cerrada \(\gamma\)
+  y en su interior:
+  \begin{equation*}
+    \int_\gamma f(z) \, \mathrm{d} z
+      = 0
+    \qquad
+    \frac{1}{2 \pi \mathrm{i}} \,
+      \int_\gamma \frac{f(z)}{(z - z_0)^{n + 1}} \, \mathrm{d} z
+      = f^{(n)} (z_0)
+  \end{equation*}
+  Si \(f\) es holomorfa sobre \(\gamma\),
+  y salvo singularidades aisladas \(z_k\) es holomorfa a su interior:
+  \begin{equation*}
+    \frac{1}{2 \pi \mathrm{i}} \, \int_\gamma f(z) \, \mathrm{d} z
+      = \sum_{z_k} \res(f, z_k)
+  \end{equation*}
+  Para el residuo en un polo simple \(z_0\);
+  si \(f(z) = g(z) / h(z)\),
+  \(g(z_0) \ne 0\) y \(h(z)\) tiene un cero simple en \(z_0\):
+  \begin{equation*}
+    \res(f, z_0)
+      = \lim_{z \rightarrow z_0} (z - z_0) f(z)
+      = \frac{g(z_0)}{h'(z_0)}
+  \end{equation*}
+  En un polo de orden \(m\) en \(z_0\):
+  \begin{equation*}
+    \res(f, z_0)
+      = \frac{1}{(m - 1)!} \,
+	  \lim_{z \rightarrow z_0}
+	    \frac{\mathrm{d}^{m - 1}}{\mathrm{d} z^{m - 1}} \,
+	      ((z - z_0)^m f(z))
+  \end{equation*}
+
+\subsection*{Funciones Gamma y Beta}
+\label{sec:funciones-gamma-beta}
+
+  \begin{equation*}
+    \Gamma(z)
+      = \int_0^\infty t^{z - 1} \mathrm{e}^{-t} \, \mathrm{d} t
+    \qquad
+    \Gamma(z + 1)
+      = z \Gamma(z)
+      = z!
+    \qquad
+    \Gamma(z) \Gamma(1 - z)
+      = \frac{\pi}{\sin \pi z}
+    \qquad
+    \Gamma(1 / 2)
+      = \sqrt{\pi}
+  \end{equation*}
+  \begin{equation*}
+    B(x, y)
+      = \int_0^1 t^{x - 1} (1 - t)^{y - 1} \, \mathrm{d} t
+      = \frac{\Gamma(x) \Gamma(y)}{\Gamma(x + y)}
+  \end{equation*}
+
+\section*{Lista de series frecuentes}
+\label{sec:series-frecuentes}
+
+  \begin{tabular}{*{2}{>{\(\displaystyle}l<{\)}}
+		   @{\hspace{5em}}*{2}{>{\(\displaystyle}l<{\)}}}
+    \sum_{n \ge 0} z^n			& \frac{1}{1 - z} &
+    \sum_{n \ge 0} n z^n		& \frac{z}{(1 - z)^2} \\
+    \sum_{n \ge 0} n^2 z^n		& \frac{z + z^2}{(1 - z)^3} &
+    \sum_{n \ge 1} \frac{z^n}{n}	& - \ln (1 - z) \\
+    \sum_{n \ge 0} \frac{z^n}{n!}	& \mathrm{e}^z &
+    \sum_{n \ge 0} \frac{(-1)^n z^n}{n!}
+					& \mathrm{e}^{-z} \\
+    \sum_{n \ge 0} \frac{z^{2 n}}{(2 n)!}
+					& \cosh z &
+    \sum_{n \ge 0} \frac{z^{2 n + 1}}{(2 n + 1)!}
+					& \sinh z \\
+    \sum_{n \ge 0} \frac{(-1)^n z^{2 n}}{(2 n)!}
+					& \cos z &
+    \sum_{n \ge 0} \frac{(-1)^n z^{2 n + 1}}{(2 n + 1)!}
+					& \sin z \\
+    \sum_{k \ge 0} \binom{\alpha}{k} z^k
+					& (1 + z)^\alpha &
+    \sum_{n \ge 0} \binom{n}{k} z^n	& \frac{z^k}{(1 - z)^{k + 1}} \\
+    \sum_{k \ge 0} \multiset{n}{k} z^k	& \frac{1}{(1 - z)^n} &
+    \sum_{n \ge 0} \multiset{n}{k} z^n	& \frac{z^{[k > 0]}}
+					       {(1 - z)^{k + 1}} \\
+    \sum_{n \ge 0} \binom{n + k}{k} z^n
+					& \frac{1}{(1 - z)^{k + 1}} &
+    \sum_{n \ge 0} \binom{2 n}{n} z^n	& \frac{1}{\sqrt{1 - 4 z}} \\
+    \sum_{n \ge 0} C_n z^n		& \frac{1 - \sqrt{1 - 4 z}}{2 z} &
+    \sum_{n \ge 1} H_n z^n		& \frac{1}{1 - z} \ln \frac{1}{1 - z}
+      \\
+    \sum_{n \ge 0} F_n z^n		& \frac{z}{1 - z - z^2} &
+    \sum_{n \ge 0} F_{n + 1} z^n	& \frac{1}{1 - z - z^2}
+  \end{tabular}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

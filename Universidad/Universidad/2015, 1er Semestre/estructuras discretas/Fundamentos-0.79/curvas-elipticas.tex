@@ -1,0 +1,145 @@
+% curvas-elipticas.tex
+%
+% Copyright (c) 2012-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\subsection{Curvas elípticas}
+\label{sec:curvas-elipticas}
+\index{curva eliptica@curva elíptica|textbfhy}
+
+  Una \emph{curva elíptica}
+  está definida por una ecuación de la forma:
+  \begin{equation*}
+    \label{eq:elliptic-curve}
+    y^2
+      = x^3 + a x + b
+  \end{equation*}
+  \begin{figure}
+    \centering
+    \subfloat[\(y^2 = x^3 - x\)]{
+      \pgfimage{images/curva-eliptica-1}
+    }%
+    \hspace{1em}%
+    \subfloat[\(y^2 = x^3 - x + 1\)]{
+      \pgfimage{images/curva-eliptica-2}
+    }
+    \caption{Curvas elípticas}
+    \label{fig:curvas-elipticas}
+  \end{figure}
+  que no tiene puntos aislados,
+  no se intersecta a sí misma y no tiene cuernos.
+  Algebraicamente,
+  el discriminante \(\Delta = - 16 (4 a^3 + 27 b^2) \ne 0\).%
+    \index{discriminante}
+  El gráfico de la curva tiene dos componentes si \(\Delta > 0\)
+  y uno solo si \(\Delta < 0\),
+  ver la figura~\ref{fig:curvas-elipticas}.
+  El nombre no tiene relación con la forma de la curva,
+  sino con el hecho que se requieren funciones elípticas
+  para representarlas paramétricamente.
+
+  \begin{figure}
+    \centering
+    \subfloat[Suma de \(\mathtt{P}_1 = (x_1, y_1)\)
+	      y \(\mathtt{P}_2 = (x_2, y_2)\)]{
+      \pgfimage{images/suma-curva-eliptica}
+      \label{subfig:suma-curva-eliptica}
+    }%
+    \hspace{1em}%
+    \subfloat[Doble de \(\mathtt{P} = (x, y)\)]{
+      \pgfimage{images/doble-curva-eliptica}
+      \label{subfig:doble-curva-eliptica}
+    }
+    \caption{Sumas en curvas elípticas}
+    \label{fig:sumas-curva-eliptica}
+  \end{figure}
+  Dados dos puntos \(\mathtt{P}_1 = (x_1, y_1)\)
+  y \(\mathtt{P}_2 = (x_2, y_2)\) sobre una curva elíptica
+  podemos definir la suma
+  como el punto donde la recta entre los puntos corta la curva
+  reflejado en el eje \(x\),
+  véase~\ref{subfig:suma-curva-eliptica} para un ejemplo.
+  Esto hace que si \(\mathtt{P}_1\),
+  \(\mathtt{P}_2\) y \(\mathtt{P}_3\)
+  son puntos sobre la curva,
+  es \(\mathtt{P}_1 + \mathtt{P}_2 + \mathtt{P}_3 = 0\),
+  donde 0 es el punto en el infinito.
+  En caso que \(x_1 = x_2\)
+  hay dos posibilidades:
+  Si \(y_1 = - y_2\),
+  (incluyendo el caso en que los puntos coinciden),
+  la suma se define como \(0\)
+  (el punto en el infinito).
+  Tenemos así para \(\mathtt{P} = (x, y)\)
+  que \(- \mathtt{P} = (x, -y)\).
+  En caso contrario
+  definimos \(\mathtt{P}_1 + \mathtt{P}_2 = \mathtt{P}_3\)
+  con \(\mathtt{P}_3 = (x_3, y_3)\)
+  mediante:
+  \begin{align}
+    s
+      &= \frac{y_2 - y_1}{x_2 - x_1} \notag \\
+    x_3
+      &= s^2 - x_1 - x_2 \label{eq:suma-curva-eliptica} \\
+    y_3
+      &= y_1 + s (x_3 - x_1) \notag
+  \end{align}
+  Para sumar el punto \(\mathtt{P} = (x, y)\) consigo mismo
+  corresponde usar la tangente a la curva,
+  ver la figura~\ref{subfig:doble-curva-eliptica},
+  lo que da \(\mathtt{P}_2 = (x_2, y_2)\):
+  \begin{align}
+    s
+      &= \frac{3 x + a}{2 y} \notag \\
+    x_2
+      &= s^2 - 2 x \label{eq:doble-curva-eliptica} \\
+    y_2
+      &= y + s (x_2 - x) \notag
+  \end{align}
+  Es rutina verificar que esto define un grupo abeliano.%
+    \index{curva eliptica@curva elíptica!grupo}%
+    \index{grupo!abeliano}
+
+  Lo interesante es que las relaciones
+  que definen la suma en curvas elípticas
+  valen en cualquier campo,
+  por lo que podemos considerar
+  el grupo definido por la curva elíptica sobre un campo cualquiera.
+  Si la característica del campo \(F\) no es \(2\) ni \(3\)
+  (vale decir,
+   no es \(2 x = 0\) ni \(3 x = 0\) para todo \(x \in F\);
+   la discusión formal deberá esperar
+   al capítulo~\ref{cha:campos-finitos}),
+  toda curva elíptica puede escribirse en la forma:
+  \begin{equation*}
+    y^2
+      = x^3 - p x - q
+  \end{equation*}
+  tal que el lado derecho no tiene ceros repetidos.
+  Interesan los puntos con coordenadas en \(F\).
+  El teorema de Hasse~%
+    \cite{hasse36:_EC-I, hasse36:_EC-II, hasse36:_EC-III}
+  da las cotas para el número \(N\) de elementos en curvas elípticas
+  sobre el campo finito de \(q\) elementos:
+  \begin{equation*}
+    \lvert N - (q + 1) \rvert
+      \le 2 \sqrt{q}
+  \end{equation*}
+
+  Las curvas elípticas son importantes en teoría de números,
+  y tienen bastantes aplicaciones prácticas,
+  particularmente se están haciendo muy populares en criptografía.%
+    \index{criptografia@criptografía}%
+  El sistema \texttt{PARI/GP}~\cite{PARI:2.7.2}%
+    \index{PARI/GP@\texttt{PARI/GP}}
+  incluye soporte para operar en los grupos respectivos.
+  El paquete GAP~%
+    \cite{GAP:4.7.5}%
+    \index{GAP@\texttt{GAP}}
+  tiene extenso soporte para trabajar con grupos,
+  incluyendo grupos de curvas elípticas.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

@@ -1,0 +1,86 @@
+% tao-bookkeeper.tex
+%
+% Copyright (c) 2009, 2011-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section{El tao de \texttt{BOOKKEEPER}}
+\label{sec:tao-bookkeeper}
+\index{Tao de \texttt{BOOKKEEPER}|see{combinatoria!secuencias con repeticiones}}
+\index{combinatoria!secuencias con repeticiones|textbfhy}
+
+  Veremos maneras de contar secuencias que incluyen elementos repetidos.
+  Para llegar a la iluminación
+  siguiendo los pasos de Lehman, Leighton y Meyer~%
+    \cite{lehman15:_mathem_comput_scien},
+  meditemos sobre la palabra \(\mathtt{BOOKKEEPER}\).
+  \begin{enumerate}
+  \item
+    ¿De cuántas maneras se pueden ordenar las letras de \(\mathtt{POKE}\)?
+  \item
+    ¿De cuántas maneras se pueden ordenar las letras de
+    \(\mathtt{B} \mathtt{O}_1 \mathtt{O}_2 \mathtt{K}\)?
+    (Note que los subíndices
+     hacen que las dos \(\mathtt{O}\) sean distintas).
+  \item
+    Pequeño saltamontes,
+    mapea los ordenamientos de
+    \(\mathtt{B} \mathtt{O}_1 \mathtt{O}_2 \mathtt{K}\)
+    (las \(\mathtt{O}\) son diferentes)
+    a \(\mathtt{BOOK}\)
+    (las dos \(\mathtt{O}\) son idénticas).
+    ¿Qué clase de mapa es este?
+  \item
+    ¡Muy bien,
+    joven maestro!
+    Dime ahora,
+    ¿de cuántas maneras pueden ordenarse las letras de
+    \(\mathtt{K} \mathtt{E}_1 \mathtt{E}_2 \mathtt{P}
+      \mathtt{E}_3 \mathtt{R}\)?
+  \item
+    Mapea cada ordenamiento de
+    \(\mathtt{K} \mathtt{E}_1 \mathtt{E}_2 \mathtt{P}
+      \mathtt{E}_3 \mathtt{R}\)
+    a un ordenamiento de \(\mathtt{KEEPER}\)
+    tal que,
+    borrando los subíndices,
+    lista todos los que leen \(\mathtt{REPEEK}\).
+    ¿Que clase de mapa es este?
+  \item
+    En vista de lo anterior,
+    ¿cuántos ordenamientos de
+    \(\mathtt{\foreignlanguage{english}{KEEPER}}\) hay?
+  \item
+    \emph{¡Ahora ya estás en posición de enfrentarte
+      al terrible \(\mathtt{BOOKKEEPER}\)!}
+    ¿Cuántos ordenamientos de
+    \(\mathtt{B} \mathtt{O}_1 \mathtt{O}_2 \mathtt{K}_1
+      \mathtt{K}_2 \mathtt{E}_1 \mathtt{E}_2 \mathtt{P}
+      \mathtt{E}_3 \mathtt{R}\)
+    hay?
+  \item
+    ¿Cuántos ordenamientos de
+    \(\mathtt{BOO} \mathtt{K}_1
+      \mathtt{K}_2 \mathtt{E}_1 \mathtt{E}_2 \mathtt{P}
+      \mathtt{E}_3 \mathtt{R}\)
+    hay?
+  \item
+    ¿Cuántos ordenamientos de
+    \(\mathtt{BOOKKEEPER}\) hay?
+  \item
+    ¿Cuántos ordenamientos de
+    \(\mathtt{VOODOODOLL}\) hay?
+  \item
+    Esta es muy importante,
+    pequeño saltamontes.
+    ¿Cuántas secuencias de \(n\) bits
+    tienen \(k\) ceros y \(n - k\) unos?
+  \end{enumerate}
+  Prender subíndices,
+  apagar subíndices.
+  Ese es el tao de \(\mathtt{BOOKKEEPER}\).%
+    \index{coeficiente multinomial}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

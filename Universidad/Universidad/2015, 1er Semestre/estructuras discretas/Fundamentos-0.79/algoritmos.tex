@@ -1,0 +1,1200 @@
+% algoritmos.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Algoritmos aritméticos}
+\label{cha:algoritmos}
+\index{algoritmos aritmeticos@algoritmos aritméticos|textbfhy}
+
+  Hay aplicaciones en las cuales se requieren cálculos
+  con números de muchos miles de bits de largo.
+  Tales algoritmos son particularmente relevantes
+  en las técnicas criptográficas modernas,
+  basadas en teoría de números y áreas afines.
+  Algunos de los algoritmos que discutiremos son relevantes
+  incluso para números pequeños.
+  También ofrecen ejemplos de técnicas de análisis de algoritmos
+  que tienen interés independiente.
+
+\section{Referencias detalladas}
+\label{sec:referencias-detalladas}
+
+  Esta es un área muy amplia,
+  desarrollada explosivamente desde la aparicición de criptografía
+  basada en teoría de números.
+  En este reducido espacio es imposible hacerle justicia.
+  Una discusión exhaustiva de algoritmos aritméticos y afines,
+  con análisis muy detallado de su rendimiento,
+  es de Knuth~\cite{knuth97:_semin_algor}.
+  Detalles sobre algoritmos numéricos adicionales,
+  incluyendo resultados recientes en el área
+  y con énfasis en algoritmos aplicables para criptología,
+  dan Brent y Zimmermann~%
+    \cite{brent10:_moder_comput_arith}.
+  Una discusión de algoritmos en \cplusplus{}%
+    \index{C++ (lenguaje de programacion)@\cplusplus{} (lenguaje de programación)}
+  da Arndt~%
+    \cite{arndt11:_matters_computational}.
+  Una implementación libre de algoritmos aritméticos
+  de buen rendimiento es la biblioteca GMP~%
+     \cite{granlund14:_gnu_multip_precis_arith_librar}.%
+     \index{GMP@\texttt{GMP}}
+  Hay varias otras opciones,
+  como NTL~%
+     \cite{shoup14:_ntl},%
+     \index{NTL@\texttt{NTL}}
+  que ofrece una interfaz más cómoda de usar,
+  y CLN~%
+    \cite{haible14:_CLN_1.3.4}%
+    \index{CLN@\texttt{CLN}}
+  para uso desde \cplusplus.
+  Para cómputo en otras estructuras algebraicas
+  (por ejemplo,
+   grupos elípticos o campos finitos)
+  se recomienda GAP~%
+    \cite{GAP:4.7.5}.%
+    \index{GAP@\texttt{GAP}}
+
+\section{Máximo común divisor}
+\label{sec:gcd}
+\index{maximo comun divisor@máximo comun divisor}
+
+  Para el máximo común divisor
+  (que ya discutimos en la sección~\ref{sec:GCD}),
+  notar que para \(q\) arbitrario debe ser:
+  \begin{equation*}
+    \gcd(a, b) = \gcd(b, a - q b)
+  \end{equation*}
+  Esto porque cualquier divisor común de \(b\) y \(a - q b\)
+  necesariamente divide a \(a\) también.
+  Interesa disminuir lo más posible los valores en cada iteración,
+  cosa que se logra si elegimos \(q = \lfloor a / b \rfloor\).
+  Como los valores son enteros no negativos
+  y disminuyen en cada paso,
+  el proceso no puede continuar indefinidamente.
+  Esta observación lleva al algoritmo de Euclides,
+  algoritmo~\ref{alg:gcd},
+  para calcular el máximo común divisor.
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{Gcd}{gcd}
+
+    \KwFunction \Gcd{\(a, b\)} \;
+    \BlankLine
+    \While{\(b > 0\)}{
+      \((a, b) \leftarrow (b, a \bmod b)\) \;
+    }
+    \Return \(a\) \;
+    \caption{Algoritmo de Euclides para calcular $\gcd(a, b)$}
+    \label{alg:gcd}
+  \end{algorithm}
+  Es interesante considerar el número de iteraciones del algoritmo.
+  Sean \(r_i\) los restos en cada paso del algoritmo,
+  con el entendido que \(r_0 = a\) y \(r_1 = b\),
+  y que \(a > b\)
+  (en caso contrario,
+   lo único que hace la primera iteración es intercambiarlos).
+  Estamos calculando:
+  \begin{equation*}
+    r_{i + 2} = r_i \bmod r_{i + 1}
+  \end{equation*}
+  O sea,
+  para una secuencia de \(q_i\)
+  tenemos las relaciones:
+  \begin{equation*}
+    r_{i + 2} = r_i - q_i r_{i + 1}
+  \end{equation*}
+  donde \(r_k \ne 0\) y \(r_{k + 1} = 0\)
+  si hay \(k\) iteraciones.
+  El peor caso se da cuando \(q_i = 1\) siempre,
+  ya que en tal caso
+  los \(r_i\) disminuyen lo más lentamente posible.
+  Además,
+  el caso en que \(\gcd(a, b) = 1\)
+  es el en el cual más terreno se debe recorrer.
+  Podemos dar vuelta esto,
+  y preguntarnos qué tan lejos del final estamos,
+  y calcular desde allí:
+  \begin{equation}
+    \label{eq:Fibonacci}
+    F_{k + 2} = F_{k + 1} + F_k \qquad F_0 = 0, F_1 = 1
+  \end{equation}
+  Esto define la famosa secuencia de Fibonacci:%
+    \index{Fibonacci, numeros de@Fibonacci, números de}
+
+  \noindent
+    \hspace{2.3em} \(0\), \(1\), \(1\), \(2\), \(3\), \(5\),
+		   \(8\), \(13\), \(21\), \ldots
+
+  \noindent
+  El resultado es entonces
+  que si el algoritmo efectúa \(k\) iteraciones
+  entonces \(b \ge F_k\).
+  Esto fue demostrado por Lamé en 1844~%
+    \cite{lame44:_gcd},%
+    \index{Lame, Gabriel Leon Jean Baptiste@Lamé, Gabriel Léon Jean Baptiste}
+  lo que inauguró el área de análisis de algoritmos.%
+    \index{Euclides, algoritmo de!analisis@análisis}
+    \index{analisis de algoritmos@análisis de algoritmos}
+  Fue también el primer uso serio de los números de Fibonacci.
+
+  Para completar el análisis interesa saber cómo crece \(F_k\).
+  Más adelante
+  (capítulo~\ref{cha:aplicaciones})
+  veremos cómo tratar esta clase de situaciones,
+  por ahora nos contentamos con una cota.
+  Si calculamos las razones \(F_{k + 1} / F_k\),
+  vemos que parecen converger a una constante cerca de \(1,6\).
+  Llamemos:
+  \begin{equation*}
+    \tau
+      = \lim_{k \rightarrow \infty} \frac{F_{k + 1}}{F_k}
+  \end{equation*}
+  Podemos expresar:
+  \begin{align*}
+    \frac{F_{k + 2}}{F_k}
+      &= \frac{F_{k + 1}}{F_k} + 1 \\
+    \frac{F_{k + 2}}{F_{k + 1}} \cdot \frac{F_{k + 1}}{F_k}
+      &= \frac{F_{k + 1}}{F_k} + 1 \\
+  \end{align*}
+  Si ahora hacemos \(k \rightarrow \infty\),
+  queda:
+  \begin{equation}
+    \label{eq:tau}
+    \tau^2
+      = \tau + 1
+  \end{equation}
+  La ecuación~\eqref{eq:tau} tiene dos raíces,
+  interesa la positiva
+  (de mayor magnitud):
+  \begin{equation*}
+    \tau
+      = \frac{1 + \sqrt{5}}{2}
+      \approx 1,618
+  \end{equation*}
+  Se cumplen las siguientes relaciones para \(k \ge 1\):
+  \begin{equation}
+    \label{eq:cotas-Fk}
+    \tau^{k - 2} \le F_k \le \tau^{k - 1}
+  \end{equation}
+  Requerimos dos valores de partida,
+  dado que a la recurrencia~\eqref{eq:Fibonacci}
+  entran dos valores.%
+    \index{recurrencia}
+  Estas se demuestran por inducción.%
+    \index{demostracion@demostración!induccion@inducción}
+  \begin{description}
+  \item[Base:]
+    Cuando \(k = 1\) y \(k = 2\) tenemos:
+    \begin{align*}
+      \tau^{-1}
+	&\le F_1 \le 1 \\
+      1
+	&\le F_2 \le \tau
+    \end{align*}
+    Ambas son ciertas.
+  \item[Inducción:]
+    Suponiendo que la aseveración es cierta hasta \(k + 1\),
+    planteamos las cotas~\eqref{eq:cotas-Fk} para \(k\) y \(k + 1\):
+    \begin{align*}
+      \tau^{k - 2} &\le F_k	  \le \tau^{k - 1}	\\
+      \tau^{k - 1} &\le F_{k + 1} \le \tau^k
+    \end{align*}
+    Sumando las relaciones resultantes,
+    y viendo de la ecuación~\eqref{eq:tau}
+    que \(\tau^2 = 1 + \tau\):
+    \begin{equation*}
+      \begin{array}{rcccl}
+	\tau^{k - 2} + \tau^{k - 1}
+	  &\le & F_k + F_{k + 1}
+	  &\le & \tau^{k - 1} + \tau^k \\
+	\tau^{k - 2}(1 + \tau)
+	  &\le & F_{k + 2}
+	  &\le & \tau^{k - 1} (1 + \tau) \\
+	\tau^k
+	  &\le & F_{k + 2}
+	  &\le & \tau^{k + 1}
+      \end{array}
+    \end{equation*}
+    que es el caso siguiente.
+  \end{description}
+
+  Con estas estimaciones de \(F_k\),
+  tenemos que si el algoritmo da a lo más \(k\) iteraciones:
+  \begin{align*}
+    b &\ge F_k \\
+      &\ge \tau^{k - 2} \\
+    k &\le \frac{\log b}{\log \tau} + 2
+  \end{align*}
+  O sea,
+  \(k = O(\log b)\).
+
+  Puede analizarse el comportamiento promedio del algoritmo,
+  pero eso lleva a profundidades que escapan de este ramo.
+  El detalle se encuentra en el texto de Knuth~%
+    \cite{knuth97:_semin_algor}.
+
+  Un algoritmo alternativo
+  (máximo común divisor binario)%
+    \index{maximo comun divisor@máximo común divisor!algoritmo binario}
+  se obtiene de aplicar repetidas veces
+  las siguientes observaciones:
+  \begin{enumerate}
+  \item
+    \(\gcd(a, b) = \gcd(b, a)\) nos permite reordenar a gusto.
+  \item
+    \(\gcd(a, 0) = a\) da el resultado final.
+  \item
+    \(\gcd(a, b) = 2 \, \gcd(a / 2, b / 2)\)
+    cuando \(a\) y \(b\) son pares.
+  \item
+    \(\gcd(a, b) = \gcd(a / 2, b)\)
+    cuando \(a\) es par y \(b\) impar.
+  \item
+    \(\gcd(a, b) = \gcd(b, (a - b) / 2)\)
+    cuando \(a\) y \(b\) son impares
+    (en tal caso, \(a - b\) es par).
+  \end{enumerate}
+  En máquinas en las cuales la división es lenta
+  este algoritmo puede ser más eficiente
+  si se programa con cuidado aprovechando operaciones con bits.
+
+  Nuestra versión~(\ref{alg:gcd-binario})
+  primero extrae la máxima potencia de \(2\)
+  que tienen en común \(a\) y \(b\),
+  de allí en adelante trabaja solo con números impares,
+  asegurándose de mantener siempre \(a \ge b\).
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{Gcd}{gcd}
+
+    \KwFunction \Gcd{\(a,\; b\)} \;
+    \BlankLine
+    \(u \leftarrow 1\) \;
+    \While{\((2 \mid a) \wedge (2 \mid b)\)}{
+      \((u, a, b) \leftarrow (2 u, a / 2, b / 2)\) \;
+    }
+    \While{\(2 \mid a\)}{
+      \(a \leftarrow a / 2\) \;
+    }
+    \While{\(2 \mid b\)}{
+      \(b \leftarrow b / 2\) \;
+    }
+    \If{\(a < b\)}{
+      \((a, b) \leftarrow (b, a)\) \;
+    }
+    \Loop{
+      \(t \leftarrow a - b\) \;
+      \If{\(t = 0\)}{
+	\Return \(a \cdot u\) \;
+      }
+      \Repeat{\(2 \centernot\mid t\)}{
+	\(t \leftarrow t / 2\) \;
+      }
+      \((a, b) \leftarrow (b, t)\) \;
+    }
+    \caption{Máximo común divisor binario}
+    \label{alg:gcd-binario}
+  \end{algorithm}
+  Un ejemplo del algoritmo binario
+  sería el cálculo de \(\gcd(40\,902, 24\,140)\).
+  Como \(40\,902 = 2 \cdot 20\,451\)
+  y \(24\,140 = 4 \cdot 6\,035\),
+  la máxima potencia de \(2\) que tienen en común \(a\) y \(b\)
+  es \(u = 2\),
+  y el algoritmo propiamente tal
+  se inicia con \(a = 20451\), \(b = 6035\).
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|>{\(}r<{\)}|>{\(}r<{\)}
+		    |>{\(}r<{\)}@{${} - {}$}>{\(}r<{\)}
+		       @{${} = {}$}>{\(}r<{\)}@{${} \cdot {}$}>{\(}r<{\)}|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\(\boldsymbol{a}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{b}\)} &
+	\multicolumn{4}{c|}{\(\boldsymbol{t}\)} \\
+      \hline\rule[-0.7ex]{0pt}{3ex}%
+      20\,451 & 6\,035 & 20\,451 & 6\,035 & 16 &    901 \\
+       6\,035 &	   901 &  6\,035 &    901 &  2 & 2\,567 \\
+       2\,567 &	   901 &  2\,567 &    901 &  2 &    833 \\
+	  901 &	   833 &     901 &    833 &  4 &     17 \\
+	  833 &	    17 &     833 &     17 & 16 &     51 \\
+	   51 &	    17 &      51 &     17 &  2 &     17 \\
+	   17 &	    17 &      17 &     17
+		  & \multicolumn{2}{l|}{\(0\)} \\
+      \hline
+    \end{tabular}
+    \caption{Traza del algoritmo binario para máximo común divisor}
+    \label{tab:traza-gcd-binario}
+  \end{table}
+  La traza respectiva
+  se reseña en el cuadro~\ref{tab:traza-gcd-binario}.
+  El resultado final
+  es \(\gcd(40\,902, 24\,140) = 2 \cdot 17 = 34\).
+
+  El análisis completo del algoritmo parece ser intratable,
+  Knuth~\cite{knuth97:_semin_algor}
+  analiza en detalle un modelo aproximado
+  y da algunos resultados exactos.
+
+\section{Potencias}
+\label{sec:potencias}
+\index{algoritmo!potencia}
+
+  Otra operación importante
+  es calcular potencias.
+  Un algoritmo eficiente para calcular potencias
+  es el~\ref{alg:power}.%
+    \index{algoritmo!potencia!binario}
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{Pow}{pow}
+
+    \KwFunction \Pow{\(a,\; n\)} \;
+    \BlankLine
+    \(r \leftarrow 1\) \;
+    \While{\(n \ne 0\)}{
+      \If{\(2 \centernot\mid n\)}{
+	\(r \leftarrow r \cdot a\) \;
+      }
+      \(a \leftarrow a^2\) \;
+      \(n \leftarrow \lfloor n / 2 \rfloor\) \;
+    }
+    \Return \(r\) \;
+    \caption{Cálculo binario de potencias}
+    \label{alg:power}
+  \end{algorithm}
+  Es fácil ver que con este algoritmo el cálculo de \(a^n\)
+  toma \(O(\log n)\) multiplicaciones.
+  En todo caso,
+  el algoritmo~\ref{alg:power} no es lo mejor que se puede hacer,
+  un tratamiento detallado de este espinudo tema
+  da Knuth~\cite{knuth97:_semin_algor}.
+
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|>{\(}r<{\)}|>{\(}r<{\)}|>{\(}r<{\)}|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\(\boldsymbol{n}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{a}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{r}\)} \\
+      \hline\rule[-0.7ex]{0pt}{3ex}%
+	10 &	  3 &	 1 \\
+	 5 &	  9 &	 9 \\
+	 9 &	 81 &	 9 \\
+	 1 & 6\,561 & 59\,049 \\
+      \hline
+    \end{tabular}
+    \caption{Cálculo de $3^{10}$ por el método binario}
+    \label{tab:3^10}
+  \end{table}
+  Un ejemplo del método binario
+  da el cálculo de \(3^{10}\) en el cuadro~\ref{tab:3^10}.
+
+\section{Factorizar}
+\label{sec:factorizar}
+\index{algoritmo de factorizacion@algoritmo de factorización}
+
+  Una técnica básica para factorizar
+  es la que hemos aprendido en el colegio:
+  Para factorizar \(N\),
+  intentamos los primos entre \(2\) y \(\lfloor \sqrt{N} \rfloor\).
+  Si ninguno divide a \(N\),
+  entonces \(N\) es primo.
+  Si \(N\) es grande,
+  esto definitivamente no es viable,
+  pero sirve muy bien
+  para eliminar factores primos chicos de algún número.
+
+  Una alternativa que sirve bien cuando \(N\) tiene factores grandes
+  es debida esencialmente a Fermat.%
+    \index{algoritmo de factorizacion@algoritmo de factorización!Fermat}
+  Supongamos \(N = U V\),
+  donde podemos suponer que \(N\) es impar
+  (y por tanto lo son \(U\) y \(V\)).
+  Entonces,
+  definiendo \(X\) e \(Y\) como sigue:
+  \begin{align*}
+    X &= (U + V) / 2 \\
+    Y &= (U - V) / 2 \\
+    N &= X^2 - Y^2
+  \end{align*}
+  La idea entonces es buscar sistemáticamente
+  valores de \(X\) e \(Y\) según lo anterior.
+  Aprovechando que la suma de los primeros \(n\) números impares
+  cumple:
+  \begin{equation*}
+    \sum_{0 \le k \le n} (2 k + 1) = n^2
+  \end{equation*}
+  obtenemos el algoritmo~\ref{alg:factorizar-Fermat},
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{Factor}{factor}
+
+    \KwFunction \Factor{\(N\)} \;
+    \BlankLine
+    \(x \leftarrow 2 \left\lfloor \sqrt{N} \right\rfloor + 1\) \;
+    \(y \leftarrow 1\) \;
+    \(r \leftarrow \left\lfloor \sqrt{N} \right\rfloor^2 - N\) \;
+    \While{\(r \ne 0\)}{
+      \(r \leftarrow r + x\) \;
+      \(x \leftarrow x + 2\) \;
+      \While{\(r > 0\)}{
+	\(r \leftarrow r -y\) \;
+	\(y \leftarrow y + 2\) \;
+      }
+    }
+    \Return \(N = \left((x - y)/2\right) \cdot \left((x + y - 2)/2\right)\) \;
+    \caption{Factorizar según Fermat}
+    \label{alg:factorizar-Fermat}
+  \end{algorithm}
+  donde usamos las variables \(x\), \(y\) y \(r\)
+  para designar lo que en la exposición anterior
+  llamamos \(2X + 1\), \(2Y + 1\) y \(X^2 - Y^2 -N\),
+  respectivamente.
+  Durante la ejecución tenemos \(\lvert r \rvert < x\) e \(y < x\).
+  Lo más curioso
+  es que no usa multiplicación ni división para factorizar.
+  El lector podrá entretenerse aplicando a mano
+  este algoritmo a \(377\).
+
+  El método de Fermat en realidad era diferente,
+  el algoritmo~\ref{alg:factorizar-Fermat}
+  es muy eficiente en computadores
+  pero no es muy adecuado para cálculo manual.
+% Fixme: Add reference to TAoCP, where Knuth discusses this method/example
+  Fermat no mantenía el valor de \(y\),
+  miraba \(x^2 - N\)
+  y descartaba no cuadrados viendo sus últimos dígitos
+  (en base 10,
+   deben ser \(00\), \(p1\), \(p4\), 25, \(i6\) o \(p9\),
+   donde \(p\) es un dígito par e \(i\) uno impar);
+  en caso de sospechar que fuera un cuadrado perfecto
+  extraía una raíz.
+  Esta misma idea puede extenderse a otras bases,
+  como muestra Knuth~\cite{knuth97:_semin_algor}.
+  Tomemos por ejemplo \(N = 8\,616\,460\,799\),
+  y consideremos el cuadro~\ref{tab:condiciones-factores}.
+  \begin{table}
+    \centering
+    \begin{tabular}{|>{\(}r<{\)}|*{3}{>{\(}l<{\)}}|}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\(\boldsymbol{m}\)} &
+	\multicolumn{1}{c}{\textbf{Si $\boldsymbol{x \bmod m}$ es}} &
+	\multicolumn{1}{c}{\textbf{$\boldsymbol{x^2 \bmod m}$ es}} &
+	\multicolumn{1}{c|}{\textbf{$\boldsymbol{(x^2 - N) \bmod m}$ es}} \\
+      \hline\rule[-0.7ex]{0pt}{3ex}%
+       3 & 0, 1, 2
+	 & 0, 1, 1
+	 & \phantom{0}1, 2, 2 \\
+       \rule[-0.7ex]{0pt}{3ex}%
+       5 & 0, 1, 2, 3, 4
+	 & 0, 1, 4, 4, 1
+	 & \phantom{0}1, 2, 0, 0, 2 \\
+       \rule[-0.7ex]{0pt}{3ex}%
+       7 & 0, 1, 2, 3, 4, 5, 6
+	 & 0, 1, 4, 2, 2, 4, 1
+	 & \phantom{0}5, 6, 2, 0, 0, 2, 6 \\
+       \rule[-0.7ex]{0pt}{3ex}%
+       8 & 0, 1, 2, 3, 4, 5, 6, 7
+	 & 0, 1, 4, 1, 0, 1, 4, 1
+	 & \phantom{0}1, 2, 5, 2, 1, 5, 2 \\
+       \rule[-0.7ex]{0pt}{3ex}%
+      \multirow{2}*{11}
+	 &  0,	1,  2,	3,  4,	5,  6,	7,
+	 &  0,	1,  4,	9,  5,	3,  3,	5,
+	 & 10,	0,  3,	8,  4,	2,  2,	4,\\
+	 &  8,	9, 10
+	 &  9,	4,  1
+	 &  \phantom{0}8,  3,  0 \\
+     \hline
+    \end{tabular}
+    \caption{Condiciones a $x$ e $y$
+	     al factorizar $8\,616\,460\,799$}
+    \label{tab:condiciones-factores}
+  \end{table}
+  Si \(x^2 - N\) es un cuadrado perfecto \(y^2\),
+  entonces debe tener un residuo módulo \(m\) consistente con esto,
+  para todo \(m\).
+  Por ejemplo,
+  con \(N = 8\,616\,460\,799\) y \(x \bmod 3 \ne 0\),
+  entonces \((x^2 - N) \bmod 3 = 2\),
+  y esto no puede ser un cuadrado perfecto,
+  de forma que \(x\) debe ser un múltiplo de \(3\)
+  para que \(N = x^2 - y^2\).
+  Nuestro cuadro dice que:
+  \begin{align*}
+    x \bmod \phantom{0}3
+      &= 0 \\
+    x \bmod \phantom{0}5
+      &= 0, 2 \text{\ ó\ } 3 \\
+    x \bmod \phantom{0}7
+      &= 2, 3, 4 \text{\ ó\ } 5 \\
+    x \bmod \phantom{0}8
+      &= 0 \text{\ ó\ } 4 \text{\ (o sea, \(x \bmod 4 = 0\))} \\
+    x \bmod 11
+      &= 0, 2, 4, 7, 9 \text{\ ó\ } 10
+  \end{align*}
+  Esto reduce la búsqueda en forma considerable.
+  Por ejemplo,
+  vemos que \(x\) debe ser múltiplo de \(12\).
+  Debe ser \(x \ge \lceil \sqrt{N} \rceil = 92\,825\),
+  y el menor múltiplo de \(12\) que cumple es \(92\,832\).
+  Pero este valor
+  tiene residuos \((2, 5, 3)\) módulos \((5, 7, 11)\),
+  y falla nuestra condición respecto del módulo \(11\).
+  Incrementar \(x\) en \(12\) aumenta los residuos
+  módulo \(5\) en \(2\),
+  módulo \(7\) en \(5\)
+  y módulo \(11\) en \(1\).
+  El primer \(x\) que cumple todas las condiciones es \(92\,880\),
+  y \(92\,880^2 - N = 10\,233\,601\),
+  que resulta ser el cuadrado de \(3\,199\).
+  Hemos encontrado la solución \(x = 92\,880\) e \(y = 3\,199\),
+  que entrega la factorización:
+  \begin{equation*}
+    8\,616\,460\,799 = (x - y) (x + y) = 89\,681 \cdot 96\,079
+  \end{equation*}
+  La importancia del número de marras
+  es que el economista y lógico W.~S.~Jevons%
+    \index{Jevons, W. S.}
+  lo mencionó en un conocido libro en~1874~%
+    \cite{jevons74:_princ_scien},
+  diciendo que a pesar que es muy fácil multiplicar dos números,
+  probablemente nunca nadie salvo él mismo conocería sus factores.
+  Sin embargo,
+  acabamos de demostrar
+  que Fermat%
+    \index{Fermat, Pierre de}
+  podría haberlo factorizado en unos minutos.
+  El punto central de que factorizar es difícil es correcto,
+  siempre que los factores no sean tan cercanos.
+
+  Un algoritmo curioso es rho de Pollard~%
+    \cite{pollard75:_rho_factorization},%
+    \index{algoritmo de factorizacion@algoritmo de factorización!rho de Pollard}
+  que tiende a ser útil para factores más bien pequeños.
+  La idea básica viene
+  de lo que se conoce como \emph{la paradoja del cumpleaños}%
+    \index{paradoja del cumpleanos@paradoja del cumpleaños}
+  (\emph{\foreignlanguage{english}{birthday paradox}} en inglés):%
+    \index{birthday paradox@\emph{\foreignlanguage{english}{birthday paradox}}|see{paradoja del cumpleaños}}
+  En el año hay \(365\) días,
+  si tomamos una persona la probabilidad
+  que el cumpleaños de una segunda no coincida con la primera
+  es \(1 - 1 / 365\),
+  para que el de una tercera
+  no coincida con ninguno de los dos anteriores
+  es \(1 - 2 / 365\),
+  y así sucesivamente.
+  La probabilidad que en un grupo de \(n\) personas
+  no hayan cumpleaños repetidos es:
+  \begin{equation*}
+    P(n)
+      = \prod_{1 \le k \le n - 1} \, \left( 1 - \frac{k}{365} \right)
+  \end{equation*}
+  Resulta que para \(n = 24\)
+  la probabilidad de que hayan dos (o más)
+  personas con el mismo cumpleaños ya es mayor a \(1 / 2\),
+  cuando intuitivamente uno pensaría que se requieren muchas más.
+  Una manera alternativa de analizar aproximadamente el problema%
+    \index{paradoja del cumpleanos@paradoja del cumpleaños!analisis aproximado@análisis aproximado}
+  es considerar que hay
+  \(n (n + 1) / 2\) pares de personas,
+  basta que uno de los pares coincida,
+  con lo que debiera ser suficiente
+  que \(n (n + 1) / 2 \approx 365\)
+  para que se produzca una coincidencia.
+  Esto se traduce en \(n \approx \sqrt{2 \cdot 365} = 27\).
+  Acá lo que se busca es generar rápidamente
+  una gran colección de pares
+  módulo \(N\)
+  y buscar coincidencias módulo un primo que divide a \(N\).
+  Un razonamiento como el anterior
+  lleva a pensar que si \(p_1\) es el menor primo que divide a \(N\)
+  con \(O(p_1^{\sfrac{1}{2}})\) pares hallaremos una coincidencia,
+  que lleva a determinar \(p_1\).
+
+  El nombre \(\rho\)
+  viene de considerar una secuencia eventualmente periódica
+  en la cual hay \(\mu\) elementos antes del primero que se repite
+  (la cola de la letra \(\rho\)),
+  y luego un ciclo de largo \(\lambda\)
+  (la cabeza de \(\rho\)).
+  Vale decir,
+  sea \(f \colon \mathbb{N} \rightarrow \{0, 1, \dotsc, m - 1\}\)
+  una función,
+  y consideremos la secuencia definida por \(x_{i + 1} = f(x_i)\).
+  Entonces hay \(\mu\) y \(\lambda\)
+  tales que
+    \(x_0, x_1, \dotsc, x_\mu, \dotsc, x_{\mu + \lambda - 1}\)
+  son todos diferentes,
+  pero \(x_\mu = x_{\mu + \lambda}\).
+  Estas relaciones definen \(\mu\) y \(\lambda\).
+  Tenemos \(0 \le \mu < m\),
+  \(0 < \lambda \le m\) y \(\mu + \lambda \le m\).
+  Así,
+  \(x_j = x_k\) con \(j > k\)
+  si y solo si \(j - k\) es múltiplo de \(\lambda\)
+  y \(k \ge \mu\);
+  con esto \(x_{2 k} = x_k\)
+  si y solo si \(k\) es múltiplo de \(\lambda\)
+  y \(k \ge \mu\).
+  Vale decir,
+  hay un \(k > 0\) con \(\mu \le k \le \mu + \lambda\)
+  tal que \(x_k = x_{2 k}\),
+  lo que lleva al algoritmo de Floyd~%
+    \cite{floyd67:_non_deter_algor}%
+    \index{Floyd, algoritmo de (deteccion de ciclos)@Floyd, algoritmo de (detección de ciclos)}
+  (ver~\ref{alg:ciclo-Floyd})
+  para detectar ciclos.
+  \begin{algorithm}[htbp]
+    \(x \leftarrow x_0\) \;
+    \(y \leftarrow x_0\) \;
+    \Repeat{\(x = y\)}{
+      \(x \leftarrow f(x)\) \;
+      \(y \leftarrow f(f(y))\) \;
+    }
+    \caption{Detectar ciclos (Floyd)}
+    \label{alg:ciclo-Floyd}
+  \end{algorithm}
+
+  Sea ahora \(f(x)\) un polinomio con coeficientes enteros,
+  \(p\) un factor primo de \(N\),
+  y consideremos las secuencias
+  definidas con un inicio \(A\) arbitrario:
+  \begin{align*}
+    x_0	      &= y_0 = A	\\
+    x_{m + 1} &= f(x_m) \bmod N \\
+    y_{m + 1} &= f(y_m) \bmod p
+  \end{align*}
+  Por el teorema chino de los residuos%
+    \index{residuo!teorema chino de los}
+  \(y_m \equiv x_m \pmod{p}\).
+  La secuencia \(y_m\) debe repetirse con un período a lo más \(p\),
+  digamos \(y_{k + \lambda} = y_k\).
+  Entonces \(x_{k + \lambda} \equiv x_k \pmod{p}\),
+  y \(\gcd(N, x_{k + \lambda} - x_k)\) da un factor de \(N\).
+  Funciones de la forma \(f(x) = (\alpha x + \beta) \bmod N\)
+  no sirven,
+  ya que con ellas \(x_{k + \lambda} \equiv x_k \pmod{p}\)
+  exactamente cuando \(x_{k + \lambda} \equiv x_k \pmod{N}\).
+  Se usa lo siguiente más simple,
+  \(f(x) = (x^2 + 1) \bmod N\);
+  y si esto no tiene éxito,
+  se intenta \(f(x) = (x^2 + c) \bmod N\)
+  con \(c \ne 0\) y \(c \ne -2\)
+  (porque estos caen en un ciclo de unos
+   al toparse con \(x \equiv \pm 1 \pmod{N}\)).
+  Todo esto lleva al algoritmo~\ref{alg:rho-Pollard}.
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{Factor}{factor}
+
+    \KwFunction \Factor{\(N\)} \;
+    \BlankLine
+    Elegir \(A\) al azar \;
+    \(x \leftarrow A\) \;
+    \(y \leftarrow A\) \;
+    \Repeat{\(d \ne 1\)}{
+      \(x \leftarrow f(x)\) \;
+      \(y \leftarrow f(f(y))\) \;
+      \(d \leftarrow \gcd(\lvert x - y \rvert, N)\) \;
+    }
+    \eIf{\(d = N\)}{
+      \Return Falló
+    }{
+      \Return \(d \mid N\)
+    }
+    \caption{$\rho$ de Pollard}
+    \label{alg:rho-Pollard}
+  \end{algorithm}
+  Brent~\cite{brent80:_improved_rho}
+  da una variante usando un algoritmo de detección de ciclos
+  más rápido.
+
+  El método descrito,
+  con \(f(x) = x^2 + 1\) y \(x_0 = 42\),
+  factoriza \(16\,843\,009 = 257 \cdot 65\,537\)
+  como muestra el cuadro~\ref{tab:ejemplo-rho}.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|*{4}{>{\(}r<{\)}|}}
+      \hline
+      \multicolumn{1}{|c|}{\rule[-0.7ex]{0pt}{3ex}\(\boldsymbol{i}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{x_i}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{x_{2 i}}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{\gcd}\)} \\
+      \hline\rule[-0.7ex]{0pt}{3ex}%
+	 0 &	       42 &		 &     \\
+	 1 &	   1\,765 &  3\,115\,226 &   1 \\
+	 2 &  3\,115\,226 &  4\,805\,758 &   1 \\
+	 3 & 11\,262\,448 &  4\,817\,235 &   1 \\
+	 4 &  4\,805\,758 &  9\,598\,062 &   1 \\
+	 5 &  7\,583\,675 & 11\,476\,471 &   1 \\
+	 6 &  4\,817\,235 &  2\,534\,841 &   1 \\
+	 7 & 11\,064\,323 &	443\,204 &   1 \\
+	 8 &  9\,598\,062 &  6\,015\,649 &   1 \\
+	 9 &  6\,959\,372 &  6\,454\,177 &   1 \\
+	10 & 11\,476\,471 & 15\,725\,109 &   1 \\
+	11 &  3\,760\,417 &  9\,439\,232 &   1 \\
+	12 &  2\,534\,841 &	574\,959 & 247 \\
+      \hline
+    \end{tabular}
+    \caption{Ejemplo de Pollard $\rho$}
+    \label{tab:ejemplo-rho}
+  \end{table}
+
+  Otra técnica es el método \(p - 1\) de Pollard~%
+    \cite{pollard74:_thms_factor_prime_testing}.%
+    \index{algoritmo de factorizacion@algoritmo de factorización!\(p - 1\) de Pollard}
+  Recordemos el teorema de Fermat%
+    \index{Fermat, pequeno teorema de@Fermat, pequeño teorema de}
+  para \(p\) primo y \(p \centernot\mid a\):
+  \begin{equation*}
+    a^{p - 1} \equiv 1 \pmod{p}
+  \end{equation*}
+  Podemos elevar esta congruencia a una potencia cualquiera \(k\):
+  \begin{equation*}
+    a^{k (p - 1)} \equiv 1 \pmod{p}
+  \end{equation*}
+  Vale decir,
+  \(p \mid a^{k (p - 1)} - 1\).
+  Consideremos ahora el entero \(N\) a factorizar
+  y \(p\) un factor primo (desconocido) de \(N\)
+  y un valor \(M\) a determinar.
+  Si \(p - 1 \mid M\)
+  tenemos:
+  \begin{equation*}
+    p \mid (a^M \bmod N - 1)
+  \end{equation*}
+  y \(\gcd(a^M \bmod N - 1, N)\) dará un factor no trivial de \(N\).
+  La idea es elegir \(a\) pequeño
+  y hacer \(M\) el producto de muchos primos
+  (ojalá más bien chicos).
+  Si los factores de \(p - 1\) están en este conjunto,
+  tendremos éxito.
+
+  Otra colección de métodos,
+  más apropiados para computación distribuida y números grandes,
+  se deben a una idea de Maurice Kraitchik en los 1920s.%
+    \index{Kraitchik, Maurice}
+  Supongamos que podemos encontrar la congruencia:
+  \begin{equation*}
+    a^2 \equiv b^2 \pmod{N}
+       \quad a \centernot\equiv \pm b \pmod{N}
+  \end{equation*}
+  Entonces \(N \mid (a^2 - b^2)\),
+  pero \(a^2 - b^2 = (a + b) (a - b)\),
+  y ninguno de estos dos factores es divisible por \(N\),
+  por lo que si \(N = p q\),
+  entonces \(p\) divide a uno de los factores y \(q\) al otro,
+  y \(\gcd(a + b, N)\) y \(\gcd(a - b, N)\)
+  son factores no triviales de \(N\).
+  La manera de obtener esta ecuación
+  es construir una \emph{gran} colección de relaciones de la forma
+  \(a^2 \equiv q \pmod{N}\) en las cuales \(q\) es pequeño,
+  e intentar factorizar tales \(q\),
+  en particular en términos de primos chicos.
+  Para la mayoría de los \(q\) esto no funcionará,
+  pero bastan unos pocos que se puedan factorizar completamente.
+  Si consideramos la expresión \(a^2 \equiv q \pmod{N}\),
+  el lado izquierdo ya es un cuadrado,
+  y lo hemos factorizado.
+  Buscamos otros \(q\) factorizados
+  que completen las potencias
+  de los primos factores de \(q\) a pares,
+  o sea,
+  tenemos:
+  \begin{align*}
+    a_1^2
+      &\equiv q_1 \phantom{q_2 \dotsm q_n} \pmod{N} \\
+    a_2^2
+      &\equiv q_2 \phantom{q_2 \dotsm q_n} \pmod{N} \\
+      &\vdots \\
+    a_n^2
+      &\equiv q_n \phantom{q_2 \dotsm q_n} \pmod{N} \\
+    (a_1 a_2 \dotso a_n)^2
+      &\equiv q_1 q_2 \dotsm q_n \pmod{N}
+  \end{align*}
+  donde conocemos \(b^2 = q_1 q_2 \dotsm q_n\),
+  y esto entrega una factorización de \(N\) por lo anterior,
+  claro que la factorización puede ser trivial.
+  La búsqueda de los \(q\)
+  y su factorización
+  en términos de un conjunto de primos predefinidos
+  puede distribuirse;
+  para factorizar luego planteamos
+  un sistema de ecuaciones lineales módulo \(2\)
+  buscando una combinación de \(q\) que sea un cuadrado.
+  Hay varias variantes de esta idea general,
+  que difieren en la estrategia usada
+  para buscar cuadrados pequeños
+  (y ojalá fácilmente factorizables)
+  para combinar.
+  No entraremos en ese detalle acá,
+  Pommerance~\cite{pommerance96:_tale_two_sieves}%
+    \index{algoritmo de factorizacion@algoritmo de factorización!criba}
+  describe la historia con múltiples referencias.
+
+\section{Factorización con curvas elípticas}
+\label{sec:EC-factorizacion}
+\index{algoritmo de factorizacion@algoritmo de factorización!curva eliptica@curva elíptica}
+
+  Un método reciente es la factorización por curvas elípticas%
+    \index{curva eliptica@curva elíptica}
+  de Lenstra~\cite{lenstra87:_factor_integ_ellip_curves},
+  basado en grupos de curvas elípticas
+  (ver la sección~\ref{sec:curvas-elipticas}).
+  Es un método cuyo tiempo de ejecución depende del factor primo más chico,
+  por lo que se usa para eliminar factores pequeños
+  para luego ir a un método general con los factores remanentes.
+  Primero,
+  si se cumple:
+  \begin{equation}
+    \label{eq:curva-eliptica-factorizacion}
+    y^2
+      \equiv x^3 + a x + b \pmod{n}
+  \end{equation}
+  por el (padre del) teorema chino de los residuos
+  (corolario~\ref{cor:isomorfismo-anillo-Zm})
+  también se cumple para los factores primos de \(n\).
+  En el fondo,
+  estamos efectuando
+  cálculos simultáneos
+  en los grupos elípticos para los factores primos de \(n\),
+  y en alguno de ellos atinaremos al orden de \(P\)
+  y obtenemos un factor de \(n\).
+  Por el teorema de Hasse~%
+    \cite{hasse36:_EC-I,hasse36:_EC-II,hasse36:_EC-III}
+  el orden del grupo sobre \(\mathbb{Z}_p\) está entre
+  \(p + 1 - 2 \sqrt{p}\) y \(p + 1 + 2 \sqrt{p}\),
+  no depende directamente de \(p\).
+  En este sentido,
+  este método es un refinamiento de método \(p - 1\),
+  que busca detectar
+  el orden de un elemento en \(\mathbb{Z}_p^\times\)
+  (pero allí el orden del grupo es \(p - 1\),
+   y el método solo funciona si \(p - 1\) tiene factores chicos).
+
+  Calcularemos múltiplos \(k \, \mathtt{P}\)
+  para diversos valores de \(k\)
+  para un punto \(\mathtt{P}\) de la curva
+  usando la suma del grupo de la curva elíptica,
+  ecuaciones~\eqref{eq:suma-curva-eliptica}
+  y~\eqref{eq:doble-curva-eliptica}.
+  Para valores grandes de \(k\)
+  se puede usar un algoritmo afín al para calcular potencias,
+  algoritmo~\ref{alg:power},%
+    \index{algoritmo!potencia}
+  pero como en estos grupos calcular restas es tan rápido como sumar
+  se pueden usar variantes que las incluyen
+  (por ejemplo,
+   calcular \(15 \mathtt{P} = 2( 2 (2 (2 \mathtt{P}))) - \mathtt{P}\)
+   son \(5\)~sumas/restas,
+   calcular
+     \(15 \mathtt{P}
+	 = \mathtt{P} + 2 \mathtt{P}
+	     + 2 (2 \mathtt{P}) + 2 (2 (2 \mathtt{P}))\)
+   considera \(6\)).
+
+  Las fórmulas de suma en el grupo
+  involucran la ``pendiente'' \(s\),
+  que requiere un inverso multiplicativo módulo \(n\).
+  Si \(s = u / v\),
+  con \(v \equiv 0 \pmod{n}\),
+  el punto resultante es el punto en el infinito,
+  el elemento neutro del grupo.%
+    \index{operacion@operación!elemento neutro}
+  Si es \(\gcd(v, n) \ne 1\) y \(\gcd(v, n) \ne n\),
+  no se obtiene un punto válido en la curva,
+  pero sí un factor no trivial de \(n\).
+
+  El algoritmo contempla los siguientes pasos:
+  \begin{enumerate}
+  \item
+    Elija una curva elíptica sobre \(\mathbb{Z}_n\),
+    de la forma~\ref{eq:curva-eliptica-factorizacion}
+    y un punto al azar \(\mathtt{P}\) sobre ella.
+    Una posibilidad es elegir \(\mathtt{P} = (x, y)\)
+    con coordenadas al azar diferentes de cero módulo \(n\),
+    luego tomar un valor \(a \centernot\equiv 0 \pmod{n}\)
+    y calcular:
+    \begin{equation*}
+      b = (y^2 - x^3 - a x) \bmod n
+    \end{equation*}
+  \item
+    Calcule \(m \mathtt{P}\) para \(m\)
+    un producto de muchos factores chicos,
+    por ejemplo el producto de los primeros primos
+    elevados a potencias chicas
+    o \(B!\) para un \(B\) pequeño.
+    Si en el proceso halla un factor de \(n\),
+    deténgase.
+    Si no halla factores o llega al punto en el infinito,
+    intente con otra curva.
+  \end{enumerate}
+
+  Hay maneras de acelerar los cálculos usando curvas especiales
+  o mediante descripciones alternativas de los puntos o las curvas,
+  ver discusiones de implementación
+  de Bernstein, Birkner, Lange y Peters~%
+    \cite{cryptoeprint:2008:016}.
+  Métodos relacionados usan grupos de curvas hiperelípticas,
+  basadas en curvas de la forma \(y^2 = f(x)\)
+  para polinomios \(f(x)\) de grado mayor a 4,
+  ver Cosset~\cite{cosset10:_factor_genus_2_curves}.
+
+\section{Determinar primalidad}
+\label{sec:primalidad}
+\index{algoritmo!primalidad}
+
+  Para determinar si un número es primo,
+  el teorema de Fermat%
+    \index{Fermat, pequeno teorema de@Fermat, pequeño teorema de}
+  es una herramienta poderosa.
+  Por ejemplo,
+  para \(2^{32} + 1 = 4\,294\,967\,297\)
+  mediante \(32\) elevaciones al cuadrado módulo \(2^{32} + 1\)%
+    \index{algoritmo!potencia}
+  obtenemos que:
+  \begin{equation*}
+    3^{2^{32}} \equiv 3\,029\,026\,160 \pmod{2^{32} + 1}
+  \end{equation*}
+  lo que dice que \(2^{32} + 1\) no es primo.
+  Claro que no da ninguna luz sobre sus factores.
+  En general,
+  para \(N\) compuesto es posible hallar \(a\)
+  con \(0 < a < N\)
+  tal que \(a^{N - 1} \centernot\equiv 1 \pmod{N}\),
+  y la experiencia muestra que tales \(a\) se hallan rápidamente.
+  Hay casos raros en los cuales frecuentemente se da
+  \(a^{N - 1} \equiv 1 \pmod{N}\),
+  pero entonces \(N\) tiene un factor menor que \(\sqrt[3]{N}\),
+  como veremos más adelante.
+  Para efectos prácticos basta considerar \(3^{N - 1} \bmod N\).
+
+  La forma clásica de demostrar que \(N\) es primo
+  para	\(N\) grande
+  es hallar una raíz primitiva \(r\) de \(N\).%
+    \index{raiz primitiva@raíz primitiva}
+  Por suerte,
+  las raíces primitivas de números primos son bastante numerosas.
+  De la discusión de grupos cíclicos de orden \(m\)
+  sabemos que las potencias relativamente primas a \(m\)
+  del generador del grupo
+  también son generadores,
+  con lo que hay \(\phi(p - 1)\) raíces primitivas del primo \(p\).
+  Recientemente,
+  Agrawal, Kayal y~Saxena~\cite{agrawal04:_primes_in_P}%
+    \index{AKS, algoritmo}
+  describieron un algoritmo polinomial en el número de bits de \(n\)
+  para determinar si es primo.
+  La existencia de tal algoritmo se sospechaba hacía tiempo,
+  pero el algoritmo en sí resultó sorprendente,
+  su demostración requiere solo álgebra relativamente sencilla.
+
+  Consideremos \(p\) primo,
+  con lo que hay una raíz primitiva módulo \(p\),
+  llamémosle \(r\).
+  Tomemos \(k\) tal que \(0 \le k < p\),
+  sabemos que si \(\ord_p(r^k) = n\)
+  entonces \(k n\) es el mínimo común múltiplo de \(k\) y \(p - 1\),
+  y será \(n = p - 1\) exactamente cuando \(\gcd(k, p - 1) = 1\).
+  Si \(x\) es raíz primitiva módulo \(N\),
+  para todo \(d\) que divide a \(N - 1\) debe ser:
+  \begin{equation*}
+    x^{(N - 1) / d} \centernot\equiv 1 \pmod{N}
+  \end{equation*}
+  porque esto asegura que \(\ord_N(x) = N - 1\).
+  En todo caso,
+  basta encontrar un \(x\)
+  para cada primo \(p\) que divide a \(N - 1\),
+  el producto de todos ellos será una raíz primitiva.
+  Los cálculos involucrados
+  (salvo posiblemente la factorización de \(N - 1\))
+  son simples de efectuar con los algoritmos discutidos antes.
+  Esto lo discutiremos en conexión con el algoritmo Diffie-Hellman%
+    \index{Diffie-Hellman, algoritmo de}
+  en la sección~\ref{sec:Diffie-Hellman}.
+  El cuello de botella es factorizar \(N - 1\).
+
+  En la práctica,
+  se usan métodos que no \emph{garantizan} que el número es primo,
+  pero que tienen alta probabilidad de detectar no-primos.
+  El más usado actualmente es el test de Miller-Rabin~%
+    \cite{miller76:_Riemann_hypot_tests_primality,
+	  rabin80:_probab_algor_test_primality}.%
+    \index{Miller-Rabin, prueba de}
+  Monier~\cite{monier80:_evaluat_compar_two_effic_probab}
+  compara en detalle dos algoritmos similares,
+  y concluye que el de Miller-Rabin
+  es más eficiente en todos los casos.
+
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{IsPrime}{is\_prime}
+
+    \KwFunction \IsPrime{\(N\)} \;
+    \BlankLine
+    \(s \leftarrow 0\) \;
+    \(d \leftarrow N - 1\) \;
+    \While{\(2 \mid d\)}{
+      \(s \leftarrow s + 1\) \;
+      \(d \leftarrow d / 2\) \;
+    }
+    \For{\(i \leftarrow 1\) \KwTo \(k\)}{
+      Elija \(a\) al azar en el rango \([2, N - 2]\) \;
+      \(x \leftarrow a^d \bmod N\) \;
+      \If{\(x = 1\) o \(x = N - 1\)}{
+	\KwContinue \;
+      }
+      \For{\(r \leftarrow 1\) \KwTo \(s - 1\)}{
+	\(x \leftarrow x^2 \bmod N\) \;
+	\uIf{\(x = 1\)}{
+	  \Return Compuesto \;
+	}
+	\ElseIf{\(x = N - 1\)}{
+	  \KwBreak \;
+	}
+      }
+      \If{\(x \ne N - 1\)}{
+	\Return Compuesto \;
+      }
+    }
+    \Return Probablemente primo
+    \caption{Prueba de primalidad de Miller-Rabin}
+    \label{alg:Miller-Rabin}
+  \end{algorithm}
+  El test de Miller-Rabin
+  se basa en la observación que módulo un primo \(p\)
+  solo \(1\) y \(-1\) pueden ser raíces cuadradas de \(1\)
+  (el polinomio \(x^2 - 1\) puede tener a lo más dos ceros
+   en el campo \(\mathbb{Z}_p\),
+   mientras por el teorema chino de los residuos
+   en \(\mathbb{Z}_n\) con \(n\) compuesto
+   hay un par diferente por cada factor primo de \(n\)).
+  Si \(p\) es un primo impar,
+  podemos escribir \(p - 1 = 2^s d\),
+  con \(d\) impar.
+  Con esta notación,
+  del teorema de Fermat para \(a \centernot\equiv 0 \pmod{p}\)
+  tenemos que \(a^{2^s d} \equiv 1 \pmod{p}\).
+  Por la observación anterior
+  sobre raíces cuadradas en \(\mathbb{Z}_p\),
+  sacando raíz cuadrada sucesivamente partiendo de \(a^{p - 1} = 1\)
+  debemos llegar a que \(a^d = \pm 1\)
+  o que alguno de los \(a^{{2^r}d} = -1\) para \(1 \le r < s\).
+  El test de Miller-Rabin se basa en el contrapositivo de esto.
+  Puede demostrarse que a lo más \(1 / 4\) de los valores \(a\)
+  para un número compuesto ``mienten'',
+  con lo que repitiendo el proceso suficientes veces
+  podemos tener gran confianza de que el número realmente es primo.
+  El algoritmo~\ref{alg:Miller-Rabin} repite la prueba \(k\) veces.
+
+\section{Números de Carmichael}
+\label{sec:Carmichael}
+\index{numero@número!Carmichael|see{Carmichael, número de}}
+\index{Carmichael, numero de@Carmichael, número de}
+
+  Queda la inquietud planteada antes
+  sobre números para los cuales ``falla''
+  el teorema de Fermat,%
+    \index{Fermat, pequeno teorema de@Fermat, pequeño teorema de}
+  en el sentido que \(a^{n - 1} \equiv 1 \pmod{n}\)
+  se cumple con \(\gcd(a, n) = 1\),
+  pero \(n\) no es primo.
+  A tal número se le llama \emph{pseudoprimo}%
+    \index{numero@número!pseudoprimo|textbfhy}%
+    \index{pseudoprimo|see{número pseudoprimo}}
+  (de Fermat con base \(a\)).
+  El caso extremo lo dan los números de Carmichael~%
+    \cite{carmichael10:_note_new_number_theor_funct},
+  pseudoprimos de Fermat
+  para todos los \(a\) relativamente primos a ellos.
+
+  \begin{theorem}
+    Todo número de Carmichael \(n\) es libre de cuadrados,
+    y para \(p\) primo,
+    si \(p \mid n\) entonces \(p - 1 \mid n - 1\).
+  \end{theorem}
+  \begin{proof}
+    Consideremos un número de Carmichael
+    \(n = p_1^{k_1} p_2^{k_2} \dotsm p_r^{k_r}\)
+    donde los \(p_i\) son primos distintos,
+    y un \(a\) relativamente primo a \(n\).
+    Del padre del teorema chino de los residuos%
+      \index{residuo!teorema chino de los!padre del}
+    (corolario~\ref{cor:isomorfismo-anillo-Zm})
+    sabemos que:
+    \begin{equation*}
+      \mathbb{Z}_n
+	\cong \mathbb{Z}_{p_1^{k_1}}
+		\times \mathbb{Z}_{p_2^{k_2}}
+		\times \dotsb
+		\times \mathbb{Z}_{p_r^{k_r}}
+    \end{equation*}
+    con lo que \(a^{n - 1} \equiv 1 \pmod{n}\)
+    si y solo si \(a^{n - 1} \equiv 1 \pmod{p_i^{k_i}}\)
+    para todos los \(i\).
+    Esto a su vez para el primo \(p\)
+    solo puede ser si \(\ord_{p^k}(a) \mid n - 1\).
+    Sabemos por el teorema~\ref{theo:raices-primitivas}%
+      \index{raiz primitiva@raíz primitiva}
+    que si \(p\) es un primo impar,
+    hay raíces primitivas módulo \(p^k\) para todo \(k\),
+    vale decir,
+    hay elementos de orden \(\phi(p) = p^{k - 1} (p - 1)\).
+    (En realidad,
+     basta con el teorema~\ref{theo:raiz-primitiva-p2},
+     ya que si un elemento es de orden \(p (p - 1)\) módulo \(p^2\),
+     tendrá que ser al menos de ese orden módulo \(p^k\);
+     en particular,
+     \(p\) divide a su orden.)
+    Pero si \(p \mid n\),
+    entonces \(p\) no puede dividir a \(n - 1\),
+    y \(n\) no puede tener factores primos repetidos.
+    Ahora,
+    si \(n\) fuera par y \(p\) un primo impar que divide a \(n\),
+    tendríamos que \(p - 1 \mid n - 1\),
+    un número par dividiendo a uno impar,
+    lo que es imposible.
+  \end{proof}
+  Esto fue demostrado por Korselt en 1899~%
+    \cite{korselt99:_probl_chinois},
+  los números llevan el nombre de Carmichael
+  por ser el primero de hallar uno.
+
+  Supongamos ahora que \(n = p q\), con \(p\) y \(q\) primos
+  tales que \(p < q\).
+  Entonces debe ser \(q - 1 \mid p q - 1\),
+  pero esto es \(q - 1 \mid p (q - 1) + (p - 1)\),
+  o sea \(q - 1 \mid p - 1\),
+  también imposible.
+  En resumen,
+  un número de Carmichael
+  tiene al menos tres factores primos diferentes,
+  todos impares.
+
+  Hay infinitos números de Carmichael,
+  como demostraron Alford, Granville y Pommerance~%
+    \cite{alford94:_there_infin_many_carmic_number},
+  los primeros son:
+  \begin{align*}
+       561
+      &= 3 \cdot 11 \cdot 17 \\
+    1\,105
+      &= 5 \cdot 13 \cdot 17 \\
+    1\,729
+      &= 7 \cdot 13 \cdot 19
+  \end{align*}
+  El primero con cuatro factores primos es:
+  \begin{equation*}
+    41\,041 = 7 \cdot 11 \cdot 13 \cdot 41
+  \end{equation*}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

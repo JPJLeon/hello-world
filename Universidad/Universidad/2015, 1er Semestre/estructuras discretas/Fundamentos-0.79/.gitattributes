@@ -1,0 +1,8 @@
+# .gitattributes
+#
+# Copyright (c) 2009-2010 Horst H. von Brand
+# Bajo licencia MIT. Vea LICENSE-MIT para detalles
+
+*.tex diff=tex
+*.bib diff=bibtex
+* whitespace=indent,trail,space

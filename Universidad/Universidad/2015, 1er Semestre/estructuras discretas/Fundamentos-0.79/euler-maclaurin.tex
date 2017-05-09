@@ -1,0 +1,1329 @@
+% euler-maclaurin.tex
+%
+% Copyright (c) 2010-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{La fórmula de Euler-Maclaurin}
+\label{cha:euler-maclaurin}
+
+  Es común que interese el valor de alguna suma,
+  particularmente alguna suma infinita.
+  En muchos casos de interés la suma converge muy lentamente,
+  y resulta indispensable
+  contar con alguna técnica que permita acelerarla.
+  En otros casos una expresión simple para un valor aproximado
+  de una suma finita
+  resulta mucho más útil que el valor exacto.
+  Una de las técnicas principales para aproximar sumas infinitas
+  es la fórmula de Euler-Maclaurin.
+  En su desarrollo toman lugar central
+  los polinomios y números de Bernoulli,
+  que a su vez aparecen inesperadamente en muchas situaciones combinatorias.
+  Entre otras aplicaciones,
+  la fórmula de Euler-Maclaurin
+  permite obtener aproximaciones simples para factoriales
+  y números harmónicos,
+  valores que a su vez son ubicuos en la combinatoria
+  (y por tanto el análisis de algoritmos).
+
+\section{Relación entre suma e integral}
+\label{sec:relacion-suma-integral}
+
+  Conceptualmente la suma y la integral
+  están íntimamente relacionadas,
+  ambas podemos representarlas como áreas bajo curvas
+  como en la figura~\ref{fig:fz}.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/fz}
+    \caption{Suma e integral como áreas}
+    \label{fig:fz}
+  \end{figure}
+  Pareciera ser que la integral (área bajo la curva)
+  y la suma (área bajo la escalera)
+  tienden a tener una diferencia constante.
+  Esto es exactamente lo que asegura nuestro siguiente teorema.
+  \begin{theorem}[Maclaurin-Cauchy]
+    \index{Maclaurin-Cauchy, teorema de|textbfhy}
+    \label{theo:maclaurin-Cauchy}
+    Sea \(f(z)\) una función continua,
+    positiva
+    y que tiende monotónicamente a cero.
+    Entonces existe la constante de Euler:%
+      \index{Euler, constante de (para una funcion)@Euler, constante de (para una función)}
+    \begin{equation*}
+      \gamma_f
+	= \lim_{n \rightarrow \infty}
+	    \left(
+	      \sum_{1 \le k < n} f(k) - \int_1^n f(z)
+					  \, \mathrm{d} z
+	    \right)
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Como \(f\) es continua,
+    la integral existe para todo \(n \in \mathbb{N}\).
+    Por ser decreciente:
+    \begin{equation*}
+      f(\lceil z \rceil)
+	\le f(z)
+	\le f(\lfloor z \rfloor)
+    \end{equation*}
+    Entonces:
+    \begin{align*}
+      \int_1^n	f(\lceil z \rceil) \, \mathrm{d} z
+	&\le \int_1^n f(z) \, d z
+	\le \int_1^n f( \lfloor z \rfloor ) \, \mathrm{d} z \\
+      \sum_{1 \le k < n} f(k + 1)
+	&\le \int_1^n f(z) \, \mathrm{d} z
+	\le \sum_{1 \le k < n}	f(k) \\
+      \sum_{2 \le k < n + 1} f(k)
+	&\le \int_1^n f(z) \, \mathrm{d} z
+	\le \sum_{1 \le k < n} f(k)
+    \end{align*}
+    Así,
+    la diferencia:
+    \begin{equation*}
+      a_n
+	= \sum_{1 \le k < n} f(k) - \int_1^n f(z) \, \mathrm{d} z
+    \end{equation*}
+    satisface \(0 \le f(n) \le a_n \le f(1)\).
+    Además:
+    \begin{equation*}
+      a_{n + 1} - a_n
+	= f(n + 1) - \int_n^{n + 1} f(z) \, \mathrm{d} z
+	\le 0
+    \end{equation*}
+    O sea,
+    la secuencia \(a_n\) es decreciente y acotada,
+    y por tanto converge.
+  \end{proof}
+  Nótese que la demostración da cotas precisas:
+  \(0 \le \gamma_f \le f(1)\).
+  Consideremos la situación geométrica:
+  La diferencia entre la línea continua y la escalera
+  de la figura~\ref{fig:fz}
+  es una serie de ``triángulos''
+  de base \(1\) cuyas alturas suman \(f(1)\),
+  con lo que su área total es aproximadamente \(f(1) / 2\),
+  y esto suele no ser tan mala aproximación de \(\gamma_f\).
+
+\section{Desarrollo de la fórmula}
+\label{sec:desarrollo-euler-maclaurin}
+
+  Con la intención de tomar límites \(b \rightarrow \infty\) luego,
+  para calcular la suma entre \(1\) y \(a\)
+  escribimos:
+  \begin{align*}
+    \sum_{1 \le k < b} f(k) - \int_1^b f(z) \, \mathrm{d} z
+      &= \sum_{1 \le k < a} f(k) - \int_1^a f(z) \, \mathrm{d} z
+	   + \sum_{a \le k < b} f(k) - \int_a^b f(z) \, \mathrm{d} z
+  \end{align*}
+  Nos falta aproximar los últimos términos.
+
+  Tomemos el tramo entre un entero y el siguiente,
+  para simplificar el rango entre \(0\) y \(1\).
+  Nuestro resultado final
+  se obtendrá sumando sobre los diferentes tramos.
+  Integrando por partes:
+  \begin{align*}
+    \int_0^1 f(z) \, \mathrm{d} z
+      &= z f(z) \, \biggr|_0^1
+	  - \int_0^1 z f'(z) \, \mathrm{d} z \\
+      &= z f(z) \, \biggr|_0^1
+	   -  \frac{1}{2} \, z^2 f'(z) \, \biggr|_0^1
+	   + \int_0^1 \frac{1}{2} \, z^2 f''(z) \, \mathrm{d} z \\
+      &= z f(z) \, \biggr|_0^1
+	   -  \frac{1}{2} \, z^2 f'(z) \, \biggr|_0^1
+	   +  \frac{1}{2 \cdot 3} \, z^3 f''(z) \, \biggr|_0^1
+	   - \int_0^1 \frac{1}{2 \cdot 3} \, z^3 f'''(z)
+	       \, \mathrm{d} z
+  \end{align*}
+  Están apareciendo las derivadas sucesivas de \(f\)
+  multiplicadas por polinomios.
+  Si queremos polinomios mónicos,
+  aparecerán divididos por factoriales.
+  Llamemos \(B_n(z)\) al polinomio mónico de grado \(n\),
+  partiendo con \(B_0(z) = 1\).
+  Integrando por partes tenemos la relación básica:
+  \begin{equation*}
+    \int_0^1 B_n(z) f^{(n)}(z) \, \mathrm{d} z
+      = \frac{B_{n + 1} (z)}{n + 1} \, f^{(n)} (z) \, \biggr|_0^1
+	  - \int_0^1 \frac{B_{n + 1} (z)}{n + 1} \, f^{(n + 1)} (z)
+	      \, \mathrm{d} z
+  \end{equation*}
+  De acá:%
+    \index{Bernoulli, polinomios de!recurrencia|textbfhy}
+  \begin{align}
+    B_0(z)
+      &= 1 \label{eq:B0} \\
+    B'_{n + 1} (z)
+      &= (n + 1) B_n(z)	 \quad n \ge 0
+	    \label{eq:Bn}
+  \end{align}
+  Queda por definir la constante de integración en~\eqref{eq:Bn}.
+  Tenemos primeramente:
+  \begin{equation}
+    \label{eq:Euler-Maclaurin-1}
+    \int_0^1 f(z) \, \mathrm{d} z
+      = \sum_{0 \le k \le n}
+	   \frac{(-1)^k B_{k + 1}(z)}{(k + 1)!} \, f^{(k)}(z)
+	     \, \biggr|_0^1
+	 - \int_0^1 (-1)^n \frac{B_{n + 1}(z)}{(n + 1)!} \,
+			     f^{(n + 1)}(z) \, \mathrm{d} z
+  \end{equation}
+  Interesa sumar la expresión~\eqref{eq:Euler-Maclaurin-1}
+  para \([a, a + 1]\), \([a + 1, a + 2]\), \ldots, \([b - 1, b]\),
+  conviene que se cumpla:
+  \begin{equation}
+    \index{Bernoulli, polinomios de|textbfhy}
+    \label{eq:Bernoulli-polynomial-ends}
+    B_n(0)
+      = B_n(1)
+  \end{equation}
+  de forma que los términos intermedios se cancelen.
+  Como \(B_0(z) = 1\),
+  \(B_1(z)\) es una función lineal
+  que solo si fuera constante cumpliría \(B_1(0) = B_1(1)\).
+  La relación~\eqref{eq:Bernoulli-polynomial-ends}
+  es válida siempre que \(n \ne 1\).
+  Definimos en general:
+  \begin{equation}
+    \index{Bernoulli, numeros de@Bernoulli, números de|textbfhy}
+    \label{eq:Bernoulli-number-definition}
+    B_n
+      = B_n(1)
+  \end{equation}
+  A los polinomios \(B_n(x)\)
+  se les conoce como \emph{polinomios de Bernoulli},
+  y las constantes \(B_n\) como \emph{números de Bernoulli},
+  por razones
+  que discutiremos en la sección~\ref{sec:suma-potencias}.
+  Los números y polinomios de Bernoulli
+  aparecen en una amplia gama de situaciones.
+  Debe tenerse cuidado,
+  hay autores que definen la secuencia
+  (bajo el mismo nombre e incluso con la misma notación)
+  de forma que todos los elementos son cero o positivos.
+
+  En vista de la recurrencia~\eqref{eq:Bn},%
+    \index{Bernoulli, polinomios de!recurrencia}
+  si \(n \ge 2\) la condición~\eqref{eq:Bernoulli-polynomial-ends}
+  puede expresarse también como:%
+    \index{Bernoulli, polinomios de!integral}
+  \begin{equation}
+    \label{eq:Bernoulli-polynomial-integral}
+    \int_0^1 B_n(z) \, \mathrm{d} z = 0
+  \end{equation}
+  Por el proceso que los produce,
+  todos los coeficientes
+  de los polinomios \(B_n(z)\) son racionales,
+  por lo que también lo son las constantes \(B_n\).
+  Los primeros polinomios y constantes
+  registra el cuadro~\ref{tab:Bernoulli}.
+  \begin{table}[htbp]
+    \centering
+    \begin{align*}
+      \begin{array}{l@{\hspace*{2em}}l@{${} = {}$}c}
+	\displaystyle
+	  B_0(z) = 1 &
+	  B_0 & \displaystyle \phantom{-}1 \\[1.5ex]
+	\displaystyle
+	  B_1(z) = z - \frac{1}{2} &
+	  B_1 & \displaystyle -\frac{1}{2} \\[1.5ex]
+	\displaystyle
+	  B_2(z) = z^2 - z + \frac{1}{6} &
+	  B_2 & \displaystyle \phantom{-}\frac{1}{6} \\[1.5ex]
+	\displaystyle
+	  B_3(z) = z^3 - \frac{3}{2} z^2 + \frac{1}{2} z &
+	  B_3 & \displaystyle \phantom{-}0 \\[1.5ex]
+	\displaystyle
+	  B_4(z) = z^4 - 2 z^3 + z^2 - \frac{1}{30} &
+	  B_4 & \displaystyle -\frac{1}{30} \\[1.5ex]
+	\displaystyle
+	  B_5(z) = z^5 - \frac{5}{2} z^4 + \frac{5}{3} z^3
+		    - \frac{1}{6} z &
+	  B_5 & \displaystyle \phantom{-}0 \\[1.5ex]
+	\displaystyle
+	  B_6(z) = z^6 - 3 z^5 + \frac{5}{2} z^4 - \frac{1}{2} z^2
+		    + \frac{1}{42} &
+	  B_6 & \displaystyle \phantom{-}\frac{1}{42} \\[1.5ex]
+	\displaystyle
+	  B_7(z) = z^7 - \frac{7}{2} z^6 + \frac{7}{2} z^5
+		    - \frac{7}{6} z^3 + \frac{1}{6} z &
+	  B_7 & \displaystyle \phantom{-}0 \\[1.5ex]
+	\displaystyle
+	  B_8(z) = z^8 - 4 z^7 + \frac{14}{3} z^6 - \frac{7}{3} z^4
+		    + \frac{2}{3} z^2 - \frac{1}{30} &
+	  B_8 & \displaystyle -\frac{1}{30} \\[1.5ex]
+	\displaystyle
+	  B_9(z) = z^9 - \frac{9}{2} z^8 + 6 z^7 - \frac{21}{5} z^5
+		    + 2 z^3 -\frac{3}{10} z &
+	  B_9 &	 \displaystyle \phantom{-}0 \\[1.5ex]
+	\displaystyle
+	  B_{10}(z) = z^{10} - 5 z^9 + \frac{15}{2} z^8
+		    - 7 z^6 + 5 z^4 - \frac{3}{2} z^2
+		    + \frac{5}{66} &
+	  B_{10} &  \displaystyle \phantom{-} \frac{5}{66}
+      \end{array}
+    \end{align*}
+    \caption[Polinomios y números de Bernoulli]
+	    {Polinomios y números de Bernoulli~\cite{DLMF}}
+    \label{tab:Bernoulli}
+    \index{Bernoulli, polinomios de!cuadro}
+    \index{Bernoulli, numeros de@Bernoulli, números de!cuadro}
+  \end{table}
+  Se observa que salvo \(B_1\)
+  los valores de \(B_n\) para \(n\) impar
+  son cero,
+  y que los \(B_{2 n}\) alternan signo.
+  Esto lo demostraremos en general más adelante.
+
+  Para simplificar la derivación que sigue,
+  definimos una extensión periódica del polinomio \(B_n(z)\):
+  \begin{equation*}
+    \widetilde{B}_n(z)
+      = B_n(z - \lfloor z \rfloor)
+  \end{equation*}
+  La función \(\widetilde{B}_n(z)\) es continua
+  dado que definimos \(B_n(0) = B_n(1) = B_n\)
+  (salvo cuando \(n = 1\)).
+  Así tenemos:
+  \begin{align}
+    \int_a^b f(z) \, \mathrm{d} z
+      &= \sum_{1 \le k \le n}
+	   \frac{(-1)^k \widetilde{B}_k(z)}{k!} \, f^{(k - 1)}(z)
+	     \, \biggr|_a^b
+	  + (-1)^{n + 1}
+	      \int_a^b \frac{\widetilde{B}_{n + 1}(z)}{(n + 1)!} \,
+				    f^{(n + 1)}(z)
+		\, \mathrm{d} z \notag \\
+      &= \frac{1}{2} f(a)
+	   + \sum_{a < r < b} f(r)
+	   + \frac{1}{2} f(b) \notag \\
+      &\hspace{3.5em}
+	    + \sum_{2 \le k \le n}
+		\frac{(-1)^k B_k}{k!} \, f^{(k - 1)}(z)
+		  \, \biggr|_a^b
+	    + (-1)^{n + 1} \int_a^b
+			     \frac{\widetilde{B}_{n + 1}(z)}
+				  {(n + 1)!} \,
+			     f^{(n + 1)}(z) \, \mathrm{d} z
+	    \notag \\
+      &= \sum_{a \le r < b} f(r)
+	   + \sum_{1 \le k \le n}
+	      \frac{(-1)^k B_k}{k!} \, f^{(k - 1)}(z)
+		 \, \biggr|_a^b
+	 + (-1)^{n + 1}
+	     \int_a^b \frac{\widetilde{B}_{n + 1}(z)}{(n + 1)!} \,
+				   f^{(n + 1)}(z)
+	       \, \mathrm{d} z
+	   \label{eq:Euler-Maclaurin-2}
+  \end{align}
+  Acá aprovechamos que \(B_1 = - 1 / 2\),
+  absorbimos el término \(f(a)\)
+  en la primera sumatoria y reorganizamos.
+
+  Dividiendo el rango de la suma en~\eqref{eq:Euler-Maclaurin-2}
+  \begin{multline}
+    \label{eq:Euler-Maclaurin-3}
+    \sum_{1 \le k < b} f(k) - \int_1^b f(z) \, \mathrm{d} z
+      = \sum_{1 \le k < a} f(k) - \int_1^a f(z) \, \mathrm{d} z \\
+	   - \sum_{1 \le k \le n}
+	       \frac{(-1)^k B_k}{k!} \, f^{(k - 1)}(z)
+		  \, \biggr|_a^b
+	   + (-1)^n \int_a^b \frac{\widetilde{B}_{n + 1}(z)}
+				  {(n + 1)!} \,
+				     f^{(n + 1)}(z)
+		      \, \mathrm{d} z
+  \end{multline}
+  Haciendo ahora \(b \rightarrow \infty\),
+  y reorganizando~\eqref{eq:Euler-Maclaurin-3}
+  bajo el entendido que:
+  \begin{equation*}
+    \lim_{z \rightarrow \infty} f^{(n)} (z) = 0
+  \end{equation*}
+  Recordando que salvo \(B_1\) todos los \(B_{2 k + 1} = 0\),
+  obtenemos la fórmula de Euler-Maclaurin:
+  \begin{equation}
+    \index{Euler-Maclaurin, formula de@Euler-Maclaurin, fórmula de|textbfhy}
+    \label{eq:Euler-Maclaurin}
+    \sum_{1 \le k < a} f(k)
+      = \int_1^a f(z) \, \mathrm{d} z
+	  + \gamma_f
+	  + B_1 f(a)
+	  + \sum_{1 \le k \le n}
+	       \frac{B_{2 k}}{(2 k)!} f^{(2 k - 1)}(a)
+	  + R_n(f; a)
+  \end{equation}
+  En esto hemos escrito:
+  \begin{align}
+    \gamma_f
+      &= \lim_{b \rightarrow \infty}
+	   \left(
+	     \sum_{1 \le k \le b} f(k) - \int_1^b f(z)
+					   \, \mathrm{d} z
+	   \right)
+	      \label{eq:gamma-f} \\
+    R_n(f; a)
+      &= \int_a^\infty
+	   \frac{\widetilde{B}_{2 n + 1}(z)}{(2 n + 1)!} \,
+	     f^{(2 n + 1)}(z) \, \mathrm{d} z
+	      \label{eq:euler-maclaurin-residue}
+  \end{align}
+  Resta encontrar mejores maneras
+  de determinar los polinomios \(B_n(z)\),
+  los coeficientes \(B_n = B_n(0)\),
+  y finalmente acotar el resto \(R_n(f; a)\).
+  Esto lo haremos en la sección~\ref{sec:resto-Euler-Maclaurin}.
+  Lamentablemente,
+  los \(B_n\) crecen muy rápidamente
+  y~\eqref{eq:Euler-Maclaurin} rara vez converge,
+  por lo que la constante \(\gamma_f\)
+  debe determinarse de alguna otra forma.
+  Las cotas que daremos indican que el error cometido
+  es a lo más el último término incluido,
+  la fórmula igual es útil para obtener valores numéricos precisos.
+
+\section{Suma de potencias}
+\label{sec:suma-potencias}
+
+  Una aplicación obvia de la fórmula de Euler-Maclaurin%
+    \index{Euler-Maclaurin, formula de@Euler-Maclaurin, fórmula de}
+  es calcular las sumas:
+  \begin{equation*}
+    S_m(n)
+      = \sum_{1 \le k \le n - 1} k^m
+  \end{equation*}
+  Acá tenemos:
+  \begin{align*}
+    f(z)
+      &= z^m \\
+    f^{(k)}(z)
+      &= m^{\underline{k}} z^{m - k}
+  \end{align*}
+  La fórmula de Euler-Maclaurin sumando hasta el término \(m - 1\)
+  (el resto es cero en este caso;
+   en realidad estamos aplicando~\eqref{eq:Euler-Maclaurin-2},
+   no hay constante \(\gamma\) porque es parte del resto)
+  y tomando la suma desde \(0\) para simplificar
+  da:
+  \begin{align*}
+    S_m(n)
+      &= \int_0^n z^m \, \mathrm{d} z
+	   + \sum_{0 \le k \le m - 1}
+	       \frac{B_{k + 1}}{(k + 1)!} \,
+		 m^{\underline{k}} \, n^{m - k} \\
+      &= \frac{n^{m + 1}}{(m + 1)}
+	   + \sum_{0 \le k \le m - 1}
+	       B_{k + 1} \,
+		  \frac{m^{\underline{k}}}{(k + 1)!} \,
+		  n^{m - k} \\
+      &= \frac{1}{m + 1}
+	   \left(
+	     n^{m + 1}
+	       + \sum_{0 \le k \le m - 1} \binom{m + 1}{k + 1} \,
+		   B_{k + 1} \, n^{m - k}
+	   \right)
+  \end{align*}
+  Pero como \(B_0 = 1\),
+  podemos incorporar el primer término a la suma,
+  y luego de ajustar índices queda:%
+    \index{suma!potencias|textbfhy}
+  \begin{equation}
+    \label{eq:Bernoulli-Smn}
+    S_m(n)
+      = \frac{1}{m + 1} \,
+	  \left(
+	    \sum_{0 \le k \le m}
+	      \binom{m + 1}{k} \, B_k n^{m + 1 - k}
+	  \right)
+  \end{equation}
+  Jakob Bernoulli%
+    \index{Bernoulli, Jakob}
+  había notado esta expansión,
+  e incluso la usó para calcular \(S_{10}(1\,000)\).
+  Es en honor a su descubrimiento
+  que llevan su nombre estos números.
+
+  La fórmula~\eqref{eq:Bernoulli-Smn}
+  a veces se atribuye erróneamente a Faulhaber,%
+    \index{Faulhaber, Johann}
+  quien desarrolló fórmulas eficientes
+  para expresar \(S_{2 m + 1}(n)\)
+  en términos de \(n (n + 1)\).
+  Una discusión detallada de sus resultados,
+  reconstrucción de sus posibles métodos
+  y una variedad de extensiones presenta Knuth~%
+    \cite{knuth93:_johann_faulhaber_sums_powers}.
+
+\section{Números harmónicos}
+\label{sec:em-harmonicos}
+\index{numeros harmonicos@números harmónicos}
+
+  Usemos ahora nuestro nuevo juguete
+  para aproximar los números harmónicos.
+  Tenemos primeramente:
+  \begin{equation*}
+    \mathrm{D}^k z^{-1}
+       = (-1)^{\underline{k}} \, z^{- k - 1}
+       = (-1)^k k! z^{- k - 1}
+  \end{equation*}
+  Las derivadas tienden a cero cuando \(z \rightarrow \infty\),
+  así que vamos bien.
+  La fórmula de Euler-Maclaurin da:%
+    \index{Euler-Maclaurin, formula de@Euler-Maclaurin, fórmula de}%
+    \index{numeros harmonicos@números harmónicos!aproximacion@aproximación}
+  \begin{align}
+    H_n
+      &= \frac{1}{n} + \sum_{1 \le r < n} \frac{1}{r} \notag \\
+      &= \frac{1}{n} + \int_1^n \frac{\mathrm{d} z}{z}
+	   + \gamma
+	   + B_1 \cdot (-1) 1! n^{-1}
+	   + \sum_{1 \le k \le s}
+	       \frac{B_{2 k}}{(2 k)!}
+		  \cdot (2 k - 1)! n^{- 2 k - 2}
+	   + R_s(n) \notag \\
+      &= \ln n + \frac{1}{n}
+	   + \gamma
+	   - \frac{1}{2 n}
+	   + \sum_{1 \le k \le s}
+	       \frac{B_{2 k}}{2 k}
+		  \cdot n^{- 2 k - 2}
+	   + R_s(n)
+	      \label{eq:Hn-asy-Bn} \\
+      &= \ln n + \gamma + \frac{1}{2 n}
+	   - \frac{1}{12 n^2}
+	   + \frac{1}{120 n^4}
+	   - \frac{1}{252 n^6}
+	   + O(n^{-8})
+	      \label{eq:Hn-asy-numbers}
+  \end{align}
+  Por el teorema de Maclaurin-Cauchy,%
+    \index{Maclaurin-Cauchy, teorema de}
+  existe la constante:
+  \begin{align*}
+    \index{Euler, constante de|textbfhy}
+    \index{\(\gamma\) (constante de Euler)|see{Euler, constante de}}
+    \gamma
+      &= \lim_{n \rightarrow \infty}
+	   \left(
+	     \sum_{1 \le k < n}
+	       \frac{1}{k} - \int_1^n \frac{\mathrm{d} z}{z}
+	   \right) \\
+      &= \lim_{n \rightarrow \infty}
+	   \left( H_n - \ln n \right) \\
+      &\approx 0,5772156649
+  \end{align*}
+  La aproximación simple obtenida
+  luego del teorema de Maclaurin-Cauchy
+  da \(\gamma \approx 1 / 2\).
+  Nada mal.
+
+  Euler%
+    \index{Euler, Leonhard}
+  en 1736 obtuvo el valor de \(\gamma\) con \(16\) dígitos
+  usando \(8\) términos de la expansión:
+  \begin{equation*}
+    \gamma
+      = H_{10} - \ln 10 - \frac{1}{20} + \frac{1}{1200} - \dotsb
+  \end{equation*}
+  Para calcular el número de términos requeridos
+  para una precisión similar directamente
+  podemos usar la aproximación que derivamos.
+  Para la precisión que obtuvo Euler
+  requeriríamos \(n\) tal que:
+  \begin{equation*}
+    \left\lvert \gamma - (H_n - \ln n) \right\rvert
+      \approx \frac{1}{2 n}
+      < 5 \cdot 10^{-17} \\
+  \end{equation*}
+  Resulta \(10^{16}\) términos.
+
+  Al número \(\gamma\)
+  se le conoce como \emph{constante de Euler-Mascheroni}%
+    \index{Euler-Mascheroni, constante de|see{Euler, constante de}}
+  o simplemente como \emph{constante de Euler}.
+  Gourdon y Sebah~%
+    \cite{gourdon03:_euler_const}
+  incluso lo consideran
+  el tercer número más importante de la matemática,
+  después de \(\pi\) y \(e\).
+  Determinar si \(\gamma\) es racional,%
+    \index{numero@número!irracional!\(\gamma\)}
+  algebraico o trascendente
+  es un problema abierto famoso.
+
+\section{Fórmula de Stirling}
+\label{sec:em-Stirling}
+
+  Veamos cómo podemos aproximar factoriales
+  con esta herramienta.
+  Primero tenemos:
+  \begin{equation*}
+    \ln n!
+      = \sum_{1 \le k < n} \ln k + \ln n
+  \end{equation*}
+  El teorema de Maclaurin-Cauchy no sirve si
+  (como acá)
+  tenemos una función creciente.
+  Pero en caso que la función \(f(z)\) sea monótona creciente
+  es claro que:
+  \begin{align*}
+    \int_1^n \lfloor f(z) \rfloor \, \mathrm{d} z
+       \le \int _1^n f(z) \, \mathrm{d} z
+      &\le \int_1^n \lceil f(z) \rceil \, \mathrm{d} z \\
+    \sum_{1 \le k < n} f(k)
+       \le \int _1^n f(z) \, \mathrm{d} z
+      &\le \sum_{1 \le k < n} f(k + 1) \\
+      &= \sum_{1 \le k < n} f(k) + f(n) - f(1)
+  \end{align*}
+  Promediando ambas cotas
+  (la diferencia entre la curva y las escaleras son casi triángulos)
+  queda:
+  \begin{equation*}
+    \sum_{1 \le k < n} f(k)
+      \approx \int_1^n f(z) \, \mathrm{d} z
+		- \frac{1}{2} \, (f(n) - f(1))
+  \end{equation*}
+  Hasta acá podemos decir que,
+  burdamente:
+  \begin{align*}
+    \ln n!
+      &= \sum_{1 \le k < n} \ln n + \ln n \\
+      &\approx \int_1^n \ln z \, \mathrm{d} z
+	  - \frac{1}{2} \, (\ln n - \ln 1)
+	  + \ln z \\
+      &= n \ln n - n + 1 + \frac{1}{2} \, \ln n \\
+    n!
+      &\approx e \sqrt{n} \, \left(\frac{n}{e}\right)^n
+  \end{align*}
+  Esto nos hace albergar la esperanza de obtener algo útil.
+
+  Para una mejor aproximación usamos la fórmula de Euler-Maclaurin:
+  \begin{align*}
+    \int_1^n \ln z \, \mathrm{d} z
+      &= n \ln n - n + 1 \\
+    \mathrm{D}^k \ln z
+      &= (-1)^{k - 1} (k - 1)! z^{-k}
+  \end{align*}
+  Si suponemos que existe la constante \(\ln \sigma\)
+  (\emph{constante de Stirling}):%
+    \index{Stirling, constante de}
+  \begin{align}
+    \ln n!
+      &= \ln n + \sum_{1 \le k < n} \ln k \\
+      &= \ln n + \int_1^n \ln z \, \mathrm{d} z + \ln \sigma
+	   + B_1 \ln n \notag \\
+      &\qquad
+	   + \sum_{1 \le k \le s}
+	       \frac{B_{2 k}}{(2 k)!}
+		 \cdot (-1)^{2 k - 2} (2 k - 2)!
+		 \cdot n^{- 2 k - 1}
+	   + R_s(n) \notag \\
+      &= \ln \sigma + (n + 1) \ln n - n
+	   - \frac{1}{2} \ln n
+	   - \sum_{1 \le k \le s}
+	       \frac{B_{2 k}}{(2 k - 1) 2 k} \, n^{- 2 k - 1}
+	   + R_s(n) \notag \\
+      &= \ln \sigma + n \ln n + \frac{1}{2} \, \ln n - n
+	   + \frac{1}{12 n}
+	   - \frac{1}{360 n^3}
+	   + \frac{1}{1260 n^5}
+	   + R_3(n)
+	      \label{eq:Stirling-1}
+  \end{align}
+  La constante \(\ln \sigma\)
+  en~\eqref{eq:Stirling-1}
+  queda determinada por el siguiente límite,
+  si existe:
+  \begin{align*}
+    \ln \sigma
+      &= \lim_{n \rightarrow \infty}
+	   \left(
+	     \sum_{1 \le k \le n}
+	       \ln k - \int_1^n \ln z \, \mathrm{d} z
+	   \right) \\
+      &= \lim_{n \rightarrow \infty}
+	   \left(
+	     \ln n! - n \ln n - n
+	   \right)
+  \end{align*}
+  Veremos más adelante que \(\sigma = \sqrt{2 \pi}\),
+  usando este valor en~\eqref{eq:Stirling-1},
+  y expandiendo la exponencial:
+  \begin{equation}
+    \label{eq:Stirling-asymptotic}
+    n!
+      = \sqrt{2 \pi n} \, \left( \frac{n}{e} \right)^n
+	  \cdot \left(1
+			+ \frac{1}{12 n}
+			+ \frac{1}{288 n^2}
+			- \frac{139}{51840 n^3}
+			- \frac{571}{2488320 n^4}
+			+ O(n^{-5})
+		\right)
+  \end{equation}
+  Truncado en el primer término,
+  queda:
+  \begin{equation}
+    \index{Stirling, formula de@Stirling, fórmula de|textbfhy}
+    \label{eq:Stirling}
+    n!
+     \approx \sqrt{2 \pi n} \, \left( \frac{n}{e} \right)^n
+  \end{equation}
+  La ecuación~\eqref{eq:Stirling}
+  es la fórmula de Stirling para el factorial.
+  La aproximación dada antes dice que
+  ya para \(n \ge 8\) el error es de cerca de \(1\)\%,
+  cosa que cálculo directo confirma.
+
+  Nótese que \(\sigma = \sqrt{2 \pi} = 2,5066\),
+  nuestra burda aproximación \(\sigma \approx e\) no era tan mala.
+
+  Falta el valor de \(\ln \sigma\).
+  Por el producto de Wallis%
+    \index{Wallis, producto de}
+  (lo demostraremos más adelante):
+  \begin{align*}
+    \frac{\pi}{2}
+      &= \prod_{k \ge 1}
+	   \frac{2 k}{2 k - 1} \cdot \frac{2 k}{2 k + 1} \\
+      &= \lim_{n \rightarrow \infty}
+	   \prod_{1 \le k \le n}
+	     \left(
+	       \frac{2 k}{2 k - 1} \cdot \frac{2 k}{2 k}
+	     \right) \cdot
+	     \left(
+	       \frac{2 k}{2 k} \cdot \frac{2 k}{2 k + 1}
+	     \right) \\
+      &= \lim_{n \rightarrow \infty}
+	   \frac{(2 n!)^4}{(2 n)! (2 n + 1)!} \\
+      &= \lim_{n \rightarrow \infty}
+	   \frac{1}{2 n + 1} \cdot
+	     \frac{2^{4 n} \, n!^4}{(2 n)!^2}
+  \end{align*}
+  Substituyendo la aproximación~\eqref{eq:Stirling-1}
+  para los factoriales:
+  \begin{align*}
+    \frac{\pi}{2}
+      &= \lim_{n \rightarrow \infty}
+	   \frac{1}{2 n + 1} \cdot
+	     \frac{2^{4 n} \sigma^4 n^2 \left( n / e \right)^{4 n}}
+		  {\sigma^2 (2 n) \left( 2 n / e \right)^{4 n}} \\
+    \sigma^2
+      &= 2 \pi
+  \end{align*}
+
+  Para completar,
+  demostraremos el producto de Wallis,
+  siguiendo a Lynn~%
+    \cite{lynn:_wallis_product}.
+  \begin{theorem}[Producto de Wallis]
+    \index{Wallis, producto de|textbfhy}
+    \label{theo:producto-Wallis}
+    Tenemos:
+    \begin{equation*}
+      \frac{\pi}{2}
+	= \prod_{k \ge 1}
+	    \frac{2 k}{2 k - 1} \cdot \frac{2 k}{2 k + 1}
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Definamos:
+    \begin{equation*}
+      a_n
+	= \int_0^{\pi / 2} \sin^n z \, \mathrm{d} z
+    \end{equation*}
+    Como \(0 \le \sin z \le 1\) en el rango \(0 \le z \le \pi / 2\),
+      \(\left\langle a_n \right\rangle_{n \ge 0}\)
+    es una secuencia positiva y monótona decreciente.
+    Integrando por partes:
+    \begin{align*}
+      a_n
+	&= -\sin^{n - 1} z \, \cos z \,
+	   \biggr|_0^{\pi / 2}
+	   + \int_0^{\pi / 2}
+	       (n - 1) \sin^{n - 2} z \, \cos^2 z \, \mathrm{d} z \\
+	&= \int_0^{\pi / 2}
+	     (n - 1) \sin^{n - 2} z \, (1 - \sin^2 z)
+	     \, \mathrm{d} z
+    \end{align*}
+    O sea \(a_n = (n - 1) a_{n - 2} - (n - 1) a_n\),
+    que resulta en:
+    \begin{equation}
+      \label{eq:Wallis-recurrence}
+      a_n
+	= \frac{n - 1}{n} \, a_{n - 2}
+    \end{equation}
+    Por el otro lado,
+    directamente tenemos \(a_0 = \pi / 2\) y \(a_1 = 1\).
+    Con estos puntos de partida en~\eqref{eq:Wallis-recurrence}:
+    \begin{align}
+      a_{2 n}
+	&= \frac{\pi}{2} \cdot \frac{1}{2} \cdot \dotsm
+	     \cdot \frac{2 n - 1}{2 n} \label{eq:Wallis-an-even} \\
+      a_{2 n + 1}
+	&= \frac{2}{3} \cdot \frac{4}{5} \cdot \dotsm
+	     \cdot \frac{2 n}{2 n + 1} \label{eq:Wallis-an-odd}
+    \end{align}
+    Como la secuencia \(a_n\) es decreciente,
+    \(a_{2 n + 1} \le a_{2 n} \le a_{2 n - 1}\),
+    y de la recurrencia~\eqref{eq:Wallis-recurrence}:
+    \begin{equation*}
+      1 \le \frac{a_{2 n}}{a_{2 n + 1}}
+	\le \frac{a_{2 n - 1}}{a_{2 n + 1}}
+	= 1 + \frac{1}{2 n}
+    \end{equation*}
+    En consecuencia:
+    \begin{equation}
+      \label{eq:Wallis-limit}
+      \lim_{n \rightarrow \infty} \frac{a_{2 n}}{a_{2 n + 1}}
+	= 1
+    \end{equation}
+    y por~\eqref{eq:Wallis-limit}
+    con~\eqref{eq:Wallis-an-even} y~\eqref{eq:Wallis-an-odd}:
+    \begin{equation*}
+      \lim_{n \rightarrow \infty}
+	\frac{\pi}{2} \cdot
+	  \frac{1 \cdot 3 \dotsm (2 n - 1)}
+	       {2 \cdot 4 \dotsm (2 n)} \cdot
+	  \frac{3 \cdot 5 \dotsm (2 n + 1)}
+	       {2 \cdot 4 \dotsm (2 n)}
+	= 1
+    \end{equation*}
+    que es equivalente a lo planteado.
+  \end{proof}
+  Una muy bonita demostración alternativa
+  (originalmente de Euler,%
+     \index{Euler, Leonhard}
+   quien de forma similar
+   obtuvo muchos otros resultados sorprendentes)
+  es la siguiente.
+  Tiene el problema de basarse en la fórmula de Euler para el seno,
+  que es muy sugestiva pero no es sencilla de demostrar.
+  \begin{proof}
+    La fórmula de Euler para el seno
+    resulta de considerar esta función impar
+    como un ``polinomio infinito'' con ceros \(0\) y \(\pm n \pi\),
+    como también:
+    \begin{equation*}
+      \lim_{z \rightarrow 0} \frac{\sin z}{z}
+	= 1
+    \end{equation*}
+    el coeficiente de \(z\) debe ser \(1\),
+    por lo que puede expresarse:%
+      \index{Euler, formula para seno@Euler, fórmula para seno}
+    \begin{align*}
+      \frac{\sin z}{z}
+	&= \left( 1 - \frac{z^2}{\pi^2} \right)
+	     \left( 1 - \frac{z^2}{4 \pi^2} \right)
+	     \left( 1 - \frac{z^2}{9 \pi^2} \right) \dotsm \\
+	&= \prod_{k \ge 1}
+	     \left( 1 - \frac{z^2}{k^2 \pi^2} \right)
+    \end{align*}
+    Notamos que para \(z = \pi / 2\):
+    \begin{align*}
+      \frac{2}{\pi}
+	&= \prod_{k \ge 1} \left( 1 - \frac{1}{4 k^2} \right) \\
+      \frac{\pi}{2}
+	&= \prod_{k \ge 1} \left( \frac{4 k^2}{4 k^2 - 1} \right) \\
+	&= \prod_{k \ge 1} \frac{(2 k) (2 k)}{(2 k - 1) (2 k + 1)}
+      \qedhere
+    \end{align*}
+  \end{proof}
+
+\section{Propiedades de los polinomios
+       y números de Bernoulli}
+\label{sec:propiedades-Bernoulli}
+
+  Derivaremos algunas propiedades adicionales
+  de los polinomios y números de Bernoulli.%
+    \index{Bernoulli, polinomios de}%
+    \index{Bernoulli, numeros de@Bernoulli, números de}
+  Algunas ya las usamos,
+  otras las necesitaremos más adelante.
+  En el proceso mostraremos algunas técnicas útiles
+  para obtener información sobre los coeficientes de una serie.%
+    \index{serie de potencias!coeficientes}
+
+  De la recurrencia~\eqref{eq:Bn}:
+  \begin{equation*}
+    B'_n(z)
+     = n B_{n - 1}(z)
+  \end{equation*}
+  Con esto,
+  à la Maclaurin en \(y\):
+  \begin{align}
+    B_n(z + y)
+      &= B_n(z)
+	  + n B_{n - 1}(z) \, y
+	  + \frac{n (n - 1)}{2} B_{n - 2}(z) \, y^2
+	  + \dotsb \notag \\
+      &= \sum_{0 \le k \le n} \binom{n}{k} B_{n - k}(z) \, y^k
+	    \label{eq:Bn(z+y)}
+  \end{align}
+  Si ahora hacemos \(z = 0\) en~\eqref{eq:Bn(z+y)},
+  recordamos \(B_n(0) = B_n\)
+  y cambiamos variables \(y \leadsto z\) en el resultado:
+  \begin{equation}
+    \label{eq:Bn(z)-expansion}
+    B_n(z)
+      = \sum_{0 \le k \le n} \binom{n}{k} B_{n - k} \, z^k
+  \end{equation}
+  Para \(z = 1\),
+  como \(B_n(1) = B_n\)
+  salvo para \(n = 1\),
+  resulta:
+  \begin{equation}
+    \label{eq:Bn-expansion}
+    B_n
+      = \sum_{0 \le k \le n} \binom{n}{k} B_k
+  \end{equation}
+  Si en~\eqref{eq:Bn-expansion}
+  interpretamos \(\mathbf{B}^n\) como \(B_n\)
+  tenemos la linda fórmula:%
+    \index{Bernoulli, numeros de@Bernoulli, números de!linda formula@linda fórmula}
+  \begin{equation}
+    \label{eq:B-linda-formula}
+    \mathbf{B}^n
+      = (1 + \mathbf{B})^n
+  \end{equation}
+  En la linda fórmula~\eqref{eq:B-linda-formula}
+  para \(B_{n + 1}\) se cancelan los \(B_{n + 1}\),
+  y puede despejarse \(B_n\)
+  dando la relación válida para \(n \ge 1\):
+  \begin{equation*}
+    B_n
+      = - \frac{1}{n + 1}
+	    \sum_{0 \le k \le n - 1} \binom{n + 1}{k} \, B_k
+  \end{equation*}
+
+  Por los factoriales definamos una función generatriz exponencial
+  para los polinomios \(B_n(x)\)
+  (estamos trabajando con series sobre el anillo \(\mathbb{Q}[x]\)):
+  \begin{equation}
+    \label{eq:definicion-B(x,z)}
+    B(x, z)
+      = \sum_{n \ge 0} B_n(x) \, \frac{z^n}{n!}
+  \end{equation}
+  De la recurrencia~\eqref{eq:Bn} para los polinomios:
+  \begin{align}
+    \frac{\partial B(x, z)}{\partial x}
+      &= \sum_{n \ge 1} B'_n(x) \, \frac{z^n}{n!} \notag \\
+      &= z \sum_{n \ge 1}
+	     B_{n - 1}(x) \, \frac{z^{n - 1}}{(n - 1)!} \notag \\
+      &= z B(x, z) \label{eq:B(x,z)}
+  \end{align}
+  La ecuación~\eqref{eq:B(x,z)} indica
+  que para alguna función \(c(z)\) que no depende de \(x\):
+  \begin{equation}
+    \label{eq:B(x,z)-2}
+    B(x, z)
+      = c(z) \mathrm{e}^{x z}
+  \end{equation}
+  Usamos ahora la otra condición sobre los polinomios.
+  Debe cumplirse:
+  \begin{align*}
+    \int_0^1 B(x, z) \, \mathrm{d} x
+      &= \sum_{n \ge 0}
+	   \frac{z^n}{n!} \, \int_0^1 B_n(x) \, \mathrm{d} x \\
+      &= 1
+  \end{align*}
+  De nuestra expresión~\eqref{eq:B(x,z)-2} para \(B(x, z)\):
+  \begin{align*}
+    \int_0^1 B(x, z) \, \mathrm{d} x
+      &= c(z) \int_0^1 \mathrm{e}^{x z} \, \mathrm{d} x \\
+      &= c(z) \frac{1}{z} \, \left( \mathrm{e}^z - 1 \right)
+  \end{align*}
+  Comparando ambas expresiones para la integral obtenemos \(c(z)\),
+  y finalmente:
+  \begin{equation}
+    \index{Bernoulli, polinomios de!generatriz}
+    \label{eq:B(x,z)-3}
+    B(x, z)
+      = \sum_{n \ge 0} B_n(x) \, \frac{z^n}{n!}
+      = \frac{z \mathrm{e}^{x z}}{\mathrm{e}^z - 1}
+  \end{equation}
+  Para justificar algunas de las manipulaciones que siguen,
+  debemos asegurarnos
+  que esta serie converge uniformemente para \(0 \le z \le 1\)%
+    \index{convergencia uniforme}
+  (no hay problemas con \(x\)).
+  La función~\eqref{eq:B(x,z)-3} en \(z = 0\)
+  tiene una singularidad removible,%
+    \index{singularidad!removible}
+  y tiene polos en \(z = \pm 2 n \pi \mathrm{i}\) para \(n \ge 1\),%
+    \index{polo}
+  por lo que el radio de convergencia es \(2 \pi > 1\).%
+    \index{serie de potencias!radio de convergencia}
+  Para detalles de estos conceptos
+  véase el capítulo~\ref{cha:analisis-complejo}.%
+    \index{analisis complejo@análisis complejo}
+
+  Con \(x = 0\) obtenemos la función generatriz
+  de los coeficientes \(B_n = B_n(0)\):%
+    \index{Bernoulli, numeros de@Bernoulli, números de!generatriz}
+  \begin{equation}
+    \label{eq:B(0,z)}
+    B(0, z)
+      = \sum_{n \ge 0} B_n \, \frac{z^n}{n!}
+      = \frac{z}{\mathrm{e}^z - 1}
+  \end{equation}
+
+  De los valores dados antes
+  pareciera ser que los valores para índices impares son todos cero,
+  salvo \mbox{\(B_1 = - 1 / 2\)}.
+  Consideremos la función:
+  \begin{align*}
+    \frac{z}{\mathrm{e}^z - 1} + \frac{z}{2}
+      &= \frac{z}{2}
+	   \cdot \frac{\mathrm{e}^z + 1}{\mathrm{e}^z - 1} \\
+      &= \frac{z}{2} \, \coth \frac{z}{2}
+  \end{align*}
+  Esta función es par,
+  confirmando nuestra sospecha.
+
+  Anotamos el resultado siguiente
+  en términos de la función \(\zeta\) de Riemann:%
+    \index{Riemann, funcion \(\zeta\) de@Riemann, función \(\zeta\) de|textbfhy}%
+    \index{\(\zeta\) de Riemann|see{Riemann, función \(\zeta\) de}}
+  \begin{equation}
+    \label{eq:zeta}
+    \zeta(z)
+      = \sum_{n \ge 1} n^{-z}
+  \end{equation}
+  Uno de los resultados más sensacionales de Euler
+  fue la solución en 1734 del problema de Basilea,%
+    \index{Basilea, problema de|textbfhy}%
+    \index{Euler, Leonhard}
+  que venía siendo un tema recurrente desde 1650.
+  Se buscaba el valor de la serie:
+  \begin{equation}
+    \label{eq:zeta(z)}
+    \zeta(2)
+      = \sum_{n \ge 1} \frac{1}{n^2}
+  \end{equation}
+  Hizo mucho más que esto,
+  hallando los valores de \(\zeta(2 k)\) para \(k\) hasta \(13\).
+  Luego halló la fórmula general,
+  para la que hay hermosas demostraciones
+  (ver Aigner y Ziegler~%
+    \cite{aigner14:_proof_the_book}
+   o Kalman~%
+    \cite{kalman93:_six_ways_sum_series}).
+  Podemos seguir uno de los razonamientos de Euler
+  (Dunham~\cite{dunham09:_when_euler_met_lhopital}
+   da otras de las demostraciones
+   y algo del sabor del trabajo original)
+  como sigue.
+
+  Por la fórmula de Euler para la exponencial de un complejo:%
+    \index{Euler, formula de (exponencial complejo)@Euler, fórmula de (exponencial complejo)}
+  \begin{align}
+    \cot z
+      &= \frac{\cos z}{\sin z} \notag \\
+      &= \mathrm{i} \, \frac{\mathrm{e}^{\mathrm{i} z}
+			     + \mathrm{e}^{- \mathrm{i} z}}
+		{\mathrm{e}^{\mathrm{i} z}
+		  - \mathrm{e}^{- \mathrm{i} z}}
+	     \notag \\
+      &= \mathrm{i} + \frac{2 \mathrm{i}}
+			   {\mathrm{e}^{2 \mathrm{i} z} - 1}
+	     \notag \\
+    \frac{z}{2} \, \cot \frac{z}{2}
+      &= \frac{\mathrm{i} z}{2}
+	   + \frac{\mathrm{i} z}{\mathrm{e}^{\mathrm{i} z} - 1}
+	     \notag \\
+    \intertext{Manejado los primeros dos términos
+	       en forma especial queda:}
+    \frac{z}{2} \, \cot \frac{z}{2}
+      &= 1 + \sum_{k \ge 2} B_k \frac{(\mathrm{i} z)^k}{k!}
+	   \label{eq:zcotz-1}
+  \end{align}
+  Por el otro lado tenemos la fórmula de Euler para el seno:%
+    \index{Euler, formula para seno@Euler, fórmula para seno}
+  \begin{equation}
+    \label{eq:Euler-seno}
+    \sin z
+      = z \prod_{n \ge 1} \left( 1 - \frac{z^2}{n^2 \pi^2} \right)
+  \end{equation}
+  Aplicando \(z \mathrm{D} \log\) a~\eqref{eq:Euler-seno}:
+  \begin{equation*}
+    z \, \frac{\mathrm{d}}{\mathrm{d} z} \, \ln \sin z
+      = z \, \frac{\cos z}{\sin z}
+      = z \cot z
+  \end{equation*}
+  Con esto tenemos:
+  \begin{align}
+    z \cot z
+      &= 1 - \sum_{n \ge 1} \frac{2 z^2}{1 - (z^2 / n^2 \pi^2)}
+	  \notag \\
+      &= 1 - 2 \sum_{n \ge 1}
+		 \sum_{k \ge 0} \frac{z^{2 k + 2}}
+				     {n^{2 k} \pi^{2 k}} \notag \\
+      &= 1 - 2 \sum_{k \ge 0}
+		 \frac{z^{2 k + 2}}{\pi^{2 k}}
+		    \cdot \sum_{n \ge 1} \frac{1}{n^{2 k}} \notag \\
+      &= 1 - 2 \sum_{k \ge 0} \frac{z^{2 k + 2} \zeta(2 k)}
+				   {\pi^{2 k}}
+						    \notag \\
+    \frac{z}{2} \cot \frac{z}{2}
+      &= 1 - 2 \sum_{k \ge 0}
+		 \frac{z^{2 k + 2} \zeta(2 k)}
+		      {2^{2 k + 2} \pi^{2 k}}
+		    \label{eq:zcotz-2}
+  \end{align}
+  Comparando coeficientes de \(z^{2 k}\)
+  entre~\eqref{eq:zcotz-1} y~\eqref{eq:zcotz-2} resulta:
+  \begin{equation*}
+    \zeta(2 k)
+      = \frac{(-1)^{k + 1} 4^k \pi^{2 k} B_{2 k}}{2 (2 k)!}
+  \end{equation*}
+  Incidentalmente,
+  esto demuestra que los números \(B_{2 k}\) alternan signo,
+  ya que \(\zeta(2 k)\) claramente es positivo.
+  Como \(\zeta(2 k) \sim 1\),
+  usando la fórmula de Stirling~\eqref{eq:Stirling}:%
+    \index{Stirling, formula de@Stirling, fórmula de}%
+    \index{Bernoulli, numeros de@Bernoulli, números de!asintotica@asintótica|textbfhy}
+  \begin{align}
+    B_{2 k}
+      &\sim (-1)^{k + 1} \frac{2 (2 k)!}{4^k \pi^{2 k}} \notag \\
+      &\sim (-1)^{k + 1} \, 4 \sqrt{k \pi}
+	      \left( \frac{k}{\pi e} \right)^{2 k}
+		    \label{eq:Bernoulli-approximation}
+  \end{align}
+  Con este crecimiento de \(B_{2 k}\)
+  las derivadas de \(f\) deben disminuir muy rápidamente
+  para que la fórmula de Euler-Maclaurin converja.%
+    \index{Euler-Maclaurin, formula de@Euler-Maclaurin, fórmula de!convergencia}
+
+  La figura~\ref{fig:Bernoulli}
+  grafica algunos polinomios de Bernoulli
+  en el rango que nos interesa.
+  \begin{figure}[htbp]
+    \newlength{\ten}
+    \settowidth{\ten}{\(10\)}
+    \begin{tabular}{>{\raggedleft}m{\ten}@{\hspace{0.5ex}}
+		     *{4}{@{}m{0.232\linewidth}}}
+	     & \multicolumn{1}{c}{\(m\)}
+	     & \multicolumn{1}{c}{\(m + 1\)}
+	     & \multicolumn{1}{c}{\(m + 2\)}
+	     & \multicolumn{1}{c}{\(m + 3\)} \\
+       \(2\) & \pgfimage[width=\linewidth]{images/B2}
+	     & \pgfimage[width=\linewidth]{images/B3}
+	     & \pgfimage[width=\linewidth]{images/B4}
+	     & \pgfimage[width=\linewidth]{images/B5} \\
+       \(6\) & \pgfimage[width=\linewidth]{images/B6}
+	     & \pgfimage[width=\linewidth]{images/B7}
+	     & \pgfimage[width=\linewidth]{images/B8}
+	     & \pgfimage[width=\linewidth]{images/B9} \\
+      \(10\) & \pgfimage[width=\linewidth]{images/B10}
+	     & \pgfimage[width=\linewidth]{images/B11}
+	     & \pgfimage[width=\linewidth]{images/B12}
+	     & \pgfimage[width=\linewidth]{images/B13}
+    \end{tabular}
+    \caption{Polinomios de Bernoulli en $[0, 1]$
+	     (escalados de mínimo a máximo)}
+    \label{fig:Bernoulli}%
+    \index{Bernoulli, polinomios de!grafica@gráfica}
+  \end{figure}
+  Pareciera ser que \(B_{2 k}(z)\)
+  es simétrica alrededor de \(1 / 2\),
+  mientras \(B_{2 k + 1}(z)\) es antisimétrica.
+  Para demostrar estos hechos
+  consideramos:
+  \begin{align*}
+    B \left( 1 / 2 + u, z \right)
+	+ B \left( 1 / 2 - u, z \right)
+      &= \frac{z \mathrm{e}^{z (1 / 2 + u)}}{\mathrm{e}^z - 1}
+	   + \frac{z \mathrm{e}^{z (1 / 2 - u)}}
+		  {\mathrm{e}^z - 1} \\
+      &= \frac{z \mathrm{e}^{z / 2}}{\mathrm{e}^z - 1}
+	   \cdot \left(
+		   \mathrm{e}^{z u} + \mathrm{e}^{- z u}
+		 \right)
+  \end{align*}
+  Esta expresión es par en \(z\):
+  \begin{align*}
+    \frac{-z \mathrm{e}^{-z / 2}}{\mathrm{e}^{-z} - 1}
+       \cdot \frac{\mathrm{e}^z}{\mathrm{e}^z}
+      &= \frac{-z \mathrm{e}^{z / 2}}{1 - \mathrm{e}^z} \\
+      &= \frac{z \mathrm{e}^{z / 2}}{\mathrm{e}^z - 1}
+  \end{align*}
+  Esto significa que los términos para \(z^{2 k + 1}\) se anulan:
+  \begin{equation*}
+    B_{2 k + 1}(1 / 2 - u)
+      = - B_{2 k + 1}(1 / 2 + u) \\
+  \end{equation*}
+  En particular, \(B_{2 k + 1}(1 / 2) = 0\).
+
+  De forma similar:
+  \begin{align*}
+    B \left( 1 / 2 + u, z \right)
+	- B \left( 1 / 2 - u, z \right)
+      &= \frac{z \mathrm{e}^{z (1 / 2 + u)}}{\mathrm{e}^z - 1}
+	   - \frac{z \mathrm{e}^{z (1 / 2 - u)}}
+		  {\mathrm{e}^z - 1} \\
+      &= \frac{z \mathrm{e}^{z / 2}}{\mathrm{e}^z - 1}
+	   \cdot \left(
+		   \mathrm{e}^{z u} - \mathrm{e}^{- z u}
+		 \right)
+  \end{align*}
+  Esta expresión es impar en \(z\),
+  lo que significa que ahora se anularon los términos pares:
+  \begin{equation*}
+    B_{2 k}(1 / 2 - u)
+      = B_{2 k}(1 / 2 + u)
+  \end{equation*}
+
+  De las gráficas~\ref{fig:Bernoulli}
+  en el rango \([0, 1]\)
+  se ve que el polinomio \(B_{2 k}(z)\) tiene dos ceros,
+  mientras \(B_{2 k + 1}(z)\) tiene tres
+  (0 y \(\pm 1\)).
+  Esto vale en general.%
+    \index{Bernoulli, polinomios de!ceros}
+  \begin{theorem}
+    \label{theo:Bernoulli-zeros}
+    Para \(k > 0\),
+    en el rango \([0, 1]\) el polinomio \(B_{2 k}(z)\)
+    tiene exactamente dos ceros,
+    mientras \(B_{2 k + 1} (z)\) tiene exactamente tres
+    (\(0\), \(1 / 2\) y	 \(1\)).
+  \end{theorem}
+  \begin{proof}
+    Demostramos por inducción que para \(k \ge 1\) en \([0, 1 / 2]\)
+    el polinomio \(B_{2 k} (z)\) tiene exactamente un cero,%
+      \index{demostracion@demostración!induccion@inducción}
+    y que \(B_{2 k + 1}(z)\) no cambia de signo
+    y se anula únicamente en los extremos.
+    De partida,
+    ninguno de los polinomios es idénticamente cero.
+    \begin{description}
+    \item[Base:]
+      Para \(k = 1\) tenemos \(B_2(z) = z^2 - z + 1 / 6\)
+      con ceros \(1 / 2 \pm \sqrt{3} / 6\)
+      (estos dos están en el rango  \([0, 1]\),
+       hay uno en \([0, 1/2]\)),
+      y \(B_3(z) = z^3 - 3 z^2 / 2 + z / 2\) con ceros \(0, \pm 1\).
+    \item[Inducción:]
+      Supongamos que \(B_{2 k}(z)\)
+      tiene un único cero en \([0, 1 / 2]\),
+      y que \(B_{2 k + 1}(z)\)
+      se anula únicamente en \(0\) y \(1 /2\).
+      Debemos demostrar que vale para \(B_{2 k + 2}(z)\)
+      y \(B_{2 k +3}(z)\) también.
+
+      Como \(B_{2 k + 1}(z)\) no cambia de signo en el rango,
+      \(B_{2 k + 2}(z)\) es monótona
+      y por tanto puede tener a lo más un cero.
+      Pero pusimos como condición
+      que la integral de \(B_{2 k + 2}(z)\)
+      de \(0\) a \(1\) se anule;
+      como \(B_{2 k + 2}(z)\)
+      es simétrica alrededor de \(z = 1 / 2\)
+      se anula la integral de \(0\) a \(1 / 2\),
+      por lo que deben haber valores positivos y negativos
+      en el rango,
+      y hay exactamente un cero en él.
+
+      Por la recurrencia \(B'_n (z) = n B_{n - 1} (z)\),
+      al tener un único cero \(B_{2 k + 2} (z)\),
+      \(B_{2 k + 3}(z)\) tiene un único mínimo o máximo
+      en el rango \([0, 1/2]\),
+      y \(B_{2 k + 3}(z)\) puede tener a lo más dos ceros allí
+      y conocemos dos (0 y \(1 / 2\)).
+    \end{description}
+    Por inducción vale para todo \(k \ge 1\).
+  \end{proof}
+
+  Como \(B'_{2 k}(1 / 2) = 2 k B_{2 k - 1} (1 / 2) = 0\),
+  sabemos que \(B_{2 k}(z)\)
+  tiene un mínimo o máximo en \(z = 1 / 2\).
+  Tenemos:
+  \begin{align*}
+    B(0, z / 2)
+      &= \frac{z}{2 (\mathrm{e}^{z / 2} - 1)} \\
+      &= \frac{1}{2} \cdot \frac{z}{\mathrm{e}^{z / 2} - 1}
+	   \cdot \frac{\mathrm{e}^{z / 2} + 1}
+		      {\mathrm{e}^{z / 2} + 1} \\
+      &= \frac{1}{2}
+	   \cdot \frac{z (\mathrm{e}^{z / 2} + 1)}
+		      {\mathrm{e}^z - 1} \\
+      &= \frac{1}{2} \,
+	   \left(
+	     \frac{z \mathrm{e}^{z / 2}}{\mathrm{e}^z - 1}
+	       - \frac{z}{\mathrm{e}^z - 1}
+	   \right) \\
+      &= \frac{1}{2} \,
+	   \left(B(1 / 2, z) - B(0, z) \right)
+  \end{align*}
+  Comparando coeficientes de \(z^k\):
+  \begin{align*}
+    \frac{B_k}{2^k}
+      &= \frac{1}{2} \, \left( B_k(1 / 2) - B_k \right) \\
+    B_k(1 / 2)
+      &= - \left( 1 - 2^{1 - k} \right) \, B_k
+  \end{align*}
+  Como \(z = 1 / 2\) es el único máximo (mínimo) de \(B_{2 k} (z)\)
+  en el rango \([0, 1]\) por ser monótona en \([0, 1 / 2]\),
+  al ser simétrica alrededor de \(1 / 2\) los mínimos (máximos)
+  se dan en los extremos,
+  y en este rango:
+  \begin{equation*}
+    \lvert B_{2 k}(z) \rvert
+      \le \lvert B_{2 k} \rvert
+  \end{equation*}
+
+\section{El resto}
+\label{sec:resto-Euler-Maclaurin}
+
+  Nuestra fórmula maestra es:
+  \begin{equation*}
+    \sum_{1 \le k < a} f(k)
+      = \int_1^a f(z) \, \mathrm{d} z
+	  + \gamma_f
+	  + B_1 f(a)
+	  + \sum_{1 \le k \le n}
+	       \frac{B_{2 k}}{(2 k)!} \, f^{(2 k - 1)}(a)
+	  + \int_a^\infty
+	      \frac{\widetilde{B}_{2 n + 1}(z)}{(2 n + 1)!} \,
+			      f^{(2 n + 1)}(z) \, \mathrm{d} z
+  \end{equation*}
+  Interesa acotar la integral que determina el resto,
+  la llamaremos \(R_n(f; a)\).
+  Podemos volver a integrar por partes:
+  \begin{equation*}
+    R_n(f; a)
+      = \int_a^\infty \frac{\widetilde{B}_{2 n + 2}(z)}
+			   {(2 n + 2)!} \,
+			      f^{(2 n + 2)}(z) \, \mathrm{d} z
+  \end{equation*}
+  Suponiendo que \(f^{(2 n + 2)}(z)\) y \(f^{(2 n + 1)}(z)\)
+  tienden monótonamente a cero
+  (con lo que en particular no cambian signo),
+  la integral queda acotada
+  por el valor extremo de \(\widetilde{B}_{2 n + 2}(z)\)
+  y la integral del segundo factor.
+  Para el valor extremo de \(\widetilde{B}_{2 n + 2}(z)\)
+  tenemos la cota \(\lvert B_{2 n + 2} \rvert\):%
+    \index{Euler-Maclaurin, formula de@Euler-Maclaurin, fórmula de!resto|textbfhy}
+  \begin{align*}
+    \lvert R_n(f; a) \rvert
+      &\le \frac{\lvert B_{2 n + 2} \rvert}{(2 n + 2)!}
+	      \cdot \left\lvert
+		      \int_a^\infty f^{(2 n + 2)}(z)
+			\, \mathrm{d} z
+		    \right\rvert \\
+      &= \frac{\lvert B_{2 n + 2} \rvert}{(2 n + 2)!}
+	   \cdot \lvert f^{(2 n + 1)}(a) \rvert
+  \end{align*}
+  Esto es del orden del primer término omitido,
+  como se indicó.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

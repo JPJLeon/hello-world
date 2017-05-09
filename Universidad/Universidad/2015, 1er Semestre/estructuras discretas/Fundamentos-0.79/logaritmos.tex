@@ -1,0 +1,198 @@
+% logaritmos.tex
+%
+% Copyright (c) 2015 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section{Funciones generatrices con logaritmos}
+\label{sec:gf-logs}
+
+  Requeriremos coeficientes de varias series involucrando logaritmos,
+  de la forma:
+  \begin{equation}
+    \label{eq:ln:alpha-beta}
+    \frac{1}{(1 - z)^\alpha} \ln^\beta \frac{1}{1 - z}
+  \end{equation}
+  para \(\alpha\) y \(\beta\) enteros.
+  El caso más simple es \(\alpha = 0\) y \(\beta = 1\):
+  \begin{equation}
+    \label{eq:ln:0-1}
+    \ln \frac{1}{1 - z}
+      = \sum_{n \ge 1} \frac{z^n}{n}
+  \end{equation}
+  De~\eqref{eq:ln:0-1} resulta directamente
+  la función generatriz de los números harmónicos:%
+    \index{numeros harmonicos@números harmónicos!generatriz}
+  \begin{equation}
+    \label{eq:ln:1-1}
+    \frac{1}{1 - z} \ln \frac{1}{1 - z}
+      = \sum_{n \ge 1} H_n z^n
+  \end{equation}
+  Aplicando la fórmula de Leibnitz:%
+    \index{Leibnitz!formula de@fórmula de}
+  \begin{equation}
+    \label{eq:Leibnitz-derivative}
+    \frac{\mathrm{d}^m}{\mathrm{d} z^m} (f(z) \cdot g(z))
+      = \sum_{0 \le r \le m} \binom{m}{r} f^{(r)}(z) \cdot g^{(m - r)}(z)
+  \end{equation}
+  a~\eqref{eq:ln:1-1} resulta:
+  \begin{align}
+    \frac{\mathrm{d}^{k - 1}}{\mathrm{d} z^{k - 1}}
+      \left( \frac{1}{1 - z} \ln \frac{1}{1 - z} \right)
+      &= \sum_{0 \le r \le k - 1}
+	   \binom{k - 1}{r}
+	      \frac{\mathrm{d}^r}{\mathrm{d} z^r} \ln \frac{1}{1 - z}
+	      \cdot
+	      \frac{\mathrm{d}^{k - 1 - r}}{\mathrm{d} z^{k - 1 - r}}
+		 \frac{1}{1 - z}
+		       \notag \\
+      &= \frac{(k - 1)!}{(1 - z)^k} \ln \frac{1}{1 - z}
+	   + \sum_{1 \le r \le k - 1}
+	       \binom{k - 1}{r}
+		 \frac{(r - 1)!}{(1 - z)^r}
+		   \cdot \frac{(k - 1 - r)!}{(1 - z)^{k - r}}
+		       \notag \\
+      &= \frac{(k - 1)!}{(1 - z)^k}
+	   \left(
+	     \ln \frac{1}{1 - z}
+	       + \sum_{1 \le r \le k - 1} \frac{1}{r}
+	   \right)
+		       \notag \\
+      &= \frac{(k - 1)!}{(1 - z)^k}
+	   \left(
+	     \ln \frac{1}{1 - z}
+	       + H_{k - 1}
+	   \right)
+  \end{align}
+  Despejando el término que nos interesa:
+  \begin{equation}
+    \label{eq:ln:k-1}
+    \frac{1}{(1 - z)^k} \ln \frac{1}{1 - z}
+      = \frac{1}{(k - 1)!}
+	  \frac{\mathrm{d}^{k - 1}}{\mathrm{d} z^{k - 1}}
+	    \left( \frac{1}{1 - z} \ln \frac{1}{1 - z} \right)
+	  - \frac{1}{(1 - z)^k} H_{k - 1}
+\end{equation}
+  Con~\eqref{eq:ln:1-1},
+  las propiedades conocidas de las funciones generatrices%
+    \index{funcion generatriz@función generatriz!propiedades}
+  y el teorema del binomio:%
+    \index{teorema del binomio}
+  \begin{align}
+    [z^n] \frac{1}{(1 - z)^k} \ln \frac{1}{1 - z}
+      &= \frac{(n + k  - 1)^{\underline{k - 1}}}{(k - 1)!} H_{n + k - 1}
+	   - \binom{n + k - 1}{k - 1} H_{k - 1} \notag \\
+      &= \binom{n + k - 1}{k - 1} (H_{n + k - 1} - H_{k - 1})
+		      \label{eq:ln:k-1:coef}
+  \end{align}
+  Vemos que para \(n = 0\) el coeficiente se anula
+  y para \(n = 1\) es \(1\),
+  tal como debiera ser.
+%% Checked against the Taylor series for n = 1, 2, 4 and k = 1, 2, 10
+%%   HvB 2015-01-16
+
+  Otra colección de interés resulta partiendo con:
+  \begin{align}
+    [z^n] \ln^2 \frac{1}{1 - z}
+      &= \sum_{1 \le r \le n - 1} \frac{1}{r (n - r)} \notag \\
+  \intertext{Aplicamos fracciones parciales al sumando:}
+      &= \frac{1}{n}
+	   \sum_{1 \le r \le n - 1}
+	     \left( \frac{1}{r} + \frac{1}{n - r} \right) \notag \\
+      &= \frac{2}{n} H_{n - 1}
+	     \label{eq:ln:0-2:coef}
+  \end{align}
+%% Checked against the Taylor series for n = 2, 3, 4, 7, 10
+%%   HvB 2015-01-16
+  De esto:
+  \begin{align*}
+    [z^n]\frac{1}{1 - z} \ln^2 \frac{1}{1 - z}
+      &= \sum_{1 \le r \le n} \frac{2}{r} H_{r - 1} \\
+      &= 2 \sum_{1 \le r \le n}
+	     \frac{1}{r} \sum_{1 \le s \le r - 1} \frac{1}{s} \\
+      &= 2 \sum_{1 \le s < r \le n} \frac{1}{r s} \\
+  \intertext{Por simetría en \(r\) y \(s\) podemos escribir:}
+      &= \sum_{1 \le s < r \le n} \frac{1}{r s}
+	   + \sum_{1 \le r < s \le n} \frac{1}{r s} \\
+      &= \sum_{\substack{1 \le r \le n \\
+			 1 \le s \le n \\
+			 r \ne s}} \frac{1}{r s} \\
+      &= H^2_n - H^{(2)}_n
+  \end{align*}
+  Acá usamos la definición de números harmónicos generalizados:%
+    \index{numeros harmonicos@números harmónicos!generalizados|textbfhy}
+  \begin{equation}
+    \label{eq:H(m)n}
+    H^{(m)}_n
+      = \sum_{1 \le k \le n} \frac{1}{k^m}
+  \end{equation}
+  Con esto el coeficiente que nos interesa es:
+  \begin{equation}
+    \label{eq:ln:1-2:coef}
+    [z^n] \frac{1}{1 - z} \ln^2 \frac{1}{1 - z}
+      = H^2_n - H^{(2)}_n
+  \end{equation}
+%% Checked against the Taylor series for n = 1, 2, 3, 4, 10
+%%   HvB 2015-01-16
+
+  Interesan un par de funciones generatrices adicionales.
+  Primero:
+  \begin{align*}
+    \frac{\mathrm{d}}{\mathrm{d} z}
+      \left( \frac{1}{1 - z} \ln^2 \frac{1}{1 - z} \right)
+      &= \frac{1}{(1 - z)^2} \ln^2 \frac{1}{1 - z}
+	   + 2 \frac{1}{(1 - z)^2} \ln \frac{1}{1 - z} \\
+    \frac{\mathrm{d}^2}{\mathrm{d} z^2}
+      \left( \frac{1}{1 - z} \ln^2 \frac{1}{1 - z} \right)
+      &= 2 \frac{1}{(1 - z)^3} \ln^2 \frac{1}{1 - z}
+	   + 6 \frac{1}{(1 - z)^3} \ln \frac{1}{1 - z}
+	   + \frac{2}{(1 - z)^3}
+  \end{align*}
+  de donde despejamos:
+  \begin{align*}
+    \frac{1}{(1 - z)^2} \ln^2 \frac{1}{1 - z}
+      &= \frac{\mathrm{d}}{\mathrm{d} z}
+	   \left( \frac{1}{1 - z} \ln^2 \frac{1}{1 - z} \right)
+	   - 2 \frac{1}{(1 - z)^2} \ln \frac{1}{1 - z} \\
+    \frac{1}{(1 - z)^3} \ln^2 \frac{1}{1 - z}
+      &=  \frac{1}{2} \frac{\mathrm{d}^2}{\mathrm{d} z^2}
+			\left( \frac{1}{1 - z} \ln^2 \frac{1}{1 - z} \right)
+	   - 3 \frac{1}{(1 - z)^3} \ln \frac{1}{1 - z}
+	   - \frac{1}{(1 - z)^3}
+  \end{align*}
+  Derivando término a término
+  la serie con coeficientes~\eqref{eq:ln:1-2:coef}
+  tenemos los coeficientes de las derivadas,
+  usamos los coeficientes~\eqref{eq:ln:k-1:coef} deducidos antes:
+  \begin{align}
+    [z^n] \frac{1}{(1 - z)^2} \ln^2 \frac{1}{1 - z}
+      &= (n + 1) \left( H^2_{n + 1} - H^{(2)}_{n + 1} \right)
+	  - 2 \binom{n + 1}{1} \left( H_{n + 1} - H_1 \right) \notag \\
+      &= \binom{n + 1}{1}
+	   \left(
+	     H^2_{n + 1} - H^{(2)}_{n + 1} - 2 H_{n + 1} + 2
+	   \right) \label{eq:ln:2-2:coef} \\
+%% Checked against the Taylor series for n = 2, 3, 4, 5, 10
+%%   HvB 2015-01-20
+    [z^n] \frac{1}{(1 - z)^3} \ln^2 \frac{1}{1 - z}
+      &= \frac{1}{2} (n + 2) (n + 1)
+	   \left( H^2_{n + 2} - H^{(2)}_{n + 2} \right) \notag \\
+	   &\qquad
+	   - 3 \binom{n + 2}{2}
+	       \left(
+		 H_{n + 2}
+		   - H_2
+	       \right) \notag
+	   - \binom{n + 2}{2} \notag \\
+      &= \binom{n + 2}{2}
+	   \left(
+	     H^2_{n + 2} - H^{(2)}_{n + 2}
+	       - 3 H_{n + 2} + \frac{7}{2}
+	   \right)
+%% Checked against the Taylor series for n = 2, 3, 4, 5, 10
+%%   HvB 2015-01-20
+  \end{align}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

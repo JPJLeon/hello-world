@@ -1,0 +1,477 @@
+% dominios-euclidianos.tex
+%
+% Copyright (c) 2012-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section{Dominios euclidianos}
+\label{sec:dominios-euclidianos}
+
+  A un dominio integral \(D\)
+  equipado con una \emph{función euclidiana}
+  (a veces llamada \emph{función grado} o simplemente \emph{grado})
+  \(g \colon D \smallsetminus \{0\} \rightarrow \mathbb{N}\)
+  tal que si \(a, b \in D\),
+  con \(b \ne 0\),
+  hay \(q, r \in D\)
+  tales que \(a = q b + r\)
+  con \(r = 0\) o \(g(r) < g(b)\)
+  se le llama \emph{dominio euclidiano}.
+  Estas estructuras tienen mucho en común con \(\mathbb{Z}\)
+  (en particular,
+   toman su nombre porque es aplicable el algoritmo de Euclides
+   para calcular máximo común divisor,
+   y tenemos el equivalente
+   de la identidad de \foreignlanguage{french}{Bézout}).
+  En el caso de los polinomios,
+  el grado sirve como función euclidiana.
+
+  Tenemos algunos resultados simples:
+  \begin{theorem}
+    \label{theo:ED:g-minimo=>unidad}
+    Sea \(D\) un dominio euclidiano con función euclidiana \(g\).
+    El valor \(g(a)\) es mínimo si \(a\) es una unidad.
+  \end{theorem}
+  \begin{proof}
+    Tomemos \(a \ne 0\) en \(D\) tal que \(g(a)\) es mínimo.
+    Por el algoritmo de división,
+    teorema~\ref{theo:F[x]:division-algorithm},
+    tenemos \(1 = q a + r\) con \(r = 0\) o \(g(r) < g(a)\).
+    Pero \(g(a)\) es mínimo,
+    por lo que debe ser \(r = 0\)
+    y \(a\) es una unidad.
+  \end{proof}
+  También tenemos las propiedades
+  (ver Rogers~%
+    \cite{rogers71:_axiom_euclidean_domain}
+   y Samuel~%
+    \cite{samuel71:_about_euclidean_rings}):
+  \begin{theorem}
+    \label{theo:ED:propiedades-f}
+    Sea \(D\) un dominio euclidiano
+    con función euclidiana \(g\).
+    La función definida por:
+    \begin{equation*}
+      f(a)
+	= \min_{x \in D \smallsetminus \{0\}} g(a x)
+    \end{equation*}
+    es una función euclidiana,
+    y cumple:
+    \begin{enumerate}[label=(\alph{*})]
+    \item
+      \label{en:fe:a}
+      \(f(a) \le f(a b)\) si \(a b \ne 0\)
+    \item
+      \label{en:fe:b}
+      \(f(a) \le g(a)\) para todo \(a \in D \smallsetminus \{0\}\)
+    \item
+      \label{en:fe:c}
+      \(f(a u) = f(a)\) si y solo si \(u \in D^\times\)
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Por la definición de \(f\)
+    los puntos~\ref{en:fe:a} y~\ref{en:fe:b} son obvios.
+
+    Para demostrar que \(f\) es euclidiana,
+    consideremos elementos \(a, b\)
+    cualquiera en \(D \smallsetminus \{0\}\).
+    Debemos demostrar que si \(b = q a + r\)
+    entonces \(r = 0\) o \(f(r) < f(a)\).
+
+    El caso \(r = 0\) es trivial.
+    Supongamos entonces \(r \ne 0\).
+    Por definición
+    es \(f(a) = g(a c)\)
+    para algún \(c \in D \smallsetminus \{0\}\).
+    De la definición de \(r\) tenemos que \(g(r) < g(a)\)
+    por ser \(g\) euclidiana.
+    De \(b c = q a c + r c\),
+    por ser \(g\) euclidiana es \(g(r c) < g(a c) = f(a)\);
+    y por la definición de \(f\) es también \(f(r) \le g(r c)\).
+    Uniendo las anteriores queda \(f(r) < f(a)\),
+    y \(f\) es euclidiana.
+
+    Para~\ref{en:fe:c} demostramos implicancia en ambas direcciones.
+    Primero,
+    sea \(u \in D^\times\).
+    Por el punto~\ref{en:fe:a}
+    es \(f(a) \le f(a u) \le f((a u) u^{-1}) = f(a)\).
+    Por otro lado,
+    si \(f(a c) = f(a)\),
+    escribimos \(a = q a c + r\) con \(f(r) < f(a c) = f(a)\);
+    siendo \(r = a (1 - c q)\),
+    por la parte~\ref{en:fe:a}
+    si \(r \ne 0\) es \(f(r) \ge f(a)\),
+    lo que es absurdo.
+    Así \(r = 0\) y \(c\) es una unidad.
+  \end{proof}
+  Supondremos una función euclidiana
+  tal que \(f(a) \le f(a b)\) para todo \(a, b \in D\)
+  desde ahora,
+  ya que simplifica mucha de la discusión que sigue.
+  Nótese que en particular el grado de polinomios cumple esto.
+  Como la función euclidiana no es única,
+  no la incluimos en la definición del dominio.
+  \begin{definition}
+    Sea \(R\) un dominio integral.
+    Si podemos escribir \(m = b c\),
+    decimos que \(b\) \emph{divide a} \(m\),
+    y anotamos \(b \mid m\).
+  \end{definition}
+  Esto también se expresa
+  diciendo que \(b\) es un \emph{factor} de \(m\),
+  o que \(m\) es un \emph{múltiplo} de \(b\).
+  \begin{definition}
+    Sea \(R\) un dominio integral.
+    Dos elementos \(a, b \in R\) se dicen \emph{asociados}
+    si \(a = u b\),
+    donde \(u\) es una unidad.
+    Se anota \(a \sim b\).
+  \end{definition}
+  Es fácil ver que \(\sim\) es una relación de equivalencia.
+  \begin{definition}
+    Sea \(R\) un dominio integral.
+    Un elemento \(e \in R \smallsetminus R^\times\)
+    se llama \emph{irreductible} si siempre que
+    \(e = u \cdot v\),
+    \(u\) o \(v\) es una unidad.
+    En caso contrario,
+    decimos que \(e\) es \emph{reductible}.
+  \end{definition}
+  \begin{definition}
+    Sea \(R\) un dominio integral,
+    \(p \in R \smallsetminus R^\times\).
+    Si \(p \mid a b\) implica que \(p \mid a\) o \(p \mid b\),
+    se dice que \(p\) es \emph{primo}.
+  \end{definition}
+  Vemos que si un elemento es primo,
+  es irreductible:
+  \begin{lemma}
+    \label{lem:prime=>irreducible}
+    Sea \(R\) un dominio integral.
+    Si \(p \in R\) es primo,
+    entonces es irreductible.
+  \end{lemma}
+  \begin{proof}
+    Por contradicción.
+    Supongamos \(p\) primo pero no irreductible.
+    Así podemos escribir \(p = u v\),
+    donde \(u, v \notin R^\times\).
+    Pero entonces \(p \mid u v\),
+    y por la definición de primo
+    es \(p \mid u\) o \(p \mid v\).
+    Sin pérdida de generalidad
+    podemos suponer \(u = a p\),
+    con lo que:
+    \begin{align*}
+      p
+	&= a p v \\
+      0
+	&= p (1 - a v)
+    \end{align*}
+    Como no hay divisores de cero distintos de cero en \(R\),
+    debe ser \(a v = 1\)
+    y \(v\) es una unidad,
+    lo que contradice su elección.
+  \end{proof}
+  El recíproco del lema~\ref{lem:prime=>irreducible}
+  no siempre se cumple.
+  Consideremos el dominio integral
+  \(\mathbb{Z}[\sqrt{-5}]\)
+  (ver la sección~\ref{sec:anillos-cuadraticos},
+   solo que este es un subanillo de \(\mathbb{C}\)).
+  Si \(3 = u \cdot v\),
+  debe ser \(N(u) \cdot N(v) = N(3) = 9\),
+  con lo que las normas posibles para \(u\) y \(v\)
+  son los divisores de 9.
+  Si \(N(u) = 1\),
+  \(u\) es una unidad.
+  Si \(N(u) = 3\),
+  con \(u = u_1 + u_2 \sqrt{-5}\)
+  es \(u_1^2 + 5 u_2^2 = 3\).
+  Esto claramente es imposible con \(u_1\), \(u_2\) enteros.
+  Así \(3\) es irreductible en \(\mathbb{Z}[\sqrt{-5}]\).
+  Por el otro lado:
+  \begin{align*}
+    &(2 + \sqrt{-5}) \cdot (2 - \sqrt{-5})
+      = 9 \\
+  \intertext{con lo que}
+    &3
+      \mid (2 + \sqrt{-5}) \cdot (2 - \sqrt{-5})
+  \end{align*}
+  Claramente \(3 \centernot\mid 2 \pm \sqrt{-5}\),
+  o sea 3 no es primo en \(\mathbb{Z}[\sqrt{-5}]\).
+
+  \begin{definition}
+    Sea \(R\) un dominio integral,
+    y sea \(a \in R\) con \(a \ne 0\).
+    Entonces se dice
+    que \emph{\(a\) tiene factorización única en irreductibles}
+    si hay una unidad \(u\)
+    e irreductibles \(p_i\) tales que \(a = u p_1 p_2 \dotsm p_r\),
+    y además,
+    si \(a = v q_1 q_2 \dotsm q_s\) para una unidad \(v\)
+    e irreductibles \(q_i\),
+    entonces \(r = s\)
+    y \(p_i = u_i q_i\)
+    para unidades \(u_i\) salvo reordenamiento.
+  \end{definition}
+  \begin{definition}
+    Se dice que \(R\) es un \emph{dominio de factorización única}
+    (en inglés
+     \emph{\foreignlanguage{english}{Unique Factorization Domain}}.
+     abreviado \emph{UFD})
+    si todo elemento de \(R\)
+    tiene factorización única en irreductibles.
+  \end{definition}
+
+  En vista del algoritmo de división en el dominio euclidiano,
+  tenemos:
+  \begin{theorem}
+    \label{theo:ED=>PID}
+    Sea \(D\) un dominio euclidiano con función euclidiana \(f\)
+    y \(a, b \in D\).
+    Entonces el conjunto \(I = \{u a + v b \colon u, v \in D\}\)
+    consta de todos los múltiplos de un elemento \(m\).
+  \end{theorem}
+  La demostración es muy similar
+  a la discusión sobre máximo común divisor
+  en el capítulo~\ref{cha:teoria-numeros}.
+  \begin{proof}
+    Si \(a = b = 0\),
+    claramente \(I = \{0\}\),
+    y lo aseverado se cumple.
+    Supongamos entonces que al menos uno
+    de \(a\), \(b\) es diferente de 0,
+    en cuyo caso \(I\) contiene elementos diferentes de 0.
+    Elijamos uno de ellos con \(f\) mínimo,
+    llamémosle \(m\).
+    Tomemos ahora \(n \in I\) cualquiera.
+    Si \(n = 0\),
+    se cumple \(m \mid n\),
+    y estamos listos.
+    Si \(n \ne 0\),
+    podemos aplicar el algoritmo de división y escribir:
+    \begin{equation*}
+      n = q m + r
+    \end{equation*}
+    donde \(r = 0\) o \(f(r) < f(m)\).
+    Dado que hay \(u, v, u', v'\) tales que \(n = u a + v b\)
+    y \(m = u' a + v' b\) resulta:
+    \begin{align*}
+      r
+	&= n - q m \\
+	&= (u - q u') a + (v - q v') b
+    \end{align*}
+    con lo que \(r \in I\).
+    Pero no puede ser \(f(r) < f(m)\),
+    hemos elegido \(m\) precisamente por ser \(f(m)\) mínimo.
+    En consecuencia,
+    \(r = 0\) y \(m \mid n\).
+  \end{proof}
+  Conjuntos como \(I\)
+  que aparece en la demostración del teorema~\ref{theo:ED=>PID}
+  son muy importantes.
+  Podemos definir \(m\)
+  (o uno de sus asociados,
+   que también son parte de \(I\);
+   \(m\) no necesariamente es único)
+  como un máximo común divisor de \(a\) y \(b\)
+  (``máximo'' en el sentido de la función euclidiana \(f\)).
+  \begin{definition}
+    Sea \(R\) un anillo conmutativo.
+    Un \emph{ideal} de \(R\)
+    es un conjunto \(I \subseteq R\)
+    tal que:
+    \begin{enumerate}
+    \item
+      \((I, +)\) es un subgrupo de \((R, +)\)
+    \item
+      Para todo \(x \in I\)
+      y para todo \(r \in R\)
+      se cumple \(r \cdot x \in I\)
+    \end{enumerate}
+  \end{definition}
+  Los ideales son casi subanillos de \(R\)
+  (solo falta el elemento \(1\)).
+  Hay quienes definen anillos sin \(1\),
+  para ellos los ideales son subanillos.
+  \begin{definition}
+    Sea \(R\) un anillo conmutativo,
+    y \(\{x_1, x_2, \dotsc, x_n\} \subseteq R\).
+    Al ideal
+      \(\{\sum_{1 \le k \le n} u_k x_k \colon u_k \in R\}\)
+    se le llama
+    el \emph{ideal generado por \(\{x_1, x_2, \dotsc, x_n\}\)},
+    que se suele anotar \((x_1, x_2, \dotsc, x_n)\).
+    Por la convención que sumas vacías son cero,
+    \(\{0\}\) es generado por \(\varnothing\).
+    A un ideal generado por un único elemento \(x_1\),
+    anotado \((x_1)\),
+    se le llama \emph{ideal principal}.
+    Si en \(R\) todos los ideales son principales,
+    se dice que \(R\) es un \emph{dominio de ideal principal}
+    (en inglés
+     \emph{\foreignlanguage{english}{Principal Ideal Domain}},
+     abreviado \emph{PID}).
+  \end{definition}
+  En estos términos,
+  el teorema~\ref{theo:ED=>PID} asevera que todo dominio euclidiano
+  es un dominio de ideal principal.
+
+  \begin{lemma}
+    \label{lem:ED:irreductible-coprime}
+    Sea \(p\) irreductible en un dominio euclidiano \(D\),
+    y \(a\) otro elemento de \(D\).
+    Si \(p\) no divide a \(a\),
+    entonces \(1\) es un máximo común divisor entre \(a\) y \(p\).
+  \end{lemma}
+  \begin{proof}
+    Sea \(m\) un máximo común divisor de \(a\) y \(p\).
+    Por el teorema~\ref{theo:ED=>PID}
+    existen \(x, y \in D\) tales que:
+    \begin{equation*}
+      m = x a + y p
+    \end{equation*}
+    Como \(m\) divide a \(p\),
+    que es irreductible,
+    \(m\) es una unidad o \(m \sim p\).
+    Si \(m\) es una unidad,
+    \(1\) es un máximo común divisor de \(a\) y \(p\)
+    y estamos listos.
+    En el otro caso,
+    por ser \(m\) divisor de \(a\)
+    es \(a = c m\) para algún \(c \in D\)
+    y como a su vez \(m = u p\) para una unidad \(u\),
+    entonces \(a = c u p\) y \(p \mid a\).
+  \end{proof}
+  Esto nos permite demostrar
+  el recíproco del lema~\ref{lem:prime=>irreducible}
+  en dominios euclidianos,
+  como ya lo hicimos en el teorema~\ref{theo:Z:irreductible=>prime}
+  para los enteros:
+  \begin{theorem}
+    \label{theo:ED:irreducible=>prime}
+    En un dominio euclidiano,
+    si \(p\) es irreductible
+    entonces \(p\) es primo.
+  \end{theorem}
+  \begin{proof}
+    Supongamos que el irreductible \(p\) divide a \(a b\).
+    Debemos demostrar que \(p\) divide a \(a\) o a \(b\)
+    (o a ambos).
+    Si \(p \mid a\),
+    estamos listos.
+    En caso contrario,
+    como \(p \mid a b\),
+    hay un \(c \in D\) tal que \(a b = c p\).
+    Por el lema~\ref{lem:ED:irreductible-coprime}
+    tenemos que \(1\) es un máximo común divisor de \(a\) y \(p\),
+    y por el teorema~\ref{theo:ED=>PID} podemos escribir:
+    \begin{align*}
+      1
+	&= u p + v a \\
+      b
+	&= b u p + v a b \\
+	&= (b u + v c) p
+    \end{align*}
+    con lo que \(p \mid b\).
+  \end{proof}
+  \begin{lemma}
+    \label{lem:ED:primo-divide-producto}
+    Si el primo \(p\) divide al producto \(x_1 x_2 \dotsm x_n\),
+    entonces \(p \mid x_i\) para algún \(i\).
+  \end{lemma}
+  \begin{proof}
+    Por inducción sobre \(n\).
+    Si \(n = 1\),
+    no hay nada que demostrar.
+    \begin{description}
+    \item[Base:]
+      Para \(n = 2\),
+      por la definición de primo tenemos que si \(p \mid x_1 x_2\),
+      entonces \(p \mid x_1\) o \(p \mid x_2\).
+    \item[Inducción:]
+      Por la hipótesis de inducción,
+      si \(p \mid x_1 x_2 \dotsm x_n\)
+      entonces \(p \mid x_i\) para \(1 \le i \le n\).
+      Si ahora \(p \mid x_1 x_2 \dotsm x_n x_{n + 1}\)
+      por el caso \(n = 2\) significa que ya sea
+      \(p \mid x_1 x_2 \dotsm x_n\)
+      (lo que implica \(p \mid x_i\) para \(1 \le i \le n\))
+      o \(p \mid x_{n + 1}\).
+      En conjunto,
+      \(p \mid x_i\) para \(1 \le i \le n + 1\).
+    \end{description}
+    Por inducción,
+    vale para todo \(n \in \mathbb{N}\).
+  \end{proof}
+  Así tenemos:
+  \begin{theorem}
+    \label{theo:PID=>UFD}
+    Si \(D\) es un dominio de ideal principal,
+    entonces es un dominio de factorización única.
+  \end{theorem}
+  \begin{proof}
+    Por contradicción.
+    Consideremos un elemento \(a \in D \smallsetminus D^\times\)
+    (distinto de \(0\))
+    con \(f(a)\) mínimo
+    y que no tiene factorización en irreductibles.
+    Entonces \(a\) no es irreductible
+    (sería el producto de un irreductible),
+    por lo que podemos escribir \(a = b c\),
+    con \(b, c \notin D^\times\).
+    Por el teorema~\ref{theo:ED:propiedades-f}
+    resulta \(f(b) < f(a)\) y \(f(c) < f(a)\).
+    Pero entonces \(b\) y \(c\) son producto de irreductibles,
+    con lo que lo es \(a\).
+    Vale decir,
+    tal \(a\) no existe.
+
+    Para demostrar factorización única usamos reducción al absurdo.
+    Sea \(a\) un elemento de mínimo \(f\)
+    que tiene dos factorizaciones esencialmente diferentes:
+    \begin{equation*}
+      a
+	= u p_1 p_2 \dotsm p_m
+	= v q_1 q_2 \dotsm q_n
+    \end{equation*}
+    donde los \(p_i\) son primos
+    (no necesariamente diferentes),
+    y similarmente los \(q_i\),
+    y \(u\) y \(v\) son unidades.
+    Por el lema~\ref{lem:ED:primo-divide-producto},
+    esto significa que \(p_1\) divide a \(q_i\) para algún \(i\),
+    o sea \(q_i = u_i p_i\) para alguna unidad \(u_i\),
+    con lo que:
+    \begin{equation*}
+      a / p_1
+	= u p_2 \dotsm p_m
+	= v u_i q_1 \dotsm q_{i -1} q_{i + 1} \dotsm q_n
+    \end{equation*}
+    tendría dos factorizaciones diferentes,
+    pero \(f(a / p_1) < f(a)\),
+    lo que contradice la elección de \(a\) como uno de mínimo \(f\)
+    con dos factorizaciones.
+  \end{proof}
+  Esto viene a ser el equivalente
+  del teorema fundamental de la aritmética
+  (teorema~\ref{theo:fundamental-aritmetica}):
+  En un dominio euclidiano
+  todo elemento \(a\) es el producto de un número finito de primos.
+  Además,
+  si tenemos factorizaciones en primos \(p_i\) y \(q_i\):
+  \begin{equation*}
+    a
+      = p_1 p_2 \dotsm p_m
+      = q_1 q_2 \dotsm q_n
+  \end{equation*}
+  entonces cada \(p\) es el asociado de uno de los \(q\).
+  En particular,
+  \(m = n\).
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

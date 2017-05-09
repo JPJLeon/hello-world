@@ -1,0 +1,1504 @@
+% aplicaciones.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Aplicaciones}
+\label{cha:aplicaciones}
+
+  Veremos varias aplicaciones concretas adicionales
+  de la maquinaria de funciones generatrices,
+  hallando funciones generatrices
+  y también derivando (y demostrando) identidades.
+  De particular interés para nosotros es la solución de recurrencias,
+  que comúnmente aparecen en problemas combinatorios,
+  en particular aplicaciones al análisis de algoritmos.
+  En el camino estudiaremos algunas de las secuencias más comunes
+  en la combinatoria.
+
+\section{Números harmónicos}
+\label{sec:numeros-harmonicos}
+\index{numeros harmonicos@números harmónicos}
+
+  Los números harmónicos se definen como:
+  \begin{equation}
+    \label{eq:harmonic-number}
+    H_n = \sum_{1 \le k \le n} \frac{1}{k}
+  \end{equation}
+  Además definimos
+  \(H_0 = 0\)
+  (consistente con que sumas vacías son cero).
+  Esta secuencia es importante en teoría de números,
+  se requiere para calcular una variedad de funciones especiales,
+  además que aparece con frecuencia al analizar algoritmos.
+
+  Los primeros valores son:
+  \begin{equation*}
+    \left\langle
+      0, 1, \frac{3}{2}, \frac{11}{6}, \frac{25}{12},
+      \frac{137}{60},  \frac{49}{20}, \frac{363}{140},
+      \frac{761}{280}, \frac{7\,129}{2\,520},
+      \dotsc
+    \right\rangle
+  \end{equation*}
+  Buscamos una expresión para:
+  \begin{equation}
+    \label{eq:harmonic-number-ogf}
+    H(z)
+      = \sum_{n \ge 0} H_n z^n
+  \end{equation}
+  Esto se reduce a:
+  \begin{align*}
+    H(z)
+      &= \sum_{n \ge 1} \biggl( \,
+			  \sum_{1 \le k \le n} \frac{1}{k}
+			\biggr) z^n \\
+      &= z \sum_{n \ge 1} \biggl( \,
+			     \sum_{0 \le k \le n - 1}
+			       \frac{1}{k + 1}
+			   \biggr) z^{n - 1} \\
+      &= z \sum_{n \ge 0} \biggl( \,
+			     \sum_{0 \le k \le n} \frac{1}{k + 1}
+			   \biggr) z^n
+  \end{align*}
+  Como tenemos una suma entre manos,
+  usamos la regla de sumas parciales:%
+    \index{generatriz!numeros harmonicos@números harmónicos}
+  \begin{align}
+    H(z)
+      &= z \cdot \frac{1}{1 - z}
+	   \cdot \sum_{k \ge 0} \frac{z^k}{k + 1}
+	   \notag \\
+      &= \frac{1}{1 - z} \, \ln \frac{1}{1 - z}
+	   \label{eq:H(z)}
+  \end{align}
+  Acá usamos la suma~\eqref{eq:ln(1-z)} para el logaritmo
+  derivada en la sección~\ref{sec:otras-series}.
+
+  Aprovechando que la serie~\eqref{eq:H(z)}
+  converge para \(\lvert z \rvert < 1\)
+  (la expresión entra en problemas en \(z = 1\),
+   el radio de convergencia es \(\lvert z \rvert = 1\)),
+  podemos evaluar expresiones como:
+  \begin{equation*}
+    \sum_{n \ge 0} H_n \cdot 2^{-n}
+      = H(1 / 2)
+      = 2 \, \ln 2
+  \end{equation*}
+
+\input{logaritmos}
+
+\section{Potencias factoriales}
+\label{sec:potencias-factoriales}
+
+  Definamos:
+  \begin{equation*}
+    G(z, u)
+      = \sum_{n \ge 0} u^{\underline{n}} \, \frac{z^n}{n!}
+  \end{equation*}
+  Como:
+  \begin{equation*}
+    \frac{u^{\underline{n}}}{n!}
+      = \binom{u}{n}
+  \end{equation*}
+  tenemos:
+  \begin{equation*}
+    G(z, u)
+      = \sum_{n \ge 0} \binom{u}{n} z^n
+      = (1 + z)^u
+  \end{equation*}
+  Esto implica:
+  \begin{equation*}
+    G(z, u) \cdot G(z, v)
+      = G(z, u + v) \\
+  \end{equation*}
+  Podemos evaluar entonces de dos formas:
+  \begin{align}
+    G(z, u) \cdot G(z, v)
+      &= \sum_{n \ge 0}
+	   \biggl( \,
+	     \sum_{0 \le k \le n}
+	       \binom{n}{k}
+		 \, u^{\underline{k}} v^{\underline{n - k}}
+	   \biggr) \, \frac{z^n}{n!}
+	       \label{eq:G(u)G(v)}\\
+    G(z, u + v)
+      &= \sum_{n \ge 0} (u + v)^{\underline{n}} \, \frac{z^n}{n!}
+	       \label{eq:G(u+v)}
+  \end{align}
+  Comparando los coeficientes de \(z^n\)
+  en~\eqref{eq:G(u)G(v)} y~\eqref{eq:G(u+v)} resulta:
+  \begin{equation}
+    \index{binomio, teorema del!potencias factoriales}
+    \label{eq:binomial-falling}
+    (u + v)^{\underline{n}}
+      = \sum_{0 \le k \le n}
+	  \binom{n}{k} \, u^{\underline{k}} v^{\underline{n - k}}
+  \end{equation}
+  Curioso equivalente de la fórmula
+  para la potencia de un binomio.
+  Aprovechando la relación
+  entre potencias factoriales en subida y en bajada
+  se puede derivar una relación similar
+  para las potencias factoriales en subida.
+
+\section{Números de Fibonacci}
+\label{sec:Fibonacci}
+\index{Fibonacci, numeros de@Fibonacci, números de}
+
+  Consideremos la secuencia:
+  \begin{equation}
+    \label{eq:Fibonacci-sequence}
+    \langle 0, 1, 1, 2, 5, 8, 13, 21, 34, \dotsc \rangle
+  \end{equation}
+  que se obtiene de la recurrencia válida para \(n \ge 0\):
+  \begin{equation}
+    \label{eq:recurrence-Fibonacci}
+    F_{n + 2}
+      = F_{n + 1} + F_n
+      \qquad \text{\(F_0 = 0\), \(F_1 = 1\)}
+  \end{equation}
+  Esta la encontramos al analizar el algoritmo de Euclides%
+    \index{Euclides, algoritmo de!analisis@análisis}
+  para el máximo común divisor
+  en la sección~\ref{sec:gcd}.
+  Aparece en una gran variedad de situaciones
+  relacionadas con nuestra área,
+  y muchos fenómenos naturales,
+  como el crecimiento de los árboles
+  y las espirales que se observan en los girasoles,
+  siguen aproximadamente esta secuencia.
+  Véanse por ejemplo el libro de Dunlap~%
+    \cite{dunlap98:_golden_ratio_fibonacci}
+  para una variedad de situaciones donde aparecen,
+  y la muy detallada discusión de Vajda~%
+    \cite{vajda89:_fibonacci_lucas_number_golden_section}.
+
+\subsection{Solución mediante funciones generatrices ordinarias}
+\label{sec:Fibonacci-ordinarias}
+
+  Definimos:
+  \begin{equation*}
+    F(z)
+      = \sum_{n \ge 0} F_n z^n
+  \end{equation*}
+  Aplicando las propiedades de funciones generatrices ordinarias
+  a~\eqref{eq:recurrence-Fibonacci}:
+  \begin{equation*}
+    \frac{F(z) - F_0 - F_1 \cdot z}{z^2}
+      = \frac{F(z) - F_0}{z} + F(z)
+  \end{equation*}
+  Substituyendo los valores de \(F_0\) y \(F_1\)
+  y despejando resulta:
+  \begin{equation}
+    \index{Fibonacci, numeros de@Fibonacci, números de!generatriz|textbfhy}
+    \label{eq:gf-Fibonacci}
+    F(z)
+      = \frac{z}{1 - z - z^2}
+  \end{equation}
+  Necesitamos reducir~\eqref{eq:gf-Fibonacci}
+  a fracciones con denominadores lineales,
+  usando fracciones parciales.
+  Buscamos factorizar de la siguiente manera:
+  \begin{equation*}
+    1 - z - z^2 = (1 - r_{+} z) (1 - r_{-} z)
+  \end{equation*}
+  Para obtener esta factorización
+  realizamos el cambio de variable \(y = 1 / z\)
+  y tenemos:
+  \begin{align*}
+    y^2 - y - 1
+      &= (y - r_{+}) (y - r_{-}) \\
+    r_{\pm}
+      &= \frac{1 \pm \sqrt{5}}{2}
+  \end{align*}
+  y denotamos \(r_{+} = \tau\) y \(r_{-} = \phi\).
+  El número \(\tau\) es la \emph{sección áurea}%
+    \index{\(\tau\) (seccion aurea)@\(\tau\) (sección áurea)|see{sección áurea}}%
+    \index{seccion aurea@sección áurea|textbfhy}
+  (por la palabra griega para \emph{corte}),
+  que ya habíamos encontrado antes
+  al analizar el algoritmo de Euclides%
+    \index{Euclides, algoritmo de!analisis@análisis}
+  para el máximo común divisor.
+  Una notación común para la sección áurea
+  (particularmente en matemáticas recreativas)
+  es \(\phi\) o \(\varphi\),
+  en honor al escultor ateniense Fidias,%
+    \index{Fidias}
+  quien se dice usó esta razón extensamente en su trabajo.
+  Otros usan \(\phi = - r_{-}\) y \(\Phi = r_{+}\),
+  de forma de tener números positivos siempre.
+
+  Podemos expresar:
+  \begin{align*}
+    y^2 - y - 1
+      &= (y - \tau) (y - \phi) \\
+      &= y^2 - (\tau + \phi) y + \tau \phi
+  \end{align*}
+  Comparando coeficientes
+  resulta \(\phi = 1 - \tau = -1 / \tau\).
+  Las fracciones parciales resultan ser:
+  \begin{equation}
+    \label{eq:gf-Fibonacci-fracciones-parciales}
+    F(z) = \frac{1}{\tau - \phi} \cdot
+	     \left(
+		\frac{1}{1 - \tau z} - \frac{1}{1 - \phi z}
+	     \right)
+  \end{equation}
+  En~\eqref{eq:gf-Fibonacci-fracciones-parciales}
+  se reconocen dos series geométricas.
+  Esto da la sorprendente relación,
+  conocida como fórmula de Binet,%
+    \index{Binet, formula de@Binet, fórmula de|textbfhy}%
+    \index{Fibonacci, numeros de@Fibonacci, números de!formula de Binet@fórmula de Binet}
+  que expresa los números de Fibonacci
+  (enteros)
+  en términos de números irracionales:%
+    \index{numero@número!irracional}
+  \begin{align}
+    F_n
+      &= \frac{\tau^n - \phi^n}{\tau - \phi} \\
+      &= \frac{(1 + \sqrt{5})^n - (1 - \sqrt{5})^n}{2^n \sqrt{5}}
+	   \label{eq:Binet-Fibonacci}
+  \end{align}
+  Ahora bien:
+  \begin{equation*}
+    \frac{1}{2 \tau - 1}
+      = \frac{1}{\sqrt{5}}
+      = 0,4472\dotso
+    \hspace{3em}
+    \tau
+      = 1,618\dotso
+    \hspace{3em}
+    \phi
+      = -0,6180\dotso
+  \end{equation*}
+  Resulta para todo \(n \ge 0\):
+  \begin{equation*}
+    \left| \frac{\phi^n}{2 \tau - 1} \right| < 0,5
+  \end{equation*}
+  Por lo tanto,
+  \(F_n = \tau^n / \sqrt{5}\),
+  redondeado al entero más cercano.
+  De todas formas:%
+    \index{Fibonacci, numeros de@Fibonacci, números de!asintotica@asintótica}
+  \begin{equation}
+    \label{eq:Fibonacci-asymptotic}
+    F_n
+      \sim \frac{\tau^n}{\sqrt{5}}
+  \end{equation}
+
+  Podemos obtener otras relaciones
+  de la función generatriz~\eqref{eq:gf-Fibonacci}:
+  \begin{equation*}
+    F(z)
+      = \frac{z}{1 - z - z^2}
+      = \frac{z}{1 - z(1 + z)}
+      = \sum_{r \ge 0} z^{r + 1} (1 + z)^r
+      = \sum_{r, s \ge 0} \binom{r}{s} z^{r + s + 1}
+  \end{equation*}
+  De aquí,
+  como con \(n = r + s\) tenemos \(r = n - s\):
+  \begin{equation}
+    \index{Fibonacci, numeros de@Fibonacci, números de!relacion con coeficientes binomiales@relación con coeficientes binomiales}
+    \label{eq:Fibonacci-binomial}
+    F_{n + 1}
+      = \sum_{0 \le s \le n} \binom{n - s}{s}
+  \end{equation}
+
+\subsection{Solución mediante funciones generatrices exponenciales}
+\label{sec:Fibonacci-exponenciales}
+
+  Definimos la función generatriz exponencial:
+  \begin{equation*}
+    \widehat{F}(z)
+      = \sum_{n \ge 0} \frac{F_n z^n}{n!}
+  \end{equation*}
+  Aplicando las propiedades de funciones generatrices exponenciales%
+    \index{generatriz!exponencial}
+  a~\eqref{eq:recurrence-Fibonacci}:
+  \begin{equation*}
+    \widehat{F}''(z)
+      = \widehat{F}'(z) + \widehat{F}(z)
+      \quad \text{\(\widehat{F}(0) = 0\), \(\widehat{F}'(0) = 1\)}
+  \end{equation*}
+  Resolvemos esta ecuación diferencial
+  ordinaria lineal de segundo orden,
+  homogénea y de coeficientes constantes
+  por el método de la ecuación característica:
+  \begin{equation*}
+    r^2
+      = r + 1
+  \end{equation*}
+  Los ceros son
+  \(\tau\) y \(\phi\),
+  con lo que tenemos:
+  \begin{equation*}
+    \widehat{F}(z)
+      = \alpha \mathrm{e}^{\tau z} + \beta \mathrm{e}^{\phi z}
+  \end{equation*}
+  de donde:
+  \begin{align*}
+    \widehat{F}(0)  &= \alpha + \beta = 0 \\
+    \widehat{F}'(0) &= \alpha \tau + \beta \phi = 1
+  \end{align*}
+  La solución de estas ecuaciones es:
+  \begin{equation*}
+    \alpha
+      = \frac{1}{\sqrt{5}} \qquad
+    \beta
+      = -\frac{1}{\sqrt{5}}
+  \end{equation*}
+  y finalmente resulta
+  la misma fórmula~\eqref{eq:Binet-Fibonacci} anterior:
+  \begin{align*}
+    F_n
+      = \frac{1}{\sqrt{5}}
+	  n! \left[ z^n \right] \,
+	    \left(
+	      \mathrm{e}^{\tau z} - \mathrm{e}^{\phi z}
+	    \right)
+      = \frac{\tau^n - \phi^n}{\sqrt{5}}
+  \end{align*}
+  Si comparamos las derivaciones,
+  obtener la ecuación y sus condiciones de borde es más simple
+  al usar funciones generatrices exponenciales,
+  luego debemos resolver una ecuación diferencial,
+  pero obtener el resultado
+  de la solución de la ecuación diferencial es inmediato.
+  En la derivación usando funciones generatrices ordinarias
+  obtener la ecuación era algo más trabajo,
+  y tuvimos que usar fracciones parciales
+  para poder obtener la secuencia;
+  pero tratar la ecuación misma era más simple.
+  De todas formas,
+  siempre tendremos las dos opciones.
+  Cuál resulta más conveniente dependerá de la situación específica.
+
+\subsection{Números de Fibonacci y fuentes}
+\label{sec:Fibonacci-fuentes}
+
+  Si comparamos la secuencia~\eqref{eq:fountains-sequence}
+  de números de fuentes de base \(n\)%
+    \index{fuente}
+  con los números de Fibonacci,
+  parecieran ser los términos alternos:
+  \begin{equation*}
+    \langle F_{2 n + 1} \rangle_{n \ge 0}
+      = \langle 1, 2, 5, 13, 34, \dotsc \rangle
+  \end{equation*}
+  Una manera de verificar esto es extraer los términos impares
+  de la función generatriz~\eqref{eq:gf-Fibonacci},%
+    \index{serie de potencias!decimar}
+  o sea encontrar una función generatriz
+  para \(\langle F_{2 n + 1} \rangle_{n \ge 0}\)
+  y comparar con~\eqref{eq:gf-fountain-pf}.
+
+  Aplicamos la técnica descrita en la sección~\ref{sec:decimar}
+  a la función generatriz~\eqref{eq:gf-Fibonacci}.
+  Para los números de Fibonacci impares resulta:
+  \begin{equation*}
+    \frac{F(\sqrt{z}) - F(-\sqrt{z})}{2 \sqrt{z}}
+      = \frac{1 - z}{1 - 3 z + z^2}
+  \end{equation*}
+  En nuestro caso tenemos la secuencia desplazada en uno,
+  de~\eqref{eq:gf-fountain}:
+  \begin{equation*}
+    \frac{f(z) - f_0}{z}
+      = \frac{1 - z}{1 - 3 z + z^2}
+  \end{equation*}
+  Coinciden,
+  o sea:
+  \begin{equation}
+    \label{eq:fountain-Fibonacci}
+    f_n
+      = \begin{cases}
+	  1	      & \text{si \(n = 0\)} \\
+	  F_{2 n - 1} & \text{si \(n \ge 1\)}
+	\end{cases}
+  \end{equation}
+
+\subsection{Búsqueda de Fibonacci}
+\label{sec:busqueda-Fibonacci}
+\index{Fibonacci, busqueda de@Fibonacci, búsqueda de|textbfhy}
+
+  La \emph{búsqueda de Fibonacci}
+  (ver por ejemplo a Kiefer~%
+    \cite{kiefer53:_seq_minimax_search_maximum})
+  es un método para encontrar el mínimo
+  de una función en un rango dado.
+  Resulta incluso que esta técnica es óptima
+  en cuanto a número de veces que se evalúa la función
+  siempre que nos restrinjamos a solo comparar valores.
+  \begin{definition}
+    Una función \(f : \mathbb{R} \rightarrow \mathbb{R}\)
+    se dice \emph{unimodal} sobre el rango \([a, b]\)%
+      \index{funcion@función!unimodal}
+    si hay un único \(\xi\) con \(a \le \xi \le b\) tal que
+    \(f\) es decreciente en \([a, \xi]\)
+    y creciente en \([\xi, b]\).
+  \end{definition}
+  Esto describe el caso en que la función tenga un único mínimo
+  en el rango,
+  de forma muy similar se define el caso que tiene un único máximo,
+  y en ambas situaciones se llama unimodal la función.
+
+  Nos interesa acotar el mínimo en el rango \([a, b]\)
+  de una función unimodal \(f(z)\)
+  recurriendo únicamente a evaluar la función.
+  Por ejemplo,
+  la función está dada por una computación compleja
+  y no hay forma de calcular su derivada.
+  Supongamos que tenemos los valores de la función
+  en los puntos \(a\) y \(b\).
+  Elegimos dos puntos adicionales \(c < d\)
+  dentro del rango \([a, b]\),
+  y evaluamos la función en ellos,
+  resultando la situación
+  de la figura~\ref{fig:Fibonacci-search-step}.
+  \begin{figure}[htbp]
+    \centering
+    \pgfimage{images/Fibonacci-search-step}
+    \caption{Búsqueda de Fibonacci}
+    \label{fig:Fibonacci-search-step}
+  \end{figure}
+  Al ser unimodal \(f\)
+  sabemos que \(f(c)\) y \(f(d)\)
+  son ambos menores que \(\max \{ f(a), f(b) \}\).
+  Si \(f(c) < f(d)\),
+  el mínimo está en el subintervalo \([a, d]\),
+  descartamos el tramo \((d, b]\)
+  y trabajamos con el nuevo rango \([a, d]\).
+  De la misma manera,
+  si \(f(c) > f(d)\),
+  el mínimo está en el tramo \([c, b]\),
+  descartamos el rango \([a, c)\).
+
+  Consideremos el ejemplo
+  de la figura~\ref{fig:Fibonacci-search-step}.
+  Descartamos el rango \([a, c)\)
+  y elegimos un nuevo punto \(e\) entre \(d\) y \(b\),
+  y seguimos con nuevos puntos \(a'\), \(b'\), \(c'\) y \(d'\).
+  Para solo calcular una vez la función en la iteración
+  se reutilizan los valores calculados
+  en los puntos \(a\), \(c\) y \(d\)
+  (de descartar \((d, b]\))
+  o en los puntos \(c\), \(d\) y \(b\)
+  (de descartar \([a, c)\)).
+  Queremos además
+  que el método reduzca el tramo en la misma proporción
+  en ambos casos.
+  O sea,
+  debe ser \(d - a = b - c\).
+  En el siguiente paso queremos que se vuelva a repetir esto,
+  debe ser también
+  \(b - d = e - c\).
+
+  Definamos \(r\) mediante \(d - a = r (b - a)\),
+  con lo que \(c - a = (1 - r) (b - a)\).
+  Restando:
+  \begin{align*}
+    d - c
+      &= (d - a) - (c - a) \\
+      &= r (b - a) - (1 - r) (b - a) \\
+      &= (2 r  - 1) (b - a)
+  \end{align*}
+  Para el paso siguiente,
+  \(a' = c\),
+  \(c' = d\),
+  \(d' = e\)
+  y \(b' = b\).
+  Elegimos \(r'\) mediante \(d' - a' = r' (b' - a')\),
+  de donde resulta \(c' - a' = (1 - r') (b' - a')\),
+  que es decir \(d - c = (1 - r') (b' - a')\).
+  El intervalo \([a, b]\) se redujo a \([a', b']\),
+  con \(b' - a' = r (b - a)\).
+  Igualando los valores de \(d - c\),
+  y substituyendo el valor de \(b' - a'\) resulta:
+  \begin{align*}
+    (2 r - 1) (b - a)
+      &= (1 - r') (b ' - a') \\
+    (2 r - 1) (b - a)
+      &= (1 - r') r (b - a) \\
+    2 r - 1
+      &= (1 - r') r
+  \end{align*}
+  Despejando \(r\):
+  \begin{equation}
+    \label{eq:Fibonacci-search-recurrence-r}
+    r = \frac{1}{r' + 1}
+  \end{equation}
+  Partiendo del final,
+  esto permite calcular las razones previas.
+  En el caso extremo reducimos el intervalo en una razón de \(1\)
+  (vale decir, se mantiene el tamaño).
+  \begin{figure}[htbp]
+    \centering
+     \pgfimage{images/Fibonacci-search-final}
+    \caption{Búsqueda de Fibonacci: Juego final}
+    \label{fig:Fibonacci-search-final}
+  \end{figure}
+  El paso final
+  lo ilustra la figura~\ref{fig:Fibonacci-search-final}.
+  El algoritmo retorna el rango marcado \(a\) a \(b\)
+  como resultado final,
+  la mejor aproximación a \(\xi\) es \(c = d = (a + b) / 2\).
+
+  Esto sugiere la recurrencia:
+  \begin{equation}
+    \label{eq:Fibonacci-search-recurrence}
+    r_{k + 1}
+      = \frac{1}{1 + r_k}
+      \quad (k \ge 1)
+      \qquad r_0 = 1
+  \end{equation}
+  Intentando algunos valores obtenemos:
+  \begin{equation*}
+    \left\langle
+      1, \frac{1}{2}, \frac{2}{3}, \frac{3}{5}, \frac{5}{8}, \dotsc
+    \right\rangle
+  \end{equation*}
+  Da la impresión que:
+  \begin{equation}
+    \label{eq:Fibonacci-search-solution}
+    r_k
+      = \frac{F_{k + 1}}{F_{k + 2}}
+  \end{equation}
+  Esto es fácil de demostrar por inducción,
+  los detalles los proveerá el amable lector.
+  Con esto estamos en condiciones de plantear
+  la búsqueda de Fibonacci,
+  algoritmo~\ref{alg:Fibonacci-search}.
+  Suponemos dados el intervalo \([a, b]\)
+  y la tolerancia \(\epsilon\)
+  (el largo del último intervalo).
+  Para reducir el largo del intervalo en un factor \(F_n\)
+  se calcula la función \(n + 4\) veces.
+  En vista de~\eqref{eq:Fibonacci-asymptotic}
+  para reducir el rango de largo \(L_0\) a \(L_f\)
+  el número de llamadas de la función es:
+  \begin{align*}
+    n &\sim \frac{\ln (L_0 / L_f)}{\ln \tau}
+	      + 4 + \frac{\ln 5}{2 \ln \tau} \\
+      &\sim 4,78497 \, \ln \frac{L_0}{L_f} + 5,67723
+  \end{align*}
+  \begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \SetKwFunction{Fibonacci}{FibonacciSearch}
+
+    \KwFunction \Fibonacci{\(f,\; a, \; b, \; \epsilon\)} \;
+    \BlankLine
+    \(L \leftarrow (b - a) / \epsilon\) \;
+    \((F_a, F_b) \leftarrow (1, 1)\) \;
+    \While{\(F_b < L\)}{
+      \((F_a, F_b) \leftarrow (F_b, F_a + F_b)\) \;
+    }
+    \(c \leftarrow b - (b - a) \cdot F_a / F_b\) \;
+    \(d \leftarrow a + (b - a) \cdot F_a / F_b\) \;
+    \((f_a, f_b, f_c, f_d) \leftarrow (f(a), f(b), f(c), f(d))\) \;
+    \While{\(F_a \ne 1\)}{
+      \((F_a, F_b) \leftarrow (F_b - F_a, F_a)\) \;
+      \eIf{\(f_d < f_c\)}{
+	\(e \leftarrow c + (b - c) \cdot F_a / F_b\) \;
+	\(f_e \leftarrow f(e)\) \;
+	\((a, c, d, b) \leftarrow (c, d, e, b)\) \;
+	\((fa, fc, fd, fb) \leftarrow (fc, fd, fe, fb)\) \;
+      }{
+	\(e \leftarrow d - (d - a) \cdot F_a / F_b\) \;
+	\(f_e \leftarrow f(e)\) \;
+	\((a, c, d, b) \leftarrow (a, e, c, d)\) \;
+	\((fa, fc, fd, fb) \leftarrow (fa, fe, fc, fd)\) \;
+      }
+    }
+    \eIf{\(f_a < f_b\)}{
+      \Return \([a, d]\) \;
+    }{
+      \Return \([d, b]\) \;
+    }
+    \caption{Búsqueda de Fibonacci}
+    \label{alg:Fibonacci-search}
+  \end{algorithm}
+
+  Un método relacionado es la búsqueda de sección áurea.%
+    \index{seccion aurea@sección áurea!busqueda de@búsqueda de|see{Fibonacci, búsqueda de}}
+  La idea es similar,
+  solo que en vez de ir modificando \(r\) se usa el valor límite:
+  \begin{equation*}
+    \lim_{n \rightarrow \infty} \frac{F_{n + 1}}{F_n}
+      = \tau
+  \end{equation*}
+  El programa es un poco más sencillo,
+  pero algo menos eficiente
+  (requiere más evaluaciones de la función).
+
+\section{Coeficientes binomiales}
+\label{sec:coeficientes-binomiales}
+\index{coeficiente binomial}
+
+  Hagamos como que nada sabemos\ldots
+  ¿Cuántos subconjuntos de \(k\)
+  elementos podemos obtener de un conjunto de \(n\) elementos?
+  Obviamente,
+  exactamente qué conjunto de \(n\) elementos tomemos da lo mismo,
+  podemos usar el conjunto \(\{1, 2, \dotsc, n\}\)
+  sin pérdida de generalidad.
+  Podemos deducir algunas propiedades de estas:
+  \begin{itemize}
+  \item
+    Tomar un número negativo de elementos
+    del conjunto no tiene sentido,
+    o sea,
+    \(\binom{n}{k} = 0\) si \(k < 0\).
+  \item
+    Tomar más de \(n\) elementos es imposible,
+    así que \(\binom{n}{k} = 0\) si \(k > n\).
+  \item
+    Hay una única forma de elegir cero elementos,
+    y \(\binom{n}{0} = 1\).
+  \item
+    De la misma forma,
+    hay una única manera de elegirlos todos,
+    y \(\binom{n}{n} = 1\).
+  \item
+    Elegir \(k\) elementos a poner en el subconjunto
+    es lo mismo que elegir los \(n - k\) que se dejan fuera,
+    o sea \(\binom{n}{k} = \binom{n}{n - k}\).
+  \end{itemize}
+  Ahora buscamos encontrar
+  una recurrencia para los \(\binom{n}{k}\).
+  Podemos descomponer los \(\binom{n}{k}\) subconjuntos
+  en dos grupos:
+  \begin{description}
+  \item[\boldmath Aquellos conjuntos
+	que no contienen a \(n\):\unboldmath]
+    Corresponden simplemente a tomar \(k\) elementos
+    de los restantes \(n - 1\),
+    de estos hay \(\binom{n - 1}{k}\).
+  \item[\boldmath Aquellos conjuntos
+	que contienen a \(n\):\unboldmath]
+    Tomamos \(n\),
+    y \(k - 1\) elementos más de entre los restantes \(n - 1\),
+    de estos hay \(\binom{n - 1}{k - 1}\).
+  \end{description}
+  Como estas dos posibilidades son excluyentes,
+  y corresponden a todas las formas
+  de armar subconjuntos de \(k\) elementos:
+  \begin{equation*}
+    \binom{n}{k} = \binom{n - 1}{k} + \binom{n - 1}{k - 1}
+  \end{equation*}
+  Esto en principio es válido para \(1 \le k \le n - 1\).
+  Pero si substituimos \(k = n\) bajo los entendidos de arriba
+  resulta \(\binom{n}{n} = 1\),
+  y con \(k > n\) se reduce a \(\binom{n}{k} = 0\),
+  y la recurrencia en realidad es válida para \(k \ge 1\).
+  Partiremos de \(k + 1\) y \(n + 1\)
+  para poder sumar desde \(k = 0\) y \(n = 0\):
+  \begin{equation}
+    \label{eq:binomial-recurrencia}
+    \binom{n + 1}{k + 1}
+      = \binom{n}{k + 1} + \binom{n}{k}
+  \end{equation}
+  Como condiciones de contorno bastan:
+  \begin{equation*}
+    \binom{n}{0}
+      = 1 \qquad
+    \binom{0}{k}
+      = [k = 0]
+  \end{equation*}
+  Ahora tenemos tres opciones de función generatriz ordinaria:
+  \begin{equation*}
+    A_n(x)
+      = \sum_{k \ge 0} \binom{n}{k} x^k
+      \qquad
+    B_k(y)
+      = \sum_{n \ge 0} \binom{n}{k} y^n
+      \qquad
+    C(x, y)
+      = \sum_{\substack{k \ge 0 \\
+			n \ge 0}}
+	  \binom{n}{k} x^k y^n
+  \end{equation*}
+  Las primeras dos opciones
+  llevarán a recurrencias en la función generatriz,
+  cosa que la tercera resuelve automáticamente.
+  Nada indica particulares complicaciones
+  (más allá del uso de dos variables y no una
+   como ha sido común hasta acá),
+  por lo que optaremos por esta.
+  Aplicando las propiedades de funciones generatrices ordinarias%
+    \index{generatriz!ordinaria}
+  a la recurrencia queda:
+  \begin{equation}
+    \label{eq:binomial-bivariada}
+    \frac{C(x, y) - C(x, 0) - C(0, y) + C(0, 0)}{x y}
+      = \frac{C(x, y) - C(0, y)}{x} + C(x, y)
+  \end{equation}
+  El numerador del lado izquierdo
+  de~\eqref{eq:binomial-bivariada} corresponde a:
+  \begin{equation*}
+    \sum_{\substack{k \ge 0 \\
+		    n \ge 0}}
+      \binom{n + 1}{k + 1} x^{k + 1} y^{n + 1}
+	= \sum_{\substack{k \ge 0 \\
+			  n \ge 0}}
+		\binom{n}{k} x^k y^n
+	    - \sum_{k \ge 0} \binom{0}{k} x^k y^0
+	    - \sum_{n \ge 0} \binom{n}{0} x^0 y^n
+	    + \binom{0}{0}
+  \end{equation*}
+  que resulta de eliminar la primera fila y columna de la suma
+  (de eso se hacen cargo los dos siguientes términos);
+  al restarlas estamos restando dos veces \(C(0, 0)\),
+  y debemos reponerlo,
+  lo que da lugar al último término.
+  Esto es el principio de inclusión y exclusión,%
+    \index{inclusion y exclusion, principio de@inclusión y exclusión, principio de}
+  capítulo~\ref{cha:pie},
+  haciendo su trabajo.
+  De nuestras condiciones de contorno:
+  \begin{equation*}
+    C(0, 0)
+      = \binom{0}{0} = 1 \qquad
+    C(x, 0)
+      = \sum_{k \ge 0} \binom{0}{k} \, x^k = 1 \qquad
+    C(0, y)
+      = \sum_{n \ge 0} \binom{n}{0} \, y^n = \frac{1}{1 - y}
+  \end{equation*}
+  Despejando obtenemos:
+  \begin{equation*}
+    C(x, y)
+      = \frac{1}{1 - (1 + x) y}
+  \end{equation*}
+  Expandiendo la serie geométrica:%
+    \index{serie geometrica@serie geométrica}
+  \begin{equation*}
+    \binom{n}{k}
+      = \left[ x^k y^n \right] C(x, y)
+      = \left[ x^k y^n \right]
+	  \sum_{r \ge 0} (1 + x)^r y^r
+      = \left[ x^k \right] (1 + x)^n
+  \end{equation*}
+  Tenemos nuevamente la relación
+  entre los coeficientes binomiales
+  y el número de combinaciones de \(k\) elementos
+  tomados entre \(n\).
+
+  La recurrencia~\eqref{eq:binomial-recurrencia}
+  mostrada de la siguiente manera:
+  \begin{equation*}
+    \xymatrix{
+      \displaystyle \binom{n}{k} \ar[dr] &
+	 & \displaystyle \binom{n}{k + 1} \ar[dl] \\
+	 & \displaystyle\binom{n + 1}{k + 1} &
+    }
+  \end{equation*}
+  y recordando \(\binom{n}{0} = \binom{n}{n} = 1\)
+  da el famoso triángulo de Pascal,%
+    \index{Pascal, triangulo de@Pascal, triángulo de|textbfhy}
+  ver cuadro~\ref{tab:triangulo-Pascal}
+  (comparar también con la sección~\ref{sec:conteos-recurrentes},
+   en particular el teorema~\ref{theo:identidad-Pascal}).
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{>{\(}r<{\)}*{12}{>{\(}c<{\)}@{\hspace{1ex}}}>{\(}c<{\)}}
+      n=0:& \phantom{00}
+		& \phantom{00}
+		    & \phantom{00}
+			& \phantom{00}
+			    & \phantom{00}
+				 & \phantom{00}
+				      &	 1 \\
+	 \noalign{\smallskip\smallskip}
+      n=1:&	&   &	&   &	 &  1 &	   &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=2:&	&   &	&   & 1	 &    &	 2 & \phantom{00}
+					       &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=3:&	&   &	& 1 &	 &  3 &	   &  3 & \phantom{00}
+						    &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=4:&	&   & 1 &   & 4	 &    &	 6 &	&  4 & \phantom{00}
+							 &  1 \\
+	 \noalign{\smallskip\smallskip}
+      n=5:&	& 1 &	& 5 &	 & 10 &	   & 10 &    &	5 & \phantom{00}
+							      &	 1
+	      & \phantom{00} \\
+	 \noalign{\smallskip\smallskip}
+      n=6:& 1 &	  & 6	 &  & 15 &    & 20 &	& 15 &	  & 6 & \phantom{00}
+								   & 1 \\
+	 \noalign{\smallskip\smallskip}
+    \end{tabular}
+    \caption{Triángulo de Pascal}
+    \label{tab:triangulo-Pascal}
+  \end{table}
+
+\input{recurrencia-2}
+
+\section{Dividir y conquistar}
+\label{sec:dividir-y-conquistar}
+
+% Fixme: Agregar los algoritmos, eliminar comentarios abajo
+% Fixme: Más ejemplos de algoritmos! Derivar alguno?
+
+  Una de las estrategias más fructíferas para diseñar algoritmos
+  es la que se llama \emph{dividir y conquistar}%
+    \index{dividir y conquistar}
+  (ver por ejemplo Cormen, Leiserson, Rivest y Stein~%
+    \cite{cormen09:_introd_algor}).
+  La idea es resolver un problema ``grande''
+  por la vía de expresarlo
+  en términos de varios problemas menores del mismo tipo,
+  resolver estos (recursivamente)
+  y luego combinar los resultados.
+  Ejemplos típicos son el ordenamiento por intercalación%
+    \index{ordenamiento!intercalacion@intercalación}
+%  (ver algoritmo~\ref{alg:mergesort})
+  y búsqueda binaria.%
+    \index{busqueda binaria@búsqueda binaria}
+%   (ver algoritmo~\ref{alg:busqueda-binaria}).
+
+  Un ejemplo menos conocido
+  es el algoritmo de Karatsuba
+  para multiplicación de números enteros~%
+    \cite{karatsuba62:_multiplication}.%
+    \index{Karatsuba, algoritmo de}
+%   (ver algoritmo~\ref{alg:Karatsuba}).
+  Se desean multiplicar números de \(2 n\) dígitos,
+  llamémosles \(A\) y \(B\),
+  los dividimos en mitades más y menos significativas.
+  Si la base es \(10\),
+  escribimos:
+  \begin{equation*}
+    A = a \cdot 10^n + b
+    \hspace{3em}
+    B = c \cdot 10^n + d
+  \end{equation*}
+  donde \(0 \le a, b, c, d < 10^n\),
+  y tenemos:
+  \begin{equation*}
+    A \cdot B
+      = a c \cdot 10^{2 n}
+	  + (a d + b c) \cdot 10^n
+	  + b d
+  \end{equation*}
+  Esta fórmula permite calcular un producto de dos números
+  de \(2 n\) dígitos
+  mediante cuatro multiplicaciones de números de \(n\) dígitos
+  (y algunas operaciones adicionales,
+   como sumas de números de a lo más \(2 n\) dígitos).
+  Si definimos:
+  \begin{align*}
+    u = a + b
+    \hspace{3em}
+    v = c + d
+    \hspace{3em}
+    u v
+      = a c + a d + b c + b d
+  \end{align*}
+  podemos expresar:
+  \begin{equation*}
+    A \cdot B
+      = a c \cdot 10^{2 n} + (u v - a c - b d) \cdot 10^n + b d
+  \end{equation*}
+  Esta fórmula significa usar tres
+  (no cuatro)
+  multiplicaciones,
+  a costa de más operaciones de suma.
+  Si comenzamos con números con \(2^n\) dígitos,
+  podemos aplicar esta estrategia recursivamente,
+  y los ahorros se suman.
+
+  Un ejemplo lo da el producto \(23\,316\,384 \cdot 20\,936\,118\).
+  Tenemos:
+  \begin{align*}
+    n &= 8 \\
+    A &= 23\,316\,384  \\
+    B &= 20\,936\,118 \\
+    a &= 2\,331 \quad b = 6\,384
+	 \qquad c = 2\,093 \quad d = 6\,118 \\
+    u &= 8\,715 \quad v = 8\,211
+  \end{align*}
+  Debemos ahora calcular:
+  \begin{align*}
+    a c
+      &= 2\,331 \cdot 2\,093 \\
+      &= (23 \cdot 20) \cdot 10^4
+	   + ((23 + 31) \cdot (20 + 93)
+	   - 23 \cdot 20
+	   - 31 \cdot 93) \cdot 10^2
+	   + 31 \cdot 93 \\
+      &= 460 \cdot 10^4 + 2\,759 \cdot 10^2 + 2\,883 \\
+      &= 4\,878\,783
+  \end{align*}
+  En esto hemos calculado,
+  por ejemplo:
+  \begin{equation*}
+    23 \cdot 20
+      = 2 \cdot 2 \cdot 10^2
+	  + ((2 + 3) \cdot (2 + 0)
+	  - 2 \cdot 2
+	  - 3 \cdot 0) \cdot 10
+	  + 3 \cdot 0
+      = 4 \cdot 10^2 + 6 \cdot 10 + 0
+      = 460
+  \end{equation*}
+  Los otros valores intermedios a calcular son:
+  \begin{equation*}
+    b d
+      = 39\,057\,312
+    \hspace{3em}
+    u v
+      = 71\,558\,865
+    \hspace{3em}
+    u v - a c - b d
+      = 27\,622\,770
+  \end{equation*}
+  Combinando los anteriores queda finalmente:
+  \begin{align*}
+     23\,316\,384 \cdot 20\,936\,118
+       &= 4\,878\,783 \cdot 10^8
+	    + 27\,622\,770 \cdot 10^4
+	    + 39\,057\,312 \\
+       &= 488\,154\,566\,757\,312
+  \end{align*}
+%   \begin{algorithm}[htbp]
+%     \caption{Ordenamiento por intercalación}
+%     \label{alg:mergesort}
+%   \end{algorithm}
+%   \begin{algorithm}[htbp]
+%     \caption{Búsqueda binaria}
+%     \label{alg:busqueda-binaria}
+%   \end{algorithm}
+%   \begin{algorithm}[htbp]
+%     \caption{Multiplicación eficiente}
+%     \label{alg:Karatsuba}
+%   \end{algorithm}
+
+  Otro ejemplo de esta estrategia es el algoritmo de Strassen~%
+    \cite{strassen69:_matrix_multiplication}%
+    \index{Strassen, multiplicacion de@Strassen, multiplicación de}
+%   (ver algoritmo~\ref{alg:Strassen})%
+  para multiplicar matrices.
+  Consideremos primeramente
+  el producto de dos matrices de \(2 \times 2\):
+  \begin{equation*}
+    \begin{pmatrix}
+      c_{1 1} & c_{1 2} \\
+      c_{2 1} & c_{2 2}
+    \end{pmatrix}
+      = \begin{pmatrix}
+	  a_{1 1} & a_{1 2} \\
+	  a_{2 1} & a_{2 2}
+	\end{pmatrix}
+	  \cdot
+	    \begin{pmatrix}
+	      b_{1 1} & b_{1 2} \\
+	      b_{2 1} & b_{2 2}
+	    \end{pmatrix}
+  \end{equation*}
+  Sabemos que:
+  \begin{equation*}
+    \begin{array}{l@{\qquad}l}
+      c_{1 1}
+	= a_{1 1} b_{1 1} + a_{1 2} b_{2 1} &
+      c_{1 2}
+	= a_{1 1} b_{1 2} + a_{1 2} b_{2 2} \\
+      c_{2 1}
+	= a_{2 1} b_{1 1} + a_{2 2} b_{2 1} &
+      c_{2 2}
+	= a_{2 1} b_{1 2} + a_{2 2} b_{2 2}
+    \end{array}
+  \end{equation*}
+  Esto corresponde a \(8\) multiplicaciones.
+  Definamos los siguientes productos:
+  \begin{equation*}
+    \begin{array}{l@{\qquad}l}
+      m_1
+	= (a_{1 1} + a_{2 2}) \, (b_{1 1} + b_{2 2}) &
+      m_2
+       = (a_{2 1} + a_{2 2}) \, b_{1 1} \\
+      m_3
+       = a_{1 1} \, (b_{1 2} - b_{2 2}) &
+      m_4
+       = a_{2 2} \, (b_{2 1} - b_{1 1}) \\
+      m_5
+       = (a_{1 1} + a_{1 2}) \, b_{2 2} &
+      m_6
+       = (a_{2 1} - a_{1 1}) \, (b_{1 1} + b_{1 2}) \\
+      m_7
+       = (a_{1 2} - a_{2 2}) \, (b_{2 1} + b_{2 2})
+    \end{array}
+  \end{equation*}
+  Entonces podemos expresar:
+  \begin{align*}
+    \begin{array}{l@{\qquad}l}
+      c_{1 1}
+	= m_1 + m_4 - m_5 + m_7 &
+      c_{1 2}
+	= m_3 + m_5 \\
+      c_{2 1}
+	= m_2 + m_4 &
+      c_{2 2}
+	= m_1 - m_2 + m_3 + m_6
+    \end{array}
+  \end{align*}
+  Con estas fórmulas se usan \(7\) multiplicaciones
+  para evaluar el producto de dos matrices.
+  Cabe hacer notar que estas fórmulas
+  no hacen uso de conmutatividad,
+  por lo que son aplicables también
+  para multiplicar matrices de \(2 \times 2\)
+  cuyos elementos son a su vez matrices.
+  Podemos usar esta fórmula recursivamente
+  para multiplicar matrices de \(2^n \times 2^n\).
+%   \begin{algorithm}[htbp]
+%     \caption{Multiplicación eficiente de matrices}
+%     \label{alg:Strassen}
+%   \end{algorithm}
+
+  Tal vez el algoritmo más importante
+  basado en dividir y conquistar
+  es el que se conoce
+  como \emph{transformada rápida de Fourier},%
+    \index{Fourier, transformada rapida de@Fourier, transformada rápida de}%
+    \index{FFT|see{Fourier, transformada rápida de}}
+  generalmente abreviado \emph{FFT}
+  (de \emph{\foreignlanguage{english}{Fast Fourier Transform}} en inglés);
+  se acredita a Cooley y~Tukey~%
+    \cite{cooley65:_FFT}
+  (aunque para variar un poco,
+   más de dos siglos antes Gauß%
+     \index{Gauss, Carl Friedrich@Gauß, Carl Friedrich}
+   ya lo empleaba,
+   como relatan Heideman, Johnson y Burrus~%
+     \cite{heideman84:_gauss_history_FFT}).
+  Elegido
+  como uno de los \(10\) algoritmos más importantes del siglo~XX~%
+    \cite{dongarra00:_top10_algorithms},
+  es la base de mucho de lo que es procesamiento de señales hoy día,
+  es el corazón del algoritmo de Schönhage y Strassen,%
+    \index{Schonhage y Strassen, algoritmo de@Schönhage y Strassen, algoritmo de}
+  el mejor algoritmo conocido para multiplicar que resulta práctico
+  para números muy grandes~%
+    \cite{schoehage71:_schnel_multip_zahlen},
+  y es central en el algoritmo de Fürer~%
+    \cite{fuerer07:_faster_integ_multip},
+  el mejor que se conoce
+  (aunque este último solo sería ventajoso
+   para números fuera del rango útil)
+
+  Otro ejemplo clásico es el algoritmo Quicksort%
+    \index{ordenamiento!quicksort}%
+    \index{quicksort|see{ordenamiento}}%
+  (ver la sección~\ref{sec:quicksort}),
+  claro que en este la división no es equitativa
+  (como en los otros que se mencionan).
+  También fue considerado
+  uno de los \(10\) algoritmos más importantes del siglo~XX~%
+    \cite{dongarra00:_top10_algorithms}.
+
+\subsection{Análisis de división fija}
+\label{sec:d&c:division-fija}
+
+  Consideraremos primero el caso en que el problema original
+  se traduce en varios problemas
+  de una fracción fija del tamaño del original.
+  Si el tiempo de ejecución de un algoritmo de este tipo
+  para una entrada de tamaño \(n\)
+  lo denotamos por \(t(n)\),
+  el problema se reduce a \(a\) problemas de tamaño \(n / b\),
+  y el costo de reducir el problema y luego combinar las soluciones
+  es \(f(n)\),
+  al sumar el tiempo para resolver los subproblemas
+  y las otras operaciones
+  obtendremos recurrencias de la forma:
+    \index{dividir y conquistar!recurrencia}
+  \begin{equation*}
+    t(n) = a \, t(n / b) + f(n) \qquad t(1) = t_1
+  \end{equation*}
+  El restringir el análisis a potencias de \(b\)
+  es válido ya que interesa el comportamiento asintótico
+  de la solución a la recurrencia.
+  Intuitivamente es claro que los algoritmos considerados
+  se ejecutan en un tiempo intermedio para tamaños intermedios,
+  y en cualquier caso podemos ``rellenar''
+  los datos hasta completar la potencia respectiva.
+  Hacer esto no cambia nuestras conclusiones más abajo.
+
+  En el caso de ordenamiento por intercalación,%
+    \index{ordenamiento!intercalacion@intercalación}
+  dividimos en dos partes iguales
+  que se procesan recursivamente.
+  El proceso de dividir
+  puede implementarse vía tomar elementos alternativos
+  y ubicarlos en grupos separados,
+  el combinar las partes ordenadas
+  toma tiempo proporcional a su tamaño.
+  Por lo tanto,
+  el crear los subproblemas y combinar sus soluciones
+  toma un tiempo proporcional al número de elementos a ordenar.
+  Así tenemos que
+  \(a = b = 2\), \(f(n) = c n\) para alguna constante \(c\).
+  Para búsqueda binaria,%
+    \index{busqueda binaria@búsqueda binaria}
+  se divide en dos partes iguales
+  de las cuales se procesa recursivamente solo una,
+  y el proceso de división es simplemente ubicar el elemento medio
+  y comparar con él,
+  y no hay combinación de subproblemas;
+  todo esto toma un tiempo constante.
+  En este caso es
+  \(a = 1\), \(b = 2\), \(f(n) = c\) para alguna constante.
+  En el algoritmo de Karatsuba%
+    \index{Karatsuba, algoritmo de}
+  se transforma la multiplicación de dos números de largo \(2 n\)
+  en \(3\) multiplicaciones de números de \(n\) dígitos,
+  las tareas adicionales son dividir los números en mitades
+  y efectuar varias sumas y restas de números de \(2 n\) dígitos,
+  y finalmente juntar las piezas.
+  El costo de estas operaciones es simplemente proporcional a \(n\).
+  Resulta \(a = 3\), \(b = 2\) y \(f(n) = c n\).
+  En la multiplicación de matrices de Strassen%
+    \index{Strassen, algoritmo de}
+  el multiplicar matrices de \(2 n \times 2 n\)
+  se traduce en \(7\) multiplicaciones de matrices de \(n \times n\)
+  y algunas sumas de matrices.
+  Tenemos entonces \(a = 7\),
+  \(b = 2\),
+  y las operaciones adicionales son básicamente sumas de matrices,
+  lo que da \(f(n) = c n^2\).
+  Para cubrir el patio de \(2^n \times 2^n\)
+  de la Universidad de Miskatonic con losas en L%
+    \index{pavimentacion@pavimentación}
+  que vimos al discutir inducción fuerte
+  (sección~\ref{sec:induccion-fuerte}),
+  la demostración que dimos reduce el problema de \(2^n \times 2^n\)
+  a 4~problemas de \(2^{n - 1} \times 2^{n - 1}\)
+  haciendo una cantidad fija de trabajo,
+  lo que hace \(a = 4\), \(b = 2\), \(d = 0\).
+  Si aprovechamos simetrías
+  con el cuadradito a cubrir siempre en una esquina,
+  es un solo trabajo menor,
+  con lo que \(a = 1\), \(b = 2\), \(d = 0\).
+  En caso que la posición de August es arbitraria,
+  hay 2~tipos de subproblemas
+  (uno con el espacio libre en la esquina,
+   el otro con el espacio para August en una posición arbitraria),
+  y \(a = 2\), \(b = 2\), \(d = 0\).
+
+  Estos ejemplos son bastante representativos.
+  El análisis es simple si \(f(n) = c n^d\).
+  Para búsqueda binaria tenemos \(d = 0\),
+  para ordenamiento por intercalación%
+    \index{ordenamiento!intercalacion@intercalación}
+  y en Karatsuba \(d = 1\),
+  Strassen da \(d = 2\).
+  El cuadro~\ref{tab:dividir-conquistar} resume los parámetros
+  para los algoritmos dados.
+
+  Consideramos entonces la recurrencia,
+  válida para \(n\) una potencia de \(b\):
+  \begin{equation*}
+    t(b n) = a t(n) + c n^d \qquad t(1) = t_1
+  \end{equation*}
+
+  Efectuamos el cambio de variables:
+  \begin{equation*}
+    \begin{array}{l@{\quad}l}
+      n	   = b^k  & k	   = \log_b n \\
+      t(n) = T(k) & t(b n) = T(k + 1)
+    \end{array}
+  \end{equation*}
+  En estos términos,
+  dadas las condiciones del problema
+  para constantes \(c > 0\)
+  (el costo de dividir y combinar no es nulo)
+  y \(t_1 > 0\)
+  (el resolver un problema de tamaño mínimo tiene algún costo)
+  tenemos para \(k \ge 0\):
+  \begin{equation*}
+    T(k + 1) = a T(k) + c (b^d)^k \qquad T(0) = t_1
+  \end{equation*}
+  Para resolver la recurrencia
+  definimos la función generatriz:
+  \begin{equation*}
+    g(z) = \sum_{k \ge 0} T(k) z^k
+  \end{equation*}
+  y aplicamos nuestra técnica a la recurrencia lineal resultante:
+  \begin{align*}
+    \frac{g(z) - t_1}{z}
+      &= g(z) + c \, \frac{1}{1 - b^d z} \\
+    g(z)
+      &= \frac{t_1 - (b^d t_1 - c) z}{(1 - b^d z) (1 - a z)}
+  \end{align*}
+  Si \(a \ne b^d\):
+  \begin{equation}
+    \label{eq:DaC-ne}
+    g(z)
+      = \frac{c}{b^d - a} \cdot \frac{1}{1 - b^d z}
+	  + \frac{(b^d - a) t_1 - c}{b^d - a}
+	      \cdot \frac{1}{1 - a z}
+  \end{equation}
+  Cuando \(a = b^d\):
+  \begin{equation}
+    \label{eq:DaC-eq}
+    g(z)
+      = \frac{c}{a} \cdot \frac{1}{(1 - a z)^2}
+	  + \frac{a t_1 - c}{a} \cdot \frac{1}{1 - a z}
+  \end{equation}
+  El comportamiento asintótico
+  queda determinado por \(a\) y \(b^d\).
+  Si \(a > b^d\),
+  domina el segundo término de~\eqref{eq:DaC-ne}:
+  \begin{equation}
+    \label{eq:DaC-gt-asymp}
+    T(k)
+      \sim \left( t_1 + \frac{c}{a - b^d} \right) \cdot a^k
+  \end{equation}
+  Si \(a < b^d\),
+  es el primer término de~\eqref{eq:DaC-ne} el dominante:
+  \begin{equation}
+    \label{eq:DaC-lt-asymp}
+    T(k)
+      \sim \frac{c}{b^d - a} \cdot b^{k d}
+  \end{equation}
+  En caso que \(a = b^d\) debemos recurrir a~\eqref{eq:DaC-eq},
+  y es dominante el primer término:
+  \begin{equation}
+    \label{eq:DaC-eq-asymp}
+    T(k)
+      \sim \frac{c}{a} \cdot k a^k
+  \end{equation}
+  Las constantes indicadas son siempre diferentes de cero.
+
+  En términos de las variables originales,
+  es \(k = \log_b n\)
+  y \(a^k = a^{\log_b n}
+	  = b^{\log_b a \cdot \log_b n}
+	  = n^{\log_b a}\):%
+    \index{analisis de algoritmos@análisis de algoritmos!dividir y conquistar!asintotica@asintótica}
+  \begin{equation*}
+    t(n)
+      \sim
+      \begin{cases}
+	\left( t_1 + \frac{c}{a - b^d} \right) \cdot n^{\log_b a}
+	   & \text{si \(a > b^d\)} \\
+	\frac{c}{a} \, n^{\log_b a} \log n)
+	   & \text{si \(a = b^d\)} \\
+	\frac{c}{b^d - a} \cdot n^d
+	   & \text{si \(a < b^d\)}
+      \end{cases}
+  \end{equation*}
+  Para los algoritmos que describimos
+  tenemos las complejidades
+  resumidas en el cuadro~\ref{tab:dividir-conquistar}.%
+    \index{analisis de algoritmos@análisis de algoritmos!dividir y conquistar}
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|*{3}{>{\(}r<{\)}|}>{\(}l<{\)}|}
+      \hline
+      \multicolumn{1}{|c|}
+	 {\rule[-0.7ex]{0pt}{3ex}\textbf{Nombre}} &
+	\multicolumn{1}{c|}{\(\boldsymbol{a}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{b}\)} &
+	\multicolumn{1}{c|}{\(\boldsymbol{d}\)} &
+	\multicolumn{1}{c|}{\textbf{Complejidad}} \\
+      \hline\rule[-0.7ex]{0pt}{3.5ex}%
+      Búsqueda binaria		     & 1 & 2 & 0
+	& O(\log n)	      \\
+      \hline\rule[-0.7ex]{0pt}{3.5ex}%
+      Ordenamiento por intercalación & 2 & 2 & 1
+	& O(n \log n)	      \\
+      \hline\rule[-0.7ex]{0pt}{3.5ex}%
+      Karatsuba			     & 3 & 2 & 1
+	& O \left( n^{\log_2 3} \right) \\
+      \hline\rule[-0.7ex]{0pt}{3.5ex}%
+      \multirow{3}*{Pavimentación}   & 4 & 2 & 0
+	& O \left( n^2 \right) \\
+				     & 2 & 2 & 0
+	& O( n) \\
+				     & 1 & 2 & 0
+	& O( n) \\
+      \hline\rule[-0.9ex]{0pt}{3.5ex}%
+      Strassen			     & 7 & 2 & 2
+	& O \left( n^{\log_2 7} \right) \\
+      \hline
+    \end{tabular}
+    \caption{Complejidad de algunos algoritmos}
+    \label{tab:dividir-conquistar}
+  \end{table}
+
+  Este tipo de recurrencias puede resolverse exactamente.
+  Por ejemplo,
+  Sedgewick y Flajolet~\cite{sedgewick13:_introd_anal_algor}
+  muestran que la solución a la recurrencia
+  para el número de comparaciones
+  en mergesort de \(n\) elementos diferentes:
+    \index{ordenamiento!intercalacion@intercalación!analisis@análisis}
+  \begin{equation}
+    \label{eq:mergesort-compares-exact}
+    C_n
+      = C_{\lfloor n / 2 \rfloor} + C_{\lceil n / 2 \rceil} + n
+    \qquad C_1 = 0
+  \end{equation}
+  es:
+  \begin{equation}
+    \label{eq:mergesort-compares-exact-solution}
+    C_n
+      = n \log_2 n + n \theta(1 - \{ \log_2 n \})
+  \end{equation}
+  donde:
+  \begin{equation}
+    \label{eq:mergesort-theta}
+    \theta(x)
+      = 1 + x - 2^x
+  \end{equation}
+  Resulta \(\theta(0) = \theta(1) = 0\)
+  y \(0 < \theta(x) < 0,086\)
+  para \(0 < x < 1\).
+  Esta clase de comportamiento ``periódico''
+  complica el análisis preciso de muchos algoritmos.
+
+  Un desarrollo didáctico de resultados de este tipo
+  se encuentra en el texto de Stein, Drysdale y Bogarth~%
+    \cite[apéndice A]{stein10:_discr_mathem_comput_scien}.
+  Una visión alternativa,
+  incluyendo técnicas
+  para acotar el caso de funciones forzantes diferentes,
+  dan Bentley, Haken y Saxe~%
+    \cite{bentley80:_gener_method_solvin_divid_conquer_recur}.
+  Una extensión a estos resultados
+  es el teorema de Akra-Bazzi~\cite{akra98:_sol_lin_recurr_eqs}.
+  Leighton~\cite{leighton96:_notes_better_master_theo}
+  da la variante que reseñamos,
+  extensiones interesantes da Roura~%
+     \cite{roura01:_improv_master_theor_divid_conquer_recur},
+  soluciones más precisas para versiones discretas
+  (con techos/pisos)
+  ofrecen Drmota y Szpankowski~%
+     \cite{Drmota:2011:MTD:2133036.2133064}.
+  \begin{theorem}[Akra-Bazzi]
+    \index{Akra-Bazzi, teorema de|textbfhy}
+    \label{theo:Akra-Bazzi}
+    Sea una recurrencia de la forma:
+    \begin{equation*}
+      T(z)
+	= g(z) + \sum_{1 \le k \le n} a_k T(b_k z + h_k(z))
+	   \quad \text{para \(z \ge z_0\)}
+    \end{equation*}
+    donde \(z_0\), \(a_k\) y \(b_k\) son constantes,
+    sujeta a las siguientes condiciones:
+    \begin{itemize}
+    \item
+      Hay suficientes casos base.
+    \item
+      Para todo \(k\) se cumplen \(a_k > 0\) y \(0 < b_k < 1\).
+    \item
+      Hay una constante \(c\)
+      tal que \(\lvert g(z) \rvert = O(z^c)\).
+    \item
+      Para todo \(k\)
+      se cumple \(\lvert h_k(z) \rvert = O(z / (\log z)^2)\).
+    \end{itemize}
+    Entonces,
+    si \(p\) es tal que:
+    \begin{equation*}
+      \sum_{1 \le k \le n} a_k b_k^p
+	= 1
+    \end{equation*}
+    la solución a la recurrencia cumple:
+    \begin{equation*}
+      T(z)
+	= \Theta
+	    \left(
+	      z^p \left(
+		     1 + \int_1^z \frac{g(u)}{u^{p + 1}}
+			   \, \mathrm{d} u
+		  \right)
+	    \right)
+    \end{equation*}
+  \end{theorem}
+  Frente a nuestro tratamiento tiene la ventaja
+  de manejar divisiones desiguales
+  (\(b_k\) diferentes),
+  y explícitamente
+  considera pequeñas perturbaciones en los términos,
+  como lo son aplicar pisos o techos,
+  a través de los \(h_k(z)\).
+  Diferencias con pisos y techos están acotados por una constante,
+  mientras la cota del teorema permite que crezcan.
+  Por ejemplo,
+  la recurrencia correcta para el número de comparaciones
+  en ordenamiento por intercalación es:
+  \begin{equation*}
+    T(n)
+      = T(\lfloor n / 2 \rfloor) + T(\lceil n / 2 \rceil) + n - 1
+  \end{equation*}
+  El teorema de Akra-Bazzi es aplicable.
+  La recurrencia es:
+  \begin{equation*}
+    T(n)
+      = T(n / 2 + h_{+}(n)) + T(n / 2 + h_{-}(n)) + n - 1
+  \end{equation*}
+  Acá \(\lvert h_{\pm}(n) \rvert \le 1/2\),
+  además \(a_{\pm} = 1\) y \(b_{\pm} = 1/2\).
+  Estos cumplen las condiciones del teorema,
+  de:
+  \begin{equation*}
+    \sum_{1 \le k \le 2} a_k b_k^p = 1
+  \end{equation*}
+  resulta \(p = 1\),
+  y tenemos la cota:
+  \begin{equation*}
+    T(z)
+      = \Theta
+	  \left(
+	    z \left(
+	  1 + \int_1^z \frac{u - 1}{u^2} \, \mathrm{d} u
+	      \right)
+	  \right)
+      = \Theta
+	  \left(
+	    z \ln z + 1
+	  \right)
+      = \Theta(z \log z)
+  \end{equation*}
+
+  Otro ejemplo son los árboles de búsqueda aleatorizados
+  (\emph{\foreignlanguage{english}{Randomized Search Trees}},
+   ver por ejemplo Aragon y Seidel~%
+     \cite{aragon89:_random_search_tree},
+   Martínez y Roura~%
+     \cite{martinez98:_random_binar_searc_trees}
+   y Seidel y Aragon~%
+     \cite{seidel96:_random_search_trees})
+  en uno de ellos de tamaño~\(n\)
+  una búsqueda toma tiempo aproximado:
+  \begin{equation*}
+    T(n)
+      = \frac{1}{4} \, T(n / 4) + \frac{3}{4} \, T(3 n / 4) + 1
+  \end{equation*}
+  Nuevamente es aplicable el teorema~\ref{theo:Akra-Bazzi},
+  de:
+  \begin{equation*}
+    \frac{1}{4} \, \left(\frac{1}{4}\right)^p
+	+ \frac{3}{4} \left(\frac{3}{4}\right)^p
+      = 1
+  \end{equation*}
+  obtenemos \(p = 0\),
+  y por tanto la cota
+  \begin{equation*}
+    T(z)
+      = \Theta \left(
+	  z^0 \left( 1 + \int_1^z \frac{\mathrm{d} u}{u} \right)
+	\right)
+      = \Theta ( \log z )
+  \end{equation*}
+
+\input{quicksort}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

@@ -1,0 +1,162 @@
+% sigil.tex
+%
+% Copyright (c) 2013-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\documentclass[spanish, english, greek]{article}
+% Fonts
+\usepackage{fourier}
+\usepackage[utf8]{inputenc}
+% Languages
+\usepackage{babel}
+\usepackage{babelbib}
+% General LaTeXe
+\usepackage{pgf}
+\usepackage{fixltx2e}
+% microtype should come after fonts and languages, and most packages
+\usepackage[babel=true, stretch=10]{microtype}
+% Hyperref (PDF output settings), should be last
+\usepackage[ocgcolorlinks]{hyperref}
+
+%%%
+%%% PDF information settings
+%%%
+
+\hypersetup{pdftitle = {Sigil},
+	    pdfauthor = {Horst H. von Brand},
+	    unicode, pdfdisplaydoctitle,
+	    urlcolor=blue
+	   }
+
+\title{Sobre el sello oficial de\\
+       Fundamentos de Informática}
+\author{\href{mailro:vonbrand@inf.utfsm.cl}{Horst H. von Brand}}
+
+\begin{document}
+\selectlanguage{spanish}
+\bibliographystyle{plain}
+
+\maketitle
+\thispagestyle{empty}
+
+  \begin{figure}[ht]
+    \centering
+    \pgfimage[width=0.4\textwidth]{images/necronomicon}
+    \caption{El sello de Yog-Sothoth}
+    \label{fig:sigil}
+  \end{figure}
+  Primero,
+  unas pinceladas de (pre)historia,
+  en su mayor parte de \cite{SDSAB:_necronomicon_real},
+  \cite{Wikipedia14:_necronomicon}
+  y~\cite{gilmore03:_necronomicon_facts}.
+  El escritor estadounidense Howard Phillip Lovecraft
+  (1890--1937)
+  es reconocido como maestro de lo macabro.
+  En \selectlanguage{english}{``The Hound''} (1922)
+  menciona por primera vez
+  un ``libro terrible y prohibido'',
+  el Necronomicon,
+  texto general de demonología,
+  lo oculto y magia negra.
+  Es tal el poder del libro que solo estudiar su contenido
+  suele tener consecuencias espantosas.
+  A su supuesto autor,
+  el árabe loco Abdul Alhazred,
+  ya lo había mencionado en \selectlanguage{english}{``The Nameless City''}
+  (1921).
+  Con el cuento \selectlanguage{english}{``The Call of Cthulhu''}
+  (1926)
+  comenzó una serie de cuentos
+  que incorporan mitología basada en seres sobrenaturales
+  (los ``antiguos'',
+   como Cthulhu o Yog-Sothoth)
+  e incluyen textos míticos.
+  Lovecraft se distingue por haber urdido una elaborada y original mitología,
+  que fue a su vez adoptada por un grupo de autores
+  conocidos o corresponsales de Lovecraft.
+  Este círculo tuvo la costumbre de inventar textos míticos,
+  y
+  (para darles verosimilitud)
+  citarlos junto con textos reales,
+  e incluso inventar historias de variadas ediciones de tales textos.
+  Por ejemplo,
+  el mismo Lovecraft escribió una historia del texto %
+    \cite{lovecraft38:_history_necronomicon},
+  donde reseña que su autor fue el poeta yemení demente Abdul Alhazred,
+  quien lo transcribió en Damasco alrededor del año~700,
+  bajo el nombre de \emph{Al Azif}
+  (en árabe,
+   \emph{azif} es el sonido nocturno de insectos que se supone es el aullido
+   de los demonios).
+  Según su biógrafo Ebn Khallikan,
+  en recompensa por sus esfuerzos fue devorado públicamente
+  por un monstruo invisible el año~738.
+  El texto fue traducido al griego por Theodorus Philetas el año 950,
+  adquiriendo el nombre.
+
+  Según Lovecraft,
+  el nombre del libro viene del griego
+  \textgreek{νεκρός}
+  (cadáver),
+  \textgreek{νόμος}
+  (ley)
+  e \textgreek{εἰκών}
+  (imagen),
+  con lo que significaría algo como ``La imagen de la ley de los muertos'',
+  pero esto es inconsistente con la gramática griega clásica
+  (el sufijo \textgreek{-ἰκών} es adjetivo neutro,
+   no tiene relación con \textgreek{εἰκών}).
+  Asimismo,
+  el nombre del supuesto autor es árabe incorrecto,
+  el \emph{-ul} de Abdul es redundante con \emph{al} de Alhazred,
+  correcto sería Abd el Hazred
+  (claro que no suena tan bien).
+  Por lo demás,
+  Abd es \emph{servidor} o \emph{adorador},
+  mientras Alhazred hace referencia a su lugar de origen,
+  con lo que el nombre del autor no tiene sentido.
+  Lovecraft dijo que el nombre lo habría sacado de las 1000 y una noches,
+  o que fue sugerido por un abogado amigo de la familia.
+
+  En 1977,
+  un escritor anónimo aficionado a lo oculto
+  que se identifica únicamente como Simon publicó una supuesta traducción
+  del texto~\cite{simon77:_necronomicon},
+  en cuya tapa figura prominentemente el sello de la figura~\ref{fig:sigil}.
+  De muchos supuestas ediciones del texto esta es lejos la más popular.
+  Se caracteriza además porque no reconoce que es falsa.
+  Un análisis somero del texto de marras muestra
+  que la mitología en que se basa es sumeria con añadidos,
+  muy posterior a la historia que supuestamente narra el Necronomicon.
+  Otra edición notable es la de Hay~\cite{hay78:_necronomicon},
+  escrita a propósito como una elaborada inocentada.
+
+  Volvamos a nuestro tema ahora.
+  Poco después de comenzar a escribir el presente apunte
+  para los ramos de Fundamentos de Informática
+  ya los estudiantes consideraban que era la máxima expresión de lo maligno,
+  en particular que su estudio provocaba serios males,
+  y lo bautizaron ``el Necronomicón''.
+  En busca de una imagen que representara cabalmente el mal que encierra
+  es que se eligió este sello.
+
+  En sus cuentos Lovecraft menciona las ciudades ficticias
+  de \selectlanguage{english}{Arkham},
+  \selectlanguage{english}{Dunwich} e \selectlanguage{english}{Innsmouth}.
+  Supuestamente la única copia existente del texto se encuentra
+  en la biblioteca de la también ficticia
+  Universidad de \selectlanguage{english}{Miskatonic}
+  en \selectlanguage{english}{Arkham}.
+  Asimismo,
+  hay personajes que se repiten en sus escritos.
+  Donde es posible en el texto se usan lugares y nombres
+  de la tradición de Lovecraft.
+
+\bibliography{necronomicon}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

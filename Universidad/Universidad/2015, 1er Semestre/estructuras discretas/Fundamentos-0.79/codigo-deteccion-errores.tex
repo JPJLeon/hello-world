@@ -1,0 +1,355 @@
+% codigo-deteccion-errores.tex
+%
+% Copyright (c) 2012-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section{Códigos de detección y corrección de errores}
+\label{sec:codigos-errores}
+\index{codigo@código}
+
+  Consideremos \emph{mensajes} de \(m\)~bits de largo%
+    \index{mensaje}
+  que se transmiten por algún medio
+  (podría ser simplemente que se almacenan y se recuperan luego).
+  En este proceso pueden ocurrir errores,
+  que interesa detectar o corregir.
+  El tema fue estudiado inicialmente por Hamming~%
+    \cite{hamming50:_error_detec_correc_codes}.%
+    \index{Hamming, Richard}
+  Para ello usamos \emph{palabras de código}
+  de \(n\) bits de largo,%
+    \index{codigo@código!palabra}
+  donde obviamente \(n \ge m\),
+  usando los bits adicionales para detectar o corregir errores,
+  usando solo \(2^m\) de las \(2^n\) palabras posibles.
+  Si se recibe una palabra errada
+  (que no corresponde al código),
+  una estrategia obvia es suponer que el código correcto
+  es el más cercano al recibido,
+  vale decir,
+  el que difiere en menos bits del recibido.
+  Al número de bits en que difieren dos palabras se les llama
+  la \emph{distancia de Hamming}%
+    \index{Hamming, distancia de|textbfhy}
+  entre ellas.
+  Por ejemplo,
+  la distancia de Hamming entre \(10111011\) y \(10010100\)
+  es \(5\).
+  A la distancia de Hamming mínima entre dos palabras de un código
+  se le conoce como \emph{distancia de Hamming del código}.%
+    \index{codigo@código!Hamming, distancia de|textbfhy}
+  Lo que interesa entonces es hallar códigos
+  de distancia de Hamming máxima
+  en forma uniforme
+  (nos interesa que a cada código correcto
+   le corresponda un número similar
+   de palabras erróneas)
+  y por el otro lado hallar formas eficientes
+  de determinar si la palabra es correcta
+  (solo detectar errores)%
+     \index{codigo@código!deteccion de errores@detección de errores}
+  o la más cercana a la recibida
+  (para corregirlos).%
+    \index{codigo@código!correccion de errores@corrección de errores}
+  Para detectar \(d\) errores
+  se requiere que la distancia de Hamming
+  del código sea mayor a \(d + 1\)
+  (así la palabra errada nunca coincide con una correcta,
+   está al menos a un bit de distancia),
+  para corregir \(d\) errores la distancia debe ser \(2 d + 1\)
+  (la palabra errada estará a distancia a lo más \(d\)
+   de la correcta,
+   la siguiente más cercana estará
+   a la distancia al menos \(d + 1\)).
+
+\subsection{Códigos de Hamming}
+\label{sec:codigos-Hamming}
+\index{codigo@código!Hamming}
+
+  Hamming~%
+    \cite{hamming50:_error_detec_correc_codes}
+  halló una manera de construir códigos de detección
+  y corrección de errores de distancia~\(3\)
+  (capaces de detectar \(2\) errores y corregir \(1\)).
+  Suponiendo \(n = 2^w\)
+  y contando los bits de \(1\) a \(2^w\),
+  se usan los bits en las posiciones \(k = 1, 2, \dotsc, 2^{w - 1}\)
+  como bits de paridad%
+    \index{paridad, bits de}
+  y los demás como bits de datos.
+  La idea es calcular el bit en la posición \(2^k\)
+  de forma que los bits en las posiciones
+  escritas en binario que tienen \(1\) en la posición~\(k\)
+  tengan un número par
+  de unos,
+  como muestra el cuadro~\ref{tab:paridad-Hamming}.
+  \begin{table}[ht]
+    \centering
+    \begin{tabular}{|l@{\hspace{0.5em}}>{\(}r<{\)}|r*{7}{@{, }r}|}
+      \hline
+      \multicolumn{2}{|c|}{\textbf{Paridad\rule[-0.7ex]{0pt}{3ex}}} &
+	\multicolumn{8}{c|}{\textbf{Posiciones}} \\
+      \hline\rule[-0.7ex]{0pt}{3.2ex}%
+      0 & 2^0 = \phantom{0}1 &
+	 \phantom{0}1 &	 \phantom{0}3 &
+	 5 &  7 &  9 & 11 & 13 & 15 \\
+      1 & 2^1 = \phantom{0}2 &
+	 2 &  3 &  6 &	7 & 10 & 11 & 14 & 15 \\
+      2 & 2^2 = \phantom{0}4 &
+	 4 &  5 &  6 &	7 & 12 & 13 & 14 & 15 \\
+      3 & 2^3 = \phantom{0}8 &
+	 8 &  9 & 10 & 11 & 12 & 13 & 14 & 15 \\
+      \hline
+    \end{tabular}
+    \caption{Paridades para el código de Hamming $(15, 4)$}
+    \label{tab:paridad-Hamming}
+  \end{table}
+  Para determinar el bit errado,
+  lo que se hace es calcular los bits de paridad correspondientes
+  a los datos recibidos,
+  si son iguales a lo calculado,
+  no se detectan errores;
+  en caso de haber diferencias
+  considerar los bits de paridad
+  como un número binario da el bit errado.
+  Por ejemplo,
+  si \(w = 15\),
+  el código tendrá \(4\)~bits de paridad
+  (posiciones \(1\), \(2\), \(4\) y~\(8\))
+  y \(11\)~bits de mensaje
+  (en las posiciones \(3\), \(5\) a~\(7\) y \(9\) a~\(15\)).
+  Se recibe \lstinline[language=C]!0x6A6A!,
+  en binario \(0110\,1010\,0110\,1010\),
+  revisamos los bits respectivos,
+  lo que da \(3\) para \(0\),
+  \(6\) para \(1\),
+  \(6\) para \(2\)
+  y \(4\) para \(3\).
+  Esto corresponde a \(0001\),
+  que significa que hay un error en la posición \(1\).
+  El código correcto es \(0110\,1010\,0110\,1011\)
+  o \lstinline[language=C]!0x6A6B!,
+  y los bits de mensaje son \(110\,1010\,1100\),
+  o \lstinline[language=C]!0x6AC!.
+  El código de Hamming es óptimo,
+  en el sentido que tiene la máxima distancia de Hamming
+  para el número de bits dado.
+
+\subsection{Verificación de redundancia cíclica}
+\label{sec:CRC}
+\index{codigo@código!redundancia ciclica@redundancia cíclica}
+\index{CRC@\emph{CRC}|ver{código!redundancia cíclica}}
+
+  Una manera de construir códigos de detección de errores
+  simples de analizar matemáticamente
+  fue descubierta por Peterson~%
+    \cite{peterson61:_CRC}.
+  La técnica tiene además la ventaja
+  de poder implementarse en circuitos sencillos y rápidos,
+  como veremos luego.
+  Se les llama \emph{verificación de redundancia cíclica}
+  (en inglés,
+   \emph{\foreignlanguage{english}{Cyclic Redundancy Check}},
+   o CRC)
+  dado que se agregan bits de verificación
+  (\emph{\foreignlanguage{english}{check}} en inglés)
+  que son redundantes
+  (no aportan información)
+  según un código cíclico.
+
+  Consideremos un mensaje binario de \(m\) bits,
+  \(M = M_{m - 1} M_{m - 2} \dotso M_0\).
+  Podemos considerarlo como un polinomio sobre \(\mathbb{Z}_2\):%
+    \index{polinomio!campo finito}
+  \begin{equation*}
+    M(x)
+      = M_{m - 1} x^{m - 1}
+	 + M_{m - 2} x^{m - 2}
+	 + \dotsb
+	 + M_1 x
+	 + M_0
+  \end{equation*}
+  Sea además un polinomio \(G(x)\) de grado \(n - 1\).
+  Si calculamos:
+  \begin{align*}
+    r(x)
+      &= M(x) x^n \bmod G(x) \\
+    T(x)
+      &= M(x) x^n - r(x)
+  \end{align*}
+  Es claro que \(T(x)\) es divisible por \(G(x)\).
+  La estrategia es entonces tomar el mensaje,%
+    \index{mensaje}
+  añadirle \(n - 1\) bits cero al final,
+  calcular el resto de esto al dividir por \(G(x)\)
+  (un polinomio de grado \(n - 1\))
+  y substituir los ceros añadidos por el resto
+  (en \(\mathbb{Z}_2[x]\) suma y resta son la misma operación).
+  A estos bits agregados los llamaremos \emph{bits de paridad}.
+  El resultado es el polinomio \(T(x)\),
+  que se trasmite.
+  Al recibirlo,
+  se calcula el resto de la división con \(G(x)\);
+  si el resto es cero,
+  el dato recibido es correcto.
+  Al polinomio \(G(x)\) se le llama \emph{generador} del código.%
+    \index{codigo@código!polinomio generador}%
+    \index{polinomio!generador de un codigo@generador de un código|see{código!polinomio generador}}
+  Esto es similar a la prueba de los nueves
+  que discutimos en el capítulo~\ref{cha:estructura-Zm}.
+
+  Si se transmite \(T\) y se recibe \(R\),
+  el error
+  (las posiciones de bit erradas)
+  es simplemente la diferencia entre los polinomios respectivos:%
+    \index{error}
+  \begin{equation*}
+    E(x)
+      = T(x) - R(x)
+  \end{equation*}
+  Para que nuestra técnica detecte el error,
+  debe ser que \(G(x)\) no divida a \(E(x)\).
+  Nos interesa entonces estudiar bajo qué condiciones \(G(x)\)
+  divide a \(E(x)\) en \(\mathbb{Z}_2[x]\),
+  de manera de obtener criterios
+  que den buenos polinomios generadores
+  (capaces de detectar clases de errores de interés).
+
+  Claramente no todo \(G(x)\) sirve,
+  usaremos la teoría desarrollada antes
+  para poner algunas condiciones.
+  De partida,
+  el término constante de \(G(x)\)
+  no debe ser cero,
+  de otra forma se desperdician bits de paridad:
+  \begin{equation*}
+    \left( x^n M(x) \right) \bmod \left( x^k p(x) \right)
+      = x^{n - k} \left( M(x) \bmod p(x) \right)
+  \end{equation*}
+
+  Si consideramos cómo se multiplican polinomios
+  en \(\mathbb{Z}_2[x]\),
+  vemos que si \(G(x)\) tiene un número par de coeficientes uno
+  lo mismo ocurrirá con el producto \(p(x) G(x)\),
+  con lo que si \(G(x)\) tiene un número par de coeficientes uno
+  detectará todos los errores que cambian un número impar de bits.
+
+  Por otro lado,
+  si \(G(x)\) es de grado \(n - 1\)
+  no puede dividir a polinomios de grado menor.
+  Vale decir,
+  será capaz de detectar todos los errores
+  que cambian bits en un rango contiguo de menos de \(n\) bits.
+
+  Una \emph{ráfaga}%
+    \index{error!rafaga@ráfaga}
+  es un bloque de bits cambiados,
+  con lo que \(E = 0 0 \dotsm 0 1 1 \dotsm 1 1 0 \dotsm 0\).
+  Si se cambian \(r\) bits,
+  esto significa que para algún \(k\):
+  \begin{align*}
+    E(x)
+      &= (x^{r - 1} + x^{r - 2} + \dotsb + 1) x^k \\
+      &= \frac{(x^r - 1) x^k}{x - 1}
+  \end{align*}
+  Esto es divisible por \(G(x)\) si lo es \(x^r - 1\).
+  De la teoría precedente sobre campos finitos
+  sabemos que si \(G(x)\)
+  es el polinomio mínimo de un generador de \(\mathbb{F}_{2^n}\)
+  (lo que llaman un \emph{polinomio primitivo})
+  dividirá a \(x^r - 1\) solo si \(r \ge 2^n - 1\).
+  Lamentablemente
+  en \(\mathbb{Z}_2[x]\) el polinomio \(x + 1\) es primitivo
+  y divide a todos los polinomios con un número par de términos
+  (porque \(x - 1\) siempre divide a \(x^k - 1\)).
+
+  Analicemos ahora cómo armar circuitos
+  que calculen el resto de la división
+  de polinomios en \(\mathbb{Z}_2[x]\).
+  Requeriremos memorias de un bit,
+  que al pulso de una línea de reloj
+  (que no se muestra)
+  aceptan un nuevo bit y entregan el anterior.
+  La suma en \(\mathbb{Z}_2\)
+  es la operación lógica \emph{o exclusivo},
+  comúnmente anotada \(\oplus\).
+  \begin{figure}[ht]
+    \centering
+    \subfloat[Registro]{\pgfimage{images/register}
+       \label{subfig:register}}
+    \qquad
+    \subfloat[O exclusivo]{\pgfimage{images/xor}
+       \label{subfig:xor}}
+    \caption{Elementos de circuitos lógicos}
+    \label{fig:circuitos-logicos}
+  \end{figure}
+  Los elementos de circuito que emplearemos
+  se ilustran en la figura~\ref{fig:circuitos-logicos}.
+  El amable lector verificará
+  (por ejemplo dividiendo \(x^8 + x^5 + x^4 + x^2 + 1\)
+   por \(x^4 + x + 1\))
+  que el proceso para obtener el resto
+  puede describirse de la siguiente forma:
+  Si el primer bit del dividendo actual es \(1\),
+  sume los términos de menor exponente
+  a partir del segundo término del dividendo;
+  en caso que el primer bit del dividendo sea \(0\),
+  no haga nada.
+  Luego descarte el primer bit del dividendo.
+  Esto es lo mismo que sumar el primer bit del dividendo actual
+  en ciertas posiciones,
+  y luego correr todo en una posición.
+  En términos de nuestros elementos,
+  para el polinomio primitivo \(x^8 + x^4 + x^3 + x^2 + 1\)
+  resulta el circuito de la figura~\ref{fig:LFSR-11d}.
+  \begin{figure}[ht]
+    \centering
+    \pgfimage{images/LFSR-11d}
+    \caption{Circuito para $x^8 + x^4 + x^3 + x^2 + 1$}
+    \label{fig:LFSR-11d}
+  \end{figure}
+  La operación es la siguiente:
+  Inicialmente se cargan ceros en los registros,
+  luego se van ingresando los bits del dividendo
+  (partiendo por el más significativo)
+  al circuito.
+  El resto queda en los registros.
+  Es claro que interesan polinomios primitivos
+  con el mínimo número de términos
+  (ya que esto minimiza la circuitería requerida).
+
+  Otro uso interesante resulta de inicializar los registros
+  con un valor diferente de cero,
+  y luego alimentar el circuito con una corriente de ceros
+  (lo que puede lograrse simplemente obviando
+   la primera operación a la izquierda en la figura)
+  Como hay un número finito de posibilidades
+  para los valores de los registros,
+  en algún momento se repetirán.
+  Si el valor inicial es \(p(x)\),
+  lo que estamos haciendo
+  es calcular sucesivamente \(x^k p(x) \bmod G(x)\).
+  Si \(G(x)\) es primitivo,
+  la repetición ocurrirá cuando \(k = 2^n\),
+  por lo que los valores en los registros
+  habrán recorrido todas las combinaciones de \(n\) bits
+  (salvo solo ceros).
+  El resultado es un contador simple
+  (si solo interesa obtener valores diferentes,
+   no necesariamente en orden),
+  y la salida del circuito
+  (que en nuestra aplicación anterior descartamos)
+  es una corriente de números aleatorios
+  si se toman de a \(n\) bits.
+  Si \(G(x)\) no es primitivo,
+  la teoría precedente indica que habrá un \(k\) menor a \(n\)
+  que hace que \(x^k p(x) \equiv p(x) \pmod{G(x)}\),
+  y nuevamente hay ciclos.
+  El lector interesado determinará los posibles ciclos
+  para algún polinomio no primitivo,
+  como \((x^4 + x + 1) (x + 1) = x^5 + x^4 + x^2 +1\).
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

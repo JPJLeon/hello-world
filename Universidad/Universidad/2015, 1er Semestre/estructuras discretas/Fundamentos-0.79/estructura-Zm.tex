@@ -1,0 +1,1524 @@
+% estructura-Zm.tex
+%
+% Copyright (c) 2012-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{\protect\boldmath
+	    Estructura \texorpdfstring{de $\mathbb{Z}_m$ y $\mathbb{Z}^\times_m$}
+				      {algebraica de clases de congruencia}%
+	  \protect\unboldmath}
+\label{cha:estructura-Zm}
+\index{anillo!residuos|textbfhy}
+
+  En nuestras aplicaciones los anillos de residuos
+  son las estructuras algebraicas más importantes.
+  Estudiaremos brevemente en sus características principales.
+  Suele resultar fructífero descomponer estructuras complejas
+  en piezas más simples para ayudar a su análisis.
+  Incursionaremos un poco en el área
+  de analizar la estructura de grupos abelianos,%
+    \index{grupo!abeliano}
+  obteniendo algunos resultados de gran interés
+  en áreas como la criptología.
+
+\input{sumas-directas}
+
+  Nuestra primera tarea es descomponer \(\mathbb{Z}_m\)
+  en forma más sistemática.
+  Lo que hemos hecho hasta ahora es tomar elementos que se ven bien
+  y considerar los subgrupos que generan,
+    \index{grupo!subgrupo}
+  tratando de encontrar intersecciones y órdenes adecuados.
+  Acá veremos un método general
+  para descomponer el grupo \(\mathbb{Z}_m\),
+  y plantear el camino para entender mejor
+  los grupos \(\mathbb{Z}^\times_m\).
+
+  Por ejemplo,
+  \(\mathbb{Z}_{30}
+      = \{0, 6, 12, 18, 24\} \{0, 5, 10, 15, 20, 25\}\)
+  o sea \(\mathbb{Z}_{30}\)
+  es la suma directa de un grupo cíclico de orden \(5\)
+  y otro de orden \(6\),
+  y por el teorema~\ref{theo:suma-directa-isomorfos}
+  esto es
+    \(\mathbb{Z}_{30} \cong \mathbb{Z}_5 \times \mathbb{Z}_6\).
+  Por otro lado,
+  hay una función obvia
+  \(f \colon \mathbb{Z}_{30}
+     \rightarrow \mathbb{Z}_5 \times \mathbb{Z}_6\):
+  Si conocemos un entero \(x\) módulo \(30\),
+  sabemos sus residuos módulos \(5\) y \(6\).%
+    \index{residuo}
+  Por ejemplo,
+  si \(x \equiv 13 \pmod{30}\),
+  entonces \(x \equiv 13 \equiv 3 \pmod{5}\)
+  y \(x \equiv 13 \equiv 1 \pmod{6}\).
+  En este caso,
+  tendríamos \(f(13) = (3, 1)\).
+  Una tabla completa para \(f\) es:
+  \begin{equation*}
+    \begin{array}{*{5}{l}}
+      f(0) = (0, 0) &  f(6) \phantom{0}= (1, 0)
+		    & f(12) = (2, 0) & f(18) = (3, 0) &
+		      f(24) = (4, 0) \\
+      f(1) = (1, 1) &  f(7) \phantom{0}= (2, 1)
+		    & f(13) = (3, 1) & f(19) = (4, 1) &
+		      f(25) = (0, 1) \\
+      f(2) = (2, 2) &  f(8) \phantom{0}= (3, 2)
+		    & f(14) = (4, 2) & f(20) = (0, 2) &
+		      f(26) = (1, 2) \\
+      f(3) = (3, 3) &  f(9) \phantom{0}= (4, 3)
+		    & f(15) = (0, 3) & f(21) = (1, 3) &
+		      f(27) = (2, 3) \\
+      f(4) = (4, 4) & f(10) = (0, 4) & f(16) = (1, 4) &
+		      f(22) = (2, 4) &
+		      f(28) = (3, 4) \\
+      f(5) = (0, 5) & f(11) = (1, 5) & f(17) = (2, 5) &
+		      f(23) = (3, 5) &
+		      f(29) = (4, 5)
+    \end{array}
+  \end{equation*}
+  El que \(f\) es uno a uno se ve directamente de la tabla.
+  Las restantes propiedades son obvias si consideramos
+  que cada entrada como
+  \(f([x]_{30}) = ([x]_5, [x]_6)\).
+  Tenemos el siguiente teorema general:
+  \begin{theorem}
+    \index{residuo!teorema chino de los!padre del}
+    \label{theo:isomorfismo-anillo-Zm}
+    Sea \(m = a b\) con \(a, b\) enteros positivos
+    tales que \(\gcd(a, b) = 1\).
+    Entonces la función:
+    \begin{equation*}
+      f([x]_m) = ([x]_a, [x]_b) \quad x \in \mathbb{Z}
+    \end{equation*}
+    es un isomorfismo%
+      \index{anillo!isomorfismo}
+    entre los anillos \(\mathbb{Z}_m\)
+    y \(\mathbb{Z}_a \times \mathbb{Z}_b\).
+  \end{theorem}
+  \begin{proof}
+    Primero debemos demostrar que \(f\) siquiera tiene sentido,
+    hay muchas elecciones de \(x\)
+    que dan la misma clase \([x]_m\) en \(\mathbb{Z}_m\).
+    El teorema~\ref{theo:congruencia-mn}
+    asegura que \(f\) es una biyección,
+    ya que \(\gcd(a, b) = 1\).
+
+    Además tenemos del teorema~\ref{theo:+*mod} que:
+    \begin{align*}
+      f([x + y]_m)
+	&= ([x + y]_a, [x + y]_b) \\
+	&= ([x]_a + [y]_a, [x]_b + [y]_b) \\
+	&= ([x]_a, [x]_b)
+	     + ([y]_a, [y]_b) \\
+	&= f(x) + f(y) \\
+      f([x y]_m)
+	&= ([x y]_a, [x y]_b) \\
+	&= ([x]_a \cdot [y]_a,
+	     [x]_b \cdot [y]_b) \\
+	&= ([x]_a, [x]_b)
+	    \cdot ([y]_a, [y]_b) \\
+	&= f(x) \cdot f(y)
+    \end{align*}
+    y es isomorfismo de anillo.
+  \end{proof}
+  Hay que tener cuidado en esto,
+  la condición de que \(\gcd(a, b) = 1\) es necesaria.%
+    \index{relativamente primos}
+  Por ejemplo,
+  \(\mathbb{Z}_8 \ncong \mathbb{Z}_2 \times \mathbb{Z}_4\),
+  ya que:
+  \begin{align*}
+    2 \equiv 0 \pmod{2}
+      &\qquad 2 \equiv 2 \pmod{4} \\
+    6 \equiv 0 \pmod{2}
+      &\qquad 6 \equiv 2 \pmod{4}
+  \end{align*}
+  Esta no es una biyección.
+
+  Aplicando el teorema~\ref{theo:isomorfismo-anillo-Zm}
+  repetidas veces tenemos:
+  \begin{corollary}
+    \label{cor:isomorfismo-anillo-Zm}
+    Sean \(a_1\), \(a_2\), \ldots, \(a_r\)
+    naturales relativamente primos a pares%
+      \index{relativamente primos!a pares}
+    (o sea,
+     \(\gcd(a_i, a_j) = 1\) si \(i \ne j\)),
+    y \(m = a_1 a_2 \dotsm a_r\).
+    Entonces la función:
+    \begin{equation*}
+      f([x]_m)
+	= ([x]_{a_1}, [x]_{a_2}, \dotsc, [x]_{a_r})
+    \end{equation*}
+    es un isomorfismo de anillo entre \(\mathbb{Z}_m\) y
+    \(\mathbb{Z}_{a_1} \times \mathbb{Z}_{a_2}
+	\times \dotsb \times \mathbb{Z}_{a_r}\)
+  \end{corollary}
+
+  Una consecuencia inmediata es el siguiente importante teorema:
+  \begin{theorem}[Teorema chino de los residuos]
+    \index{residuo!teorema chino de los}
+    \label{theo:chino-residuos}
+    Sean \(a_1\), \(a_2\), \ldots, \(a_r\)
+    naturales relativamente primos a pares,
+    y \(b_1\), \(b_2\), \ldots, \(b_r\) enteros cualquiera.
+    Entonces hay un entero \(x\) tal que:
+    \begin{align*}
+      x &\equiv b_1 \pmod{a_1} \\
+      x &\equiv b_2 \pmod{a_2} \\
+	&\;\;\vdots	       \\
+      x &\equiv b_r \pmod{a_r}
+    \end{align*}
+    El entero \(x\) es único módulo \(n = a_1 a_2 \dotsm a_r\).
+  \end{theorem}
+  \begin{proof}
+    Considere el elemento
+    \(([b_1]_{a_1}, [b_2]_{a_2}, \dotsc,
+       [b_r]_{a_r})\)
+    en
+    \(\mathbb{Z}_{a_1} \times \dotsb \times \mathbb{Z}_{a_r}\).
+    Por el isomorfismo del corolario~\ref{cor:isomorfismo-anillo-Zm}
+    hay un único \([x]_m \in \mathbb{Z}_m\)
+    tal que \([x]_{a_1} = [b_1]_{a_1}\),
+    \([x]_{a_2} = [b_2]_{a_2}\), \ldots,
+    \([x]_{a_r} = [b_r]_{a_r}\),
+    lo que no es más que otra forma
+    de decir que hay un entero \(x\),
+    único módulo \(n\),
+    que cumple el sistema de ecuaciones indicado.
+  \end{proof}
+  Al teorema~\ref{theo:isomorfismo-anillo-Zm}
+  (o también al corolario~\ref{cor:isomorfismo-anillo-Zm})
+  se le debiera llamar
+  el \emph{padre del teorema chino de los residuos},%
+    \index{residuo!teorema chino de los!padre del}
+  son estos resultados los que en realidad más se usan
+  bajo ese nombre.
+  En inglés se abrevia \emph{CRT},
+  por \emph{\foreignlanguage{english}{Chinese Remainder Theorem}}.%
+    \index{CRT@\emph{CRT}|see{residuo!teorema chino de los}}
+
+  Usando la notación del teorema chino de los residuos,
+  para cálculo concreto
+  esto se puede expresar mediante lo siguiente.
+  Defina \(s_i\) como
+  \(s_i \cdot (n / a_i) \equiv 1 \pmod{a_i}\),
+  y defina \(m_i = s_i \cdot (n / a_i)\),
+  con lo que \(m_i \equiv [i = j] \pmod{a_j}\).
+  Considere:
+  \begin{equation*}
+    x = \sum_{1 \le i \le r} m_i \cdot b_i
+  \end{equation*}
+  Entonces:
+  \begin{align*}
+    x
+      &\equiv \sum_{1 \le i \le r} m_i \cdot b_i \pmod{a_k} \\
+      &\equiv m_k \cdot b_k			 \pmod{a_k} \\
+      &\equiv b_k				 \pmod{a_k}
+  \end{align*}
+  Con esto el isomorfismo
+  del corolario~\ref{cor:isomorfismo-anillo-Zm}
+  puede usarse en la práctica.
+  La demostración del teorema~\ref{theo:chino-residuos}
+  no da luces de cómo obtener el valor \(x\),
+  solo asegura que si probamos todas las opciones
+  hallaremos exactamente una solución.
+
+  Para clarificar ideas,
+  resolveremos un ejemplo.
+  Buscamos \(x\) tal que:
+  \begin{align*}
+    x &\equiv 3 \pmod{5} \\
+    x &\equiv 5 \pmod{7} \\
+    x &\equiv 1 \pmod{9}
+  \end{align*}
+  Los módulos son primos entre sí,
+  hay una solución única
+  módulo \(n = 5 \cdot 7 \cdot 9 = 315\).
+  Necesitamos los siguientes inversos:
+  \begin{align*}
+    s_5
+      &= (315 / 5)^{-1} = 2 \text{\ en\ } \mathbb{Z}_5 \\
+    s_7
+      &= (315 / 7)^{-1} = 5 \text{\ en\ } \mathbb{Z}_7 \\
+    s_9
+      &= (315 / 9)^{-1} = 8 \text{\ en\ } \mathbb{Z}_9
+  \end{align*}
+  lo que da los coeficientes,
+  ahora módulo \(315\):
+  \begin{align*}
+    m_5
+      &= 2 \cdot (315 / 5) = 126 \\
+    m_7
+      &= 5 \cdot (315 / 7) = 225 \\
+    m_9
+      &= 8 \cdot (315 / 9) = 280
+  \end{align*}
+  Para resolver nuestro problema concreto:
+  \begin{align*}
+    x &= 126 \cdot 3 + 225 \cdot 5 + 280 \cdot 1 \\
+      &= 1\,783 \\
+      &\equiv 208 \pmod{315}
+  \end{align*}
+
+  Como ejercicio,
+  dejamos el problema planteado por Sunzi%
+    \index{Sunzi}%
+    \index{Sun Tzu|see{Sunzi}}
+  en el siglo~IV.
+  \begin{verse}
+    Hay cierto número de objetos cuyo número es desconocido. \\
+    Dividido por \(3\), el resto es \(2\); \\
+    por \(5\) el resto es \(3\); \\
+    y por \(7\) el resto es \(2\). \\
+    ¿Cuántos serán los objetos?
+  \end{verse}
+
+  Supongamos ahora que piden:
+  \begin{align*}
+    x &\equiv 2 \pmod{6} \\
+    x &\equiv 1 \pmod{7} \\
+    x &\equiv 3 \pmod{9}
+  \end{align*}
+  Los módulos no son relativamente primos,
+  puede no haber solución.
+  Tenemos para el par en conflicto:
+  \begin{align*}
+    x = 6 s + 2	  &= 9 t + 3 \\
+	6 s - 9 t &= 1
+  \end{align*}
+  Esto último es imposible,
+  ya que significaría
+  que el máximo común divisor entre \(6\) y \(9\)
+    \index{maximo comun divisor@máximo común divisor}
+  divide a \(1\),
+  pero \(\gcd(6, 9) = 3\).
+  No hay solución.
+
+  Antes de continuar,
+  algunas propiedades adicionales del máximo común divisor
+  y el mínimo común múltiplo.
+  \begin{lemma}
+    \index{maximo comun divisor@máximo común divisor!propiedades}
+    \index{minimo comun multiplo@mínimo común múltiplo!propiedades}
+    \label{lem:gcd-lcm}
+    Se cumplen:
+    \begin{align*}
+      \gcd(a, \gcd(b, c))
+	&= \gcd(\gcd(a, b), c) \\
+      \lcm(a, \lcm(b, c))
+	&= \lcm(\lcm(a, b), c)
+    \end{align*}
+    Además:
+    \begin{align*}
+      \gcd(\lcm(a_1, b), \lcm(a_2, b), \dotsc, \lcm(a_r, b))
+	&= \lcm(\gcd(a_1, a_2, \dotsc, a_r), b) \\
+      \lcm(\gcd(a_1, b), \gcd(a_2, b), \dotsc, \gcd(a_r, b))
+	&= \gcd(\lcm(a_1, a_2, \dotsc, a_r), b)
+    \end{align*}
+  \end{lemma}
+  Básicamente,
+  las operaciones son asociativas y cumplen leyes distributivas.
+    \index{operacion@operación}
+  \begin{proof}
+    Por el teorema fundamental de la aritmética,%
+      \index{teorema fundamental de la aritmetica@teorema fundamental de la aritmética}
+    todo entero puede representarse por el conjunto
+    de los divisores que son potencias de números primos.
+    En estos términos,
+    el máximo común divisor es la intersección de sus argumentos,
+    y el mínimo común múltiplo su unión.
+    Las identidades indicadas
+    son entonces reflejo de la asociatividad
+    de la unión e intersección,
+    y la distributividad de la unión sobre la intersección
+    y viceversa.
+  \end{proof}
+
+  Podemos extender el teorema chino de los residuos:
+  \begin{theorem}[Teorema chino de los residuos generalizado]
+    \index{residuo!teorema chino de los!generalizado}
+    \label{theo:chino-residuos-generalizado}
+    Para \(a_1\), \(b_1\), \ldots, \(a_r\), \(b_r\) cualquiera
+    sean:
+    \begin{align*}
+      x &\equiv a_1 \pmod{b_1} \\
+      x &\equiv a_2 \pmod{b_2} \\
+	&\quad \vdots	       \\
+      x &\equiv a_r \pmod{b_r}
+    \end{align*}
+    Estas congruencias tienen solución si y solo si
+    \(a_i \equiv a_j \pmod{\gcd(b_i, b_j)}\) para todo \(i\), \(j\).
+    Módulo \(\lcm(b_1, b_2, \dotsc, b_r)\)
+    la solución es única en tal caso.
+  \end{theorem}
+  \begin{proof}
+    Por inducción sobre \(r\).%
+      \index{demostracion@demostración!induccion@inducción}
+    Cuando \(r = 1\),
+    el resultado es obvio.
+    Partiremos con el caso \(r = 2\)
+    porque lo usaremos en el paso de inducción.
+    \begin{description}
+    \item[Base:]
+      Tenemos las congruencias:
+      \begin{align*}
+	x &\equiv a_1 \pmod{b_1} \\
+	x &\equiv a_2 \pmod{b_2}
+      \end{align*}
+      Si \(d \mid b_1\),
+      claramente \(x \equiv a_1 \pmod{d}\).
+      En particular,
+      para \(m_2 = \gcd(b_1, b_2)\)
+      debe ser:
+      \begin{align*}
+	x &\equiv a_1 \pmod{m_2} \\
+	x &\equiv a_2 \pmod{m_2}
+      \end{align*}
+      con lo que no hay solución
+      a menos que \(a_1 \equiv a_2 \pmod{m_2}\).
+      Esta es la condición sobre los \(b_i\) para el caso \(r = 2\).
+
+      Si \(a_1 \equiv a_2 \pmod{m_2}\),
+      por la identidad de Bézout%
+	\index{Bezout, identidad de@Bézout, identidad de}
+      sabemos que existen enteros \(u_2\) y \(v_2\) tales que:
+      \begin{equation*}
+	u_2 b_1 + v_2 b_2
+	  = \gcd(b_1, b_2)
+	  = m_2
+      \end{equation*}
+      Como \(a_1 \equiv a_2 \pmod{m_2}\),
+      hay \(c_2 \in \mathbb{Z}\)
+      tal que \(a_1 - a_2 = c_2 \cdot m_2\),
+      y \(a_1 - a_2 = c_2 u_2 b_1 + c_2 v_2 b_2\).
+      Con esto:
+      \begin{equation*}
+	s_2
+	  = a_1 - c_2 u_2 b_1
+	  = a_2 + c_2 v_2 b_2
+      \end{equation*}
+      cumple ambas congruencias.
+
+      Para demostrar que es única,
+      consideremos soluciones \(s\) y \(s'\).
+      Vemos que
+      \(s \equiv s' \pmod{b_1}\)
+      y \(s \equiv s' \pmod{b_2}\),
+      y el teorema~\ref{theo:congruencia-mn} asegura que
+      \(s \equiv s' \pmod{\lcm(b_1, b_2)}\).
+    \item[Inducción:]
+      Suponiendo que vale para \(r\) congruencias,
+      demostramos que vale para \(r + 1\):
+      \begin{align*}
+	x &\equiv a_{1\phantom{+1}} \pmod{b_1} \\
+	x &\equiv a_{2\phantom{+1}} \pmod{b_2} \\
+	  &\quad \vdots		 \\
+	x &\equiv a_{r\phantom{+1}} \pmod{b_r} \\
+	x &\equiv a_{r + 1} \pmod{b_{r + 1}}
+      \end{align*}
+      Sea \(s_r\) la solución a las primeras \(r\) congruencias,
+      que por inducción existe
+      y es única módulo \(\lcm(b_1, b_2, \dotsc, b_r)\).
+      Consideremos las congruencias:
+      \begin{align*}
+	x &\equiv s_r \pmod{\lcm(b_1, b_2, \dotsc, b_r)} \\
+	x &\equiv a_{r + 1} \pmod{b_{r + 1}}
+      \end{align*}
+      Por el caso \(r = 2\) sabemos que hay solución únicamente si:
+      \begin{equation*}
+	s_{r\phantom{+1}} \equiv a_{r + 1}
+	  \pmod{\gcd(\lcm(b_1, \dotsc, b_r), b_{r + 1})}
+      \end{equation*}
+      Por el lema~\ref{lem:gcd-lcm}:
+      \begin{equation*}
+	\gcd(\lcm(b_1, \dotsc, b_r), b_{r + 1})
+	  = \lcm(\gcd(b_1, b_{r + 1}), \gcd(b_2, b_{r + 1}),
+		 \dotsc, \gcd(b_r, b_{r + 1}))
+      \end{equation*}
+      que es equivalente a:
+      \begin{equation*}
+	a_{r + 1} \equiv a_i \pmod{\gcd(b_i, b_{r + 1})}
+	  \quad\text{para todo \(1 \le i \le r\)}
+      \end{equation*}
+      Esto extiende la condición sobre los \(a_i\).
+
+      De cumplirse la condición sobre los \(a_i\),
+      hay una solución \(s_{r + 1}\) única módulo
+      \(\lcm(b_1, \dotsc, b_{r + 1})\),
+      que podemos calcular como antes.
+      Sean \(u_{r + 1}\) y \(v_{r + 1}\) tales que:
+      \begin{equation*}
+	u_{r + 1} s_r + v_{r + 1} b_{r + 1}
+	  = \gcd(s_r, b_{r + 1})
+      \end{equation*}
+      Como \(s_r \equiv a_{r + 1} \pmod{b_{r + 1}}\),
+      existe \(c_{r + 1} \in \mathbb{Z}\) en
+      \(s_r - a_{r + 1} = c_{r + 1} \gcd(s_r, b_{r + 1})\),
+      y \(s_{r + 1}\)
+      definido como sigue cumple las \(r + 1\) congruencias:
+      \begin{equation*}
+	s_{r + 1}
+	  = s_r - c_{r + 1} u_{r + 1} \lcm(b_1, \dotsc, b_r)
+	  = a_{r + 1} + c_{r + 1} v_{r + 1} b_{r + 1}
+      \end{equation*}
+    \end{description}
+    Por inducción lo indicado vale para \(r \in \mathbb{N}\).
+  \end{proof}
+
+  La demostración da un algoritmo para obtener la solución.
+  Por ejemplo,
+  consideremos el sistema:
+  \begin{align*}
+    x &\equiv 3 \pmod{4} \\
+    x &\equiv 5 \pmod{6} \\
+    x &\equiv 2 \pmod{9}
+  \end{align*}
+  Para las primeras dos congruencias tenemos:
+  \begin{equation*}
+    4 u_2 + 6 v_2
+      = \gcd(4, 6)
+      = 2
+  \end{equation*}
+  Obtenemos \(u_2 = -1\), \(v_2 = 1\),
+  y tenemos \(a_1 - a_2 = 3 - 5 = -2\) que da \(c_2 = -1\),
+  por lo que:
+  \begin{equation*}
+    s_2
+      = 3 - (-1) (-1) 4
+      = -1
+  \end{equation*}
+  Como \(\lcm(4, 6) = 12\),
+  para el segundo paso queda el sistema:
+  \begin{align*}
+    x &\equiv -1	    \pmod{12} \\
+    x &\equiv \phantom{-}7  \pmod{\phantom{0}9}
+  \end{align*}
+  Tenemos:
+  \begin{equation*}
+    12 u_3 + 9 v_3
+      = \gcd(12, 9)
+      = 3
+  \end{equation*}
+  Esto resulta en \(u_3 = 1\) y \(v_3 = -1\),
+  para \(s_2 - a_3 = -1 - 2 = -3\) es \(c_3 = -1\),
+  y queda:
+  \begin{equation*}
+    s_3
+      = -1 - (-1) \cdot 1 \cdot 12
+      = 11
+  \end{equation*}
+  La solución es única módulo \(\lcm(4, 6, 9) = 36\).
+
+  El algoritmo implícito
+  en el teorema~\ref{theo:chino-residuos-generalizado}
+  es bastante engorroso.
+  Una forma diferente de enfocar el tema es dividir las congruencias
+  según los máximos comunes divisores.
+  Veamos el ejemplo:
+  \begin{align*}
+    x &\equiv \phantom{0}9 \pmod{12} \\
+    x &\equiv		12 \pmod{21}
+  \end{align*}
+  Tenemos \(\gcd(12, 21) = 3\),
+  con lo que \(12 = 3 \cdot 4\) y \(21 = 3 \cdot 7\).
+  La primera congruencia se descompone:
+  \begin{align*}
+    x &\equiv 9 \equiv 0 \pmod{3} \\
+    x &\equiv 9 \equiv 1 \pmod{4}
+  \end{align*}
+  La segunda da:
+  \begin{align*}
+    x &\equiv 12 \equiv 0 \pmod{3} \\
+    x &\equiv 12 \equiv 5 \pmod{7}
+  \end{align*}
+  Las congruencias comunes
+  (módulo~\(3\)) son consistentes,
+  hay solución módulo \(\lcm(12, 21) = 84\).
+  El sistema se reduce a:
+  \begin{align*}
+    x &\equiv 0 \pmod{3} \\
+    x &\equiv 1 \pmod{4} \\
+    x &\equiv 5 \pmod{7}
+  \end{align*}
+  El teorema chino de los residuos da:%
+    \index{residuo!teorema chino de los}
+  \begin{alignat*}{2}
+    s_3 &= (4 \cdot 7)^{-1} = 1
+	&\quad m_3 &= 1 \cdot 4 \cdot 7 = 28 \\
+    s_4 &= (3 \cdot 7)^{-1} = 1
+	&\quad m_4 &= 1 \cdot 3 \cdot 7 = 21 \\
+    s_7 &= (3 \cdot 4)^{-1} = 3
+	&\quad m_7 &= 3 \cdot 3 \cdot 4 = 36
+  \end{alignat*}
+  y la solución es:
+  \begin{align*}
+    x &= 0 \cdot 28 + 1 \cdot 21 + 5 \cdot 36 \\
+      &\equiv 33 \pmod{84}
+  \end{align*}
+
+  Un problema en esta línea planteó Brahmagupta en el siglo~VII.%
+    \index{Brahmagupta}
+  \begin{verse}
+    Una anciana va al mercado,
+    y un caballo pisa su canasto y le aplasta los huevos. \\
+    \hspace{1em}El jinete ofrece pagar el daño
+    y le pregunta cuántos huevos traía. \\
+    \hspace{1em}Ella no recuerda el número exacto,
+    pero al sacarlos de a dos sobraba un huevo.
+    Lo mismo ocurría
+    si los sacaba de a tres, cuatro, cinco y seis a la vez,
+    pero al sacarlos de a siete no sobró ninguno. \\
+    ¿Cuál es el mínimo número de huevos que podría haber tenido?
+  \end{verse}
+
+  Una aplicación adicional es la \emph{prueba del once}:
+  Vimos antes
+  (sección~\ref{sec:descomposiciones})
+  que una manera de verificar operaciones aritméticas
+  es la prueba de los nueves,
+  que es simple de aplicar
+  porque calcular el residuo módulo nueve
+  de un número escrito en decimal
+  es sumar sus dígitos,
+  repitiendo el proceso hasta reducir a uno solo.
+  Resulta que calcular el residuo módulo once
+  es sumar y restar alternativamente los dígitos
+  comenzando por el menos significativo:
+  Como \(10 \equiv -1 \pmod{11}\),
+  tenemos:
+  \begin{equation*}
+    \sum_{0 \le k \le n} d_k \cdot 10^k
+      \equiv \sum_{0 \le k \le n} (-1)^k d_k \pmod{11}
+  \end{equation*}
+  Si aplicamos la prueba del nueve y la prueba del once,
+  como \(\gcd(9, 11) = 1\),
+  estamos verificando el resultado módulo \(9 \cdot 11 = 99\).
+
+  El teorema~\ref{theo:chino-residuos}
+  (más bien,
+   el corolario~\ref{cor:isomorfismo-anillo-Zm})
+  ofrece una importante estrategia adicional
+  para demostrar teoremas en \(\mathbb{Z}\):
+  \begin{enumerate}
+  \item
+    Primeramente,
+    demuestre el resultado para \(p\) primo.
+  \item
+    Enseguida,
+    demuestre que es válido para \(p^\alpha\),
+    potencias de primos.
+  \item
+    Use el (padre del) teorema chino de los residuos
+    para combinar los resultados anteriores
+    y obtener el caso general.
+  \end{enumerate}
+  Más adelante aparecerán muchas aplicaciones de esta idea.
+
+\section[Estructura de
+	   \texorpdfstring{$\mathbb{Z}^\times_m$}
+			  {las unidades de clases de congruencia}]
+	{\protect\boldmath
+	 Estructura de
+	  \texorpdfstring{$\mathbb{Z}^\times_m$}
+				{las unidades de clases de congruencia}%
+       \protect\unboldmath}
+\label{sec:estructura-Un}
+
+  El isomorfismo del teorema~\ref{theo:isomorfismo-anillo-Zm}
+  permite demostrar:
+  \begin{theorem}
+    \label{theo:Z*ab=Z*a+Z*b}
+    Si \(a\) y \(b\) son naturales relativamente primos,
+    entonces:
+    \begin{equation*}
+      \mathbb{Z}^\times_{a b}
+	\cong \mathbb{Z}^\times_a \times \mathbb{Z}^\times_b
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Sabemos que \(\mathbb{Z}_{a b}\)
+    y \(\mathbb{Z}_a \times \mathbb{Z}_b\)
+    son anillos isomorfos,
+    con lo que \(\mathbb{Z}^\times_{a b}\)
+    es isomorfo al grupo de unidades
+    de \(\mathbb{Z}_a \times \mathbb{Z}_b\).
+    Ahora bien,
+    un elemento de \(\mathbb{Z}_a \times \mathbb{Z}_b\)
+    es invertible si lo son sus componentes:
+    \begin{equation*}
+      (x, y) \cdot (x', y')
+	= (x x', y y')
+	= (1, 1)
+    \end{equation*}
+    con \(x \in \mathbb{Z}^\times_a\)
+    e \(y \in \mathbb{Z}^\times_b\),
+    con lo que el grupo de unidades
+    de \(\mathbb{Z}_a \times \mathbb{Z}_b\)
+    es exactamente
+      \(\mathbb{Z}^\times_a \times \mathbb{Z}^\times_b\).
+  \end{proof}
+  Como corolario,
+  tenemos para la función \(\phi\) de Euler:%
+    \index{\(\phi\) de Euler}
+  \begin{corollary}
+    \label{cor:phi-multiplicativa}
+    Sea \(\phi\) la función de Euler.
+    Si \(a\) y \(b\) son naturales relativamente primos,
+    entonces \(\phi(a b) = \phi(a) \cdot \phi(b)\)
+  \end{corollary}
+  \begin{proof}
+    Del teorema~\ref{theo:Z*ab=Z*a+Z*b} sabemos que:
+    \begin{equation*}
+      \phi(a b)
+	= \lvert \mathbb{Z}^\times_{a b} \rvert
+	= \lvert \mathbb{Z}^\times_a
+		   \times \mathbb{Z}^\times_b \rvert
+	= \lvert \mathbb{Z}^\times_a \rvert
+	    \cdot \lvert \mathbb{Z}^\times_b \rvert
+	= \phi(a) \cdot \phi(b)
+	\qedhere
+    \end{equation*}
+  \end{proof}
+  Esta propiedad es importante:
+  \begin{definition}
+    \index{funcion@función!aritmetica@aritmética|textbfhy}
+    \index{funcion@función!aritmetica@aritmética!multiplicativa|textbfhy}
+    Una función \(f \colon \mathbb{N} \rightarrow \mathbb{C}\)
+    se llama \emph{aritmética}.
+    Anotaremos \(\mathscr{A}\)
+    para el conjunto de funciones aritméticas.
+    Una función aritmética \(f\)
+    se llama \emph{multiplicativa}
+    si \(f(a \cdot b) = f(a) \cdot f(b)\)
+    siempre que \(\gcd(a, b) = 1\).
+    A su conjunto lo llamamos \(\mathscr{M}\).
+  \end{definition}
+  \noindent
+  Supongamos que \(f\) es multiplicativa,
+  y que para algún \(n \in \mathbb{N}\) es \(f(n) \ne 0\).
+  Como \(\gcd(1, n) = 1\):
+  \begin{equation*}
+    f(n)
+      = f(n \cdot 1)
+      = f(n) \cdot f(1)
+  \end{equation*}
+  con lo que \(f(1) = 1\) o \(f(n) = 0\)
+  para todo \(n = \mathbb{N}\).
+
+  Por el teorema fundamental de la aritmética%
+    \index{teorema fundamental de la aritmetica@teorema fundamental de la aritmética}
+  todo entero se puede descomponer
+  en un producto de potencias de primos distintos.
+  Como potencias de primos diferentes son relativamente primas,
+  una función multiplicativa queda determinada por su valor
+  para potencias de primos.
+
+  Como acabamos de demostrar que \(\phi\) es multiplicativa,
+  tenemos una manera de calcularla:
+  \begin{corollary}
+    \label{cor:calcular-phi}
+    Sea \(n = p_1^{\alpha_1} p_2^{\alpha_2} \dotsm p_r^{\alpha_r}\)
+    la factorización completa de \(n\) en primos distintos \(p_i\).
+    Entonces:
+    \begin{align*}
+      \phi(n)
+	&= p_1^{\alpha_1 - 1} (p_1 - 1) p_2^{\alpha_2 - 1} (p_2 - 1)
+	     \dotsm p_r^{\alpha_r - 1} (p_r - 1) \\
+	&= n \cdot \left(1 - \frac{1}{p_1}\right) \cdot
+		     \left(1 - \frac{1}{p_2}\right) \dotsm
+		     \left(1 - \frac{1}{p_r}\right)
+    \end{align*}
+  \end{corollary}
+  \begin{proof}
+    Del corolario~\ref{cor:phi-multiplicativa} sabemos que
+      \(\phi(n)
+	  = \phi(p_1^{\alpha_1}) \cdot \phi(p_2^{\alpha_2})
+	      \dotsm \phi(p_r^{\alpha_r})\).
+    Necesitamos el valor de \(\phi(p^\alpha)\),
+    para \(p\) primo y \(\alpha\) natural.
+    Hay \(p^k\) números entre \(1\) y \(p^k\),
+    no son relativamente primos a \(p^\alpha\)
+    los \(p^{\alpha - 1}\) múltiplos de \(p\) en este rango:
+    \begin{equation*}
+      \phi(p^\alpha)
+	= p^\alpha - p^{\alpha - 1}
+	= p^{\alpha - 1} (p - 1)
+	= p^\alpha \cdot \left(1 - \frac{1}{p}\right)
+    \end{equation*}
+    Multiplicando esto
+    sobre las potencias de primos factores de \(n\)
+    da lo anunciado.
+  \end{proof}
+  Algunas funciones aritméticas interesantes adicionales son:
+  \begin{description}
+  \item[La identidad:]
+    \(\iota(n) = n\)
+  \item[\boldmath Potencias de \(n\):\unboldmath]
+    \(\iota_a(n) = n^a\)
+  \item[\boldmath El número de divisores de \(n\):\unboldmath]
+    \(\tau(n)
+	= \lvert \{ d \in \mathbb{N} \colon d \mid n \} \rvert\)
+  \item[\boldmath La suma de los divisores de \(n\):\unboldmath]
+    \(\sigma(n)
+	= \sum_{d \mid n} d\)
+  \item[\boldmath El producto de los divisores de \(n\):\unboldmath]
+    \(\pi(n)
+	= \prod_{d \mid n} d\)
+  \end{description}
+  Acá hemos usado nuestra convención general de indicar los índices
+  de sumas o productos mediante condiciones,
+  en este caso de divisibilidad.
+
+  Un resultado importante para funciones multiplicativas es:
+  \begin{theorem}
+    \label{theo:sum-multiplicative}
+    Sea \(f\) una función aritmética%
+      \index{funcion@función!aritmetica@aritmética!multiplicativa}
+    y \(S\) definida por:%
+      \index{funcion@función!aritmetica@aritmética!funcion suma@función suma|textbfhy}
+    \begin{equation*}
+      S(n)
+	= \sum_{d \mid n} f(d)
+    \end{equation*}
+    Entonces \(f\) es multiplicativa si y solo si lo es \(S\).
+  \end{theorem}
+  \begin{proof}
+    Demostramos implicancia en ambas direcciones.
+    Sean \(x, y \in \mathbb{N}\) relativamente primos,
+    y sea \(f\) multiplicativa.
+    Sean además \(x_1, x_2, \dotsc, x_r\)
+    e \(y_1, y_2, \dotsc, y_s\)
+    todos los divisores de \(x\) e \(y\),
+    respectivamente.
+    Entonces \(\gcd(x_i, y_j) = 1\),
+    y \(\{x_i y_j\}_{i, j}\) son todos los divisores de \(x y\):
+    \begin{equation*}
+      S(x) \cdot S(y)
+	= \sum_i f(x_i) \sum_j f(y_j)
+	= \sum_{i, j} f(x_i) f(y_j)
+	= \sum_{i, j} f(x_i y_j)
+	= S(x y)
+    \end{equation*}
+    y \(S\) es multiplicativa.
+
+    Para el recíproco,
+    sea \(S\) multiplicativa.
+    Demostramos por inducción fuerte sobre \(n\)%
+      \index{demostracion@demostración!induccion@inducción}
+    que cuando \(n = x y\) con \(\gcd(x, y) = 1\)
+    es \(f(n) = f(x) f(y)\).
+    \begin{description}
+    \item[Base:]
+      El caso \(n = 1\) es trivial:
+      \(f(1) = S(1)\).
+    \item[Inducción:]
+      Para nuestros \(x\) e \(y\) tenemos,
+      usando la hipótesis de inducción:
+      \begin{align*}
+	S(x y)
+	  &= \sum_{\substack{
+		     u \mid x \\
+		     v \mid y
+		  }} f(u v)
+	   = \sum_{\substack{
+		    u \mid x \\
+		    v \mid y \\
+		    u v < n
+		 }} f(u) f(v) + f(x y) \\
+      \intertext{Por otro lado,
+		 sacando de las sumatorias los términos
+		 para \(u = x\) y \(v = y\) queda:}
+	S(x) S(y)
+	  &= \sum_{u \mid x} f(u) \sum_{v \mid y} f(v)
+	   = \sum_{\substack{
+		    u \mid x \\
+		    v \mid y \\
+		    u v < n
+		 }} f(u) f(v) + f(x) f(y)
+      \end{align*}
+      Ambas expresiones son iguales ya que \(S\) es multiplicativa,
+      y es \(f(x y) = f(x) f(y)\).
+    \end{description}
+    Por inducción vale para todo \(n \in \mathbb{N}\).
+  \end{proof}
+  \begin{corollary}
+    \label{cor:formula-sum-function}
+    Sea \(f\) una función multiplicativa,%
+      \index{funcion@función!aritmetica@aritmética!multiplicativa}
+    y sea \(S\) su función suma:%
+      \index{funcion@función!aritmetica@aritmética!funcion suma@función suma|textbfhy}
+    \begin{equation*}
+      S (n)
+	= \sum_{d \mid n} f(d)
+    \end{equation*}
+    Si \(n = p_1^{\alpha_1} p_2^{\alpha_2} \dotsm p_r^{\alpha_r}\)
+    es la descomposición de \(n\)
+    en factores primos distintos \(p_i\),
+    entonces:
+    \begin{equation*}
+      S (n)
+	= \prod_{1 \le i \le r}
+	    \left(
+	      1 + f(p_i) + f(p_i^2) + \dotsb + f(p_i^{\alpha_i})
+	    \right)
+    \end{equation*}
+  \end{corollary}
+  \begin{proof}
+    Si \(f\) es multiplicativa,
+    lo es \(S\).
+    El valor indicado de \(S(n)\)
+    corresponde para potencias de primos.
+  \end{proof}
+  Del teorema~\ref{theo:sum-multiplicative}
+  vemos que son multiplicativas:%
+    \index{funcion@función!aritmetica@aritmética!multiplicativa}%
+    \index{\(\tau\) (numero de divisores)@\(\tau\) (número de divisores)}%
+    \index{\(\sigma\) (suma de divisores)}
+  \begin{align*}
+    \tau(n)
+      &= S_1 (n)
+       = \sum_{d \mid n} 1 \\
+    \sigma(n)
+      &= S_{\iota}(n)
+       = \sum_{d \mid n} d
+  \end{align*}
+  Por el corolario~\ref{cor:formula-sum-function}
+  en términos de la factorización completa
+    \(n = p_1^{\alpha_1} p_2^{\alpha_2} \dotsm p_r^{\alpha_r}\)
+  tenemos:
+  \begin{align*}
+    \tau(n)
+      &= \prod_{1 \le i \le r} (\alpha_i + 1) \\
+    \sigma(n)
+      &= \prod_{1 \le i \le r}
+	   \frac{p_i^{\alpha_i + 1} - 1}{p_i - 1}
+  \end{align*}
+  La función \(\pi(n)\) no es multiplicativa.
+
+  Para los griegos
+  la relación de un número con sus divisores propios
+  tenía relevancia mística.
+  Así reverenciaban especialmente a los \emph{números perfectos},%
+    \index{numero@número!perfecto|textbfhy}
+  que son la suma de sus divisores propios.
+  Conocían los casos \(6 = 1 + 2 + 3\),
+  \(28 = 1 + 2 + 4 + 7 + 14\),
+  496 y 8128.
+  En términos de las funciones definidas antes,
+  \(n\) es perfecto cuando \(\sigma(n) = 2 n\)
+  (los factores propios de \(n\) suman a \(n\),
+   con \(n\) suman \(2 n\)).
+  Tenemos también,
+  si \(p\) es primo:
+  \begin{align*}
+    \sigma(p)
+      &= p + 1 \\
+    \sigma(p^\alpha)
+      &= 1 + p + \dotsb + p^\alpha
+       = \frac{p^{\alpha + 1} - 1}{p - 1}
+  \end{align*}
+  Del resultado siguiente cada uno de los participantes
+  demostró una implicancia.
+  \begin{theorem}[Euclides -- Euler]
+    \index{numero@número!perfecto!par}
+    \label{theo:even-perfect-numbers}
+    Un par \(n\) es perfecto si y solo si
+    \(n = 2^{m - 1} \left( 2^m - 1 \right)\) con \(2^m - 1\) primo.
+  \end{theorem}
+  \begin{proof}
+    Demostramos implicancia en ambas direcciones.
+
+    Si \(n = 2^{m - 1} \left( 2^m - 1 \right)\)
+    con \(2^m - 1\) primo,
+    entonces como \(\sigma\) es multiplicativa:%
+      \index{funcion@función!aritmetica@aritmética!multiplicativa}
+    \begin{equation*}
+      \sigma(n)
+	= \sigma \left( 2^{m - 1} \right)
+	    \sigma \left( 2^m - 1 \right)
+	= \frac{2^m - 1}{2 - 1} \cdot \left( (2^m - 1) + 1 \right)
+	= 2^m \left( 2^m - 1 \right)
+	= 2 n
+    \end{equation*}
+    y \(n\) es perfecto.
+    Esta parte fue demostrada por Euclides.%
+      \index{Euclides}
+
+    Para el recíproco,
+    sea \(n = 2^{m - 1} u\) un número perfecto
+    con \(m > 1\) y \(u\) impar.
+    Entonces:
+    \begin{align*}
+      2^m u
+	&= \sigma \left( 2^{m - 1} u \right)
+	 = \left( 2^m - 1 \right) \sigma(u) \\
+      \sigma(u)
+	&= \frac{2^m u}{2^m - 1}
+	 = u + \frac{u}{2^m - 1}
+    \end{align*}
+    Claramente el último término es un divisor de \(u\).
+    Como \(m > 1\),
+    \(2^m - 1 > 1\).
+    O sea,
+    estamos expresando \(\sigma(u)\)%
+      \index{\(\sigma\) (suma de divisores)}
+    como la suma de dos divisores distintos de \(u\),
+    por lo que \(u\) es primo;
+    tiene que ser \(u = 2^m - 1\).
+    Este es el aporte de Euler.%
+      \index{Euler, Leonhard}
+  \end{proof}
+  Esto resuelve completamente el caso de números perfectos pares.
+  Es fácil ver que si \(m\) es compuesto
+  lo es \(2^m - 1\),
+  por lo que basta considerar \(2^p - 1\) con \(p\) primo.
+  A tales primos se les llama \emph{primos de Mersenne},%
+    \index{Mersenne, primo de}
+  quien los estudió a principios del siglo~XVII.
+  Se conocen 48 primos de Mersenne a febrero de 2013,
+  incluso el mayor primo conocido a la fecha
+  es \(2^{57\,885\,161} - 1\).
+
+  Es primo \(2^2 - 1 = 3\)
+  y \(2^{2 - 1} (2^2 - 1) = 6\) es perfecto.
+  Asimismo \(2^{3 - 1} (2^3 - 1) = 28\),
+  \(2^{5 - 1} (2^5 - 1) = 496\)
+  y \(2^{7 - 1} (2^7 - 1) = 8128\)
+  son perfectos.
+
+  Por el otro lado,
+  determinar si hay números perfectos impares%
+    \index{numero@número!perfecto!impar}
+  es un problema abierto
+  desde antes de Euclides.
+
+  \begin{definition}
+    Sean \(f\) y \(g\) funciones aritméticas.
+    Su \emph{convolución de Dirichlet} es:%
+      \index{Dirichlet, convolucion de@Dirichlet, convolución de|textbfhy}
+    \begin{equation}
+      \label{eq:Dirichlet-convolution}
+      (f * g)(n)
+	= \sum_{d \mid n} f(d) g(n / d)
+	= \sum_{a b = n} f(a) g(b)
+    \end{equation}
+  \end{definition}
+  Es claro que la operación \(*\) es conmutativa,%
+    \index{operacion@operación!conmutativa}
+  y es fácil demostrar que es asociativa.%
+    \index{operacion@operación!asociativa}
+  Con:
+  \begin{equation}
+    \index{\(\epsilon\) (identidad para convolucion de Dirichlet)@\(\epsilon\) (identidad para convolución de Dirichlet)}
+    \label{eq:arithmetic-epsilon}
+    \epsilon(n)
+      = \begin{cases}
+	  1 & \text{si \(n = 1\)} \\
+	  0 & \text{si \(n > 1\)}
+	\end{cases}
+  \end{equation}
+  para la función aritmética \(f\)
+  tenemos \(f * \epsilon = \epsilon * f = f\),
+  lo que da un neutro multiplicativo.%
+    \index{operacion@operación!elemento neutro}
+  En particular:
+  \begin{theorem}
+    \label{theo:multiplicative-group-Dirichlet}
+    El conjunto \(\mathscr{M}\)
+    de funciones aritméticas multiplicativas
+    es cerrado respecto de la convolución de Dirichlet.
+  \end{theorem}
+  \begin{proof}
+    Sean \(f, g \in \mathscr{M}\),
+    sea \(h = f * g\),
+    y \(a, b \in \mathbb{N}\) con \(\gcd(a, b) = 1\).
+    Como \(\gcd(a, b) = 1\)
+    los factores de \(a b\)
+    resultan de todas las combinaciones de factores de \(a\) y \(b\)
+    por separado:
+    \begin{align*}
+      h(a) h(b)
+	&= (f * g)(a) \cdot (f * g)(b) \\
+	&= \sum_{u_1 v_1 = a}
+	     f(u_1) g(v_1) \sum_{u_2 v_2 = b} f(u_2) g(v_2) \\
+	&= \sum_{\substack{u_1 v_1 = a \\ u_2 v_2 = b}}
+	     f(u_1) g(v_1) f(u_2) g(v_2) \\
+	&= \sum_{u_1 u_2 v_1 v_2 = a b}
+	     f(u_1) f(u_2) g(v_1) g(v_2) \\
+	&= \sum_{u v = a b} f(u) g(v) \\
+	&= (f * g)(a b) \\
+	&= h(a b)
+    \qedhere
+    \end{align*}
+  \end{proof}
+  Incluso podemos calcular inversos.
+  \begin{lemma}
+    \label{lem:Dirichlet-inverse}
+    Toda función aritmética tal que \(f(1) \ne 0\)
+    tiene inversa de Dirichlet
+    dada por:
+    \begin{equation*}
+      f^{-1}(n)
+	= \begin{cases}
+	    \displaystyle
+		 \frac{1}{f(1)}
+	       & \text{si \(n = 1\)} \\
+	    \\
+	    \displaystyle
+		 - \frac{1}{f(1)}
+		     \, \sum_{\substack{a b = n \\ b < n}}
+				    f(a) f^{-1}(b)
+	       & \text{si \(n > 1\)}
+	  \end{cases}
+    \end{equation*}
+  \end{lemma}
+  \begin{proof}
+    Corresponde a plantear el sistema de ecuaciones,
+    escrito usando la convención de Iverson:
+    \begin{align*}
+      \epsilon
+	&= f * f^{-1} \\
+      [n = 1]
+	&= \sum_{a b = n} f(a) f^{-1}(b)
+    \end{align*}
+    La expresión indicada para \(f^{-1}\) satisface este sistema.
+  \end{proof}
+  Una función importante es:
+  \begin{definition}
+    \index{Mobius, funcion de@Möbius, función de|textbfhy}
+    \index{\(\mu\)|see{Möbius, función de}}
+    \index{Mobius, August Ferdinand@Möbius, August Ferdinand}
+    La \emph{función de Möbius}
+    se define mediante:
+    \begin{equation}
+      \label{eq:Moebius-mu}
+      \mu(n)
+	= \begin{cases}
+	    1	   &
+	       \text{si \(n = 1\)} \\
+	    0	   &
+	       \text{si \(n\)
+		     es divisible por el cuadrado de un primo} \\
+	    (-1)^k &
+	       \text{si \(n\)
+		     es el producto de \(k\) primos diferentes}
+	  \end{cases}
+    \end{equation}
+  \end{definition}
+  Un momento de reflexión muestra que \(\mu\) es multiplicativa.
+    \index{funcion@función!aritmetica@aritmética!multiplicativa}
+  \begin{lemma}
+    \label{lem:sum-mu}
+    Para \(n \in \mathbb{N}\),
+    la función de Möbius satisface:
+    \begin{equation*}
+      \sum_{d \mid n} \mu(d)
+	= \begin{cases}
+	    1 & \text{si \(n = 1\)} \\
+	    0 & \text{si \(n \ge 2\)}
+	  \end{cases}
+    \end{equation*}
+  \end{lemma}
+  \begin{proof}
+    Como \(\mu\) es multiplicativa,
+    por el teorema~\ref{theo:sum-multiplicative}
+    lo es la suma indicada.
+    Basta entonces hallar el valor de la suma
+    en potencias de un primo \(p\).
+    Hay dos casos a considerar:
+    \begin{description}
+    \item[\boldmath \(p^0 = 1\):\unboldmath]
+      En este caso la suma es simplemente \(\mu(1) = 1\).
+    \item[\boldmath \(p^\alpha\), con \(\alpha \ge 1\):\unboldmath]
+      Acá,
+      como \(\mu(p^k) = 0\) si \(k > 1\):
+      \begin{equation*}
+	\sum_{d \mid p^\alpha} \mu(d)
+	  = \mu(1) + \mu(p) + \mu(p^2) + \dotsb + \mu(p^\alpha)
+	  = 1 + (-1) + 0 + \dotsb + 0
+	  = 0
+      \end{equation*}
+    \end{description}
+    Multiplicando sobre los factores primos de \(n\)
+    se obtiene lo prometido.
+  \end{proof}
+  La curiosa definición de \(\mu\)
+  resulta ser simplemente el inverso de la función \(1\),
+  \(1 * \mu = \epsilon\),
+  cosa que puede verificarse
+  usando el lema~\ref{lem:Dirichlet-inverse}.
+  En detalle,
+  llamando \(\mu = 1^{-1}\),
+  tenemos:
+  \begin{description}
+  \item[\boldmath \(n = 1\):\unboldmath]
+    Es \(\mu(1) = 1 / 1(1) = 1\).
+  \item[\boldmath \(n > 1\):\unboldmath]
+    En general es:
+    \begin{equation*}
+      \mu(n)
+	= - \frac{1}{1} \,
+	      \sum_{\substack{a b = n \\ b < n}}
+		1 \cdot \mu(b)
+	= - \sum_{\substack{d \mid n \\ d < n}} \mu(d)
+    \end{equation*}
+    O sea,
+    sucesivamente por el lema~\ref{lem:Dirichlet-inverse}:
+    \begin{align*}
+      \mu(2)
+	&= - \sum_{\substack{d \mid 2 \\ d < 2}} \mu(d)
+	 = - \mu(1)
+	 = -1 \\
+      \mu(3)
+	&= - \sum_{\substack{d \mid 3 \\ d < 3}} \mu(d)
+	 = - \mu(1)
+	 = -1 \\
+      \mu(4)
+	&= - \sum_{\substack{d \mid 4 \\ d < 4}} \mu(d)
+	 = - (\mu(1) + \mu(2))
+	 = 0 \\
+      \mu(5)
+	&= - \sum_{\substack{d \mid 5 \\ d < 5}} \mu(d)
+	 = - \mu(1)
+	 = -1 \\
+      \mu(6)
+	&= - \sum_{\substack{d \mid 6 \\ d < 6}} \mu(d)
+	 = - (\mu(1) + \mu(2) + \mu(3))
+	 = 1
+    \end{align*}
+  \end{description}
+  Es claro que calcular la inversa
+  por esta vía es bastante engorroso.
+
+  Esto hace útil la función de Möbius:
+  \begin{theorem}[Inversión de Möbius]
+    \index{Mobius, inversion de@Möbius, inversión de|textbfhy}
+    \label{theo:Moebius-inversion}
+    Sean dos funciones aritméticas
+    (no necesariamente multiplicativas)
+    tales que para todo \(n \in \mathbb{N}\) se cumple:
+    \begin{equation*}
+      g(n)
+	= \sum_{d \mid n} f(d)
+    \end{equation*}
+    entonces para todo \(n \in \mathbb{N}\):
+    \begin{equation*}
+      f(n)
+	= \sum_{d \mid n} \mu(d) g(n / d)
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    Tenemos:
+    \begin{align*}
+      g
+	&= 1 * f \\
+      f
+	&= \mu * g
+      \qedhere
+    \end{align*}
+  \end{proof}
+  También:
+  \begin{lemma}
+    \label{lem:Dirichlet-fg=>f}
+    Si \(g\) es multiplicativa,
+    y lo es \(f * g\),
+    entonces es multiplicativa \(f\).
+  \end{lemma}
+  \begin{proof}
+    Si alguna de las funciones es cero,
+    el resultado es obvio.
+    En caso contrario,
+    la demostración es por contradicción.
+    Definamos \(h = f * g\) para comodidad.
+    Suponemos que \(f\) no es multiplicativa,
+    con lo que existen \(m\), \(n\) mínimos con \(\gcd(m, n) = 1\)
+    tales que \(f(m n) \ne f(m) f(n)\).
+    No puede ser \(m n = 1\),
+    ya que \(h(1) = f(1) g(1)\),
+    como \(h\) y \(g\) son multiplicativas,
+    \(h(1) = g(1) = 1\),
+    con lo que \(f(1) = 1\) y \(f(1) = f(1) f(1)\).
+
+    Sabemos entonces que \(m n \ne 1\).
+    Calcularemos \(h(m n) = h(m) h(n)\) de dos maneras,
+    dejando fuera el término que involucra a \(m n\) con \(f\)
+    en ambos casos.
+    Comparando ambas llegaremos a una contradicción.
+    \begin{align*}
+      h(m n)
+	&= \sum_{u v = m n} f(u) g(v) \\
+	&= \sum_{\substack{u v = m n \\ u < m n}} f(u) g(v)
+	     + f(m n) g(1) \\
+	&= \sum_{\substack{u v = m n \\ u < m n}} f(u) g(v)
+	     + f(m n) \\
+      h(m) h(n)
+	&= \sum_{u_1 v_1 = m} f(u_1) g(v_1)
+	     \sum_{u_2 v_2 = n} f(u_2) g(v_2) \\
+	&= \sum_{\substack{u_1 v_1 = m \\ u_2 v_2 = n}}
+	     f(u_1) g(v_1) f(u_2) g(v_2) \\
+	&= \sum_{u_1 u_2 v_1 v_2 = m n}
+	     f(u_1) f(u_2) g(v_1) g(v_2) \\
+	&= \sum_{\substack{u_1 u_2 v_1 v_2 = m n \\
+			   u_1 < m \\
+			   u_2 < n}}
+	     f(u_1) f(u_2) g(v_1) g(v_2)
+	     + f(m) f(n) g(1) g(1) \\
+    \intertext{Pero \(f\) es multiplicativa hasta antes de \(m n\),
+	       y \(g\) es multiplicativa:}
+	&= \sum_{\substack{u v = m n \\ u < m n}}
+	     f(u) g(v)
+	     + f(m) f(n) \\
+      h(m n) - h(m) h(n)
+	&= f(m n) - f(m) f(n) \\
+	&\ne 0
+    \end{align*}
+    Tenemos una contradicción,
+    \(f * g\) no es multiplicativa,
+    contrario a la hipótesis.
+  \end{proof}
+  \begin{corollary}
+    \label{cor:Dirichlet-inverse-multiplicative}
+    La inversa de una función multiplicativa es multiplicativa.
+  \end{corollary}
+  \begin{proof}
+    Si \(f\) es multiplicativa,
+    entonces \(f * f^{-1} = \epsilon\)
+    cumplen las hipótesis del lema~\ref{lem:Dirichlet-fg=>f}.
+  \end{proof}
+  Uniendo las piezas:
+  \begin{theorem}
+    \label{theo:Dirichlet-ring}
+    El conjunto de funciones aritméticas%
+      \index{funcion@función!aritmetica@aritmética}
+    \(\mathscr{A}\) es un anillo conmutativo%
+      \index{anillo!conmutativo}
+    con suma de funciones
+    y convolución de Dirichlet como multiplicación.
+    Su grupo de unidades
+    es el conjunto de funciones multiplicativas
+    que no son cero,
+    \(\mathscr{M} \smallsetminus \{0\}\).
+  \end{theorem}
+
+  Tenemos también:
+  \begin{theorem}[Identidad de Gauß]
+    \index{Gauss, identidad de@Gauß, identidad de|textbfhy}
+    \index{Gauss, Carl Friedrich@Gauß, Carl Friedrich}
+    \label{theo:Gauss-identity}
+    Tenemos:
+    \begin{equation*}
+      \sum_{d \mid n} \phi(d)
+	= n
+    \end{equation*}
+  \end{theorem}
+  \begin{proof}
+    La suma es multiplicativa,
+    basta evaluarla para las potencias de un primo \(p\).
+    Pero:
+    \begin{align*}
+      \sum_{d \mid p^\alpha} \phi(d)
+	&= \phi(p^0) + \sum_{1 \le k \le \alpha} \phi(p^k) \\
+	&= 1 + \sum_{1 \le k \le \alpha} (p^k - p^{k - 1}) \\
+	&= p^\alpha
+    \end{align*}
+    Resulta la fórmula prometida
+    al multiplicar sobre los primos factores de \(n\).
+  \end{proof}
+  Un resultado útil es el siguiente:
+  \begin{theorem}
+    \label{theo:sum-mu-f}
+    Sea \(f\) una función multiplicativa distinta de cero,
+    y sea \(n = p_1^{e_1} p_2^{e_2} \dotsm p_r^{e_r}\)
+    con \(p_k\) primos distintos y \(e_k \ge 1\).
+    Entonces:
+    \begin{equation}
+      \label{eq:sum-mu-f}
+      \sum_{d \mid n} \mu(d) f(d)
+	= \prod_k (1 - f(p_k))
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    La función \(\mu(n) f(n)\) es multiplicativa,
+    con lo que lo es la suma a evaluar.
+    Basta evaluar la suma para \(p^e\)
+    con \(p\) primo y \(e \ge 1\)
+    y luego combinar.
+    Como \(f(1) = 1\):
+    \begin{align*}
+      \sum_{d \mid p^e} \mu(d) f(d)
+	&= \sum_{0 \le k \le e} \mu(p^k) f(p^k) \\
+	&= \mu(1) f(1) + \mu(p) f(p) \\
+	&= 1 - f(p)
+    \end{align*}
+  \end{proof}
+
+  Usando la convolución de Dirichlet%
+    \index{Dirichlet, convolucion de@Dirichlet, convolución de}
+  resulta simple demostrar fórmulas
+  que de otra forma serían casi imposibles.
+  Considere:
+  \begin{align*}
+    \tau
+      &= 1 * 1 \\
+    \sigma
+      &= \iota * 1 \\
+    \phi
+      &= \mu * \iota
+  \end{align*}
+  La última no es más que la identidad de Gauß,%
+    \index{Gauss, identidad de@Gauß, identidad de}
+  que así podemos reescribir:
+  \begin{equation*}
+    \sum_{d \mid n} d \mu(d)
+      = \phi(n)
+  \end{equation*}
+  Evaluemos ahora:
+  \begin{equation*}
+    \sum_{d \mid n} \phi(d) \tau(n / d)
+  \end{equation*}
+  que es decir:
+  \begin{equation*}
+    \phi * \tau
+      = \mu * \iota * 1 * 1
+      = \mu * 1 * \iota * 1
+      = \epsilon * \sigma
+      = \sigma
+  \end{equation*}
+  También podemos calcular:
+  \begin{equation*}
+    \sum_{d \mid n} \mu(d) \tau(n / d)
+  \end{equation*}
+  que es:
+  \begin{equation*}
+    \mu * \tau
+      = \mu * 1 * 1
+      = 1
+  \end{equation*}
+  Pero también,
+  si \(n = p_1^{e_1} p_2^{e_2} \dotsm p_r^{e_r}\)
+  con \(p_k\) primos distintos y \(e_k \ge 1\),
+  por el teorema~\ref{theo:sum-mu-f}
+  al ser \(\tau(p) = 2\):
+  \begin{align*}
+    \sum_{d \mid n} \mu(d) \tau(d)
+      &= \prod_k (1 - \tau(p)) \\
+      &= (-1)^r
+  \end{align*}
+  La suma resulta ser \(1\)
+  si \(n\) es divisible por un número par de primos distintos
+  y \(-1\) en caso contrario.
+  Asimismo:
+  \begin{align*}
+    \sum_{d \mid n} \mu^2(d)
+      &= \prod_k (1 - \mu(p_k)) \\
+      &= 2^r
+  \end{align*}
+
+  Partiendo de la identidad de Gauß:%
+    \index{Gauss, identidad de@Gauß, identidad de}
+  \begin{align*}
+    \sum_{d \mid n} \phi(d)
+      &= n \\
+    \phi(n)
+      &= \sum_{d \mid n} \mu(d) \frac{n}{d} \\
+      &= n \sum_{d \mid n} \frac{\mu(d)}{d} \\
+      &= n \prod_k \left( 1 - \frac{1}{p_k} \right)
+  \end{align*}
+  Otra derivación de la fórmula para \(\phi\).%
+    \index{\(\phi\) de Euler}
+
+  Consideremos palabras formadas
+  con símbolos de algún alfabeto \(\Sigma\),
+  por ejemplo \(\Sigma = \{a, b, c\}\).%
+    \index{palabra}
+  Una palabra puede ser la repetición de una palabra más corta,
+  como \(\mathtt{baba}\).
+  A la parte mínima que se repite para formar una palabra
+  le llamaremos su \emph{raíz}.%
+    \index{palabra!primitiva!raiz@raíz}
+  Así,
+  la raíz de \(\mathtt{ababab}\) es \(\mathtt{ab}\),
+  la raíz de \(\mathtt{acaba}\) es \(\mathtt{acaba}\).
+  Nos interesa el número de palabras que son sus propias raíces
+  (no son repeticiones de palabras más cortas),
+  a las que llamaremos \emph{primitivas}.%
+    \index{palabra!primitiva}
+
+  Por ejemplo,
+  para \(\Sigma = \{ a, b \}\)
+  el número total de palabras de largo \(4\) es \(2^4 = 16\).
+  Debemos descontar
+  las que se forman repitiendo palabras primitivas.
+  Palabras primitivas de largo \(1\)
+  son \(\mathtt{a}\) y \(\mathtt{b}\),
+  que dan lugar a \(\mathtt{aaaa}\) y \(\mathtt{bbbb}\);
+  primitivas de largo \(2\) son \(\mathtt{ab}\) y \(\mathtt{ba}\),
+  que dan lugar a \(\mathtt{abab}\) y \(\mathtt{baba}\).
+  En total hay \(4\) palabras no primitivas,
+  y por lo tanto son \(12\) las primitivas.
+
+  Llamemos \(p(n)\)
+  al número de palabras primitivas de largo \(n\)
+  (esto claramente depende del número \(s\)
+   de símbolos en el alfabeto).
+  Como toda palabra es la repetición de alguna palabra
+  (cuyo largo divide a \(n\))
+  podemos escribir:
+  \begin{equation*}
+    s^n
+      = \sum_{d \mid n} p(d)
+  \end{equation*}
+  Inversión de Möbius%
+    \index{Mobius, inversion de@Möbius, inversión de}
+  nos da:
+  \begin{equation*}
+    p(n)
+      = \sum_{d \mid n} \mu(n / d) s^d
+  \end{equation*}
+    \index{palabra!primitiva!numero@número}
+
+  Para el ejemplo el alfabeto es \(\{ a, b \}\),
+  que da \(s = 2\),
+  y es \(n = 4\).
+  Resulta:
+  \begin{align*}
+    p(4)
+      &= \sum_{d \mid 4} \mu(4 / d) \cdot 2^d \\
+      &= \mu(4) \cdot 2^1 + \mu(2) \cdot 2^2 + \mu(1) \cdot 2^4 \\
+      &= 0 \cdot 2 - 1 \cdot 4 + 1 \cdot 16 \\
+      &= 12
+  \end{align*}
+  lo que confirma nuestro cálculo anterior.
+
+  Pero la fórmula permite calcular valores mucho mayores
+  en forma simple:
+  \begin{align*}
+    p(12)
+      &= \sum_{d \mid 12} \mu(12 / d) \cdot 2^d \\
+      &= \mu(12) \cdot 2^1
+	   + \mu(6) \cdot 2^2
+	   + \mu(4) \cdot 2^3
+	   + \mu(2) \cdot 2^6
+	   + \mu(1) \cdot 2^{12} \\
+      &= 0 \cdot 2
+	   + 1 \cdot 4
+	   + 0 \cdot 8
+	   - 1 \cdot 64
+	   + 1 \cdot 4096 \\
+      &= 4036
+  \end{align*}
+
+  Puede profundizarse bastante
+  partiendo de los conceptos anteriores,
+  aún sin usar técnicas sofisticadas,
+  como muestra magistralmente Moser~%
+    \cite{moser04:_introd_theor_number}.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

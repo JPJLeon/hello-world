@@ -1,0 +1,85 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{fourier}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2cm, right = 2cm]{geometry}
+
+\newcommand{\num}{2}
+
+\title{Estructuras Discretas \\
+       Tarea \#\num \\
+       ``¡¿Hay que demostrarlo?!''}
+\author{Discrete Structures Warriors}
+\date{30 de marzo de 2015}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{Preguntas}
+
+  Se piden demostraciones claras y completas de cada una de las siguientes.
+
+  \begin{enumerate}
+  \item
+    Recordando las definiciones para conjuntos:
+    \begin{align*}
+      \mathcal{A} \subseteq \mathcal{B}
+	&\equiv (x \in \mathcal{A}) \implies (x \in \mathcal{B}) \\
+      \mathcal{A} \cup \mathcal{B}
+	&= \{x \colon x \in \mathcal{A} \vee x \in \mathcal{B} \} \\
+      \mathcal{A} \cap \mathcal{B}
+	&= \{x \colon x \in \mathcal{A} \wedge x \in \mathcal{B} \}
+    \end{align*}
+    demuestre que las siguientes tres son equivalentes:
+    \begin{enumerate}
+    \item
+      \(\mathcal{A} \subseteq \mathcal{B}\)
+    \item
+      \(\mathcal{A} \cup \mathcal{B} = \mathcal{B}\)
+    \item
+      \(\mathcal{A} \cap \mathcal{B} = \mathcal{A}\)
+    \end{enumerate}
+    Nótese que está demostrando \(3\) equivalencias,
+    lo que se reduce a \(6\) implicancias.
+    Explique cómo simplifica esto.
+    \\ \hspace*{\fill}(30 puntos)
+  \item
+    Para cada una de las siguientes
+    dé un ejemplo de conjuntos \(\mathcal{A}, \mathcal{B}, \mathcal{C}\)
+    que cumplan lo indicado
+    o demuestre que la situación es imposible.
+    \begin{enumerate}
+    \item
+      \(\mathcal{A} \subseteq \mathcal{B},
+	\mathcal{B} \not\subseteq \mathcal{C},
+	\mathcal{A} \subseteq \mathcal{C}\)
+    \item
+      \(\mathcal{A} \not\subseteq \mathcal{B},
+	\mathcal{B} \not\subseteq \mathcal{C},
+	\mathcal{A} \subseteq \mathcal{C}\)
+    \item
+      \(\mathcal{A} \not\subseteq \mathcal{B},
+	\mathcal{B} \subseteq \mathcal{C},
+	\mathcal{A} \subseteq \mathcal{C}\)
+    \end{enumerate}
+    \hspace*{\fill}(30 puntos)
+  \item
+    Demuestre por inducción que para todo \(n\),
+    \(n^3 - n\) es divisible por \(6\).
+    \\ \hspace*{\fill}(15 puntos)
+  \item
+    Demuestre que para todo \(n \ge 2\):
+    \begin{equation*}
+      \prod_{2 \le k \le n} \left( 1 - \frac{1}{k^2} \right)
+	= \frac{n + 1}{2 n}
+    \end{equation*}
+    \\ \hspace*{\fill}(25 puntos)
+  \end{enumerate}
+
+\input{condiciones}
+  \vfill\hfill DSW/HvB/\LaTeXe
+\end{document}

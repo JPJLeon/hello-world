@@ -1,0 +1,158 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{2mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit]{titlesec}
+
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+\newcommand{\definicion}[1]{\textit{\underline{\smash{#1}}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=0.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=0.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#8\quad Problemas de Optimización}}
+\renewcommand{\headrulewidth}{2pt}
+
+\author{Aldo Berrios Valenzuela}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#8\\Problemas de Optimización}
+\begin{document}
+\maketitle
+\section{Problema de Optimización}
+\subsection{Problema de Tareas}
+\begin{teorema}
+	Para el problema de programación de tareas, la estrategia de elegir en cada paso la tarea sin conflicto con fin más temprano entrega una solución óptima.
+\end{teorema}
+
+\begin{proof}
+	Por inducción sobre $\nabsoluto{P}$, el número de tareas.
+	\begin{itemize}
+		\item \emph{Base:} Si hay una única tarea, la estrategia la programa. Esto es óptimo.
+		
+		\item \emph{Inducción:} Supongamos que obtiene una solución óptima para a lo más $k$ tareas. Sea $P$ una instancia con $\nabsoluto{P}=k+1$. Elegimos $\hat{p}$ según criterio por elección voraz hay solución óptima que lo incluye, queda $P'$, $\nabsoluto{P'}\leq k$.
+		
+		Por inducción, obtengo una solución óptima $\Pi'$ de $P'$. Combinando $\Pi'\cup\llaves{\hat p}$ tengo una solución óptima para $P$, por SO (sub-estructura óptima).
+	\end{itemize}
+\end{proof}
+
+\subsection{Knapsack (mochila)}
+Hay una mochila de capacidad $M$, y un conjunto de $n$ tipos de item, del item tipo $i$ hay disponible $p_i$ en total, de valor $v_i$. Se pueden incluir fracciones de item (es café, azúcar, arroz, \ldots)
+
+Estrategia:
+\begin{itemize}
+	\item Ordenar los ítem por
+	\begin{equation*}
+	\dfrac{v_i}{p_i}
+	\end{equation*}
+	decreciente.
+	
+	\item Echar en la mochila sucesivamente todo lo que se pueda del ítem $i$, en el orden anterior.
+\end{itemize}
+
+\textbf{EVQA:} Cumple con EV, EI, SO $\Rightarrow$ dar solución óptima.
+
+\paragraph{Mochila de Discreta:} El item $i$ se agrega completo o no (no fracciones). $\rightsquigarrow$ estrategia voraz \emph{no}  da óptimo.\\[-1em]
+
+\textbf{EQVA: } Contraejemplo.
+
+\subsection{Minimal Spanning Tree}
+Dado un grafo $G=\nparentesis{V, E}$, con arcos rotulados $c:E\rightarrow \mathbb{R}^+$, se busca el árbol recubridor (o sea, el que une todos los vértices) de costos mínimo (suma de los $c$ sobre sus arcos).	
+
+
+\end{document}

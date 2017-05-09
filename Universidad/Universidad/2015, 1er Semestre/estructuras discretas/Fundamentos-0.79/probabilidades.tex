@@ -1,0 +1,1450 @@
+ probabilidades.tex
+%
+% Copyright (c) 2013-2015 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\chapter{Rudimentos de probabilidades discretas}
+\label{cha:probabilidad-discreta}
+\index{probabilidad}
+
+  Muchas aplicaciones involucran describir lo que ocurre
+  cuando interviene el azar.
+  Por ejemplo,
+  cuál es la probabilidad
+  con la que al lanzar dos dados la suma sea seis.
+  Al analizar algoritmos
+  suele ser de interés su rendimiento promedio,
+  y poder cuantificar cuánto se espera pueda desviarse de él.
+
+  Las situaciones que se presentan en casos de nuestro interés
+  se pueden describir en forma discreta.
+  Nos restringiremos a esta situación.
+  Para profundizar en el tema
+  (incluyendo probabilidades continuas)
+  se recomienda el texto de Grinstead y Snell~%
+    \cite{grinstead97:_introd_probab},
+  una visión más completa da Feller en sus textos clásicos~%
+    \cite{feller68:_intro_probab_theo_applic_1,
+	  feller71:_intro_probab_theo_applic_2}.
+
+\section{Probabilidades}
+\label{sec:probabilidades}
+
+  Primero consideraremos experimentos al azar
+  en los cuales hay un número finito de resultados
+  \(\omega_1, \omega_2, \dotsc, \omega_n\).
+  El ejemplo tradicional es el lanzar un dado,
+  con posibles resultados
+    \(1\), \(2\), \(3\), \(4\), \(5\) y \(6\).
+  Otro ejemplo es lanzar una moneda,
+  con resultados cara o sello
+  (generalmente anotados \(\mathrm{H}\)
+   por \emph{\foreignlanguage{english}{head}}
+   y \(\mathrm{T}\)
+   por \emph{\foreignlanguage{english}{tail}} en inglés).
+
+  Comúnmente nos referiremos a resultados de experimentos,
+  como lanzar un dado cuatro veces
+  y preguntarnos por la suma de los cuatro valores.
+  En tal circunstancia podemos denotar el valor de cada lanzamiento
+  por \(X_i\),
+  con \(i = 1, 2, 3, 4\).
+  La suma de interés entonces es:
+  \begin{equation}
+    \label{eq:suma-4-dados}
+    X_1 + X_2 + X_3 + X_4
+  \end{equation}
+  Los \(X_i\) son \emph{variables aleatorias},%
+    \index{variable aleatoria|textbfhy}
+  simplemente expresiones
+  cuyo valor es el resultado de un experimento.
+  La suma~\eqref{eq:suma-4-dados} también es una variable aleatoria.
+
+  Sea \(X\) la variable aleatoria
+  que representa el resultado de un experimento.
+  Asignaremos probabilidades
+  a los posibles resultados de ese experimento.
+  Esto lo hacemos a través de asignar un número no negativo
+  \(f_X(\omega_j)\) a cada posible resultado \(\omega_j\)
+  de manera que:
+  \begin{equation}
+    \label{eq:sum_probabilities=1}
+    f_X(\omega_1) + f_X(\omega_2) + \dotsb + f_X(\omega_n)
+      = 1
+  \end{equation}
+  A la función \(f_X\)
+  se le llama la \emph{función de distribución}%
+    \index{variable aleatoria!funcion de distribucion@función de distribución|textbfhy}
+  de la variable aleatoria \(X\).
+  Para el caso del lanzamiento de un dado
+  asignaríamos iguales probabilidades de \(1 / 6\)
+  a cada uno de los posibles resultados.
+  Así podemos escribir para las probabilidades
+  de que se cumplan las situaciones dadas:
+  \begin{align*}
+    \Pr(X = 1)
+      &= \frac{1}{6} \\
+    \Pr(X \le 4)
+      &= \frac{2}{3} \\
+    \Pr(X \in \{1, 3, 4\})
+      &= \frac{1}{2}
+  \end{align*}
+  De la misma forma,
+  al lanzar una moneda
+  es natural asignar las probabilidades \(1 / 2\) a cara y a sello.
+
+  En los ejemplos precedentes las probabilidades asignadas
+  a los distintos resultados son iguales,
+  pero esto no siempre será así.
+  Si se ha determinado que cierto tratamiento
+  tiene un \(70\)\% de éxitos,
+  asignaríamos la probabilidad \(0,70\)
+  a que el siguiente tratamiento resulte exitoso.
+  Esto,
+  con los casos anteriores,
+  ilustra el concepto intuitivo
+  de \emph{probabilidades como frecuencias}.%
+    \index{probabilidad!como frecuencia}
+  Vale decir,
+  si hay una probabilidad \(p\)
+  que el resultado de un experimento sea \(A\),
+  si repetimos el experimento gran número de veces
+  esperamos que una fracción \(p\) de los resultados sea \(A\).
+
+  El lector alerta protestará que todo esto es circular:
+  Estamos \emph{aseverando} que las probabilidades
+  corresponden a frecuencias relativas ``en muchos experimentos''
+  (pero también es posible que al lanzar una moneda mil veces
+   resulte cara mil veces),
+  para luego usar la idea
+  que ciertos eventos son ``igualmente probables''
+  y extraer probabilidades de ello.
+  Para una base realmente rigurosa véase por ejemplo Ash~%
+    \cite{ash08:_basic_probab_theo}.
+  La teoría allí expuesta justifica nuestro tratamiento intuitivo,
+  que sigue a Grinstead y Snell~%
+    \cite{grinstead97:_introd_probab}.
+  Para nuestros efectos generalmente bastará
+  suponer que ciertos resultados son igualmente probables.
+
+\section{Distribuciones discretas}
+\label{sec:distribuciones-discretas}
+\index{probabilidad!distribucion discreta@distribución discreta}
+
+  Analizaremos múltiples experimentos
+  desde el punto de vista probabilístico
+  en lo que sigue.
+  La idea global de lo que haremos se puede describir como sigue:
+  Cada experimento tiene asociada una variable aleatoria,
+  que representa los posibles resultados del experimento.
+  El conjunto de posibles resultados es el \emph{espacio muestral}.%
+    \index{espacio muestral|see{probabilidad!distribución discreta}}
+  Primero consideraremos el caso de espacios muestrales finitos,
+  para luego extender la discusión
+  a espacios muestrales infinitos numerables.
+
+  \begin{definition}
+    Suponga un experimento cuyo resultado depende del azar.
+    El resultado del experimento se representa por
+    una \emph{variable aleatoria}.%
+      \index{variable aleatoria|textbfhy}
+    El \emph{espacio muestral} del experimento%
+      \index{espacio muestral|see{probabilidad!distribución discreta}}
+    es el conjunto de todos los posibles resultados.
+    Si el espacio muestral es numerable,
+    se dice que la variable aleatoria es \emph{discreta}.
+  \end{definition}
+  Completamos lo anterior con dos términos adicionales.
+  \begin{definition}
+    Los elementos del espacio muestral se llaman \emph{resultados}.
+    Un \emph{evento} es un subconjunto del espacio muestral.%
+      \index{probabilidad!evento}
+  \end{definition}
+  Usamos letras mayúsculas
+  para representar el resultado del experimento,
+  y generalmente anotaremos \(\Omega\) para el espacio muestral.
+  Usaremos letras minúsculas para resultados
+  y eventos por mayúsculas.
+  Al lanzar un dado,
+  si llamamos \(X\) al resultado del experimento
+  (el número que muestra el dado),
+  el espacio muestral es:
+  \begin{equation*}
+    \Omega
+      = \{ 1, 2, 3, 4, 5, 6 \}
+  \end{equation*}
+  Un evento es que el resultado sea par,
+  o sea \(E = \{ 2, 4, 6 \}\).
+  Bajo la suposición que el dado no está cargado,
+  es natural considerar
+  que cada posible resultado tiene la misma probabilidad,
+  \(f_X(i) = 1 / 6\) para \(1 \le i \le 6\).
+  \begin{definition}
+    Considere un experimento
+    cuyo resultado es la variable aleatoria \(X\),
+    con espacio muestral \(\Omega\).
+    Una \emph{función de distribución} para \(X\)%
+      \index{probabilidad!funcion de distribucion@función de distribución}
+    es una función \(f_X \colon \Omega \rightarrow \mathbb{R}\)
+    tal que:
+    \begin{align}
+      f_X(\omega)
+	&\ge 0
+	    \label{eq:f(omega)>=0} \\
+      \sum_{\omega \in \Omega} f_X(\omega)
+	&= 1
+	    \label{eq:sum_f(omega)=1}
+    \end{align}
+    Para cualquier subconjunto \(E \subseteq \Omega\)
+    definimos la \emph{probabilidad del evento \(E\)}%
+      \index{probabilidad!evento|textbfhy}
+    como:
+    \begin{equation*}
+      \Pr(E)
+	= \sum_{\omega \in E} f_X(\omega)
+    \end{equation*}
+  \end{definition}
+  Esto ya debiera alertar al lector que manipulaciones de conjuntos
+  serán centrales en la discusión.
+  La notación así introducida es consistente con la idea informal
+  planteada antes.
+
+  Una consecuencia inmediata de la definición
+  es que para todo \(\omega \in \Omega\):
+  \begin{equation*}
+    \Pr(\{\omega\})
+      = f_X(\omega)
+  \end{equation*}
+
+  Consideremos el experimento de lanzar una moneda dos veces.
+  Podemos registrar el resultado de diversas maneras,
+  dando el orden en que se dieron cara y cruz
+  (\(\Omega
+      = \{ \mathrm{HH}, \mathrm{HT}, \mathrm{TH}, \mathrm{TT} \}\)),
+  el número de veces que salió cara
+  (\(\Omega = \{0, 1, 2\}\))
+  o como los pares sin importar el orden
+  (\(\Omega = \{ \mathrm{HH}, \mathrm{HT}, \mathrm{TT} \}\)).
+  Sea \(X\)
+  la variable aleatoria que corresponde a este experimento,
+  con el primer espacio muestral descrito.
+  Asumiremos que cada uno de los resultados es igualmente probable,
+  o sea la función de distribución \(f_X\) dada por:
+  \begin{equation*}
+    f_X(\mathrm{HH})
+      = f_X(\mathrm{HT})
+      = f_X(\mathrm{TH})
+      = f_X(\mathrm{TT})
+      = \frac{1}{4}
+  \end{equation*}
+  Para el evento \(E = \{\mathrm{HT}, \mathrm{TH}\}\)
+  (una cara, una cruz)
+  tenemos:
+  \begin{equation*}
+    \Pr(E)
+      = \frac{1}{4} + \frac{1}{4}
+      = \frac{1}{2}
+  \end{equation*}
+
+  Tenemos algunas propiedades simples.
+  \begin{theorem}
+    \index{probabilidad!evento!propiedades}
+    \label{theo:properties-probabilities-events}
+    Sea \(f\) una función de distribución
+    sobre el espacio muestral \(\Omega\).
+    Las probabilidades que \(f\)
+    asigna a eventos \(E \subseteq \Omega\)
+    cumplen:
+    \begin{enumerate}
+    \item
+      \label{item:nonnegative}
+      \(\Pr(E) \ge 0\) para todo \(E \subseteq \Omega\)
+    \item
+      \label{item:universe=1}
+      \(\Pr(\Omega) = 1\)
+    \item
+      \label{item:subset}
+      Si \(E \subseteq F \subseteq \Omega\)
+      entonces \(\Pr(E) \le \Pr(F)\).
+    \item
+      \label{item:disjoint-union}
+      Si \(A\) y \(B\) son subconjuntos disjuntos de \(\Omega\),
+      entonces \(\Pr(A \cup B) = \Pr(A) + \Pr(B)\).
+      En este caso se dice
+      que \emph{\(A\) y \(B\) son mutuamente excluyentes}.%
+	\index{probabilidad!evento!mutuamente excluyente}
+    \item
+      \label{item:complement}
+      \(\Pr(\overline{A}) = 1 - \Pr(A)\)
+    \end{enumerate}
+  \end{theorem}
+  \begin{proof}
+    Cada propiedad por turno.
+    \begin{enumerate}
+    \item
+      Por definición:
+      \begin{equation*}
+	\Pr(E)
+	  = \sum_{\omega \in E} f(\omega)
+      \end{equation*}
+      Como a su vez \(f(\omega) \ge 0\),
+      concluimos que \(\Pr(E) \ge 0\).
+    \item
+      Esto no es más que:
+      \begin{equation*}
+	\Pr(\Omega)
+	  = \sum_{\omega \in \Omega} f(\omega)
+	  = 1
+      \end{equation*}
+    \item
+      Supongamos \(E \subseteq F\).
+      Tenemos:
+      \begin{equation*}
+	\Pr(E)
+	  =   \sum_{\omega \in E} f(\omega)
+	  \le \sum_{\omega \in F} f(\omega)
+	  =   \Pr(F)
+      \end{equation*}
+      ya que cada término de la primera suma está en la segunda,
+      y los términos de la segunda suma que no estén en la primera
+      no son negativos.
+    \item
+      Si \(A \cap B = \varnothing\),
+      entonces:
+      \begin{equation*}
+	\Pr(A \cup B)
+	  = \sum_{\omega \in A \cup B} f(\omega)
+	  = \sum_{\omega \in A} f(\omega)
+	     + \sum_{\omega \in B} f(\omega)
+	  = \Pr(A)+ \Pr(B)
+      \end{equation*}
+    \item
+      Aplicando las propiedades~\ref{item:disjoint-union}
+      y~\ref{item:universe=1} a \(A \cup \overline{A} = \Omega\)
+      resulta:
+      \begin{equation*}
+	\Pr(A) + \Pr(\overline{A})
+	 = 1
+      \end{equation*}
+      que es equivalente a lo indicado.
+    \qedhere
+    \end{enumerate}
+  \end{proof}
+  Es común que sea más fácil calcular
+  la probabilidad de que un evento no ocurra,
+  en tal caso es útil la propiedad~\ref{item:complement}.
+
+  La propiedad~\ref{item:disjoint-union}
+  del teorema~\ref{theo:properties-probabilities-events}
+  puede extenderse a uniones disjuntas finitas:
+  \begin{theorem}
+    \label{theo:disjoint-events}
+    Sean \(A_1\), \(A_2\), \ldots, \(A_n\)
+    subconjuntos de \(\Omega\),
+    disjuntos a pares.
+    Entonces:
+    \begin{equation*}
+      \Pr(A_1 \cup A_2 \cup \dotsb \cup A_n)
+	= \sum_{1 \le k \le n} \Pr(A_k)
+    \end{equation*}
+  \end{theorem}
+  Usaremos la siguiente consecuencia con frecuencia:%
+    \index{probabilidad!evento!mutuamente excluyente}
+  \begin{corollary}
+    \label{cor:disjoint-events-intersection}
+    Sean \(A_1\), \(A_2\), \ldots, \(A_n\)
+    mutuamente excluyentes
+    (vale decir,
+     disjuntos a pares),
+    tales que \(A_1 \cup A_2 \cup \dotsb \cup A_n = \Omega\),
+    y \(E\) un evento cualquiera.
+    Entonces:
+    \begin{equation*}
+      \Pr(E)
+	= \sum_{1 \le k \le n} \Pr(E \cap A_k)
+    \end{equation*}
+  \end{corollary}
+  \begin{proof}
+    Los conjuntos \(E \cap A_k\) son disjuntos a pares,
+    y su unión es \(E\).
+  \end{proof}
+  Una consecuencia útil es:
+  \begin{corollary}
+    \label{cor:event-intersection-and-complement}
+    Para cualquier par de eventos \(A\) y \(B\):
+    \begin{equation*}
+      \Pr(A)
+	= \Pr(A \cap B) + \Pr(A \cap \overline{B})
+      \qedhere
+    \end{equation*}
+  \end{corollary}
+  Usando las anteriores con~\eqref{eq:suma-union-interseccion}
+  obtenemos:
+  \begin{theorem}
+    \label{theo:probability-union}
+    Si \(A\) y \(B\) son subconjuntos de \(\Omega\):
+    \begin{equation*}
+      \Pr(A \cup B)
+	= \Pr(A) + \Pr(B) - \Pr(A \cap B)
+    \end{equation*}
+  \end{theorem}
+  Extender este resultado a más conjuntos
+  es precisamente el principio de inclusión y exclusión,
+  tema del capítulo~\ref{cha:pie}.
+
+\subsection{Función generatriz de probabilidad}
+\label{sec:PGF}
+\index{probabilidad!funcion generatriz de@función generatriz de|textbfhy}
+
+  Formalmente para la variable aleatoria \(X\)
+  se define la \emph{función generatriz de probabilidades}
+  (abreviada \emph{pgf},
+  del inglés
+  \emph{\foreignlanguage{english}
+       {probability generating function}}) como:
+  \begin{equation}
+    \label{eq:pgf-def}
+    G(z)
+      = \E[z^X]
+  \end{equation}
+  En nuestro caso el espacio muestral es \(\Omega = \mathbb{N}_0\),
+  con la función de distribución
+  \(f \colon \mathbb{N}_0 \rightarrow \mathbb{R}\).
+  La definición~\eqref{eq:pgf-def}
+  se traduce en:
+  \begin{equation}
+    \label{eq:pgf}
+    G(z)
+      = \sum_{n \ge 0} f(n) z^n
+  \end{equation}
+  Esto no es más que la función generatriz ordinaria%
+    \index{generatriz!ordinaria}
+  de la secuencia \(\langle f(k) \rangle_{k \ge 0}\).
+  La condición~\eqref{eq:sum_f(omega)=1}
+  se traduce en:
+  \begin{equation}
+    \label{eq:pgf(1)=1}
+    G(1)
+      = 1
+  \end{equation}
+  Un dato interesante
+  es que si tenemos variables independientes \(X\) e \(Y\),
+  con distribuciones \(f_X\) y \(f_Y\),
+  respectivamente;
+  y cuyas funciones generatrices de probabilidad son
+  respectivamente \(G_X\) y \(G_Y\),
+  tenemos la función generatriz de probabilidad
+  \(G_{X + Y}\) para la suma \(X + Y\):
+  \begin{align}
+    G_{X + Y}(z)
+      &= \sum_{x, y} f_X(x) f_Y(y) z^{x + y}
+	     \notag \\
+      &= \left(\sum_x f_X(x) z^x\right)
+	   \cdot \left(\sum_y f_Y(y) z^y\right)
+	     \notag \\
+      &= G_X(z) \cdot G_Y(z)
+	     \label{eq:PGF-sum}
+  \end{align}
+
+  Planteado el modelo de un experimento al azar,
+  queda el problema de determinar las probabilidades
+  que mejor describen el experimento.
+  Afortunadamente,
+  en muchas situaciones simples
+  cada evento elemental es igualmente probable.
+  \begin{theorem}
+    \label{theo:equilikely-principle}
+    Si \(\Omega\) es finito,
+    y cada resultado es igualmente probable,
+    la probabilidad del evento \(E\)
+    es:
+    \begin{equation*}
+      \Pr(E)
+	= \frac{\lvert E \rvert}{\lvert \Omega \rvert}
+    \end{equation*}
+  \end{theorem}
+  En tales situaciones el cálculo de probabilidades
+  se reduce a contar los elementos de los eventos,
+  lo que lleva a combinatoria
+  como desarrollada en el capítulo~\ref{cha:combinatoria-elemental},
+  involucra aplicaciones del principio de inclusión y exclusión
+  discutido en el capítulo~\ref{cha:pie}
+  o técnicas más avanzadas como las expuestas en el capítulo~%
+    \ref{cha:metodo-simbolico} y siguientes.
+
+\subsection{Función generatriz de momentos}
+\label{sec:generatriz-momentos}
+
+  Formalmente,
+  se define la \emph{función generatriz de momentos}%
+    \index{momentos!funcion generatriz de!función generatriz de}
+  (abreviada \emph{mgf},
+   del inglés \emph{\foreignlanguage{english}{moment generating function}})
+  para la variable aleatoria \(X\)
+  mediante:
+  \begin{equation}
+    \label{eq:mgf-def}
+    M(z)
+      = \E[\mathrm{e}^{z X}]
+  \end{equation}
+  Recordando~\eqref{eq:pgf-def} vemos que:
+  \begin{equation}
+    \label{eq:mgf-pgf}
+    M(z)
+      = G(\mathrm{e}^z)
+  \end{equation}
+
+  Podemos evaluar:
+  \begin{align}
+    M(z)
+      &= \E[e^{z X}] \notag \\
+      &= \E\left[ \sum_{r \ge 0} \frac{z^r X^r}{r!} \right] \notag \\
+      &= \sum_{r \ge 0} \E[X^r] \frac{z^r}{r!}
+	   \label{eq:mgf-moments}
+  \end{align}
+  Esta es la función generatriz exponencial
+  de los momentos \(\E[X^n]\) de la variable.
+
+\subsection{Problemas de urna}
+\label{sec:urn-problems}
+\index{probabilidad!modelo de urna}
+
+  Muchas situaciones simples de probabilidades se pueden describir
+  en el marco de una urna que contiene bolas,
+  las cuales se extraen y se notan.
+  Consideremos una urna que contiene \(n\) bolas,
+  numeradas \(1\) a \(n\),
+  de las que se extraen \(k\).
+  Esto puede hacerse de diversas maneras.
+  Primeramente,
+  podemos extraer las bolas una a una
+  (el orden en que se extraen importa)
+  o sacarlas de una vez
+  (el orden no importa).
+  En el último caso
+  resulta conveniente
+  considerar igual que las bolas se sacan de a una,
+  pero el orden no interesa.
+  Enseguida,
+  una vez que se extrae una bola podemos notarla
+  y devolverla a la urna,
+  o dejarla fuera
+  (con y sin reemplazo).
+  Parte del arte es reconocer estas cuatro situaciones
+  aún si parecieran no ser aplicables.
+  Para distinguir los casos
+  anotamos elementos ordenados como tupla, \((1, 3, 2)\);
+  y elementos no ordenados como (multi)conjunto, \(\{ 1, 2, 3 \}\).
+
+  Podemos aplicar
+  las técnicas del capítulo~\ref{cha:combinatoria-elemental}%
+    \index{combinatoria}
+  para contar las posibilidades en los cuatro casos resultantes:
+  \begin{description}
+  \item[Ordenadas, sin reemplazo:]
+    \index{combinatoria!permutacion@permutación}
+    Vemos que la primera bola se puede elegir de \(n\) maneras,
+    la segunda entre las \(n - 1\) restantes,
+    y así sucesivamente.
+    Son permutaciones de \(k\) elementos tomados entre \(n\):
+    \begin{equation*}
+      G(n, k)
+	= n^{\underline{k}}
+    \end{equation*}
+  \item[Ordenadas, con reemplazo:]
+    \index{combinatoria!secuencia}
+    En este caso
+    cada una de las \(k\) bolas se elige entre las \(n\):
+    \begin{equation*}
+      n^k
+    \end{equation*}
+  \item[Sin orden, sin reemplazo:]
+    \index{combinatoria!combinacion@combinación}
+    Es elegir un subconjunto de \(k\) los \(n\) elementos,
+    lo que llamamos combinaciones:
+    \begin{equation*}
+      C(n, k)
+	= \binom{n}{k}
+    \end{equation*}
+  \item[Sin orden, con reemplazo:]
+    \index{combinatoria!multiconjunto}
+    En este caso lo relevante
+    es cuántas veces aparece cada uno de los \(n\) elementos,
+    es un multiconjunto de \(k\) elementos:
+    \begin{equation*}
+      \multiset{n}{k}
+	= \binom{n + k - 1}{k}
+    \end{equation*}
+  \end{description}
+  Ejemplos típicos son:
+  \begin{enumerate}
+  \item
+    En una prueba de selección múltiple hay 20~preguntas,
+    cada una con 5~alternativas.
+    Considerando que se puede responder una de las opciones
+    o dejar la pregunta en blanco,
+    esto es elegir en orden \(k = 20\) bolas entre \(n = 6\)
+    con reemplazo,
+    el total de posibilidades es:
+    \begin{equation*}
+      6^{20}
+	= 3\,656\,158\,440\,062\,976
+    \end{equation*}
+  \item
+    En el campeonato mundial de fútbol juegan 32~equipos.
+    Ordenar los ganadores
+    (primer a tercer lugar)
+    corresponde a elegir \(k = 3\) entre \(n = 32\)
+    en orden sin reemplazo:
+    \begin{equation*}
+      32^{\underline{3}}
+	= 32 \cdot 31 \cdot 30
+	= 29\,760
+    \end{equation*}
+  \item
+    De un mazo de 52~cartas se saca una mano de poker.
+    Esto es tomar \(k = 5\) elementos entre \(n = 52\)
+    sin orden y sin reemplazo,
+    un subconjunto:
+    \begin{equation*}
+      \binom{52}{5}
+	= 2\,598\,960
+    \end{equation*}
+  \item
+    Si se lanzan tres dados,
+    los resultados posibles corresponden a elegir \(k = 3\) valores
+    de \(n = 6\) sin orden con reemplazo,
+    un multiconjunto:
+    \begin{equation*}
+      \multiset{6}{3}
+	= \binom{8}{3}
+	= 56
+    \end{equation*}
+  \end{enumerate}
+  El modelo de urna supone que todas las posibilidades así obtenidas
+  son igualmente probables.
+  Al menos en el caso del campeonato de fútbol deberemos acordar
+  que esto no es realista
+  (pocos apostarían que Chile resulte campeón el~2014).
+
+\subsection{Distribuciones multivariadas}
+\label{sec:multivariable-distributions}
+\index{probabilidad!distribucion multivariada@distribución multivariada}
+
+  Podemos manejar de forma similar
+  distribuciones conjuntas de varias variables.
+  Para concretar la discusión,
+  veremos el caso de la variable aleatoria \((X, Y)\)%
+    \index{variable aleatoria}
+  compuesta por variables aleatorias \(X\) e \(Y\).
+  La extensión a más variables es simple,
+  y no nos detendremos en ello.
+
+  Siendo consistentes con nuestra notación y definiciones previas,
+  definimos la función de distribución \(f_{(X, Y)}\),
+  que cumple:
+  \begin{align*}
+    f_{(X, Y)}(x, y)
+      &\ge 0 \\
+    \sum_{x, y} f_{(X, Y)}(x, y)
+      &=   1
+  \end{align*}
+  Como:
+  \begin{equation*}
+    \Pr(X = x \wedge Y = y)
+      = f_{(X, Y)}(x, y)
+  \end{equation*}
+  la probabilidad del evento \(X = x\) es simplemente:
+  \begin{equation*}
+    \Pr(X = x)
+      = \sum_y f_{(X, Y)}(x, y)
+  \end{equation*}
+  Esto define la función de distribución de \(X\)
+  (y similarmente la de \(Y\))
+  en esta situación:
+  \begin{align}
+    f_X(x)
+      &= \sum_y f_{(X, Y)}(x, y) \label{eq:f_X-from-f_XY} \\
+    f_Y(y)
+      &= \sum_x f_{(X, Y)}(x, y) \label{eq:f_Y-from-f_XY}
+  \end{align}
+
+\subsection{Diagramas de árbol}
+\label{sec:diagramas-arbol}
+\index{probabilidad!diagrama de arbol@diagrama de árbol}
+
+  Muchos experimentos
+  pueden considerarse que se llevan a cabo en etapas.
+  Por ejemplo,
+  el lanzar tres monedas podemos describirlo
+  como lanzando una moneda después de la otra,
+  dando lugar a un diagrama
+  como el de la figura~\ref{fig:event-tree}
+  (su \emph{diagrama de árbol}).
+  \begin{figure}[ht]
+    \centering
+    \pgfimage{images/event-tree}
+    \caption{Diagrama de árbol para lanzamiento de tres monedas}
+    \label{fig:event-tree}
+  \end{figure}
+  Un \emph{camino}
+  a través del árbol representa un posible resultado
+  del experimento.
+  En el caso ilustrado de lanzar tres monedas
+  hay ocho caminos,
+  suponiendo cada uno de los resultados igualmente probables
+  le asignaríamos probabilidad \(1 / 8\) a cada uno de ellos.
+  Si \(E\) es el evento ``hay al menos una cara'',
+  el evento \(\overline{E}\) es ``no hay ninguna cara''.
+  Es claro que solo si el resultado es tres veces sello
+  (o sea \(\mathrm{TTT}\),
+   que corresponde a \(\omega_8\))
+  se da \(\overline{E}\),
+  con lo que:
+  \begin{equation*}
+    \Pr(\overline{E})
+      = \frac{1}{8}
+  \end{equation*}
+  Por lo tanto,
+  usando el ítem~\ref{item:complement}
+  del teorema~\ref{theo:properties-probabilities-events}:
+  \begin{equation*}
+    \Pr(E)
+      = 1 - \Pr(\overline{E})
+      = \frac{7}{8}
+  \end{equation*}
+  La utilidad del diagrama es que si en cada bifurcación
+  anotamos la probabilidad de tomar los distintos caminos,
+  la probabilidad de un evento es el producto de las probabilidades
+  en el camino entre la raíz y ese evento.
+  En nuestro caso,
+  si asumimos
+  que la probabilidad de cara y sello son ambas \(1 / 2\),
+  independiente de la posición en el árbol,
+  obtenemos \(1 / 8\) para \(f(\omega_8)\).
+  Describir un experimento mediante un diagrama de árbol
+  ayuda a organizar las ideas,
+  y evita errores como omitir alguna de las posibilidades
+  o asignación incoherente de probabilidades.
+
+  Un ejemplo más complejo provee el dilema de Monty Hall,%
+    \index{Monty Hall, dilema de}
+  discutido originalmente
+  en la popular columna ``Ask Marilyn'' de Marilyn vos Savant
+  en la revista \foreignlanguage{english}{Parade},
+  recogido luego en su libro~\cite{savant97:_power_logic_thinking}.
+  La controversia se inició con la pregunta:
+  \hybridblockquote{english}
+     [Craig F. Whitaker,
+      Columbia, MD]{%
+     Suppose you're on a game show,
+     and you're given the choice of three doors.
+     Behind one door is a car,
+     behind the others,
+     goats.
+     You pick a door,
+     say number 1,
+     and the host,
+     who knows what's behind the doors,
+     opens another door,
+     say number 3,
+     which has a goat.
+     He says to you,
+     ``Do you want to pick door number 2?''
+     Is it to your advantage to switch your choice of doors?
+  }
+  El nombre viene de un popular presentador de televisión,
+  en cuyo programa aparecía esta sección.
+  El dilema dio lugar a encendidas discusiones,
+  mientras aplicar las técnicas vistas lo resuelve sin ambigüedades.
+
+  Primeramente,
+  necesitamos describir la situación en forma precisa.
+  Supondremos que el auto está con la misma probabilidad tras cada puerta,
+  que el participante elige la puerta con la misma probabilidad,
+  independiente de la ubicación del auto,
+  y finalmente que Monty elige la puerta a abrir con la misma probabilidad
+  entre las no elegidas por el participante y que no ocultan el auto.
+  Por simetría,
+  podemos designar por \(A\) la puerta elegida por el participante,
+  cosa que dará un tercio de los casos
+  (y probabilidades) a considerar,
+  y nuestro diagrama considera solo este caso.
+  Enseguida,
+  consideramos las tres posibilidades para la ubicación del auto,
+  y finalmente la elección de la puerta a abrir por Monty.
+  \begin{figure}[ht]
+    \centering
+    \pgfimage{images/monty-hall}
+    \caption{Árbol para el dilema de Monty Hall}
+    \label{fig:monty-hall}
+  \end{figure}
+  Esto da el árbol de la figura~\ref{fig:monty-hall},
+  del que obtenemos la probabilidad de ganar el auto
+  al cambiar de puerta o no.
+  Resulta que la probabilidad de ganar al cambiar de puerta
+  es de \(2/3\),
+  y de no cambiar de puerta solo \(1/3\),
+  cosa a primera vista contradictoria.
+
+\section{Probabilidad condicional}
+\label{sec:probabilidad-condicional}
+\index{probabilidad!condicional}
+
+  Es frecuente querer determinar la probabilidad de un evento \(A\)
+  sabiendo que un evento \(B\) ocurrió.
+  Expresando esta situación como conjuntos,
+  nos interesa la intersección entre \(A\) y \(B\);
+  como sabemos que ocurrió \(B\),
+  la probabilidad relativa es:
+  \begin{equation*}
+    \frac{\Pr(A \cap B)}{\Pr(B)}
+  \end{equation*}
+  Adoptamos esto como definición:
+  \begin{definition}
+    La \emph{probabilidad condicional} del evento \(A\)
+    dado que ocurrió el evento \(B\) es:
+    \begin{equation}
+      \label{eq:def-conditional-probability}
+      \Pr(A \vert B)
+	= \frac{\Pr(A \cap B)}{\Pr(B)}
+    \end{equation}
+  \end{definition}
+  Por ejemplo,
+  si al lanzar dos dados la suma es diez,
+  ¿cuál es la probabilidad de que haya un seis?
+  En este caso,
+  tenemos \(B\) como el evento que la suma es diez,
+  vale decir:
+  \begin{equation*}
+    B = \{ (4, 6), (5, 5), (6, 4) \}
+  \end{equation*}
+  el evento \(A\) es que hay un único seis:
+  \begin{equation*}
+    A = \{ (1, 6), (2, 6), (3, 6), (4, 6), (5, 6),
+	   (6, 1), (6, 2), (6, 3), (6, 4), (6, 5) \}
+  \end{equation*}
+  Resulta \(A \cap B = \{ (4, 6), (6, 4) \}\),
+  con la suposición que todos los eventos elementales
+  son igualmente probables es:
+  \begin{equation*}
+    \Pr(A \vert B)
+      = \frac{2 / 36}{3 / 36}
+      = \frac{2}{3}
+  \end{equation*}
+
+  Para el caso de una secuencia más larga de eventos,
+  \(A_1 A_2 \dots A_n\),
+  resulta:
+  \begin{theorem}
+    \label{theo:regla-producto}
+    Tenemos la \emph{regla del producto}:
+    \begin{equation}
+      \label{eq:regla-producto}
+      \Pr(A_1 A_2 \dots A_n)
+	= \Pr(A_1)
+	    \cdot \Pr(A_2 \vert A_1)
+	    \cdot \Pr(A_3 \vert A_1 A_2)
+	    \dotsm
+	    \cdot \Pr(A_n \vert A_1 A_2 \dotsm A_{n - 1})
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    La demostración formal es por inducción.%
+      \index{demostracion@demostración!induccion@inducción}
+    Ilustraremos la idea con el caso \(n = 3\):
+    \begin{equation*}
+      \Pr(A) \Pr(B \vert A) \Pr(C \vert A \cap B)
+	= \Pr(A)
+	    \, \frac{\Pr(A \cap B)}{\Pr(A)}
+	    \, \frac{\Pr(A \cap B \cap C)}{\Pr(A \cap B)}
+	= \Pr(A \cap B \cap C)
+    \end{equation*}
+    Esto corresponde al lado derecho e izquierdo,
+    respectivamente,
+    de~(\ref{eq:regla-producto}).
+  \end{proof}
+
+\section{Regla de Bayes}
+\label{sec:regla-Bayes}
+\index{probabilidad!Bayes, regla de|see{Bayes, regla de}}
+\index{Bayes, regla de}
+
+  Supongamos que \(B_1, B_2, \dotsc, B_n\)
+  es una partición de \(\Omega\)
+  (son eventos mutuamente excluyentes).
+  Por el corolario~\ref{cor:disjoint-events-intersection}
+  y la definición de probabilidad condicional
+  obtenemos la \emph{ley de probabilidad total}:
+  \begin{align}
+    \Pr(A)
+      &= \sum_{1 \le k \le n} \Pr(A \cap B_k) \notag \\
+      &= \sum_{1 \le k \le n} \Pr(A \vert B_k) \, \Pr (B_k)
+	   \label{eq:law-total-probability}
+  \end{align}
+  Combinando la definición de probabilidad condicional
+  con la ley de probabilidad total
+  da la importante \emph{ley de Bayes}:
+  \begin{align}
+    \Pr(B_k \vert A)
+      &= \frac{\Pr(A \cap B_k)}{\Pr(A)} \notag \\
+      &= \frac{\Pr(A \vert B_k) \, \Pr(B_k)}
+	      {\sum_{1 \le i \le n}
+		 \Pr(A \vert B_i) \, \Pr (B_i)}
+	   \label{eq:Bayes-rule}
+  \end{align}
+
+  Para ilustrar la regla de Bayes,
+  consideremos una empresa
+  que tiene tres fábricas que producen chips,
+  la planta~1 produce un \(20\)\% del total,
+  la~2 un \(35\)\% y la~3 el \(45\)\%~restante.
+  Las tasas de fallas en los chips de las distintas plantas son
+  \(1\)\%,
+  \(5\)\% y~\(3\)\%,
+  respectivamente.
+  Se tiene un chip defectuoso.
+  ¿Cuál es la probabilidad
+  de que haya sido fabricado en la planta~1?
+
+  Sea \(A\) el evento que un chip es defectuoso,
+  y sean los \(B_i\)
+  los eventos que el chip haya sido fabricado en la planta~\(i\).
+  Claramente los \(B_i\) particionan \(\Omega\).
+  Las fracciones de la producción corresponden a los \(\Pr(B_i)\),
+  las tasas de fallas por planta son los \(\Pr(A \vert B_i)\).
+  Usando la regla de Bayes:
+  \begin{equation*}
+    \Pr(B_1 \vert A)
+      = \frac{0,20 \cdot 0,01}
+	     {0,20 \cdot 0,01 + 0,35 \cdot 0,05 + 0,45 \cdot 0,03}
+      = 0,0606
+  \end{equation*}
+  Es un poco más del \(6\)\%.
+
+\section{Independencia}
+\label{sec:independencia}
+\index{probabilidad!independencia}
+
+  Dos eventos se dicen \emph{independientes}%
+    \index{probabilidades!evento!independiente}
+  si saber que ocurrió uno de ellos
+  no altera la probabilidad del otro.
+  Vale decir,
+  \(A\) y \(B\) son independientes si:
+  \begin{equation*}
+    \Pr(A \vert B)
+      = \Pr(A)
+  \end{equation*}
+  Alternativamente,
+  incluyendo el caso \(B = \varnothing\):
+  \begin{equation}
+    \label{eq:def-independencia}
+    \Pr(A \cap B)
+      = \Pr(A) \, \Pr(B)
+  \end{equation}
+  Esto muestra que si \(A\) es independiente de \(B\)
+  entonces \(B\) es independiente de \(A\).
+  Esto claramente se puede extender a más eventos
+  independientes a pares.
+
+  De forma similar,
+  si tenemos una variable aleatoria \((X, Y)\),
+  se dice que las variables \(X\) e \(Y\) son independientes%
+    \index{probabilidades!variable!independiente}
+  si la función de distribución conjunta cumple:
+  \begin{equation}
+    \label{eq:independent-variables}
+    f_{(X, Y)}(x, y)
+      = f_X(x) \cdot f_Y(y)
+  \end{equation}
+
+\section{Las principales distribuciones discretas}
+\label{sec:principales-distribuciones-discretas}
+
+  Sabemos que cierta moneda da sello con probabilidad \(p\)
+  y cara con probabilidad \(1 - p\)
+  (no estamos suponiendo
+   que ambos resultados son igualmente probables)
+  al lanzarla.
+  Al lanzarla una vez,
+  considerando sello como ``éxito''
+  (o \(1\))
+  y cara como ``falla''
+  (o \(0\))
+  se habla de \emph{ensayo de Bernoulli}%
+    \index{Bernoulli, ensayo de}
+  (en inglés \emph{\foreignlanguage{english}{Bernoulli trial}}),
+  la variable \(X\) que representa este experimento
+  tiene probabilidad \(p\) de ser \(1\) y \(1 - p\) de ser \(0\).
+  Se dice que \(X\) tiene \emph{distribución de Bernoulli},%
+    \index{probabilidad!distribucion de Bernoulli@distribución de Bernoulli|see{Bernoulli, distribución de}}%
+    \index{Bernoulli, distribucion de@Bernoulli, distribución de|textbfhy}
+  y se anota:
+  \begin{equation}
+    \label{eq:distributed-Ber}
+    X \sim \operatorname{\boldsymbol{\mathsf{Ber}}}(p)
+  \end{equation}
+  Su función generatriz de probabilidad es simplemente:
+  \begin{equation}
+    \label{eq:PGF-Ber}
+    (1 - p) + z p
+      = 1 + p (z - 1)
+  \end{equation}
+
+  Considerando nuevamente la moneda anterior,
+  pero ahora lanzándola \(n\) veces,
+  podemos describir el espacio muestral
+  como el conjunto de \(n\)\nobreakdash-tuplas de \(0\) y \(1\),
+  con \(0\) para cara y \(1\) para sello.
+  ¿Cómo debiéramos definir las probabilidades
+  para los eventos individuales?
+  Es natural suponer que los lanzamientos son independientes,
+  y que además la probabilidad de que resulte cara
+  no cambia de un lanzamiento a otro.
+  O sea,
+  el número de caras es la suma de \(n\) ensayos de Bernoulli,
+  independientes e idénticamente distribuidos.
+  A esta situación común
+  en que tenemos variables \(X_1\), \(X_2\), \ldots, \(X_n\)
+  independientes e idénticamente distribuidas
+  se suele abreviar como \emph{iid}
+  (del inglés
+   ``\emph{\foreignlanguage{english}{independent, identically distributed}}'',
+   que casualmente sirve de abreviación del castellano también).%
+     \index{iid|see{probabilidad!independientes e idénticamente distribuidas}}%
+     \index{probabilidad!independientes e identicamente distribuidas@independientes e idénticamente distribuidas|textbfhy}
+  Por~\eqref{eq:PGF-sum}
+  y la función generatriz de probabilidad
+  del ensayo de Bernoulli~\eqref{eq:PGF-Ber}
+  esto significa que la función generatriz de probabilidad es:
+  \begin{equation}
+    \label{eq:PGF-Bin}
+    (1 + p (z - 1))^n
+  \end{equation}
+  De~\eqref{eq:PGF-Bin}
+  la distribución es directamente:
+  \begin{equation}
+    \label{eq:binomial-distribution}
+    \Pr(X = k)
+      = \binom{n}{k} p^k (1 - p)^{n - k}
+  \end{equation}
+  Esta es la \emph{distribución binomial}.%
+    \index{probabilidad!distribucion binomial@distribución binomial|textbfhy}
+  Si \(X\) representa el número de caras en este experimento,
+  se anota:
+  \begin{equation}
+    \label{eq:distributed-Bin}
+    X \sim \operatorname{\boldsymbol{\mathsf{Bin}}}(n, p)
+  \end{equation}
+
+  Si llamamos \(C_k\) al evento que al primer sello
+  ocurre en el lanzamiento \(k\),
+  sabemos que hay \(k - 1\) caras seguidas por un sello.
+  Como discutido en la sección~\ref{sec:diagramas-arbol}
+  esto resulta en:
+  \begin{equation*}
+    \Pr(C_k)
+      = (p - 1)^{k - 1} p
+  \end{equation*}
+  Nótese que el espacio muestral es infinito en este caso.
+  A esta distribución se le llama \emph{geométrica}.%
+    \index{probabilidad!distribucion geometrica@distribución geométrica|textbfhy}
+  Si \(X\) representa el número de lanzamientos,
+  se anota:
+  \begin{equation}
+    \label{eq:distributed-G}
+    X \sim \operatorname{\boldsymbol{\mathsf{G}}}(p)
+  \end{equation}
+  La función generatriz de probabilidades es:
+  \begin{equation}
+    \label{eq:PGF-G}
+    \sum_{k \ge 1} (1 - p)^{k - 1} p z^k
+      = \frac{z p}{1 - (1 - p) z}
+  \end{equation}
+
+  Otra distribución importante resulta de considerar una urna
+  conteniendo un total de \(N\) bolas,
+  \(r\) de las cuales son rojas
+  y las demás negras.
+  Se extraen \(n\) bolas sin orden y sin reposición,
+  y nos preguntamos cuántas de ellas son rojas.
+  Esto sirve por ejemplo para modelar encuestas.
+  Estamos eligiendo \(k\) de las \(r\) bolas rojas
+  y \(n - k\) de las \(N - r\) bolas negras,
+  al aplicar la regla del producto
+  y luego calcular la proporción del total de posibles subconjuntos
+  de \(n\) elementos tomados del total de \(N\)
+  resulta la \emph{distribución hipergeométrica}:%
+    \index{probabilidad!distribucion hipergeometrica@distribución hipergeométrica|textbfhy}
+  \begin{equation}
+    \label{eq:Hyp-distribution}
+    \Pr(X = k)
+      = \frac{\binom{r}{k} \binom{N - r}{n - k}}{\binom{N}{r}}
+  \end{equation}
+  En este caso escribimos:
+  \begin{equation}
+    \label{eq:distributed-Hyp}
+    X \sim \operatorname{\boldsymbol{\mathsf{Hyp}}}(n, r, N)
+  \end{equation}
+  La función generatriz de probabilidades
+  no es una función elemental.
+
+  Una distribución muy importante es la de Poisson.%
+    \index{probabilidad!distribucion de Poisson@distribución de Poisson|see{Poisson, distribución de}}%
+    \index{Poisson, distribucion de@Poisson, distribución de|textbfhy}
+  Resulta de considerar un intervalo de tiempo
+  en el cual ocurren eventos al azar
+  en promedio a una tasa de \(\lambda\).
+  Una manera de derivarla es considerar un intervalo de largo \(1\),
+  en el cual ocurrirán en promedio \(\lambda\) eventos.
+  Si dividimos el intervalo en \(n\) subintervalos del mismo largo,
+  en cada subintervalo
+  esperamos que ocurran \(\lambda / n\) eventos.
+  Si \(n\) es grande,
+  habrá a lo más un evento por subintervalo,
+  y bajo el supuesto que los eventos ocurren al azar
+  esto corresponde a una secuencia de \(n\)~ensayos de Bernoulli%
+    \index{Bernoulli, ensayo de}
+  con probabilidad \(\lambda / n\),
+  o sea el número de eventos sigue una distribución binomial:%
+    \index{probabilidad!distribucion binomial@distribución binomial}
+  \begin{equation*}
+    \Pr(X = k)
+      = \lim_{n \rightarrow \infty}
+	  \binom{n}{k}
+	    \left( \frac{\lambda}{n} \right)^k
+	    \left( 1 - \frac{\lambda}{n} \right)^{n - k}
+  \end{equation*}
+  En términos de la notación asintótica
+  de la sección~\ref{sec:notacion-asintotica}%
+    \index{notacion asintotica@notación asintótica}
+  tenemos del límite clásico para \(n \rightarrow \infty\)
+  y \(k\) fijo:
+  \begin{equation*}
+    \left( 1 - \frac{\lambda}{n} \right)^{n - k}
+      \sim \mathrm{e}^{- \lambda}
+  \end{equation*}
+  Por otro lado:
+  \begin{equation*}
+    \frac{n!}{(n - k)!}
+      = n (n - 1) \dotsm (n - k + 1)
+      \sim n^{\underline{k}}
+  \end{equation*}
+  Uniendo las anteriores piezas queda en el límite:
+  \begin{equation}
+    \label{eq:Pois-distribution}
+    \Pr(X = k)
+      = \frac{\lambda^k}{k!} \mathrm{e}^{- \lambda}
+  \end{equation}
+  Escribimos:
+  \begin{equation}
+    \label{eq:distributed-Pois}
+    X \sim \operatorname{\boldsymbol{\mathsf{Pois}}}(\lambda)
+  \end{equation}
+  Para la función generatriz de probabilidad:
+  \begin{equation}
+    \label{eq:PGF-Pois}
+    \sum_{k \ge 0} \frac{\lambda^k}{k!} \mathrm{e}^{- \lambda} z^k
+      = \mathrm{e}^{\lambda (z - 1)}
+  \end{equation}
+
+  Otra distribución que se encuentra ocasionalmente
+  es la \emph{binomial negativa}%
+    \index{probabilidad!distribucion binomial negativa@distribución binomial negativa|see{Pascal, distribución de}}%
+    \index{Pascal, distribucion de@Pascal, distribución de|textbfhy}
+  (o de Pascal).
+  Suponga ensayos de Bernoulli independientes consecutivos,%
+    \index{Bernoulli, ensayo de}
+  nos interesa el número de experimentos con resultado uno
+  antes de acumular \(r\) ceros
+  (se suele hablar de ``éxitos'' y ``fallas'',
+   interesa el número de éxitos para \(r\) fallas;
+   pero las ``fallas'' no tienen porqué ser negativas,
+   por ejemplo modela
+   el número de penales antes de completar tres goles).
+  Cuidado,
+  hay una variedad de definiciones ligeramente diferentes.
+  Si son \(k\) éxitos,
+  hay \(k + r\) ensayos en total,
+  y sabemos que el último resultado es \(0\).
+  Quedan por distribuir \(r - 1\) fallas
+  entre los primeros \(k + r - 1\) experimentos:
+  \begin{equation}
+    \label{eq:NB-distribution}
+    \Pr(X = k)
+      = \binom{k + r - 1}{k} (1 - p)^r p^k
+  \end{equation}
+  Se le llama binomial negativa por~\eqref{eq:binomial(-n,k)}:
+  \begin{equation*}
+    \binom{k + r - 1}{k}
+      = (-1)^k \binom{-r}{k}
+  \end{equation*}
+  Si tomamos para \(r > 0\) cualquiera:
+  \begin{equation*}
+    \Pr(X = k)
+      = (-1)^k \binom{-r}{k} (1 - p)^r p^k
+  \end{equation*}
+  Esta es una distribución de probabilidad,
+  ya que:
+  \begin{align*}
+    \Pr(X = k)
+      &\ge 0 \\
+    \sum_{k \ge 0} \Pr(X = k)
+      &=   \sum_{k \ge 0} (-1)^k \binom{-r}{k} (1 - p)^r p^k \\
+      &=   (1 - p)^r \sum_{k \ge 0} \binom{-r}{k} (-p)^k \\
+      &=   (1 - p)^r (1 - p)^{-r} \\
+      &=   1
+  \end{align*}
+  Se anota:
+  \begin{equation}
+    \label{eq:distributed-NB}
+    X \sim \operatorname{\boldsymbol{\mathsf{NB}}}(r, p)
+  \end{equation}
+  Por la discusión precedente \(r\) puede ser un real positivo,
+  no solo un entero.
+  Para la función generatriz de probabilidad tenemos:
+  \begin{equation}
+    \label{eq:PGF-NB}
+    \sum_{k \ge 0} (-1)^k \binom{-r}{k} (1 - p)^r p^k z^k
+      = (1 - p)^r \sum_{k \ge 0} \binom{-r}{k} (- p z)^k
+      = \left( \frac{1 - p}{1 - p z} \right)^r
+  \end{equation}
+
+  Otra situación común es tener \(n\) posibilidades
+  todas igualmente probables
+  (\(1\) a \(n\),
+   como en el caso de lanzar un dado).
+  La distribución es simplemente:%
+    \index{probabilidad!distribucion uniforme@distribución uniforme|textbfhy}
+  \begin{equation}
+    \label{eq:U-distribution}
+    \Pr(X = k)
+      = \begin{cases}
+	  \displaystyle \frac{1}{n} & \text{si \(1 \le k \le n\)} \\
+	  0			    & \text{caso contrario}
+	\end{cases}
+  \end{equation}
+  La función generatriz de probabilidad es:
+  \begin{equation}
+    \label{eq:PGF-U}
+    \sum_{1 \le k \le n} \frac{z^k}{n}
+      = \frac{z (1 - z^n)}{n (1 - z)}
+  \end{equation}
+
+\section{Valor esperado}
+\label{sec:valor-esperado}
+\index{probabilidad!valor esperado}
+
+  Aunque la distribución de una variable aleatoria
+  contiene toda la información sobre probabilidades,
+  suele ser más útil contar con características numéricas simples.
+  Formalmente:
+  \begin{definition}
+    \label{def:expectation}
+    Sea \(X\) una variable aleatoria discreta con valores reales
+    y \(g \colon \mathbb{R} \rightarrow \mathbb{R}\)
+    una función arbitraria.
+    El \emph{valor esperado} de \(g(X)\)
+    se define como:
+    \begin{equation}
+      \label{eq:def:expectation}
+      \E[g(X])
+	= \sum_{x \in \Omega} g(x) \, \Pr(X = x)
+    \end{equation}
+  \end{definition}
+  El caso más importante es el valor esperado de \(X\),
+  que amerita notación especial:
+  \begin{equation}
+    \label{eq:def:mu}
+    \mu
+      = \E[X]
+  \end{equation}
+  Por ejemplo,
+  si \(X\)
+  representa el número de puntos resultantes de lanzar un dado,
+  suponiendo que todas las caras tienen la misma probabilidad:
+  \begin{equation*}
+    \E[X]
+      = \sum_{1 \le k \le 6} k \, \Pr(X = k)
+      = \frac{1}{6} \sum_{1 \le k \le 6} k
+      = \frac{7}{2}
+  \end{equation*}
+  Este ejemplo incidentalmente muestra que \(\E[X]\)
+  no tiene porqué ser un posible resultado del experimento.
+
+  Una consecuencia extremadamente importante
+  de la definición~\ref{def:expectation}
+  es que el valor esperado es lineal:%
+    \index{probabilidad!valor esperado!linealidad}
+  \begin{theorem}
+    \label{theo:expectation-linear}
+    Sea la variable aleatoria \((X, Y)\)
+    con distribución \(f_{(X, Y)}(x, y)\).
+    Sean \(\alpha\) y \(\beta\) números reales
+    y \(g\) y \(h\) funciones arbitrarias
+    de las variables aleatorias \(X\) e \(Y\),
+    respectivamente.
+    Entonces:
+    \begin{equation*}
+      \E[\alpha g(X) + \beta h(Y)]
+	= \alpha \, \E[g(X)] + \beta \, \E[h(Y])
+    \end{equation*}
+  \end{theorem}
+  Nótese que no se hacen suposiciones
+  sobre independencia de \(X\) e \(Y\).
+  \begin{proof}
+    Por definición:
+    \begin{align*}
+      \E[\alpha g(X) + \beta h(Y)]
+	&= \sum_{(x, y)}
+	    \left(
+	      \alpha g(x) f_{(X, Y)}(x, y)
+		+ \beta h(y) f_{(X, Y)} (x, y)
+	      \right) \\
+	&= \alpha \sum_{x, y} g(x) f_{(X, Y)}(x, y)
+	     + \beta \sum_{x, y} h(y) f_{(X, Y)}(x, y) \\
+	&= \alpha \sum_x g(x) \sum_y f_{(X, Y)}(x, y)
+	     + \beta \sum_y h(y) \sum_x f_{(X, Y)}(x, y) \\
+	&= \alpha \sum_x g(x) f_X(x)
+	     + \beta \sum_y h(y) f_Y(y) \\
+	&= \alpha \, \E[g(X)] + \beta \, \E[h(Y])
+      \qedhere
+    \end{align*}
+  \end{proof}
+  Nótese que esto vale incluso en caso que \(X = Y\),
+  el caso más extremo de dependencia entre las variables.
+
+  Resulta de interés acotar la dispersión de los posibles resultados.
+  \begin{theorem}[Desigualdad de Markov]
+    \label{theo:Markov-inequality}
+    \index{Markov, desigualdad de}
+    Sea \(X\) una variable aleatoria.
+    Entonces para \(k > 0\):
+    \begin{equation}
+      \label{eq:Markov-inequality}
+      \P(\lvert X \rvert \ge k)
+	\le \E[ \lvert X \rvert ] / k
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    La desigualdad se cumple trivialmente
+    a menos que \(k > \E[ \lvert X \rvert ]\).
+    Para tales \(k\):
+    \begin{align*}
+      k \P(\lvert X \rvert \ge k)
+	&=  \sum_{r \ge k} k \P(\lvert X \rvert = r) \\
+	&\le \sum_{r \ge k} r \P(\lvert X \rvert = r) \\
+	&\le \sum_{r \ge 0} r \P(\lvert X \rvert = r) \\
+	&=  \E[ \lvert X \rvert ]
+    \qedhere
+    \end{align*}
+  \end{proof}
+
+  Una importante medida
+  de la dispersión de los datos es la \emph{varianza},%
+    \index{probabilidad!varianza|textbfhy}%
+    \index{varianza|see{probabilidad!varianza}}
+  definida para una variable aleatoria \(X\)
+  y una función \(g\) como:
+  \begin{equation}
+    \label{eq:definition-variance}
+    \var[g(X)]
+      = \E
+	  \left[
+	     \left( g(X) - \mathbb{E}\left( g(X) \right) \right)^2
+	  \right]
+  \end{equation}
+  Podemos expresar:
+  \begin{align}
+    \var[g(X)]
+      &= \E
+	   \left[
+	     \left( g(X) - \mathbb{E}\left( g(X) \right) \right)^2
+	   \right]
+	     \notag \\
+      &= \E[g^2(X)]
+	   - 2 \left(\E[g(X)] \right)^2
+	   + \left(\E[g(X)] \right)^2
+	     \notag \\
+      &= \E\left[ g^2(X) \right]
+	   - \left(\E\left[ g(X) \right] \right)^2
+	     \label{eq:compute-variance}
+  \end{align}
+  Esto es más cómodo para cálculos.
+
+  Comúnmente se usa la \emph{desviación estándar}%
+    \index{desviacion estandar@desviación estándar|textbfhy},
+  definida mediante:
+  \begin{equation}
+    \label{eq:standard-deviation-def}
+    \sigma_X
+      = \sqrt{\var[X]}
+  \end{equation}
+
+  Nuevamente podemos obtener una cota elemental:
+  \begin{theorem}[Desigualdad de Chebychev]
+    \label{theo:Chebychev-inequality}
+    \index{Chebychev, desigualdad de}
+    Sea \(X\) una variable aleatoria,
+    y sea \(k > 0\) un número real.
+    Si el valor esperado de \(X\) es \(\mu = \E[X]\)
+    y su desviación estándar es \(\sigma = \sqrt{\var[X]}\)
+    entonces:
+    \begin{equation}
+      \label{eq:Chebychev-inequality}
+      \P(\lvert X - \mu \rvert \le k \sigma)
+	\ge 1 - \frac{1}{k^2}
+    \end{equation}
+  \end{theorem}
+  \begin{proof}
+    Sea \(A = \{ r \colon \lvert x - \mu \rvert > k \sigma \}\).
+    Entonces:
+    \begin{align*}
+      \var[X]
+	&=   \E[(X - \mu)^2] \\
+	&=   \sum_r (r - \mu)^2 \P(X = r) \\
+	&\ge \sum_{r \in A} (r - \mu)^2 \P(X = r) \\
+	&\ge k^2 \sigma^2 \sum_{r \in A} \P(X = r) \\
+	&=   k^2 \sigma^2 \P(\lvert X - \mu \rvert > k \sigma)
+    \end{align*}
+    El resultado sigue de \(\var[X] = \sigma^2\).
+  \end{proof}
+
+  Supongamos una variable aleatoria \(X\)
+  con distribución \(f_X\)
+  y función generatriz de probabilidad \(G\).
+  Es simple ver que:
+  \begin{equation}
+    \label{eq:PGF-expected-value}
+    \E[X]
+      = \sum_x x f_X(x)
+      = G'(1)
+  \end{equation}
+  De forma similar:
+  \begin{equation*}
+    G''(1)
+      = \sum_x x (x - 1) f_X(x)
+      = \E[X^2] - \E[X]
+  \end{equation*}
+  Acá usamos el teorema~\ref{theo:expectation-linear};
+  \(X^2\) y \(X\) definitivamente no son independientes,
+  pero igual podemos sumar sus valores esperados.
+  Combinando esto con~\eqref{eq:compute-variance}
+  y recordando~\eqref{eq:PGF-expected-value}
+  resulta:
+  \begin{equation}
+    \label{eq:PGF-variance}
+    \var[X]
+      = G''(1) + G'(1) - \left( G'(1) \right)^2
+  \end{equation}
+  Conociendo la función generatriz de probabilidad
+  directamente tenemos los valores resumen
+  más importantes de la variable.
+  El lector curioso los tabulará para las distribuciones
+  discutidas en la sección~\ref{sec:distribuciones-discretas}.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

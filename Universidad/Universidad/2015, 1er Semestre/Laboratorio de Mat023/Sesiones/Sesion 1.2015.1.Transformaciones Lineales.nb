@@ -1,0 +1,1803 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 7.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     53420,       1794]
+NotebookOptionsPosition[     47078,       1598]
+NotebookOutlinePosition[     47763,       1627]
+CellTagsIndexPosition[     47696,       1622]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[TextData[StyleBox[" ",
+ FontSize->16,
+ FontWeight->"Bold",
+ FontColor->RGBColor[1, 0, 0]]], "Text",
+ CellChangeTimes->{3.4599344866229887`*^9},
+ TextAlignment->Left,
+ TextJustification->0,
+ FontFamily->"Verdana"],
+
+Cell[TextData[{
+ StyleBox["Universidad T\[EAcute]cnica Federico Santa Mar\[IAcute]a",
+  LineSpacing->{1, 1},
+  ParagraphSpacing->{0, 1},
+  FontSize->24,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]],
+ StyleBox["\n",
+  LineSpacing->{1, 1},
+  ParagraphSpacing->{0, 1},
+  FontSize->40,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0.501961, 0.752941]],
+ StyleBox["Departamento de Matem\[AAcute]tica\nLaboratorio de Computaci\
+\[OAcute]n para las Aplicaciones \nde la Matem\[AAcute]tica en Ingenier\
+\[IAcute]a",
+  LineSpacing->{1, 1},
+  ParagraphSpacing->{0, 1},
+  FontSize->20,
+  FontColor->GrayLevel[0]],
+ StyleBox["\n",
+  FontSize->20,
+  FontColor->GrayLevel[0]]
+}], "Text",
+ CellFrame->False,
+ CellFrameMargins->8,
+ CellFrameColor->GrayLevel[0.341176],
+ CellFrameLabelMargins->10,
+ TextAlignment->Center,
+ TextJustification->0,
+ FontFamily->"Verdana",
+ FontSize->12,
+ FontSlant->"Plain",
+ FontColor->RGBColor[1, 0, 0]],
+
+Cell[TextData[{
+ StyleBox["Laboratorio de Matem\[AAcute]tica III - MAT023",
+  FontFamily->"Verdana",
+  FontSize->24,
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ StyleBox["\n",
+  FontFamily->"Verdana",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ StyleBox["SESION 1:",
+  FontFamily->"Verdana",
+  FontSize->24,
+  FontWeight->"Bold",
+  FontSlant->"Plain",
+  FontColor->RGBColor[0.87451, 0, 0]],
+ StyleBox[" ",
+  FontFamily->"Verdana",
+  FontSize->24,
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ StyleBox["Introducci\[OAcute]n al Software y Tansformaciones Lineales\n",
+  FontFamily->"Verdana",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ StyleBox["Semana del Jue 26 de Marzo al Mie 01 de Abril del 2015",
+  FontFamily->"Verdana",
+  FontSize->14,
+  FontSlant->"Plain"]
+}], "Text",
+ CellFrame->3,
+ CellFrameMargins->8,
+ CellFrameColor->GrayLevel[0],
+ CellFrameLabelMargins->2,
+ CellChangeTimes->{{3.524225767880762*^9, 3.5242257965380125`*^9}, 
+   3.527183947492691*^9, {3.5271840711567645`*^9, 3.527184085698596*^9}, {
+   3.527184137659568*^9, 3.527184143444899*^9}, 3.5271844630721807`*^9, {
+   3.5336675827612953`*^9, 3.5336676019963956`*^9}, {3.5336676510191994`*^9, 
+   3.533667667394136*^9}, {3.5427361066427507`*^9, 3.5427361631029797`*^9}, {
+   3.5430098580256524`*^9, 3.5430098837912655`*^9}, {3.5450492341241136`*^9, 
+   3.545049302884137*^9}, {3.5450495846651134`*^9, 3.54504963934027*^9}, 
+   3.577496181046875*^9, {3.57749628090625*^9, 3.57749628209375*^9}, {
+   3.577496383984375*^9, 3.57749638428125*^9}, {3.605628005109375*^9, 
+   3.6056280145*^9}, {3.60562829984375*^9, 3.60562831221875*^9}, {
+   3.60563241675*^9, 3.60563243059375*^9}, {3.60563255028125*^9, 
+   3.605632552203125*^9}, 3.605968396265625*^9, {3.60604628009375*^9, 
+   3.606046301*^9}, 3.606146721625*^9, {3.607874940421875*^9, 
+   3.607874980890625*^9}, {3.609763630578125*^9, 3.6097636409375*^9}, {
+   3.61045784478125*^9, 3.6104579015625*^9}, {3.610458488765625*^9, 
+   3.61045850615625*^9}, {3.6110626376875*^9, 3.6110626464375*^9}, {
+   3.612886221125*^9, 3.612886269234375*^9}, {3.612886357546875*^9, 
+   3.612886365921875*^9}, {3.617799245095381*^9, 3.6177993230641804`*^9}, {
+   3.618408679251232*^9, 3.6184087495604324`*^9}, {3.618937088921875*^9, 
+   3.6189371159375*^9}, {3.6203831570625*^9, 3.62038317421875*^9}, {
+   3.621359899319195*^9, 3.621359922461195*^9}, {3.621591239712401*^9, 
+   3.621591242239601*^9}, {3.621950863203125*^9, 3.621950881171875*^9}, {
+   3.62195091121875*^9, 3.621950912515625*^9}, {3.622034078282*^9, 
+   3.6220340939049997`*^9}, {3.635974084724959*^9, 3.6359741105341873`*^9}, {
+   3.635974156669004*^9, 3.635974190082733*^9}, {3.6363072910607843`*^9, 
+   3.63630734798304*^9}, {3.6363074421014233`*^9, 3.636307535494765*^9}},
+ TextAlignment->Center,
+ TextJustification->0,
+ Background->RGBColor[
+  0.44887464713511865`, 0.7404287785152972, 0.9400015259021897]],
+
+Cell[TextData[{
+ StyleBox["\n",
+  FontFamily->"Verdana",
+  FontSize->16,
+  FontWeight->"Bold",
+  FontSlant->"Plain",
+  FontColor->GrayLevel[0]],
+ StyleBox["Coordinador Acad\[EAcute]mico del Laboratorio   :   ",
+  FontFamily->"Verdana",
+  FontWeight->"Bold",
+  FontSlant->"Plain",
+  FontColor->GrayLevel[0]],
+ StyleBox["Jonathan Acosta (jonathan.acosta@usm.cl)",
+  FontFamily->"Verdana",
+  FontSlant->"Plain",
+  FontColor->GrayLevel[0]],
+ StyleBox["\nAyudante Coordinador y de Software       :  ",
+  FontFamily->"Verdana",
+  FontWeight->"Bold",
+  FontSlant->"Plain",
+  FontColor->GrayLevel[0]],
+ StyleBox[" Alfredo Alegr\[IGrave]a (alfredo.alegria.jimenez@gmail.com)",
+  FontFamily->"Verdana",
+  FontSlant->"Plain",
+  FontColor->GrayLevel[0]],
+ StyleBox["\t\t      \nSitio web:   http://lab.mat.utfsm.cl\n",
+  FontFamily->"Verdana",
+  FontVariations->{"CompatibilityType"->0},
+  FontColor->GrayLevel[0]],
+ StyleBox["Atenci\[OAcute]n Alumnos:",
+  FontFamily->"Arial Black",
+  FontSize->14,
+  FontVariations->{"CompatibilityType"->0},
+  FontColor->GrayLevel[0]],
+ StyleBox["  ",
+  FontFamily->"Verdana",
+  FontVariations->{"CompatibilityType"->0},
+  FontColor->GrayLevel[0]],
+ StyleBox["V\[IAcute]a e-mail al ayudante coordinador",
+  FontFamily->"Verdana",
+  FontWeight->"Bold",
+  FontVariations->{"CompatibilityType"->0},
+  FontColor->RGBColor[1, 0, 0]]
+}], "Text",
+ CellFrameMargins->8,
+ CellFrameColor->GrayLevel[0.341176],
+ CellFrameLabelMargins->10,
+ CellChangeTimes->{{3.491225342375*^9, 3.49122544646875*^9}, {
+  3.491225477015625*^9, 3.49122550525*^9}, {3.6363069267479467`*^9, 
+  3.6363069276189966`*^9}, {3.636307372675452*^9, 3.6363074022911463`*^9}},
+ TextAlignment->Left,
+ TextJustification->0,
+ FontFamily->"Verdana",
+ FontSize->12,
+ FontSlant->"Plain",
+ FontColor->GrayLevel[1]],
+
+Cell[TextData[StyleBox["",
+ FontSize->1,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0, 0, 1]]], "Text",
+ CellFrame->{{0, 0}, {10, 0}},
+ CellFrameColor->RGBColor[1, 0, 0],
+ TextAlignment->Center,
+ TextJustification->0,
+ FontSize->24],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Introducci\[OAcute]n a ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"]
+}], "Seccion",
+ CellChangeTimes->{{3.491290914770447*^9, 3.491290918262377*^9}}],
+
+Cell["\<\
+Mathematica es una herramienta especializada en an\[AAcute]lisis \
+num\[EAcute]rico y c\[AAcute]lculo simb\[OAcute]lico, visualizaci\[OAcute]n \
+num\[EAcute]rica, simb\[OAcute]lica y gr\[AAcute]fica.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell["Primeros C\[AAcute]lculos", "Subseccion"],
+
+Cell[TextData[{
+ "Para realizar ",
+ StyleBox["cualquier",
+  FontVariations->{"Underline"->True}],
+ " c\[AAcute]lculo en ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ", siga los siguientes pasos:\n\t1- Situe el cursor dentro del rectangulo \
+amarillo que aparece m\[AAcute]s abajo y haga click.\n\t2- A continuacion, \
+presione la tecla INTRO que se encuentra en el extremo inferior derecho del \
+teclado num\[EAcute]rico. "
+}], "Text",
+ CellTags->"T.1"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"-", "126"}], " ", "+", " ", "456"}]], "Input",
+ CellChangeTimes->{{3.491225653015625*^9, 3.491225672140625*^9}},
+ CellTags->"T.1"],
+
+Cell[TextData[{
+ StyleBox["Descripcion de lo que ocurri\[OAcute]:",
+  FontVariations->{"Underline"->True}],
+ " Al presionar la tecla INTRO, se le indica a ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " que realize todo lo que se encuentra dentro del rectangulo amarillo, en \
+este caso, que realize la suma entre 12 y 34. Debajo del rectangulo amarillo \
+aparecer\[AAcute] un rectangulo blanco que contiene ",
+ StyleBox["la respuesta",
+  FontVariations->{"Underline"->True}],
+ " a lo que usted pidi\[OAcute] que el programa calcule, en este caso la \
+operaci\[OAcute]n de suma.\nTodas las operaciones de c\[AAcute]lculo que \
+vamos a realizar en este laboratorio (derivaci\[OAcute]n, resoluci\[OAcute]n \
+de ecuaciones, gr\[AAcute]ficos en 2D y 3D, transformadas de laplace, etc.) ",
+ StyleBox["se ingresan de la misma manera",
+  FontVariations->{"Underline"->True}],
+ ".\n"
+}], "Text"],
+
+Cell[TextData[{
+ StyleBox["\[DownQuestion]Como se form\[OAcute] la zona amarilla y se escribi\
+\[OAcute] la suma?",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ "\nPara hacer aparecer una zona amarilla de c\[AAcute]lculo basta subir o \
+bajar el cursor con la teclas direccionales del teclado hasta que aparezca \
+una l\[IAcute]nea horizontal en la pantalla, y enseguida comience a escribir \
+lo que quiera calcular. ",
+ StyleBox["Autom\[AAcute]ticamente aparece la zona amarilla y lo que usted \
+escribi\[OAcute]. \n",
+  FontColor->RGBColor[1, 0, 0]],
+ "Intente realizar los siguientes c\[AAcute]lculos:\n                         \
+         34 - 12\n                                  12 * 25\n                 \
+                 56 / 23"
+}], "Text",
+ CellMargins->{{12, Inherited}, {Inherited, Inherited}}],
+
+Cell[TextData[{
+ "Como Ud. puede apreciar, en el \[UAcute]ltimo caso ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " no le entreg\[OAcute] el resultado. Siempre escribir\[AAcute] las \
+divisiones por defecto como fracci\[OAcute]n. Para obtener el valor numerico \
+de esta division utilice el comando ",
+ StyleBox["N",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ ", tal como aparece a continuaci\[OAcute]n:\n"
+}], "Text",
+ CellMargins->{{10, Inherited}, {Inherited, Inherited}}],
+
+Cell[BoxData[
+ RowBox[{"N", "[", 
+  RowBox[{"560", "/", "237"}], "]"}]], "Input",
+ CellChangeTimes->{{3.491225685890625*^9, 3.4912256878125*^9}}],
+
+Cell["\<\
+Ejercicio:
+              Calcule el resultado de :
+                            ( 23+7/3+1/23-45*556 )*( 45-3/4 )\
+\>", "Propuesto"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Comandos B\[AAcute]sicos ", "Subseccion"],
+
+Cell[TextData[{
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " funciona a base de \"comandos\": Un comando es una instrucci\[OAcute]n que \
+el programa entiende e interpreta para realizar alguna tarea.\nPara trabajar \
+con los comandos de ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " se deben tener en cuenta dos importantes reglas: \n",
+ StyleBox["1- ",
+  FontWeight->"Bold"],
+ StyleBox["RESPETAR LAS MAYUSCULAS Y MINUSCULAS:",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 0]],
+ " Para ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ", ",
+ StyleBox["A",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ " y ",
+ StyleBox["a",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ " son dos letras diferentes.\n",
+ StyleBox["2- ",
+  FontWeight->"Bold"],
+ StyleBox["ESCRIBIR LOS PARENTESIS CORRECTOS:",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 0]],
+ " Para ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ", ",
+ StyleBox["( )",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ " y ",
+ StyleBox["[ ]",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ " son parentesis diferentes, que se usan en diferentes situaciones. NO \
+MEZCLE LOS PARENTESIS EN SUS CALCULOS.\n\nA continuaci\[OAcute]n \
+presentaremos los comandos b\[AAcute]sicos que usted ",
+ StyleBox["debe manejar",
+  FontVariations->{"Underline"->True}],
+ " durante todo el laboratorio (y especialmente en los controles!)."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell["DEFINICI\[CapitalOAcute]N DE FUNCIONES.", "Subseccion"],
+
+Cell[TextData[{
+ "Para realizar algun calculo con funciones, lo ",
+ StyleBox["primero",
+  FontWeight->"Bold"],
+ " que usted debe hacer es ",
+ StyleBox["definir la funci\[OAcute]n con la que va a trabajar",
+  FontVariations->{"Underline"->True}],
+ ". Este aspecto es esencial para el trabajo en Matem\[AAcute]tica. \nPor \
+ejemplo, si quieremos trabajar con la funcion ",
+ StyleBox["f(x) =",
+  FontWeight->"Bold"],
+ " ",
+ Cell[BoxData[
+  FormBox[
+   StyleBox[
+    RowBox[{
+     SuperscriptBox["x", "2"], " ", "Sin", " ", 
+     RowBox[{"(", 
+      SuperscriptBox["x", "3"], ")"}], " "}],
+    FontWeight->"Bold"], TraditionalForm]]],
+ ", la podemos ingresar de dos formas equivalentes. ",
+ StyleBox["FIJESE EN EL USO DE LOS PARENTESIS",
+  FontColor->RGBColor[1, 0, 0]],
+ ":"
+}], "Text"],
+
+Cell["Primera Forma", "Previo",
+ CellChangeTimes->{{3.491225729953125*^9, 3.491225733234375*^9}},
+ FontWeight->"Bold"],
+
+Cell[BoxData[
+ RowBox[{"Clear", "[", "f", "]"}]], "Input",
+ CellChangeTimes->{{3.4912258713125*^9, 3.491225873484375*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"f", "[", "x_", "]"}], "=", 
+  RowBox[{
+   SuperscriptBox["x", "2"], 
+   RowBox[{"Sin", "[", 
+    SuperscriptBox["x", "3"], "]"}]}]}]], "Input"],
+
+Cell[TextData[{
+ "De esta forma, la funci\[OAcute]n queda definida dentro de ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " por ",
+ StyleBox["f[x]. ",
+  FontFamily->"Times New Roman",
+  FontWeight->"Bold",
+  FontSlant->"Italic"],
+ "Esta notacion es util porque se resalta la variable que se usa, se presta \
+bien para ",
+ StyleBox["evaluar, graficar, componer funciones",
+  FontWeight->"Bold"],
+ ", etc. Por ejemplo:"
+}], "Posterior",
+ CellChangeTimes->{{3.491225831765625*^9, 3.49122583565625*^9}}],
+
+Cell[BoxData[
+ RowBox[{"f", "[", "Pi", "]"}]], "Input",
+ CellChangeTimes->{{3.491225880234375*^9, 3.49122588784375*^9}}],
+
+Cell["Segunda Forma", "Previo",
+ CellChangeTimes->{{3.49122573515625*^9, 3.49122573909375*^9}},
+ FontWeight->"Bold"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{
+   SuperscriptBox["x", "2"], 
+   RowBox[{"Sin", "[", 
+    SuperscriptBox["x", "3"], "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.491225861703125*^9, 3.491225861890625*^9}}],
+
+Cell[TextData[{
+ "De esta forma, la funci\[OAcute]n queda definida dentro de ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " por ",
+ StyleBox["g. ",
+  FontFamily->"Times New Roman",
+  FontWeight->"Bold",
+  FontSlant->"Italic"],
+ "En esta forma la variable usada queda ",
+ StyleBox["impl\[IAcute]cita",
+  FontVariations->{"Underline"->True}],
+ " y se presta muy bien para ",
+ StyleBox["derivar, integrar, gr\[AAcute]ficar",
+  FontWeight->"Bold"],
+ " pero no para evaluar.  Por ejemplo para evaluar se complica:"
+}], "Posterior",
+ CellChangeTimes->{{3.4912258643125*^9, 3.491225864515625*^9}, {
+  3.491225901109375*^9, 3.491225955109375*^9}}],
+
+Cell[BoxData[
+ RowBox[{"g", "/.", 
+  RowBox[{"{", 
+   RowBox[{"x", "\[Rule]", "Pi"}], "}"}]}]], "Input",
+ CellChangeTimes->{{3.49122592603125*^9, 3.49122593478125*^9}}],
+
+Cell["\<\
+Sientase libre de utilizar la forma que m\[AAcute]s le acomode. Lo \
+\[UAcute]nico que debe tener en cuenta es que debe ser consecuente con la \
+notaci\[OAcute]n: si define su funci\[OAcute]n como f[x] en los \
+c\[AAcute]lculos siguientes la debe utilizar como f[x].\
+\>", "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["GR\[CapitalAAcute]FICOS CURVAS", "Subseccion"],
+
+Cell[TextData[{
+ "Los gr\[AAcute]ficos son fundamentales tanto para hacerse una idea de un \
+problema como para contar con c\[AAcute]lculos aproximados ( por observaci\
+\[OAcute]n ). \n",
+ StyleBox["FIJESE EN EL USO DE LAS MAYUSCULAS/MINUSCULAS Y DE LOS PARENTESIS!\
+\n",
+  FontWeight->"Bold",
+  FontVariations->{"Underline"->True},
+  FontColor->RGBColor[1, 0, 0]],
+ "\n",
+ StyleBox["LO MAS B\[CapitalAAcute]SICO",
+  FontWeight->"Bold",
+  FontVariations->{"Underline"->True}],
+ StyleBox[" ",
+  FontWeight->"Bold"],
+ ": Para graficar ",
+ StyleBox["curvas en el plano",
+  FontWeight->"Bold"],
+ " , el procedimiento b\[AAcute]sico es el siguiente:\n\n1) Si la funcion \
+esta definida a traves de la forma uno, es decir f[x], y se quiere tener un \
+gr\[AAcute]fico de ella en el intervalo [a,b] entonces conviene hacer:\n\t\t\t\
+\t\t\t",
+ StyleBox["Plot [ f[x] , { x , a , b } ]\n",
+  FontWeight->"Bold"],
+ "Por Ejemplo :"
+}], "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Clear", "[", "f", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"f", "[", "x_", "]"}], "=", 
+  RowBox[{"x", "  ", 
+   RowBox[{"Cos", "[", 
+    SuperscriptBox["x", "3"], "]"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{"Plot", "[", 
+  RowBox[{
+   RowBox[{"f", "[", "x", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "0", ",", "3"}], "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.49122608396875*^9, 3.491226130390625*^9}}],
+
+Cell[TextData[{
+ "2) En cambio si la funci\[OAcute]n esta definida a traves de la forma dos, \
+es decir f, basta con hacer:\n\t\t\t\t\t\t\t",
+ StyleBox["Plot [ g , { x , a ,b } ]\n",
+  FontWeight->"Bold"],
+ "Por ejemplo :"
+}], "Text"],
+
+Cell[BoxData[{
+ RowBox[{"f", "=", 
+  RowBox[{"x", "  ", 
+   RowBox[{"Cos", "[", 
+    SuperscriptBox["x", "3"], "]"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{"Plot", "[", 
+  RowBox[{"f", ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "0", ",", "3"}], "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.491226108296875*^9, 3.49122619065625*^9}}],
+
+Cell[TextData[{
+ "\nPara graficar muchas funciones f, g, h, z, etc. todas definidas en t\
+\[EAcute]rminos de la variable x, eso se logra con:\n\t\t\t\t\t\t",
+ StyleBox["Plot [ { f, g, h, z } , { x , a , b } ]\n",
+  FontWeight->"Bold"],
+ "Por ejemplo :"
+}], "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{
+    RowBox[{"Cos", "[", 
+     SuperscriptBox["x", "2"], "]"}], " ", "-", "4"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"h", "=", 
+   RowBox[{"x", "+", "1"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Plot", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"f", ",", "g", ",", "h"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "0", ",", "3"}], "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.491226251546875*^9, 3.4912262994375*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["SOLUCI\[CapitalOAcute]N DE ECUACIONES", "Subseccion"],
+
+Cell[TextData[{
+ "Utilizaremos un ejemplo para explicar la resolucion de ecuaciones \
+utilizando ",
+ StyleBox["Mathematica.",
+  FontSlant->"Italic"]
+}], "Text"],
+
+Cell[TextData[{
+ "EJEMPLO: Resolver la ecuacion ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["x", "2"], TraditionalForm]],
+  FontWeight->"Bold"],
+ StyleBox[" + 2x = 4",
+  FontWeight->"Bold"]
+}], "Ejercicio"],
+
+Cell[TextData[{
+ "\nPara resolver ecuaciones polinomiales, trigonom\[EAcute]tricas y/o \
+hiperbolicas, se utiliza el comando ",
+ StyleBox["Solve ",
+  FontWeight->"Bold"],
+ "de la siguiente manera:"
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{"Solve", "[", " ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     SuperscriptBox["x", "2"], "+", 
+     RowBox[{"2", "x"}]}], " ", "\[Equal]", " ", "4"}], ",", "x"}], 
+  "]"}]], "Input"],
+
+Cell[TextData[{
+ "Dentro de los par\[EAcute]ntesis de corchetes se debe escribir primero la \
+ecuacion que se quiere resolver, y a continuacion se debe escribir la \
+variable a la que se quiere resolver la ecuaci\[OAcute]n. Obviamente, en este \
+caso, la variable a resolver es ",
+ StyleBox["x",
+  FontWeight->"Bold"],
+ ".\n",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " arroja los resultados agrupados dentro de parentesis de llaves. En este \
+caso, hay dos soluciones:  ",
+ Cell[BoxData[
+  StyleBox[
+   RowBox[{
+    RowBox[{"-", "1"}], "-", 
+    SqrtBox["5"]}],
+   FontWeight->"Bold",
+   FontSlant->"Plain"]]],
+ "  y  ",
+ Cell[BoxData[
+  StyleBox[
+   RowBox[{
+    RowBox[{"-", 
+     StyleBox["1",
+      FontSlant->"Plain"]}], 
+    StyleBox["+",
+     FontSlant->"Plain"], 
+    StyleBox[
+     SqrtBox["5"],
+     FontSlant->"Plain"]}],
+   FontWeight->"Bold"]]],
+ "\n",
+ StyleBox["OJO:",
+  FontWeight->"Bold",
+  FontVariations->{"Underline"->True},
+  FontColor->RGBColor[1, 0, 0]],
+ " ",
+ StyleBox["Note el detalle que el comando se deben poner dos \"signos iguales\
+\"( == ) dentro de la ecuaci\[OAcute]n en vez de uno ( = )!!",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 0]]
+}], "Text",
+ CellChangeTimes->{{3.4912900930688753`*^9, 3.4912900941188917`*^9}}],
+
+Cell[TextData[{
+ "\nSi ahora quieremos resolver un ",
+ StyleBox["sistema de ecuaciones",
+  FontVariations->{"Underline"->True}],
+ " (es decir, m\[AAcute]s de una ecuaci\[OAcute]n)",
+ ", las ecuaciones y las variables deben agruparse dentro de parentesis de \
+llaves, tal como se escribe a continuacion:"
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{"Solve", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"3", " ", "x"}], " ", "+", " ", 
+       RowBox[{"2", " ", "y"}]}], " ", "\[Equal]", "1"}], " ", ",", " ", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"7", " ", "x"}], " ", "-", 
+       RowBox[{"2", " ", "y"}]}], " ", "\[Equal]", "4"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "y"}], "}"}]}], "]"}]], "Input"],
+
+Cell[TextData[{
+ "En este caso, estamos resolviendo el sistema de ecuaciones ",
+ StyleBox["3 x + 2 y = 1",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ " y  ",
+ StyleBox["7 x -2 y = 4",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ ", de donde estamos despejando las variables ",
+ StyleBox["x",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ " e ",
+ StyleBox["y",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ StyleBox[". \n",
+  FontSlant->"Plain"],
+ "Note que el resultado es uno solo, en donde ",
+ StyleBox["x",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ " =",
+ StyleBox[" ",
+  FontSlant->"Plain"],
+ Cell[BoxData[
+  FractionBox["1", "2"]]],
+ StyleBox[" e   ",
+  FontSlant->"Plain"],
+ StyleBox["y",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ StyleBox[" = ",
+  FontSlant->"Plain"],
+ Cell[BoxData[
+  RowBox[{"-", 
+   FractionBox["1", "4"]}]]]
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["DERIVACI\[CapitalOAcute]N", "Subseccion"],
+
+Cell[TextData[{
+ "El comando para derivar es simple de usar: ",
+ StyleBox["D[ f , x ]",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ ",",
+ StyleBox[" ",
+  FontWeight->"Bold"],
+ "pero si se quiere obtener la derivada segunda conviene hacer: ",
+ StyleBox["D[ f , { x,2 } ]\n",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ "Ejemplos:"
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{"D", "[", 
+  RowBox[{
+   RowBox[{"Sin", "[", 
+    SuperscriptBox["x", "2"], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "4"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.491226386375*^9, 3.4912263873125*^9}}],
+
+Cell["\<\
+
+Para funciones de varias variables, podemos especificar la variable a la que \
+queremos la derivada parcial:\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"D", "[", 
+  RowBox[{
+   RowBox[{"2", 
+    SuperscriptBox["z", "3"], " ", 
+    SuperscriptBox["x", "2"]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "2"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"D", "[", 
+  RowBox[{
+   RowBox[{"2", 
+    SuperscriptBox["z", "3"], " ", 
+    SuperscriptBox["x", "2"]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"z", ",", "2"}], "}"}]}], "]"}]}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["INTEGRACI\[CapitalOAcute]N", "Subseccion"],
+
+Cell[TextData[{
+ "Para integrar una expresi\[OAcute]n con ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " se recurre a la siguiente orden :\n",
+ StyleBox["\t\t\t",
+  FontSlant->"Plain"],
+ StyleBox["Integrate[ f , { x, a, b} ]\t\tIntegral Definida.\n\t\t\t\
+Integrate[ f , x ]\t\tIntegral Indefinida.",
+  FontWeight->"Bold",
+  FontSlant->"Plain"],
+ StyleBox["\n",
+  FontWeight->"Bold"],
+ "Ejemplos:   Integraci\[OAcute]n Indefinida "
+}], "Text",
+ CellChangeTimes->{{3.491226672734375*^9, 3.491226678828125*^9}}],
+
+Cell[BoxData[{
+ RowBox[{"Integrate", "[", "  ", 
+  RowBox[{
+   FractionBox["1", "x"], " ", ",", "x"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Integrate", "[", " ", 
+  RowBox[{
+   FractionBox[
+    SuperscriptBox["x", "3"], "3"], " ", ",", "x"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Integrate", "[", " ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Cos", "[", "x", "]"}], " ", 
+    RowBox[{"Sin", "[", "y", "]"}]}], ",", "x"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.491226535015625*^9, 3.491226551546875*^9}, {
+  3.49122661146875*^9, 3.491226659921875*^9}}]
+}, Open  ]],
+
+Cell["\<\
+Ejemplos: Integraci\[OAcute]n definida \
+\>", "Text",
+ CellChangeTimes->{{3.4912266855*^9, 3.4912266934375*^9}}],
+
+Cell[BoxData[{
+ RowBox[{"Integrate", "[", " ", 
+  RowBox[{
+   RowBox[{"1", "/", "x"}], ",", " ", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", 
+     RowBox[{"-", "2"}], ",", 
+     RowBox[{"-", "1"}]}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Integrate", "[", " ", 
+  RowBox[{
+   FractionBox[
+    SuperscriptBox["x", "3"], "3"], " ", ",", "  ", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", 
+     RowBox[{"-", "1"}], ",", "0"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Integrate", "[", " ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Cos", "[", "x", "]"}], " ", 
+    RowBox[{"Sin", "[", "y", "]"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "0", ",", 
+     RowBox[{"Pi", "/", "2"}]}], "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.4912265696875*^9, 3.49122660015625*^9}, {
+  3.491226701875*^9, 3.49122675446875*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["UTILIZACI\[CapitalOAcute]N DE LA AYUDA", "Subseccion"],
+
+Cell[TextData[{
+ "Para ingresar al manual de ayuda debe activarse en el men\[UAcute] arriba \
+el boton ",
+ StyleBox["Help, ",
+  FontWeight->"Bold"],
+ "e",
+ "ntre las alternativas que all\[IAcute] encuentra le podemos sugerir:\n",
+ StyleBox["Getting Started/Demos",
+  FontWeight->"Bold"],
+ "\ndesde donde accesar por ejemplo a:\n",
+ StyleBox["    * Tour of Mathematica\n    * Graphics Gallery\n    * Demos",
+  FontWeight->"Bold"],
+ "\nEs obvio que esa parte pretende hacer resaltar los diversos usos \
+potenciales del software pero es bastante ilustrativo.\nPara consultar alguna \
+ayuda r\[AAcute]pida sobre un comado o una opci\[OAcute]n, se tipea el \
+comando precedido de un signo ",
+ StyleBox["?",
+  FontWeight->"Bold"],
+ ", como a continuaci\[OAcute]n se muestra :"
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{"?", "Integrate"}]], "Input"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[TextData[{
+ StyleBox["ATENCION:",
+  FontWeight->"Bold",
+  FontVariations->{"Underline"->True},
+  FontColor->RGBColor[1, 0, 0]],
+ StyleBox[" ",
+  FontWeight->"Bold"],
+ "Es importante en la sesiones que vendr\[AAcute]n que resuelva los \
+ejercicios propuestos (aquellos que su enunciado se encuentra con letra de \
+color rojo), ya que asi desarrollar\[AAcute] habilidad y rapidez en el manejo \
+de ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ", y no tendr\[AAcute] problemas al momento de resolver los controles (los \
+controles solo duran 20 minutos!)."
+}], "Text",
+ CellChangeTimes->{{3.49122686215625*^9, 3.491226866640625*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+ Introducci\[OAcute]n a las transformaciones lineales\
+\>", "Seccion"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+ \[DownQuestion] Que son las transformaciones lineales ? \
+\>", "Subseccion"],
+
+Cell["\<\
+   Son funciones entre espacios vectoriales con una propiedad especial: 
+la imagen de una combinaci\[OAcute]n lineal de vectores es \
+combinaci\[OAcute]n lineal de las im\[AAcute]genes.
+   
+   Veamos una que no es lineal y otra que es lineal.
+   \
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ " Contrajemplo:   La siguiente funci\[OAcute]n entre ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["R", "2"], "  "}], TraditionalForm]]],
+ " NO ES funci\[OAcute]n lineal:  f ( x, y ) = ( x^2 , y ) "
+}], "Ejercicio"],
+
+Cell["\<\
+   No lo es porque la im\[AAcute]gen de la combinaci\[OAcute]n lineal:   \
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"v", "=", " ", 
+  RowBox[{
+   RowBox[{"2", " ", 
+    RowBox[{"{", " ", 
+     RowBox[{"3", ",", "2"}], "}"}]}], " ", "+", " ", 
+   RowBox[{"4", " ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "2"}], ",", "1"}], "}"}]}]}]}]], "Input"],
+
+Cell["    es", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"f", "[", 
+   RowBox[{"x_", ",", "y_"}], "]"}], ":=", " ", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"x", "^", "2"}], ",", "y"}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{"f", "[", 
+  RowBox[{
+   RowBox[{"-", "2"}], ",", "8"}], "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"4", 
+   StyleBox["  ", "Text"], ",", "8"}], "}"}]], "Input"]
+}, Open  ]],
+
+Cell["\<\
+en cambio la combinaci\[OAcute]n lineal de las im\[AAcute]genes no da lo mismo\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"2", " ", 
+   RowBox[{"f", "[", 
+    RowBox[{"3", ",", "2"}], "]"}]}], " ", "+", " ", 
+  RowBox[{"4", " ", 
+   RowBox[{"f", "[", 
+    RowBox[{
+     RowBox[{"-", "2"}], ",", "1"}], "]"}]}]}]], "Input"],
+
+Cell["\<\
+  Compruebe que  con  g(x,y) = ( 2 x - y , 4 x+ y)  no ocurre lo anterior. \
+\>", "Propuesto"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+ \[DownQuestion] Cu\[AAcute]l es la utilidad de las transformaciones \
+lineales? \
+\>", "Subseccion"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ " Ejemplo:   CAMBIOS DE VARIABLES\n                  Considere el cuadril\
+\[AAcute]tero en ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["R", "2"], TraditionalForm]]],
+ ":    A(0,0) , B(3,-1) , C(4,2) , D(1,3). \n                  La \
+transformaci\[OAcute]n lineal definida   L(0,1) = ",
+ Cell[BoxData[
+  FormBox[
+   OverscriptBox["AB", "\[LongRightArrow]"], TraditionalForm]]],
+ " ;  L(1,0) = ",
+ Cell[BoxData[
+  FormBox[
+   OverscriptBox["AD", "\[LongRightArrow]"], TraditionalForm]]],
+ " ; L(x,y) = x ",
+ Cell[BoxData[
+  FormBox[
+   OverscriptBox["AB", "\[LongRightArrow]"], TraditionalForm]]],
+ " + y ",
+ Cell[BoxData[
+  FormBox[
+   OverscriptBox["AD", "\[LongRightArrow]"], TraditionalForm]]],
+ "  \n                  aplica  el cuadrado unitario O(0,0) , I(1,0) , M(1,1) \
+, J(0,1) en el cuadril\[AAcute]tero. \n                  OBS:  Esto se usar\
+\[AAcute] en MAT IV  para \"cambiar variables en una integral\".  "
+}], "Ejercicio"],
+
+Cell["\<\
+   Comprobemos este hecho graficando la im\[AAcute]gen del cuadrado. 
+    Definamos la funci\[OAcute]n:\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"L", "[", 
+   RowBox[{"x_", ",", "y_"}], "]"}], "=", " ", 
+  RowBox[{
+   RowBox[{"x", " ", 
+    RowBox[{"{", 
+     RowBox[{"3", ",", 
+      RowBox[{"-", "1"}]}], "}"}]}], " ", "+", " ", 
+   RowBox[{"y", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "3"}], "}"}]}]}]}]], "Input"],
+
+Cell["    Lo primero que se ve es que  M(1,1)  se aplica en C(4,2)", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"L", "[", 
+   RowBox[{"1", ",", "1"}], "]"}], " "}]], "Input"],
+
+Cell["     Tomemos puntos en el cuadrado unitario a distancia 0.1", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"p", "=", 
+    RowBox[{"{", " ", "}"}]}], ";"}], "  "}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", 
+   RowBox[{
+    RowBox[{"p", "=", 
+     RowBox[{"Join", "[", 
+      RowBox[{"p", ",", 
+       RowBox[{"Table", "[", " ", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"x", ",", "y"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"y", ",", "0", ",", "1", ",", "0.1"}], "}"}]}], "]"}]}], 
+      "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", "0", ",", "1", ",", "0.1"}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", "p"}], "Input"],
+
+Cell["      Grafiquemos estos puntos ", "Text"],
+
+Cell[BoxData[
+ RowBox[{"ListPlot", "[", " ", 
+  RowBox[{"p", ",", " ", 
+   RowBox[{"PlotStyle", "\[Rule]", 
+    RowBox[{"PointSize", "[", "0.02", "]"}]}]}], "]"}]], "Input"],
+
+Cell["\<\
+       Calculemos la im\[AAcute]gen del conjunto anterior\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"q", "=", 
+    RowBox[{"{", " ", "}"}]}], ";"}], "  "}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", 
+   RowBox[{
+    RowBox[{"q", "=", 
+     RowBox[{"Join", "[", 
+      RowBox[{"q", ",", 
+       RowBox[{"Table", "[", " ", 
+        RowBox[{
+         RowBox[{"L", "[", 
+          RowBox[{"x", ",", "y"}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"y", ",", "0", ",", "1", ",", "0.1"}], "}"}]}], "]"}]}], 
+      "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", "0", ",", "1", ",", "0.1"}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", "q"}], "Input"],
+
+Cell["      Grafiquemos estos puntos ", "Text"],
+
+Cell[BoxData[
+ RowBox[{"ListPlot", "[", " ", 
+  RowBox[{"q", ",", " ", 
+   RowBox[{"PlotStyle", "\[Rule]", 
+    RowBox[{"PointSize", "[", "0.02", "]"}]}]}], "]"}]], "Input"],
+
+Cell["\<\
+  Ejercicio: 
+                Calcule la transformaci\[OAcute]n lineal que aplica el \
+cuadrado unitario en el cuadril\[AAcute]tero generado por los vectores:
+v1 ={-2,3} ;   v2 = {-1,-2}\
+\>", "Propuesto"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ " Ejemplo   ROTACIONES\n                 Tomemos el plano ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["R", "2"], TraditionalForm]]],
+ " y apliquemos una rotaci\[OAcute]n  en un \[AAcute]ngulo  \[CurlyPhi] = ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox["\[Pi]", "4"], TraditionalForm]]],
+ ". \n                 El punto con coordenadas (x,y) antes de rotar \
+\[DownQuestion] donde se ubicar\[AAcute] ?.\n                 Las coordenadas \
+la da la transformaci\[OAcute]n lineal:\n                 L(x,y) = ( x cos(\
+\[CurlyPhi]) - y sen(\[CurlyPhi]) , x cos(\[CurlyPhi]) + y sen(\[CurlyPhi]) ) \
+      "
+}], "Ejercicio"],
+
+Cell["\<\
+
+Claramente la funci\[OAcute]n es lineal.
+\[DownQuestion] Pero tendr\[AAcute] el efecto que dice ?.
+Para visualizarlo tomemos un cono de rectas y veamos que las im\[AAcute]genes \
+es un cono de rectas pero ROTADAS en \[CurlyPhi]\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"t", "=", 
+  RowBox[{"Pi", "/", "4"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"L", "[", 
+   RowBox[{"x_", ",", "y_"}], "]"}], "=", " ", 
+  RowBox[{"{", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"x", " ", 
+      RowBox[{"Cos", "[", "t", "]"}]}], " ", "-", " ", 
+     RowBox[{"y", " ", 
+      RowBox[{"Sin", "[", "t", "]"}]}]}], " ", ",", " ", 
+    RowBox[{
+     RowBox[{"x", " ", 
+      RowBox[{"Sin", "[", "t", "]"}]}], "+", " ", 
+     RowBox[{"y", " ", 
+      RowBox[{"Cos", "[", "t", "]"}]}]}]}], "}"}]}]}], "Input"],
+
+Cell["Tomemos  un cono de rectas ", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"p", "=", 
+    RowBox[{"{", " ", "}"}]}], ";"}], "  "}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", 
+   RowBox[{
+    RowBox[{"p", "=", 
+     RowBox[{"Join", "[", 
+      RowBox[{"p", ",", 
+       RowBox[{"Table", "[", " ", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"r", " ", 
+            RowBox[{"Cos", "[", "x", "]"}]}], ",", 
+           RowBox[{"r", " ", 
+            RowBox[{"Sin", "[", "x", "]"}]}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"r", ",", "0", ",", "1", ",", "0.1"}], "}"}]}], "]"}]}], 
+      "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", "0", ",", 
+      RowBox[{"Pi", "/", "6"}], ",", "0.1"}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", "p"}], "Input"],
+
+Cell["      Grafiquemos estos puntos ", "Text"],
+
+Cell[BoxData[
+ RowBox[{"ListPlot", "[", " ", 
+  RowBox[{"p", ",", " ", 
+   RowBox[{"PlotStyle", "\[Rule]", 
+    RowBox[{"PointSize", "[", "0.02", "]"}]}], ",", " ", 
+   RowBox[{"AspectRatio", "\[Rule]", "Automatic"}]}], "]"}]], "Input"],
+
+Cell["\<\
+       Calculemos la im\[AAcute]gen del conjunto anterior\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"q", "=", 
+    RowBox[{"{", " ", "}"}]}], ";"}], "  "}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", 
+   RowBox[{
+    RowBox[{"q", "=", 
+     RowBox[{"Join", "[", 
+      RowBox[{"q", ",", 
+       RowBox[{"Table", "[", " ", 
+        RowBox[{
+         RowBox[{"L", "[", 
+          RowBox[{
+           RowBox[{"r", " ", 
+            RowBox[{"Cos", "[", "x", "]"}]}], ",", 
+           RowBox[{"r", " ", 
+            RowBox[{"Sin", "[", "x", "]"}]}]}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"r", ",", "0", ",", "1", ",", "0.1"}], "}"}]}], "]"}]}], 
+      "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", "0", ",", 
+      RowBox[{"Pi", "/", "6"}], ",", "0.1"}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", "q"}], "Input"],
+
+Cell["      Grafiquemos estos puntos ", "Text"],
+
+Cell[BoxData[
+ RowBox[{"ListPlot", "[", " ", 
+  RowBox[{"q", ",", " ", 
+   RowBox[{"PlotStyle", "\[Rule]", 
+    RowBox[{"PointSize", "[", "0.02", "]"}]}], ",", " ", 
+   RowBox[{"AspectRatio", "\[Rule]", "Automatic"}]}], "]"}]], "Input"],
+
+Cell[TextData[{
+ " Ejercicio:  Haga una rotaci\[OAcute]n en un angulo de  ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox[
+    RowBox[{"2", " ", "\[Pi]"}], "3"], TraditionalForm]]]
+}], "Propuesto"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Ejemplo.   CONSTRUCCION DE CUADRATICAS  (se usa para calcular el pandeo de \
+vigas)\n                 \"Por tres puntos no colineales ubicados en tres \
+rectas verticales pasa una \[UAcute]nica curva cuadr\[AAcute]tica\". \n       \
+          Supongamos que esas rectas sean  x1= 2 ; x2= 4;  x3 = 5.  \n        \
+         Supongamos que los puntos estan respectivamente a las alturas  y1  , \
+y2  , y3 \n                 El polinomio cuadr\[AAcute]tico lo da la \
+transformaci\[OAcute]n lineal: \n                 L(y1, y2 , y3 ) = y1 q1(x)  \
++  y2 q2(x)  + y3 q3(x) \n                 en que:\n                 q1 = ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox[
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"x", "-", "x2"}], ")"}], 
+     RowBox[{"(", 
+      RowBox[{"x", "-", "x3"}], ")"}]}], 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"2", "-", "x2"}], ")"}], 
+     RowBox[{"(", 
+      RowBox[{"2", "-", "x3"}], ")"}]}]], TraditionalForm]]],
+ " ; q2 = ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox[
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"x", "-", "x1"}], ")"}], 
+     RowBox[{"(", 
+      RowBox[{"x", "-", "x3"}], ")"}]}], 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"4", "-", "x1"}], ")"}], 
+     RowBox[{"(", 
+      RowBox[{"4", "-", "x3"}], ")"}]}]], TraditionalForm]]],
+ " ; q3 = ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox[
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"x", " ", "-", " ", "x1"}], ")"}], 
+     RowBox[{"(", 
+      RowBox[{"x", "-", "x2"}], ")"}]}], 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"5", "-", "x1"}], ")"}], 
+     RowBox[{"(", 
+      RowBox[{"5", "-", "x2"}], ")"}]}]], TraditionalForm]]]
+}], "Ejercicio"],
+
+Cell[TextData[{
+ " \nClaramente es una transformaci\[OAcute]n lineal entre ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["R", "3"], TraditionalForm]]],
+ " y  ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["P", "2"], TraditionalForm]]],
+ " : espacio de los polinomios de grado menor o igual a 2.\nComprobemos \
+algunos casos. \nPrimero definamos la transformaci\[OAcute]n"
+}], "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"x1", "=", " ", "2"}], " ", ";", " ", 
+   RowBox[{"x2", "=", " ", "4"}], " ", ";", " ", 
+   RowBox[{"x3", " ", "=", " ", "5"}], ";"}], " "}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"q1", "=", 
+   FormBox[
+    FractionBox[
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"x", "-", "x2"}], ")"}], 
+      RowBox[{"(", 
+       RowBox[{"x", "-", "x3"}], ")"}]}], 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"2", "-", "x2"}], ")"}], 
+      RowBox[{"(", 
+       RowBox[{"2", "-", "x3"}], ")"}]}]],
+    TraditionalForm]}], " ", ";", 
+  RowBox[{"q2", "=", 
+   FormBox[
+    FractionBox[
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"x", "-", "x1"}], ")"}], 
+      RowBox[{"(", 
+       RowBox[{"x", "-", "x3"}], ")"}]}], 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"4", "-", "x1"}], ")"}], 
+      RowBox[{"(", 
+       RowBox[{"4", "-", "x3"}], ")"}]}]],
+    TraditionalForm]}], " ", ";", 
+  RowBox[{"q3", "=", 
+   FormBox[
+    FractionBox[
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"x", " ", "-", " ", "x1"}], ")"}], 
+      RowBox[{"(", 
+       RowBox[{"x", "-", "x2"}], ")"}]}], 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"5", "-", "x1"}], ")"}], 
+      RowBox[{"(", 
+       RowBox[{"5", "-", "x2"}], ")"}]}]],
+    TraditionalForm]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"L", "[", 
+   RowBox[{"y1_", ",", "y2_", ",", " ", "y3_"}], "]"}], "=", " ", 
+  RowBox[{
+   RowBox[{"y1", " ", "q1"}], " ", "+", " ", 
+   RowBox[{"y2", " ", "q2"}], " ", "+", " ", 
+   RowBox[{"y3", " ", "q3"}]}]}]}], "Input"],
+
+Cell["\<\
+Tomemos los puntos  y1 = 3 ;  y2 = 2 ;  y3 = 4 y dibujemoslos:\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"z1", "=", "3"}], " ", ";", " ", 
+  RowBox[{"z2", "=", "2"}], " ", ";", " ", 
+  RowBox[{"z3", " ", "=", " ", "3"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"p", "=", " ", 
+  RowBox[{"{", " ", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"x1", ",", "z1"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x2", ",", "z2"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x3", ",", "z3"}], "}"}]}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{"dib1", "=", 
+  RowBox[{"ListPlot", "[", " ", 
+   RowBox[{"p", ",", " ", 
+    RowBox[{"PlotStyle", "\[Rule]", 
+     RowBox[{"PointSize", "[", "0.04", "]"}]}], ",", " ", 
+    RowBox[{"PlotRange", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "4"}], "}"}]}]}], "]"}]}]}], "Input"],
+
+Cell["\<\
+Vemos si la curva  L[z1,z2,z3]  de la variable  x   pasa por esos puntos \
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"q", "=", " ", 
+  RowBox[{"L", "[", 
+   RowBox[{"z1", ",", "z2", ",", "z3"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"dib2", "=", 
+  RowBox[{"Plot", "[", 
+   RowBox[{"q", ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", "2", ",", "5"}], "}"}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Show", "[", 
+  RowBox[{"dib1", ",", "dib2"}], "]"}]}], "Input"],
+
+Cell["\<\
+ Ejercicio: 
+                Haga pasar una cuadr\[AAcute]tica por los puntos  (x1, 5.3) , \
+( x2, 6.2) , (x3, 4) \
+\>", "Propuesto"]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["  Isomorfismos. ", "Subseccion"],
+
+Cell["\<\
+                   Son las transformaciones biyectivas.  \[DownQuestion] Como \
+saber que es biyectiva ?. 
+                   La matriz de la transformaci\[OAcute]n debe ser cuadrada y \
+tener determinante no nulo \
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ " Ejemplo. \n                 Compruebe que el cambio de variable lineal en ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["R", "3"], TraditionalForm]]],
+ " es un isomorfismo. \n                 L(x,y,z) = ( 2 x - 4 y + 6 z , - 7 x \
++ 3 y - 8 z , -3 x - 5 y + 2 z)  \n                 pero NO lo es \n          \
+       L(x,y,z) = ( 2 x - 4 y + 6 z , - 7 x + 3 y - 8 z ,  -5 x  - y  - 2 z ) "
+}], "Ejercicio"],
+
+Cell[TextData[{
+ "\nSu matriz es M  3 x 3  de modo  que   M . ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", "\[NegativeThinSpace]", GridBox[{
+      {GridBox[{
+         {"x"},
+         {"y"}
+        }]},
+      {"x"}
+     }], "\[NegativeThinSpace]", ")"}], TraditionalForm]]],
+ " = L(x,y,z). \nLa primera: "
+}], "Text"],
+
+Cell[BoxData[{
+ RowBox[{"m", " ", "=", " ", 
+  RowBox[{"{", " ", 
+   RowBox[{
+    RowBox[{"{", " ", 
+     RowBox[{"2", " ", ",", 
+      RowBox[{"-", "4"}], ",", "6"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "7"}], ",", "3", ",", 
+      RowBox[{"-", "8"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "3"}], ",", 
+      RowBox[{"-", "5"}], ",", "2"}], "}"}]}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{"m", ".", 
+  RowBox[{"{", 
+   RowBox[{"x", ",", "y", ",", "z"}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Det", "[", "m", "]"}]}], "Input"],
+
+Cell["La segunda ", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"m", " ", "=", " ", 
+  RowBox[{"{", " ", 
+   RowBox[{
+    RowBox[{"{", " ", 
+     RowBox[{"2", " ", ",", 
+      RowBox[{"-", "4"}], ",", "6"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "7"}], ",", "3", ",", 
+      RowBox[{"-", "8"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "5"}], ",", 
+      RowBox[{"-", "1"}], ",", 
+      RowBox[{"-", "2"}]}], "}"}]}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{"m", ".", 
+  RowBox[{"{", 
+   RowBox[{"x", ",", "y", ",", "z"}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Det", "[", "m", "]"}]}], "Input"],
+
+Cell[TextData[{
+ " Ejercicio:  Defina una transformaci\[OAcute]n lineal en ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["R", "4"], TraditionalForm]]],
+ " y vea si es un isomorfismo. "
+}], "Propuesto"]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["  Nucleo de una transformacion ", "Subseccion"],
+
+Cell["\<\
+ Es el subespacio vectorial del dominio de todos los vectores que se \
+transforman en cero. 
+\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+ Ejemplo. 
+              Calcular el n\[UAcute]cleo de la transformaci\[OAcute]n: 
+               L(x,y,z) = ( 2 x - 4 y + 6 z , - 7 x + 3 y - 8 z ,  -5 x  - y  \
+- 2 z ) \
+\>", "Ejercicio"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"L", "[", 
+   RowBox[{"x_", ",", "y_", ",", "z_"}], "]"}], "=", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"2", " ", "x"}], "-", 
+     RowBox[{"4", " ", "y"}], "+", 
+     RowBox[{"6", " ", "z"}]}], ",", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"-", "7"}], " ", "x"}], "+", 
+     RowBox[{"3", " ", "y"}], "-", 
+     RowBox[{"8", " ", "z"}]}], ",", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"-", "5"}], " ", "x"}], "-", "y", "-", 
+     RowBox[{"2", " ", "z"}]}]}], "}"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{"L", 
+   RowBox[{"(", 
+    RowBox[{"x", ",", "y", ",", "z", ","}]}]}]}]], "Input"],
+
+Cell["\<\
+   El comando Solve alega pero da una respuesta que podemos verificar \
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"Solve", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"L", "[", 
+     RowBox[{"x", ",", "y", ",", "z"}], "]"}], "\[Equal]", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "y", ",", "z"}], "}"}]}], "]"}]], "Input"],
+
+Cell["   Comprobemos", "Text"],
+
+Cell[BoxData[
+ RowBox[{" ", 
+  RowBox[{"L", "[", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "7"}], " ", 
+     RowBox[{"z", "/", "11"}]}], ",", " ", 
+    RowBox[{"13", " ", 
+     RowBox[{"z", "/", "11"}]}], ",", "z"}], "]"}]}]], "Input"],
+
+Cell["\<\
+ \[DownExclamation] Perfecto !.
+    El n\[UAcute]cleo tiene dimensi\[OAcute]n uno. 
+    Por el teorema de la dimensi\[OAcute]n la imagen es un subespacio \
+vectorial del codominio de dimensi\[OAcute]n dos. \
+\>", "Text",
+ CellChangeTimes->{{3.491290777771402*^9, 3.4912907781072283`*^9}}],
+
+Cell["\<\
+ Ejercicio:
+                Calcule el n\[UAcute]cleo y su dimensi\[OAcute]n en el caso \
+de: 
+                L( x , y , z , w ) = ( x - y + z - w , 2 x + y - 3 z - w )
+                Claramente su dimensi\[OAcute]n no puede ser cero. \
+\[DownQuestion] Por qu\[EAcute] ?.\
+\>", "Propuesto",
+ CellChangeTimes->{{3.4912907679316053`*^9, 3.491290769100135*^9}}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+
+Cell["JAS /AAJ ", "Text",
+ CellChangeTimes->{{3.4599341731646*^9, 3.4599342230963984`*^9}, {
+  3.49122552184375*^9, 3.4912255324375*^9}, {3.636307729673871*^9, 
+  3.636307743313651*^9}, {3.6363079146884537`*^9, 3.636307920082762*^9}},
+ TextAlignment->Right,
+ TextJustification->0]
+},
+AutoGeneratedPackage->None,
+WindowToolbars->"EditBar",
+CellGrouping->Manual,
+WindowSize->{1350, 633},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+DockedCells->FEPrivate`FrontEndResource[
+ "FEExpressions", "CompatibilityToolbar"],
+ShowSelection->True,
+FrontEndVersion->"7.0 for Microsoft Windows (32-bit) (February 18, 2009)",
+StyleDefinitions->"Estilo USM.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "T.1"->{
+  Cell[7107, 215, 461, 12, 65, "Text",
+   CellTags->"T.1"],
+  Cell[7571, 229, 165, 4, 31, "Input",
+   CellTags->"T.1"]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"T.1", 47552, 1614}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[545, 20, 217, 7, 32, "Text"],
+Cell[765, 29, 929, 33, 152, "Text"],
+Cell[1697, 64, 2885, 63, 117, "Text"],
+Cell[4585, 129, 1790, 55, 105, "Text"],
+Cell[6378, 186, 231, 8, 44, "Text"],
+Cell[CellGroupData[{
+Cell[6634, 198, 172, 5, 23, "Seccion"],
+Cell[6809, 205, 223, 4, 29, "Text"],
+Cell[CellGroupData[{
+Cell[7057, 213, 47, 0, 23, "Subseccion"],
+Cell[7107, 215, 461, 12, 65, "Text",
+ CellTags->"T.1"],
+Cell[7571, 229, 165, 4, 31, "Input",
+ CellTags->"T.1"],
+Cell[7739, 235, 894, 18, 83, "Text"],
+Cell[8636, 255, 808, 16, 137, "Text"],
+Cell[9447, 273, 486, 12, 47, "Text"],
+Cell[9936, 287, 145, 3, 31, "Input"],
+Cell[10084, 292, 141, 4, 55, "Propuesto"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10262, 301, 47, 0, 23, "Subseccion"],
+Cell[10312, 303, 1413, 48, 119, "Text"],
+Cell[CellGroupData[{
+Cell[11750, 355, 61, 0, 23, "Subseccion"],
+Cell[11814, 357, 783, 24, 49, "Text"],
+Cell[12600, 383, 118, 2, 23, "Previo"],
+Cell[12721, 387, 122, 2, 31, "Input"],
+Cell[12846, 391, 178, 6, 33, "Input"],
+Cell[13027, 399, 507, 15, 23, "Posterior"],
+Cell[13537, 416, 120, 2, 31, "Input"],
+Cell[13660, 420, 116, 2, 23, "Previo"],
+Cell[13779, 424, 215, 6, 33, "Input"],
+Cell[13997, 432, 647, 18, 23, "Posterior"],
+Cell[14647, 452, 168, 4, 31, "Input"],
+Cell[14818, 458, 290, 5, 29, "Text"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[15145, 468, 52, 0, 23, "Subseccion"],
+Cell[15200, 470, 930, 25, 155, "Text"],
+Cell[16133, 497, 454, 12, 75, "Input"],
+Cell[16590, 511, 234, 6, 65, "Text"],
+Cell[16827, 519, 337, 9, 54, "Input"],
+Cell[17167, 530, 264, 6, 83, "Text"],
+Cell[17434, 538, 515, 16, 74, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[17986, 559, 59, 0, 23, "Subseccion"],
+Cell[18048, 561, 160, 5, 29, "Text"],
+Cell[18211, 568, 209, 8, 23, "Ejercicio"],
+Cell[18423, 578, 209, 6, 47, "Text"],
+Cell[18635, 586, 203, 7, 33, "Input"],
+Cell[18841, 595, 1271, 43, 70, "Text"],
+Cell[20115, 640, 315, 7, 47, "Text"],
+Cell[20433, 649, 446, 14, 31, "Input"],
+Cell[20882, 665, 859, 38, 53, "Text"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21778, 708, 47, 0, 23, "Subseccion"],
+Cell[21828, 710, 345, 13, 47, "Text"],
+Cell[22176, 725, 244, 7, 33, "Input"],
+Cell[22423, 734, 133, 4, 47, "Text"],
+Cell[22559, 740, 417, 14, 55, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[23013, 759, 48, 0, 23, "Subseccion"],
+Cell[23064, 761, 517, 15, 83, "Text"],
+Cell[23584, 778, 560, 15, 107, "Input"]
+}, Open  ]],
+Cell[24159, 796, 122, 3, 29, "Text"],
+Cell[24284, 801, 825, 24, 91, "Input"],
+Cell[CellGroupData[{
+Cell[25134, 829, 60, 0, 23, "Subseccion"],
+Cell[25197, 831, 782, 19, 155, "Text"],
+Cell[25982, 852, 52, 1, 31, "Input"]
+}, Open  ]]
+}, Open  ]],
+Cell[26061, 857, 643, 16, 47, "Text"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[26741, 878, 80, 2, 23, "Seccion"],
+Cell[CellGroupData[{
+Cell[26846, 884, 87, 2, 23, "Subseccion"],
+Cell[26936, 888, 270, 7, 101, "Text"],
+Cell[CellGroupData[{
+Cell[27231, 899, 246, 7, 23, "Ejercicio"],
+Cell[27480, 908, 97, 2, 29, "Text"],
+Cell[27580, 912, 264, 9, 31, "Input"],
+Cell[27847, 923, 22, 0, 29, "Text"],
+Cell[CellGroupData[{
+Cell[27894, 927, 280, 9, 52, "Input"],
+Cell[28177, 938, 100, 3, 31, "Input"]
+}, Open  ]],
+Cell[28292, 944, 102, 2, 29, "Text"],
+Cell[28397, 948, 234, 8, 31, "Input"],
+Cell[28634, 958, 104, 2, 23, "Propuesto"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[28787, 966, 111, 3, 23, "Subseccion"],
+Cell[CellGroupData[{
+Cell[28923, 973, 960, 26, 94, "Ejercicio"],
+Cell[29886, 1001, 127, 3, 47, "Text"],
+Cell[30016, 1006, 308, 11, 31, "Input"],
+Cell[30327, 1019, 76, 0, 29, "Text"],
+Cell[30406, 1021, 96, 3, 31, "Input"],
+Cell[30505, 1026, 75, 0, 29, "Text"],
+Cell[30583, 1028, 624, 20, 72, "Input"],
+Cell[31210, 1050, 47, 0, 29, "Text"],
+Cell[31260, 1052, 173, 4, 31, "Input"],
+Cell[31436, 1058, 81, 2, 29, "Text"],
+Cell[31520, 1062, 629, 20, 72, "Input"],
+Cell[32152, 1084, 47, 0, 29, "Text"],
+Cell[32202, 1086, 173, 4, 31, "Input"],
+Cell[32378, 1092, 215, 5, 55, "Propuesto"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[32630, 1102, 638, 14, 94, "Ejercicio"],
+Cell[33271, 1118, 252, 6, 142, "Text"],
+Cell[33526, 1126, 551, 17, 64, "Input"],
+Cell[34080, 1145, 43, 0, 34, "Text"],
+Cell[34126, 1147, 796, 25, 84, "Input"],
+Cell[34925, 1174, 47, 0, 34, "Text"],
+Cell[34975, 1176, 236, 5, 44, "Input"],
+Cell[35214, 1183, 81, 2, 34, "Text"],
+Cell[35298, 1187, 801, 25, 84, "Input"],
+Cell[36102, 1214, 47, 0, 34, "Text"],
+Cell[36152, 1216, 236, 5, 44, "Input"],
+Cell[36391, 1223, 193, 6, 35, "Propuesto"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[36621, 1234, 1674, 50, 147, "Ejercicio"],
+Cell[38298, 1286, 382, 11, 142, "Text"],
+Cell[38683, 1299, 1584, 55, 100, "Input"],
+Cell[40270, 1356, 86, 2, 34, "Text"],
+Cell[40359, 1360, 754, 21, 84, "Input"],
+Cell[41116, 1383, 97, 2, 34, "Text"],
+Cell[41216, 1387, 381, 11, 84, "Input"],
+Cell[41600, 1400, 143, 4, 62, "Propuesto"]
+}, Closed]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[41792, 1410, 38, 0, 23, "Subseccion"],
+Cell[41833, 1412, 238, 5, 47, "Text"],
+Cell[CellGroupData[{
+Cell[42096, 1421, 427, 8, 87, "Ejercicio"],
+Cell[42526, 1431, 316, 12, 137, "Text"],
+Cell[42845, 1445, 590, 18, 84, "Input"],
+Cell[43438, 1465, 27, 0, 34, "Text"],
+Cell[43468, 1467, 612, 19, 84, "Input"],
+Cell[44083, 1488, 202, 6, 29, "Propuesto"]
+}, Closed]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[44334, 1500, 53, 0, 23, "Subseccion"],
+Cell[44390, 1502, 117, 4, 47, "Text"],
+Cell[CellGroupData[{
+Cell[44532, 1510, 200, 5, 55, "Ejercicio"],
+Cell[44735, 1517, 528, 18, 31, "Input"],
+Cell[45266, 1537, 139, 4, 52, "Input"],
+Cell[45408, 1543, 94, 2, 29, "Text"],
+Cell[45505, 1547, 298, 9, 31, "Input"],
+Cell[45806, 1558, 30, 0, 29, "Text"],
+Cell[45839, 1560, 242, 8, 31, "Input"],
+Cell[46084, 1570, 298, 6, 65, "Text"],
+Cell[46385, 1578, 370, 8, 71, "Propuesto"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+Cell[46794, 1591, 280, 5, 29, "Text"]
+}
+]
+*)
+
+(* End of internal cache information *)

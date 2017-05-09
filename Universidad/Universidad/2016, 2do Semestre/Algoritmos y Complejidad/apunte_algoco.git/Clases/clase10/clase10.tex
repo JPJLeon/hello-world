@@ -1,0 +1,513 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#10\quad Código Huffman}}
+
+\author{Aldo Berrios Valenzuela}
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]Clase \#10\\Código Huffman II}
+\date{Miércoles 31 de agosto de 2016}
+
+\usepackage{tikz,ifthen}
+\usetikzlibrary{automata,positioning, babel}
+\definecolor{navyblue}{RGB}{0,148,222}
+\usetikzlibrary{fit}
+\tikzset{shorten >=1pt,node distance=1.8cm,on grid, >=stealth, initial text=Inicio,
+	every state/.style={ draw=black ,fill=black, minimum size=2mm},
+	bend angle=35, every loop/.style={looseness=13}}
+
+
+\begin{document}
+\maketitle
+\begin{abstract}
+	Realizamos otro ejemplo de Código Huffman y posteriormente, demostramos que es un Algoritmo Voraz.
+\end{abstract}
+\section{Código Huffman (continuación)}
+Tenemos un texto $T$ formado por símbolos de $\Sigma=\llaves{x_1, \ldots, x_n}$ tales que $x_i$ aparece $f_i$ veces. Queremos minimizar
+\begin{equation*}
+B\nparentesis{R}=\sum_{1\leq i\leq n} f_i\,d\nparentesis{x_i},
+\end{equation*}
+donde $d\nparentesis{x_i}$ es el largo del código binario para $x_i$ obtenido en el árbol binario de $R$.
+\begin{figure}[!h]
+	\centering
+	\begin{tikzpicture}
+		\node [state] (0) {};
+		\node [state, below left of = 0, xshift = -20] (1) {};
+		\node [state, below right of = 0, xshift = 20] (2) {};
+		\node [below left of =1] (d1) {};
+		\node [state, below right of =1] (d2) {};
+		\node [below left of = 2] (d3) {};
+		\node [below right of = 2] (d4) {};
+		\node [state, below of = d2, yshift = 10] (d10) {};
+		\node [below left of = d10] (d20) {$x_a$};
+		\node [below right of = d10] (d21) {$x_b$};
+		
+		
+		
+		
+		\path (0) edge node [above left] {$0$} (1)
+		edge node [above right] {$1$} (2)
+		(1) edge node [above left] {$0$} (d1)
+		(1) edge node [above right] {$1$} (d2)
+		(2) edge node [above left] {$0$} (d3)
+		edge node [above right] {$1$} (d4)
+		(d10) edge node [above left] {$0$} (d20)
+		edge node [above right] {$1$} (d21);
+		
+		\path[dashed] (d2) edge (d10);
+	\end{tikzpicture}
+	\caption{Las hojas que se encuentran a mayor profundidad representan aquellos símbolos que se repiten con menor frecuencia. De la misma forma, aquellos que se encuentren a menor profundidad son símbolos muy frecuentes.}
+\end{figure}
+
+Observaciones:
+\begin{itemize}
+	\item Si $R$ es óptimo, todo nodo interno tiene dos hijos.
+	\item Si $d\nparentesis{x_i}$ es la profundidad de $x_i$ hay dos hojas $x_a$, $x_b$ a la profundidad máxima que son hermanos.
+\end{itemize}
+
+\subsection{Algoritmo}
+Sucesivamente:
+\begin{enumerate}
+	\item Tome los dos símbolos con menos frecuencia de su tabla y reemplacelos por un nuevo símbolo que representa a ambos. Supongamos que estos símbolos son $x_a$ y $x_b$, entonces el nuevo símbolo es $x_{ab}$. La frecuencia de este símbolo conjunto será la suma de la frecuencia de $x_a$ y $x_b$.
+	
+	\item Cree un árbol que tenga como raíz al símbolo conjunto $x_{ab}$ con $x_{a}$ y $x_{b}$ como hojas.
+	
+	\item Volver a 1 hasta que nuestra tabla esté formada por sólo 1 símbolo conjunto, que representará a todos los símbolos de $\Sigma$.
+\end{enumerate}
+\begin{ejemplo}
+	Consideremos el Cuadro \ref{10::TablaFrecuenciasEj1}.
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{c|c}
+			Símbolo & Frecuencia\\
+			\hline
+			$a$&2\\
+			$b$&6\\
+			$c$&3\\
+			$d$&3\\
+			$e$&21\\
+			$f$&5\\
+			$g$&15
+		\end{tabular}
+		\caption{Dada una determinada secuencia de palabras, se detectó que aparecen los símbolos $a, b, c, d, e, f, g$ con las frecuencias que se muestran arriba.}
+		\label{10::TablaFrecuenciasEj1}
+	\end{table}
+	Nuestro algoritmo nos dice que debemos tomar 2 símbolos con menor frecuencia en el Cuadro \ref{10::TablaFrecuenciasEj1}, que en este caso serían $a$ y $c$ o $a$ y $d$ y lo reemplazamos con uno nuevo $ac$ o $ad$ (para este ejercicio ejercicio escogeremos $ac$). La frecuencia de este símbolo será la suma de las frecuencias de $a$ y $c$. Es decir:
+	\begin{equation*}
+	f_{ac}=f_a+f_b=2+3=5
+	\end{equation*}
+	Luego, eliminamos los símbolos $a$ y $c$ del Cuadro \ref{10::TablaFrecuenciasEj1} y agregamos al símbolo conjunto $ac$ dando como origen al Cuadro \ref{10::TablaFrecuenciasEj2}.
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{c|c}
+			Símbolo & Frecuencia\\
+			\hline
+			$b$&6\\
+			$d$&3\\
+			$e$&21\\
+			$f$&5\\
+			$g$&15\\
+			$ac$&5
+		\end{tabular}
+		\caption{Eliminamos los símbolos $a$ y $c$ del Cuadro \ref{10::TablaFrecuenciasEj1} y lo reemplazamos por $ac$, con frecuencia $f\nparentesis{ac}=5$.}
+		\label{10::TablaFrecuenciasEj2}
+	\end{table}
+	En seguida, representamos este símbolo conjunto a través de un árbol binario cuya raíz sería $ac$ y sus hojas $a$ y $c$, tal como se muestra en la Figura \ref{10::ArbolEj1}.
+	\begin{figure}[!h]
+		\centering
+		\begin{tikzpicture}
+		\node [state] (ac) {};
+		\node [above of = ac, yshift = -42] (:ac) {$ac$};
+		\node [below left of = ac] (a) {$a$};
+		\node [below right of = ac] (c) {$c$};
+		
+		\path (ac) edge node [above left] {$0$} (a)
+		edge node [above right] {$1$} (c);
+		\end{tikzpicture}
+		\caption{Este árbol tiene como hoja a aquellos símbolos que menos se repiten, generando un peso mínimo hasta el momento.}
+		\label{10::ArbolEj1}
+	\end{figure}
+	
+	Nuevamente, escogemos dos símbolos con menor frecuencia en el Cuadro \ref{10::TablaFrecuenciasEj2}. Entre ellos, podemos escoger
+	\begin{itemize}
+		\item $d$ y $f$
+		\item $d$ y $ac$
+	\end{itemize}
+	En esta ocasión, escogeremos los símbolos $d$ y $f$ (queda como tarea averiguar qué es lo que ocurre si escogemos $d$ y $ac$). Entonces, eliminamos los símbolos $d$ y $f$ del Cuadro \ref{10::TablaFrecuenciasEj2} y lo reemplazamos por $df$, que tiene una frecuencia de $f_{fd}=f_d+f_f=8$. El resultado de esto queda representado en el Cuadro \ref{10::TablaFrecuenciasEj3}.
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{c|c}
+			Símbolo & Frecuencia\\
+			\hline
+			$b$&6\\
+			$e$&21\\
+			$g$&15\\
+			$ac$&5\\
+			$df$&8
+		\end{tabular}
+		\caption{Eliminamos los símbolos $d$ y $f$ del Cuadro \ref{10::TablaFrecuenciasEj2} y en su lugar, agregamos el símbolo $df$ con frecuencia $f_{df}=8$.}
+		\label{10::TablaFrecuenciasEj3}
+	\end{table}
+	En seguida, representamos este símbolo conjunto a través de un árbol binario con raíz $df$ y hojas $d$ y $f$. Esto está representado en la Figura \ref{10::ArbolEj2}.
+	\begin{figure}[!h]
+		\centering
+		\begin{tikzpicture}
+		\node [state] (df) {};
+		\node [below left of = df] (d) {$d$};
+		\node [below right of = df] (f) {$f$};
+		\node [above of = df, yshift = -42] (:df) {$df$};
+		
+		\path (df) edge node [above left] {$0$} (d)
+		edge node [above right] {$1$} (f);
+		\end{tikzpicture}
+		\caption{Árbol generado por la segunda iteración. Tiene un peso de $f_{df}=8$}
+		\label{10::ArbolEj2}
+	\end{figure}
+	
+	Pasamos a la siguiente iteración y buscamos en el Cuadro \ref{10::TablaFrecuenciasEj3} los dos símbolos de menor frecuencia. Estos son $ac$ y $b$. Por lo tanto, removemos estos dos y agregamos un nuevo símbolo llamado $bac$ (véase el Cuadro \ref{10::TablaFrecuenciasEj4}).
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{c|c}
+			Símbolo & Frecuencia\\
+			\hline
+			$e$&21\\
+			$g$&15\\
+			$bac$&11\\
+			$df$&8
+		\end{tabular}
+		\caption{Eliminamos los símbolos $b$ y $ac$ del cuadro \ref{10::TablaFrecuenciasEj3} y lo reemplazamos por $bac$. Este símbolo tiene una frecuencia de $f_{bac}=f_{b}+f_{ac}=11$.}
+		\label{10::TablaFrecuenciasEj4}
+	\end{table}
+	Luego, como es costumbre, creamos un árbol con raíz el nodo $bac$ y hojas $b$ y $ac$ (Figura \ref{10::ArbolEj3}).
+	\begin{figure}[!h]
+		\centering
+		\begin{tikzpicture}
+		\node [state] (ac) {};
+		\node [above of = ac, yshift = -42] (:ac) {$ac$};
+		\node [below left of = ac] (a) {$a$};
+		\node [below right of = ac] (c) {$c$};
+		
+		\path (ac) edge node [above left] {$0$} (a)
+		edge node [above right] {$1$} (c);
+		
+		\node [state, above left of = ac] (bac) {};
+		\node [below left of = bac] (b) {$b$};
+		\node [above of = bac, yshift = -42] (:bac) {$bac$};
+		
+		\path (bac) edge node [above right] {$1$} (ac)
+		edge node [above left] {$0$} (b);
+		\end{tikzpicture}
+		\caption{Árbol generado en la tercera iteración. Tiene raíz a $bac$ y hojas $b$ y $ac$. Pero la hoja $ac$ puede representarse en el árbol de la Figura \ref{10::ArbolEj1}.}
+		\label{10::ArbolEj3}
+	\end{figure}
+	
+	Continuamos en la cuarta iteración. En ella, buscamos los dos símbolos que tengan la menor frecuencia, los eliminamos y en su lugar agregamos otro símbolo que represente a ambos y cuya frecuencia será la suma de los dos eliminados. Mirando el Cuadro \ref{10::TablaFrecuenciasEj4}, vemos que estos son $bac$ y $df$ con frecuencias $f_{bac}=11$ y $f_{df}=8$ respectivamente. Eliminamos estos dos y agregamos $dfbac$ con una frecuencia $f_{dfbac}=f_{df}+f_{bac}=19$. El resultado se encuentra en el Cuadro \ref{10::TablaFrecuenciasEj5}.
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{c|c}
+			Símbolo & Frecuencia\\
+			\hline
+			$e$&21\\
+			$g$&15\\
+			$dfbac$&19
+		\end{tabular}
+		\caption{Eliminamos los símbolos $bac$ y $df$ del Cuadro \ref{10::TablaFrecuenciasEj4} y agregamos $dfbac$ con una frecuencia de $f_{dfbac}=19$.}
+		\label{10::TablaFrecuenciasEj5}
+	\end{table}
+	En seguida, creamos un nuevo árbol con raíz $dfbac$ y hojas $df$ y $bac$ (Figura \ref{10::ArbolEj4}).
+	\begin{figure}[!h]
+		\centering
+		\begin{tikzpicture}
+		\node [state] (ac) {};
+		\node [above of = ac, yshift = -42] (:ac) {$ac$};
+		\node [below left of = ac] (a) {$a$};
+		\node [below right of = ac] (c) {$c$};
+		
+		\path (ac) edge node [above left] {$0$} (a)
+		edge node [above right] {$1$} (c);
+		
+		\node [state, above left of = ac] (bac) {};
+		\node [below left of = bac] (b) {$b$};
+		\node [above of = bac, yshift = -42, xshift = 3] (:bac) {$bac$};
+		
+		\path (bac) edge node [above right] {$1$} (ac)
+		edge node [above left] {$0$} (b);
+		
+		\node [state, above left of = bac, xshift = -15] (dfbac) {};
+		\node [above of = dfbac, yshift = -42] (:dfbac) {$dfbac$};
+		
+		\node [below left of = dfbac, state, xshift = -15] (df) {};
+		\node [below left of = df] (d) {$d$};
+		\node [below right of = df] (f) {$f$};
+		\node [above of = df, yshift = -42] (:df) {$df$};
+		
+		\path (df) edge node [above left] {$0$} (d)
+		edge node [above right] {$1$} (f);
+		
+		\path (dfbac) edge node [above left] {$0$} (df)
+		edge node [above right] {$1$} (bac);
+		\end{tikzpicture}
+		\caption{Árbol generado en la cuarta iteración. Tiene raíz $dfbac$ y hojas $df$ y $bac$, que en el fondo son los árboles representados en las Figuras \ref{10::ArbolEj2} y \ref{10::ArbolEj3} respectivamente.}
+		\label{10::ArbolEj4}
+	\end{figure}
+	
+	Vamos por la quinta iteración. Buscamos en el Cuadro <> los dos símbolos con menor frecuencia, y estos son $g$ y $dfbac$ cuya suma de frecuencias es de $34$. Entonces, quitamos estos símbolos y agregamos $gdfbac$ en su lugar (resultados en el Cuadro \ref{10::TablaFrecuenciasEj6}).
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{c|c}
+			Símbolo & Frecuencia\\
+			\hline
+			$e$&21\\
+			$gdfbac$&34
+		\end{tabular}
+		\caption{Del cuadro \ref{10::TablaFrecuenciasEj5} eliminamos los símbolos $g$ y $dfbac$ y en su lugar agregamos $gdfbac$ con una frecuencia de $34$.}
+		\label{10::TablaFrecuenciasEj6}
+	\end{table}		
+	Luego, creamos un árbol con raíz $gdfbac$ con hojas $g$ y $dfabc$, tal cual como se muestra en la Figura \ref{10::ArbolEj5}.
+	\begin{figure}[!h]
+		\centering
+		\begin{tikzpicture}
+		\node [state] (ac) {};
+		\node [above of = ac, yshift = -42] (:ac) {$ac$};
+		\node [below left of = ac] (a) {$a$};
+		\node [below right of = ac] (c) {$c$};
+		
+		\path (ac) edge node [above left] {$0$} (a)
+		edge node [above right] {$1$} (c);
+		
+		\node [state, above left of = ac] (bac) {};
+		\node [below left of = bac] (b) {$b$};
+		\node [above of = bac, yshift = -42, xshift = 3] (:bac) {$bac$};
+		
+		\path (bac) edge node [above right] {$1$} (ac)
+		edge node [above left] {$0$} (b);
+		
+		\node [state, above left of = bac, xshift = -15, yshift = 15] (dfbac) {};
+		\node [above of = dfbac, yshift = -42, xshift = 10] (:dfbac) {$dfbac$};
+		
+		\node [below left of = dfbac, state, xshift = -15, yshift = -15] (df) {};
+		\node [below left of = df] (d) {$d$};
+		\node [below right of = df] (f) {$f$};
+		\node [above of = df, yshift = -42] (:df) {$df$};
+		
+		\path (df) edge node [above left] {$0$} (d)
+		edge node [above right] {$1$} (f);
+		
+		\path (dfbac) edge node [above left] {$0$} (df)
+		edge node [above right] {$1$} (bac);
+		
+		\node [state, above left of = dfbac] (gdfbac) {};
+		\node [above of = gdfbac, yshift = -42] (:gdfbac) {$gdfbac$};
+		\node [below left of = gdfbac] (g) {$g$};
+		
+		\path (gdfbac) edge node [above left] {$0$} (g)
+		edge node [above right] {$1$} (dfbac);
+		\end{tikzpicture}
+		\caption{Árbol generado en la quinta iteración. Tiene raíz $gdfbac$ y hojas $g$ y $dfbac$. Esta última hoja corresponde al árbol de la Figura \ref{10::ArbolEj4}.}
+		\label{10::ArbolEj5}
+	\end{figure}
+	
+	\newpage
+	En la última iteración, vemos que el Cuadro \ref{10::TablaFrecuenciasEj6} sólo tiene dos símbolos, por lo tanto, es claro que el árbol generado por el Algoritmo de Huffman para la determinada secuencia de palabras del Cuadro \ref{10::TablaFrecuenciasEj1} es aquel que está representado en la Figura \ref{10::ArbolEj6}.
+	\begin{figure}[!h]
+		\centering
+		\begin{tikzpicture}
+		\node [state] (ac) {};
+		\node [above of = ac, yshift = -42] (:ac) {$ac$};
+		\node [below left of = ac] (a) {$a$};
+		\node [below right of = ac] (c) {$c$};
+		
+		\path (ac) edge node [above left] {$0$} (a)
+		edge node [above right] {$1$} (c);
+		
+		\node [state, above left of = ac] (bac) {};
+		\node [below left of = bac] (b) {$b$};
+		\node [above of = bac, yshift = -42, xshift = 3] (:bac) {$bac$};
+		
+		\path (bac) edge node [above right] {$1$} (ac)
+		edge node [above left] {$0$} (b);
+		
+		\node [state, above left of = bac, xshift = -15, yshift = 15] (dfbac) {};
+		\node [above of = dfbac, yshift = -42, xshift = 10] (:dfbac) {$dfbac$};
+		
+		\node [below left of = dfbac, state, xshift = -15, yshift = -15] (df) {};
+		\node [below left of = df] (d) {$d$};
+		\node [below right of = df] (f) {$f$};
+		\node [above of = df, yshift = -42] (:df) {$df$};
+		
+		\path (df) edge node [above left] {$0$} (d)
+		edge node [above right] {$1$} (f);
+		
+		\path (dfbac) edge node [above left] {$0$} (df)
+		edge node [above right] {$1$} (bac);
+		
+		\node [state, above left of = dfbac] (gdfbac) {};
+		\node [above of = gdfbac, yshift = -42, xshift = 14] (:gdfbac) {$gdfbac$};
+		\node [below left of = gdfbac] (g) {$g$};
+		
+		\path (gdfbac) edge node [above left] {$0$} (g)
+		edge node [above right] {$1$} (dfbac);
+		
+		\node [state, above left of = gdfbac] (egdfbac) {};
+		\node [below left of = egdfbac] (e) {$e$};
+		
+		\path (egdfbac) edge node [above left] {$0$} (e)
+		edge node [above right] {$1$} (gdfbac);
+		
+		\node [above of = egdfbac, yshift = -42] (:egdfbac) {$egdfbac$};
+		\node [below left of = gdfbac] (g) {$g$};
+		\end{tikzpicture}
+		\caption{Árbol generado por el Algoritmo de Huffman de la secuencia de palabras del Cuadro \ref{10::TablaFrecuenciasEj1}.}
+		\label{10::ArbolEj6}
+	\end{figure}
+	
+	\newpage
+	Finalmente, hacemos una tabla para representar la codificación de cada símbolo siguiendo el árbol de la Figura \ref{10::ArbolEj6}. El resultado se encuentra en el cuadro \ref{10::CuadroCodHuffman}.
+	\newcolumntype{M}{>{$}c<{$}}
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{M|M}
+			\text{Símbolo}&\text{Código arrojado por Huffman}\\
+			\hline
+			a&11110\\
+			b&1110\\
+			c&11111\\
+			d&1100\\
+			e&0\\
+			f&1101\\
+			g&10
+		\end{tabular}
+		\caption{Cada uno de los símbolos de la presente tabla está codificado de tal manera, que no existen ambigüedades al momento de decodificar una secuencia de símbolos. Por otro lado, todos aquellos símbolos que menos se repiten son los que requieren más bits para su representación.}
+		\label{10::CuadroCodHuffman}
+	\end{table}
+	
+\end{ejemplo}
+
+
+Llegamos a la parte entretenida: tenemos que demostrar que el algoritmo de Huffman es óptimo.
+\begin{proof}
+	Para demostrar que es óptimo:
+	\begin{itemize}
+		\item \emph{Elección Voraz:} Lo demostramos la clase pasada.
+		
+		\item \emph{Estructura inductiva:} Elegir un (sub)árbol no interfiere con los demás.
+		
+		\item \emph{Optimal Subestructure:} Recordemos que:
+		\begin{itemize}
+			\item $L$: instancia original. En otras palabras, el texto $T$ que nos entregan o la tabla de símbolos con frecuencias respectivas.
+			\item $x_a, x_b$: símbolos de frecuencia mínima, $f_a+f_b$.
+			\item $R'$: árbol óptimo para $L'$
+			\item $L'$: instancia $L\setminus \llaves{x_a, x_b}\cup \llaves{x_{ab}}$, frecuencias, \ldots
+			\item $R$: óptimo para $L$ no es peor que $R'\setminus \llaves{x_{ab}}\cup x_a\cup x_b$
+		\end{itemize}
+	\end{itemize}
+\end{proof}
+\noindent\textbf{EVQQTEAR (Ejercicio voluntario para aquellos que tengan la esperanza de aprobar el ramo):} Demostrar que los algoritmos de Kruskal, Prim y Heapsort, son óptimos.
+
+
+
+\end{document}

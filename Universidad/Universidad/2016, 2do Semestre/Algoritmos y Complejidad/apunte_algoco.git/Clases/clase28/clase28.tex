@@ -1,0 +1,285 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{red!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+\renewcommand{\lstlistingname}{Listado}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Algoritmos y Complejidad}
+\rhead{\textit{Clase \#28\quad Una pizca de probabilidad}}
+
+
+\author{Aldo Berrios Valenzuela}
+
+\title{INF221 -- Algoritmos y Complejidad\\[.4\baselineskip]
+Clase \#28\\
+Una pizca de probabilidad}
+\date{Martes 22 de noviembre de 2016}
+
+\newcommand{\esperanza}[1]{\mathbb{E}\ncorchetes{#1}}
+
+\begin{document}
+\maketitle
+\section{Definiciones Básicas}
+\begin{definition}
+	$f$ es \emph{convexa} si para todo $0\leq \alpha \leq 1$,
+	\begin{equation}
+	\alpha f\nparentesis{x} + \nparentesis{1-\alpha} f\nparentesis{y} \leq f\nparentesis{\alpha x + \nparentesis{1-\alpha} y}
+	\end{equation}
+\end{definition}
+	Monito:
+	\begin{center}
+		\comentarioc{Dibujo}
+	\end{center}
+	Por inducción, si
+	\begin{equation*}
+	\sum_i \alpha_i = 1
+	\end{equation*}
+	entonces \comentarioc{$\alpha_i$ corresponde a la frecuencia de los $x_i$}
+	\begin{equation*}
+	\sum_i \alpha_i f\nparentesis{x_i} \geq f\nparentesis{\sum_i \alpha_i x_i}
+	\end{equation*}
+	Por lo tanto:
+	\begin{equation}
+	\esperanza{f\nparentesis{X}} \geq f\nparentesis{\esperanza{X}}
+	\end{equation}
+	Cota de unión: Dos conjuntos cualquiera:
+	\begin{equation*}
+	\nabsoluto{A\cup B} \leq \nabsoluto{A} + \nabsoluto{B}
+	\end{equation*}
+	O sea:
+	\newcommand{\pr}[1]{\mathrm{Pr}\ncorchetes{#1}}
+	\begin{equation}
+	\pr{A\cup B} \leq \pr{A} + \pr{B}
+	\end{equation}
+
+\begin{teorema}
+	El valor esperado es lineal:
+	\begin{equation*}
+	\esperanza{\alpha X + \beta Y} = \alpha \esperanza{X} + \beta\, \esperanza{Y}
+	\end{equation*}
+	Donde:
+	\begin{align*}
+	\esperanza{f\nparentesis{X}} &= \sum_x f\nparentesis{x} \pr{X=x}\\
+	\mathrm{Var}\ncorchetes{X} &= \esperanza{\nparentesis{X-\esperanza{X}}^2}
+	\end{align*}
+	Ademas:
+	\begin{itemize}
+		\item $\esperanza{X}$ generalmente se anota $\mu$
+		\item $\mathrm{Var}\ncorchetes{X}$ generalmente se anota $\sigma^2$
+	\end{itemize}
+\end{teorema}
+\begin{definition}
+	$X$, $Y$  son \emph{independientes} si $\pr{X = x\wedge Y = y} = \pr{X = x}\cdot \pr{Y = y}$
+\end{definition}
+Una colección de variables es \emph{mutuamente independiente} si para todo subconjunto $S\subseteq N$:
+\begin{equation*}
+\forall S' \subseteq N, \pr{X_{i_1}=x_{i_1}\wedge \ldots \wedge X_{i_s} = _{i_s}}= \pr{X_{i_1} = x_{i_1}}\cdot \ldots \cdot \pr{X_{i_s} = x_{i_s}}
+\end{equation*}
+
+\begin{teorema}
+	Si $X_1$, $X_2$ son independientes:
+	\begin{align*}
+	\esperanza{X_1 X_2} &= \esperanza{X_1} \cdot \esperanza{X_2}\\
+	\esperanza{f\nparentesis{X_1}f\nparentesis{X_2}} &= \esperanza{f\nparentesis{X_1}}\cdot \esperanza{f\nparentesis{X_2}}
+	\end{align*}
+\end{teorema}
+
+\subsection{Cota de Markov}
+Sea $X$ una variable aleatoria discreta, no negativa, y sea $c >0$ una constante. $\mu = \esperanza{X}$.
+
+Tenemos:
+\begin{align*}
+\mu &= \esperanza{X}\\
+&= \sum_x x\pr{X = x}\\
+&= \sum_{0 \leq x < c} x \pr{X=x} + \sum_{x \geq c} x\pr{X = x}\\
+&\geq \sum_{x \geq c} x \pr{X = x}\\
+&\geq \sum_{x \geq c} c \pr{X=x}\\
+&= c \sum_{x \geq c} \pr{X=x}\\
+&= c\pr{X\geq c}\\
+\therefore \pr{X \geq c} &\leq \dfrac{\mu}{c}
+\end{align*}
+
+\subsection{Desigualdad de Chebyshev}
+Sea $X$ una variable discreta general (puede ser cualquier cosa). Interesa saber cuánto se desvía la media.
+\begin{align*}
+\pr{\nabsoluto{X-\mu} \geq a} &= \pr{\nparentesis{X-u}^2 \geq a^2}\\
+&\leq \dfrac{\esperanza{\nparentesis{X-\mu}^2}}{\alpha^2}
+\end{align*}
+Por lo tanto, con $a = c\sigma$:
+
+\begin{teorema}[Chebyshev]
+	\begin{equation}
+	\pr{\nabsoluto{X-\mu}\geq \sigma} \leq \dfrac{1}{c^2}
+	\end{equation}
+\end{teorema}
+
+\subsection{Cotas de Chernoff}
+\begin{teorema}
+	Sean $X_1, \ldots, X_n$ variables independientes, $0\leq X_i \leq 1$, y sea
+	\begin{equation*}
+	X=\sum_i X_i
+	\end{equation*}
+	y $\mu = \esperanza{X}$. Entonces para todo $c \geq 1$:
+	\begin{equation*}
+	\pr{X \geq c} \leq e^{-\beta \nparentesis{c} \mu}
+	\end{equation*}
+	donde $\beta\nparentesis{c} = c \ln\nparentesis{c} - c + 1$.
+\end{teorema}
+
+\begin{proof}
+	Para Chebyshev, cuadrados. Ahora exponenciales \ldots
+	\begin{align*}
+	\pr{X \geq c\mu} &= \pr{c^X \geq c^{c\mu}}\\
+	&\geq \dfrac{\esperanza{c^X}}{c^{c\mu}} \qquad\qquad \text{(Markov)}\\
+	&\geq \dfrac{e^{\nparentesis{c-1}\mu}}{c^{c\mu}}\qquad\qquad\text{(lema 1, luego)}\\
+	&=e^{-\beta \nparentesis{c}\mu}
+	\end{align*}
+\end{proof}
+\comentarioc{colocar un entorno para el Lema}
+
+\noindent \textbf{Lema 1.} 
+\begin{equation*}
+\esperanza{c^{X}} \leq e^{\nparentesis{c-1}\mu}
+\end{equation*}
+\begin{proof}
+	\begin{align*}
+	\esperanza{c^X} &= \esperanza{c^{X_1+\cdots + X_n}}\\
+	&= \esperanza{c^{X_1}}\cdot \ldots \cdot \esperanza{c^{X_n}} \\
+	&\leq e^{\nparentesis{c-1}\esperanza{X_1}}\cdot \ldots \cdot e^{\nparentesis{c-1}\esperanza{X_n}} \qquad\qquad\text{(lema 2)}\\
+	&=e^{\nparentesis{c-1}\nparentesis{\esperanza{X_1}+\cdots + \esperanza{X_n}}}\\
+	&= e^{\nparentesis{c-1}\esperanza{X}}
+	\end{align*}
+\end{proof}
+
+\noindent \textbf{Lema 2.}
+\begin{equation}
+E\ncorchetes{c^{X_i}} \leq e^{\nparentesis{c-1}\esperanza{X_i}}
+\end{equation}
+
+\begin{proof}
+	\begin{align*}
+	\esperanza{c^{X_i}} &= \sum_x c^x \pr{X=x}\\
+	&\leq \sum_x \nparentesis{1 + \nparentesis{c-1}x}\pr{X = x}\qquad\qquad\text{(convexidad de $c^x$)}\\
+	&= \sum_x \pr{X=x} + \nparentesis{c-1}\sum_x x \pr{X=x}\\
+	&= 1 + \nparentesis{c-1}\esperanza{X_i}\\
+	&\leq e^{\nparentesis{c-1}\esperanza{X_i}}\qquad\qquad\qquad\text{(En este paso aplicamos $1+z\leq e^z$)}
+	\end{align*}
+\end{proof}
+\comentarioc{en la parte de convexidad se tiene que $x=0$ e $y=1$ de la desigualdad (1.1)}
+\begin{center}
+	\comentarioc{Dibujo}
+\end{center}
+
+
+
+
+
+
+
+
+
+\end{document}

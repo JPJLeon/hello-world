@@ -1,0 +1,639 @@
+% sumas-directas.tex
+%
+% Copyright (c) 2009-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section{Descomposiciones}
+\label{sec:descomposiciones}
+
+  Consideremos nuevamente el grupo \(\mathtt{D}_8\),
+  que vimos en la sección~\ref{sec:aritmetica-Zm},
+  véase el cuadro~\ref{tab:D_8}.
+  \begin{table}[htbp]
+    \centering
+    \renewcommand{\tabcolsep}{2pt}
+    \begin{tabular}{>{\(}c<{\)}|*{8}{>{\(}c<{\)}}}
+      \bullet & \iota & r_1 & r_2 & r_3 & f_v & f_h & f_d & f_c \\
+      \hline
+	\rule[-0.7ex]{0pt}{3ex}%
+      \iota & \iota & r_1   & r_2   & r_3   & f_v   & f_h   & f_d   & f_c \\
+      r_1   & r_1   & r_2   & r_3   & \iota & f_v   & f_h   & f_d   & f_c \\
+      r_2   & r_2   & r_3   & \iota & r_1   & f_c   & f_d   & f_v   & f_h \\
+      r_3   & r_3   & \iota & r_1   & r_2   & f_d   & f_c   & f_h   & f_v \\
+      f_v   & f_v   & f_d   & f_h   & f_c   & \iota & r_2   & r_1   & r_3 \\
+      f_h   & f_h   & f_c   & f_v   & f_d   & r_2   & \iota & r_3   & r_1 \\
+      f_d   & f_d   & f_h   & f_c   & f_v   & r_3   & r_1   & \iota & r_2 \\
+      f_c   & f_c   & f_v   & f_d   & f_h   & r_1   & r_3   & r_2   & \iota
+    \end{tabular}
+    \caption{El grupo $\mathtt{D}_8$}
+    \label{tab:D_8}
+  \end{table}
+  Si analizamos las operaciones que lo componen,
+  vemos que las operaciones \(\{\iota, r_1, r_2, r_3\}\)
+  por sí solas también conforman un grupo
+  (corresponden a solo girar el cuadrado en el plano,
+   sin salir de él),
+  o sea forman un subgrupo de \(\mathtt{D}_8\).
+  Otros subgrupos están formados por \(\iota\) solo
+  (el grupo trivial,
+   nuevamente),
+  \(\{\iota, r_2\}\),
+  \(\{\iota, f_d\}\).
+
+% Fixme: Otros ejemplos de grupo: Z_4, Klein's 4-group,
+%	 Z*_9, Z*_{15}, S_3, A_4
+
+  Un ejemplo más simple
+  (porque es un grupo abeliano)
+  lo da \(\mathbb{Z}_{12}\) con la suma,
+  véase el cuadro~\ref{tab:Z12}.
+  En \(\mathbb{Z}_{12}\) son subgrupos
+  \(\{0\}\),
+  \(\{0, 6\}\),
+  \(\{0, 4, 8\}\),
+  \(\{0, 3, 6, 9\}\),
+  \(\{0, 2, 4, 6, 8, 10\}\)
+  y \(\{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11\}\).
+
+\subsection{Homomorfismos e isomorfismos}
+\label{sec:homomorfismos-isomorfismos}
+\index{homomorfismo}
+\index{isomorfismo}
+
+  Consideremos los grupos \(\mathbb{Z}^\times_8\) y \(\mathbb{Z}^\times_{12}\),
+  que casualmente tienen el mismo número de elementos.
+  \begin{table}[htbp]
+    \centering
+    \subfloat[\(\mathbb{Z}^\times_8\)]{
+      \renewcommand{\tabcolsep}{3pt}
+      \begin{tabular}{>{\(}r<{\)}|*{4}{>{\(}r<{\)}}}
+	\multicolumn{1}{c|}{\(\cdot\)}
+	       & \phantom{0}1
+		      & \phantom{0}3
+			    & \phantom{0}5
+				  & \phantom{0}7 \\
+	\hline
+	  \rule[-0.7ex]{0pt}{3ex}%
+	      1 &   1 &	  3 &	5 &   7	 \\
+	      3 &   3 &	  1 &	7 &   5	 \\
+	      5 &   5 &	  7 &	1 &   3	 \\
+	      7 &   7 &	  5 &	3 &   1	 \\
+      \end{tabular}
+      \label{subtab:Z8*}
+    }%
+    \hspace*{3em}%
+    \subfloat[\(\mathbb{Z}^\times_{12}\)]{
+      \renewcommand{\tabcolsep}{3pt}
+      \begin{tabular}{>{\(}r<{\)}|*{4}{>{\(}r<{\)}}}
+	\multicolumn{1}{c|}{\(\cdot\)} &
+		1 &   5 &   7 &	 11 \\
+	\hline
+	  \rule[-0.7ex]{0pt}{3ex}%
+		1 &   1 &   5 &	  7 &  11  \\
+		5 &   5 &   1 &	 11 &	7  \\
+		7 &   7 &  11 &	  1 &	5  \\
+	       11 &  11 &   7 &	  5 &	1  \\
+      \end{tabular}
+      \label{subtab:Z12*}
+    }
+    \caption{Los grupos $\mathbb{Z}^\times_8$ y $\mathbb{Z}^\times_{12}$}
+    \label{tab:Z8*+Z12*}
+  \end{table}
+  Estas tablas
+  (cuadros~\ref{subtab:Z8*} y~\ref{subtab:Z12*})
+  son diferentes,
+  pero podemos ver que tienen la misma estructura,
+  por ejemplo el mapa
+  \begin{center}
+    \begin{tabular}{>{\(}r<{\)}@{$\leftrightarrow$}>{\(}r<{\)}}
+      1 &  1 \\
+      3 &  5 \\
+      5 &  7 \\
+      7 & 11
+    \end{tabular}
+  \end{center}
+  traduce entre ellos.
+  Sin embargo,
+  hay grupos diferentes con cuatro elementos.
+  Por ejemplo,
+  tenemos \(\mathbb{Z}^\times_5\)
+  (cuadro~\ref{subtab:Z5*})
+  y \(\mathbb{Z}_4\)
+  (cuadro~\ref{subtab:Z4}).
+  \begin{table}[htbp]
+    \centering
+    \subfloat[\(\mathbb{Z}^\times_5\)]{
+      \renewcommand{\tabcolsep}{3pt}
+      \begin{tabular}{>{\(}r<{\)}|*{4}{>{\(}r<{\)}}}
+	\multicolumn{1}{c|}{\(\cdot\)} &
+		1 &   2 &   3 &	  4 \\
+	\hline
+	  \rule[-0.7ex]{0pt}{3ex}%
+	  1 &	1 &   2 &   3 &	  4 \\
+	  2 &	2 &   4 &   1 &	  3 \\
+	  3 &	3 &   1 &   4 &	  2 \\
+	  4 &	4 &   3 &   2 &	  1 \\
+      \end{tabular}
+      \label{subtab:Z5*}
+    }
+    \hspace*{3em}
+    \subfloat[\(\mathbb{Z}_4\)]{
+      \renewcommand{\tabcolsep}{3pt}
+      \begin{tabular}{>{\(}r<{\)}|*{4}{>{\(}r<{\)}}}
+	\multicolumn{1}{c|}{\(+\)} &
+		0 &   1 &   2 &	  3 \\
+	\hline
+	  \rule[-0.7ex]{0pt}{3ex}%
+	  0 &	0 &   1 &   2 &	  3 \\
+	  1 &	1 &   2 &   3 &	  0 \\
+	  2 &	2 &   3 &   0 &	  1 \\
+	  3 &	3 &   0 &   1 &	  2 \\
+      \end{tabular}
+      \label{subtab:Z4}
+    }
+    \caption{Los grupos $\mathbb{Z}^\times_5$ y $\mathbb{Z}_4$}
+    \label{tab:Z5*+Z4}
+  \end{table}
+  Nótese que entre \(\mathbb{Z}_4\) y \(\mathbb{Z}^\times_5\)
+  también podemos construir una correspondencia,
+  a pesar que la operación involucrada es diferente:
+  \begin{center}
+    \begin{tabular}{>{\(}r<{\)}@{$\leftrightarrow$}>{\(}r<{\)}}
+      0 & 1 \\
+      1 & 2 \\
+      2 & 4 \\
+      3 & 3
+    \end{tabular}
+  \end{center}
+  No hay correspondencia posible
+  entre \(\mathbb{Z}^\times_5\) y \(\mathbb{Z}^\times_8\):
+  En la diagonal
+  de la tabla para \(\mathbb{Z}^\times_5\)
+  (cuadro~\ref{subtab:Z5*})
+  aparecen dos valores diferentes,
+  mientras para \(\mathbb{Z}^\times_8\)
+  (cuadro~\ref{subtab:Z8*})
+  hay uno solo.
+
+  Esta idea de ``misma estructura'' es importante,
+  y la capturamos con lo siguiente.
+  \begin{definition}
+    \label{def:group-isomorphism}
+    Sean dos grupos \((G, 1_G, \odot)\) y \((H, 1_H, \otimes)\),
+    un \emph{homomorfismo} de \(G\) a \(H\)%
+      \index{grupo!homomorfismo|textbfhy}%
+      \index{homomorfismo}
+    es una función \(h \colon G \rightarrow H\)
+    tal que \(h(a \odot b) = h(a) \otimes h(b)\).
+    A un homomorfismo que es una biyección se le llama \emph{isomorfismo},%
+      \index{grupo!isomorfismo|textbfhy}%
+      \index{isomorfismo}
+    y se dice en tal caso que los grupos son \emph{isomorfos},
+    y se anota \(G \cong H\).
+    Un caso importante de isomorfismos son los isomorfismos
+    de \(G\) a~\(G\),
+    los \emph{automorfismos}.%
+      \index{grupo!automorfismo|textbfhy}%
+      \index{automorfismo}
+  \end{definition}
+  Las mismas ideas son aplicables a otras estructuras algebraicas,
+  como anillos,
+  si la función es homomorfismo
+  (o isomorfismo)
+  para ambas operaciones.%
+    \index{anillo!homomorfismo}%
+    \index{anillo!isomorfismo}%
+    \index{anillo!automorfismo}
+
+  Un ejemplo conocido de homomorfismo
+  es la clasificación de números en pares e impares,
+  con las correspondientes reglas de sumas y productos.
+  Un isomorfismo útil es el entre \((\mathbb{R}^+, \cdot)\)
+  y \((\mathbb{R}, +)\) dado por los logaritmos.
+
+% Fixme: Ejemplos y/o ejercicios varios de grupos, homomorfismos
+%	 (Z --> Z_n, ...), isomorfismos (R^+ --> R vía \ln, ...)
+
+  Si \(h \colon G \rightarrow H\) es un homomorfismo,
+  y \(1_G\) y \(1_H\) son los elementos neutros de \(G\) y \(H\),
+  respectivamente,
+  claramente \(h(1_G) = 1_H\),
+  y \(h(a^{-1}) = (h(a))^{-1}\).
+
+  Una manera simple de entender un isomorfismo es considerando
+  que los dos grupos ``son el mismo'',
+  solo cambiando los nombres de los elementos y la operación.
+  Es fácil demostrar que los grupos cíclicos finitos de orden \(n\)
+  son isomorfos a \(\mathbb{Z}_n\),
+  y los infinitos isomorfos a \(\mathbb{Z}\).
+
+  En \(\mathbb{Z}_p\) para \(p\) primo
+  hay automorfismos que asocian \(1\) con cada elemento no cero.
+  Esto no es más que otra forma de decir que módulo \(p\)
+  todos los elementos tienen inverso.
+
+  El isomorfismo entre grupos es una relación de equivalencia:%
+    \index{relacion de equivalencia@relación de equivalencia}
+  Es reflexiva,
+  un grupo es isomorfo a sí mismo;
+  es simétrica,
+  ya si hay una biyección como la indicada,
+  existe la función inversa que cumple las mismas condiciones;
+  y es transitiva,
+  siendo la composición de los isomorfismos el isomorfismo buscado.
+  Es por ser una equivalencia que tiene sentido considerar ``iguales''
+  estructuras algebraicas isomorfas.
+
+  Una aplicación es la \emph{prueba de los nueves},
+  popular cuando operaciones aritméticas se hacen manualmente.
+  Consiste en verificar operaciones aritméticas
+  (sumas, restas y multiplicaciones)
+  vía calcular el residuo módulo nueve de los operandos,
+  operar con los residuos,
+  y comparar con el residuo módulo nueve del resultado.
+  El punto es que
+  (por el teorema~\ref{theo:mod-rules})
+  el reducir módulo \(m\) es un homomorfismo
+  del anillo \(\mathbb{Z}\) a \(\mathbb{Z}_m\),%
+    \index{anillo!homomorfismo}
+  por lo que ambos residuos debieran coincidir.
+  Calcular el residuo módulo nueve de un número escrito en decimal
+  es simplemente sumar sus dígitos
+  hasta llegar a un resultado de un único dígito:
+  Como \(10 \equiv 1 \pmod{9}\),
+  tenemos:
+  \begin{equation*}
+    \sum_{0 \le k \le n} d_k \cdot 10^k
+      \equiv \sum_{0 \le k \le n} d_k \pmod{9}
+  \end{equation*}
+  Demostramos un resultado similar en el lema~\ref{lem:9|10^k-1}.
+
+\subsection{Sumas directas}
+\label{sec:sumas-directas}
+
+  En lo que sigue discutiremos grupos abelianos,
+  pero la operación que interesa puntualmente
+  es la multiplicación entre enteros.
+  Para evitar confusiones,
+  usaremos notación de multiplicación y potencias,
+  y no sumas como sería por convención general.
+  Por lo demás,
+  la notación como multiplicación es más compacta.
+
+  Siempre es útil tratar de descomponer estructuras complejas
+  en piezas más simples.
+  Consideremos
+  el grupo de unidades \(\mathbb{Z}^\times_8 = \{1, 3, 5, 7\}\)
+  y dos de sus subgrupos,
+  \(\{1, 3\}\) y \(\{1, 5\}\).
+  Todo elemento de \(\mathbb{Z}^\times_8\)
+  puede escribirse como un producto de un elemento de cada uno de estos:
+  \begin{alignat*}{2}
+    1 &= 1 \cdot 1 &\qquad& 5 = 1 \cdot 5 \\
+    3 &= 3 \cdot 1 &&	    7 = 3 \cdot 5
+  \end{alignat*}
+  Otro ejemplo
+  provee \(\mathbb{Z}^\times_{15} = \{1, 2, 4, 7, 8, 11, 13, 14\}\),
+  con subgrupos \(\{1, 2, 4, 8\}\) y \(\{1, 11\}\):
+  \begin{alignat*}{2}
+     1 &= 1 \cdot \phantom{0}1
+       &\qquad	8 &= 8 \cdot \phantom{0}1 \\
+     2 &= 2 \cdot \phantom{0}1
+       &       11 &= 1 \cdot 11 \\
+     4 &= 4 \cdot \phantom{0}1
+       &       13 &= 8 \cdot 11 \\
+     7 &= 2 \cdot 11
+       &       14 &= 4 \cdot 11
+  \end{alignat*}
+  Esto motiva la siguiente:
+  \begin{definition}
+    \label{def:suma-directa}
+    Sean \(A\) y \(B\) subgrupos del grupo abeliano \(G\)
+    tales que todo \(g \in G\) puede escribirse de forma única
+    como \(g = a \cdot b\),
+    con \(a \in A\) y \(b \in B\).
+    Entonces escribimos \(G = A B\)
+    y decimos que \(G\) es la \emph{suma directa} de \(A\) y \(B\).
+  \end{definition}
+  La utilidad de esta noción se debe en buena parte
+  a que si sabemos qué son \(A\) y \(B\)
+  conocemos \(A B\):
+  \begin{theorem}
+    \label{theo:suma-directa-isomorfos}
+    \index{grupo!isomorfismo}
+    Si \(G = A B\),
+    \(G' = A' B'\)
+    y \(A \cong A'\), \(B \cong B'\),
+    entonces \(G \cong G'\).
+  \end{theorem}
+  \begin{proof}
+    Supongamos que
+    \(f \colon A \rightarrow A'\) y \(h \colon B \rightarrow B'\)
+    son isomorfismos,
+    construimos un isomorfismo \(k \colon G \rightarrow G'\)
+    definiendo:
+    \begin{equation*}
+      k(g) = f(a) \cdot h(b)
+    \end{equation*}
+    donde \(a \in A\), \(b \in B\) y \(g = a \cdot b\).
+    Primeramente,
+    esta definición tiene sentido,
+    ya que para \(g \in G\) los elementos \(a\) y \(b\) son únicos,
+    con lo que \(k\) es una función.
+    Es uno a uno,
+    ya que si tomamos \(g_1 \ne g_2\),
+    al escribir \(g_1 = a_1 \cdot b_1\) y \(g_2 = a_2 \cdot b_2\),
+    necesariamente estos pares son diferentes,
+    y como \(f\) y \(h\) son uno a uno,
+    tendremos
+    \(k(g_1) = f(a_1) \cdot h(b_1) \ne f(a_2) \cdot h(b_2) = k(g_2)\).
+    Es sobre ya que si tomamos \(g' \in G'\),
+    este puede escribirse de forma única como \(g' = a' \cdot b'\),
+    y usando las inversas de \(f\) y \(h\)
+    esto lleva al elemento único
+    \(g = f^{-1}(a') \cdot h^{-1}(b') \in G\)
+    tal que \(k(g) = g'\).
+  \end{proof}
+  Este enredo oculta algo muy simple:
+  Si \(G = A B\),
+  se puede expresar \(g \in G\) mediante las ``coordenadas''
+  \((a, b)\) con \(g = a \cdot b\),
+  y considerar \(A B\) como \(A \times B\) con operación
+  \((a, b) \cdot (a', b') = (a \cdot a', b \cdot b')\).
+  En estos términos,
+  la operación en \(A B\) está completamente determinada
+  por las operaciones en \(A\) y \(B\);
+  si \(A'\) es una copia de \(A\)
+  y \(B'\) es una copia de \(B\),
+  entonces \(G' = A' B'\)
+  es simplemente una copia de \(G = A B\).
+
+  Analicemos \(\mathbb{Z}^\times_{15}\) y \(\mathbb{Z}^\times_{16}\).
+  Ya vimos que \(\mathbb{Z}^\times_{15} = \{1, 2, 4, 8\} \{1, 11\}\);
+  mientras \(\mathbb{Z}^\times_{16} = \{1, 3, 5, 7, 9, 11, 13, 15\}\),
+  con subgrupos \(\{1, 3, 9, 11\}\) y \(\{1, 7\}\),
+  y tenemos \(\mathbb{Z}^\times_{16} = \{1, 3, 9, 11\} \{1, 7\}\).
+  Pero \(\{1, 2, 4, 8\}\) y \(\{1, 3, 9, 11\}\)
+  son grupos cíclicos de orden \(4\),
+  y por tanto isomorfos a \(\mathbb{Z}_4\);
+  y por el otro lado \(\{1, 11\}\) y \(\{1, 7\}\) son cíclicos de orden 2,
+  isomorfos a \(\mathbb{Z}_2\).
+  Entonces \(\mathbb{Z}^\times_{15} \cong \mathbb{Z}^\times_{16}\).
+
+  Para cálculos concretos el siguiente teorema es útil:
+  \begin{theorem}
+    \label{theo:subgrupo-suma-directa}
+    Si \(A\) y \(B\) son subgrupos del grupo abeliano \(G\)
+    tales que \(A \cap B = \{1\}\)
+    y \(\lvert A \rvert \cdot \lvert B \rvert = \lvert G \rvert\)
+    entonces \(G = A B\).
+  \end{theorem}
+  \begin{proof}
+    Consideremos los productos \(a b\)
+    con \(a \in A\) y \(b \in B\).
+    Demostramos que son diferentes por contradicción.
+    Supongamos pares distintos \((a_1, b_1)\) y \((a_2, b_2)\)
+    tales que \(a_1 \odot b_1 = a_2 \odot b_2\).
+    Entonces \(a_1 \odot a_2^{-1} = b_1^{-1} \odot b_2\).
+    Pero \(a_1 \odot a_2^{-1} \in A\)
+    y \(b_1 \odot b_2^{-1} \in B\),
+    con lo que esto tiene que estar en la intersección entre ambos,
+    o sea \(a_1 \odot a_2^{-1} = b_1 \odot b_2^{-1} = 1\),
+    con lo que \(a_1 = a_2\) y \(b_1 = b_2\).
+
+    Con esto hay exactamente
+      \(\lvert A \rvert \cdot \lvert B \rvert = \lvert G \rvert\)
+    productos \(a \odot b\) diferentes,
+    que tienen que ser todos los elementos de \(G\).
+  \end{proof}
+  El grupo \(\mathbb{Z}^\times_{16}\) tiene \(8 = 4 \cdot 2\) elementos,
+  con lo que de los subgrupos \(\{1, 3, 9, 11\}\) y \(\{1, 7\}\)
+  tenemos \(\mathbb{Z}^\times_{16} = \{1, 3, 9, 11\} \{1, 7\}\),
+  ya que \(\{1, 3, 9, 11\} \cap \{1, 7\} = \{1\}\).
+
+  Esto puede extenderse a más de dos subgrupos.
+  Por ejemplo,
+  \(\mathbb{Z}_{30}\)
+  tiene subgrupos  \(\{0, 6, 12, 18, 24\}\) y \(\{0, 5, 10, 15, 20, 25\}\),
+  de órdenes \(5\) y \(6\),
+  con intersección \(\{0\}\).
+  Por el teorema~\ref{theo:subgrupo-suma-directa}
+  tenemos la descomposición
+  \(\mathbb{Z}_{30} = \{0, 6, 12, 18, 24\} \{0, 5, 10, 15, 20, 25\}\).
+  Por su lado,
+  \(\{0, 5, 10, 15, 20, 25\}\) tiene subgrupos
+  \(\{0, 10, 20\}\) y \(\{0, 15\}\),
+  de órdenes \(3\) y \(2\),
+  y es
+  \(\{0, 5, 10, 15, 20, 25\} = \{0, 10, 20\} \{0, 15\}\).
+  Esto sugiere extender la definición~\ref{def:suma-directa} y escribir
+  \(\mathbb{Z}_{30} = \{0, 6, 12, 18, 24\}
+       \{0, 10, 20\} \{0, 15\}\).
+  \begin{definition}
+    \label{def:suma-directa-n}
+    Sea \(G\) un grupo abeliano,
+    y sean \(A_1\), \(A_2\), \ldots, \(A_n\) subgrupos de \(G\)
+    tales que todo elemento de \(G\) puede escribirse de forma única
+    como \(a_1 \cdot a_2 \dotsm a_n\),
+    con \(a_i \in A_i\) para todo \(1 \le i \le n\).
+    Entonces \(G\) es la \emph{suma directa}
+    de los subgrupos \(A_1\), \(A_2\), \ldots, \(A_n\),
+    y anotamos \(G = A_1 A_2 \dotsb A_n\).
+  \end{definition}
+  Si \(G = A_1 A_2 \dotsb A_n\)
+  y \(g = a_1 a_2 \dotso a_n\) con \(a_i \in A_i\)
+  decimos que \(a_i\) es el \emph{componente} de \(g\) en \(A_i\).
+  Por la definición de suma directa
+  el componente de \(g\) en \(A_i\) es único.
+  Una relación útil entre el orden del elemento
+  y los órdenes de sus componentes es la siguiente:
+  \begin{theorem}
+    \label{theo:ordenes-suma-directa}
+    Si \(G = A_1 A_2 \dotsb A_n\) y \(g \in G\),
+    entonces el orden de \(g\)
+    es el mínimo común múltiplo de los órdenes de los componentes de \(g\)
+  \end{theorem}
+  \begin{proof}
+    Sea \(g = a_1 \cdot a_2 \dotsm a_n\) con \(a_i \in A_i\).
+    Para cualquier entero \(s\)
+    tendremos \(g^s = a_1^s \cdot a_2^s \dotsm a_n^s\).
+    Como \(a_i^s \in A_i\),
+    el componente en \(A_i\) de \(g^s\) es \(a_i^s\).
+    Por otro lado,
+    el componente de \(1\) en \(A_i\) es \(1\),
+    y \(g^s = 1\) solo si \(a_i^s = 1\) para todo \(1 \le i \le n\),
+    con lo que \(s\) es un múltiplo del orden de \(a_i\)
+    para cada \(1 \le i \le n\),
+    y el orden de \(g\) es el menor de todos los posibles múltiplos.
+  \end{proof}
+
+  Para ilustrar lo anterior,
+  consideremos
+  \(\mathbb{Z}^\times_{21} = \{1, 4, 16\} \{1, 8\} \{1, 13\}\).
+  Si tomamos \(11 \in \mathbb{Z}^\times_{21}\),
+  se descompone en \(11 = 4 \cdot 8 \cdot 1\).
+  Las potencias respectivas las da el cuadro~\ref{tab:potencias-Z21*},
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{>{\(}l<{\)}*{3}{@{\qquad}>{\(}l<{\)}}}
+      11		  & 4		       & 8	     & 1 \\
+      11^2 =	       16 & 4^2 =	  16   & 8^2 = 1     &	 \\
+      11^3 = \phantom{0}8 & 4^3 = \phantom{0}1 &	     &	 \\
+      11^4 = \phantom{0}4 &		       &	     &	 \\
+      11^5 = \phantom{0}2 &		       &	     &	 \\
+      11^6 = \phantom{0}1 &		       &	     &
+    \end{tabular}
+    \caption{Potencias en $\mathbb{Z}^\times_{21}$}
+    \label{tab:potencias-Z21*}
+  \end{table}
+  lo que confirma que el orden de \(11\) es \(6 = 3 \cdot 2 \cdot 1\).
+
+\subsection{Sumas directas externas}
+\label{sec:sumas-directas-externas}
+
+  Hasta acá hemos descompuesto un grupo en la suma directa de subgrupos.
+  La pregunta inversa es si
+  dados grupos \(A_1\), \(A_2\), \ldots, \(A_n\),
+  podemos construir \(G\) con subgrupos \(H_1\), \(H_2\), \ldots, \(H_n\)
+  tales que \(G = H_1 H_2 \dotsb H_n\)
+  con \(A_i \cong H_i\) para todo \(1 \le i \le n\).
+  La respuesta es afirmativa,
+  y la construcción es muy simple.
+  Vimos que si \(G = H_1 H_2 \dotsb H_n\),
+  entonces \(g \in G\)
+  puede escribirse \(g = h_1 h_2 \dotsm h_n\) en forma única,
+  con \(h_i \in H_i\).
+  Especificar \(g\) es lo mismo que especificar la tupla de coordenadas
+  \(h_i\).
+  De igual manera,
+  dado \(k \in G\)
+  podemos escribirlo \(k = k_1 k_2 \dotsm k_n\) en forma única,
+  con \(k_i \in H_i\),
+  y \(g k = h_1 h_2 \dotso h_n \cdot k_1 k_2 \dotsm k_n
+	 = (h_1 k_1) (h_2 k_2) \dotsm (h_n k_n)\),
+  donde \(h_i k_i \in H_i\) resulta ser la coordenada de \(g k\).
+  Esta situación motiva la definición siguiente:
+  \begin{definition}
+    Sean \(A_1\), \(A_2\), \ldots, \(A_n\) grupos abelianos.
+    La \emph{suma directa (externa)} de \(A_1\), \(A_2\), \ldots, \(A_n\)
+    es el conjunto de tuplas \((a_1, a_2, \dotsc, a_n)\) con \(a_i \in A_i\)
+    y operación dada por:
+    \begin{equation*}
+      (a_1, a_2, \dotsc, a_n) \cdot (b_1, b_2, \dotsc, b_n)
+	= (a_1 \cdot b_1, a_2 \cdot b_2, \dotsc, a_n \cdot b_n)
+    \end{equation*}
+    Escribiremos \(G = A_1 \times A_2 \times \dotsb \times A_n\)
+    para la suma directa externa de los grupos \(A_1\), \ldots, \(A_n\).
+  \end{definition}
+  De acá resulta:
+  \begin{theorem}
+    \label{theo:suma-directa-externa}
+    La suma directa (externa)
+    de los grupos abelianos \(A_1\), \(A_2\), \ldots, \(A_n\)
+    es un grupo abeliano,
+    \(G = H_1 H_2 \dotsb H_n\),
+    donde \(H_i\) es el conjunto de tuplas
+    de la forma \((1, \dotsc, 1, a_i, 1, \dotsc, 1)\)
+    con \(a_i \in A_i\)
+    (todas las componentes, salvo la \(i\)\nobreakdash-ésima, son 1).
+    Además,
+    \(H_i \cong A_i\) para todo \(1 \le i \le n\).
+  \end{theorem}
+  \begin{proof}
+    Demostrar que \(G\) es un grupo abeliano es automático;
+    hay que verificar
+    que la operación es cerrada (inmediato de la definición),
+    asociatividad (resulta directamente de la asociatividad en cada \(A_i\)),
+    existencia de neutro (resulta ser \((1, 1, \dotsc, 1)\)),
+    conmutatividad (directamente de cada \(A_i\))
+    e inverso
+    (el inverso de \((a_1, a_2, \dotsc, a_n)\)
+     es \((a_1^{-1}, a_2^{-1}, \dotsc, a_n^{-1})\)).
+
+    Podemos escribir un elemento \(g \in G\) como:
+    \begin{equation*}
+      (a_1, a_2, \dotsc, a_n)
+	 = (a_1, 1, \dotsc, 1) \cdot
+	   (1, a_2, \dotsc, 1) \dotsm
+	   (1, 1, \dotsc, a_n)
+    \end{equation*}
+    Acá \((1, \dotsc, 1, a_i, 1, \dotsc, 1) \in H_i\),
+    lo que puede hacerse de una única forma,
+    y los \(H_i\) son subgrupos de \(G\).
+    Resulta \(G = H_1 H_2 \dotsb H_n\),
+    y \(f_i \colon H_i \rightarrow A_i\)
+    que mapea \((1,  \dotsc, 1, a_i, 1, \dotsc, 1)\) a \(a_i\)
+    es un isomorfismo.
+  \end{proof}
+
+  La noción de sumas directas externas
+  da una notación conveniente para describir grupos abelianos.
+  Por ejemplo,
+  vimos \(\mathbb{Z}^\times_{15} = \{1, 2, 4, 8\} \{1, 11\}\);
+  pero estos dos son grupos cíclicos de orden 4 y 2, respectivamente,
+  con lo que \(\mathbb{Z}^\times_{15} \cong \mathbb{Z}_4 \times \mathbb{Z}_2\)
+  dice todo lo que hay que saber sobre \(\mathbb{Z}^\times_{15}\).
+
+\subsection{Comentarios finales}
+\label{sec:Zm-comentarios}
+
+  Temas relacionados con grupos,
+  anillos y otras estructuras algebraicas
+  profundizan bastante textos del área como Connell~%
+    \cite{connell04:_elemen_abstr_linear_algeb}
+  y Judson~%
+    \cite{judson14:_abstr_algeb}.
+
+  Lo que nosotros llamamos \(\mathbb{Z}_m\)
+  se conoce formalmente como \(\mathbb{Z} / m \mathbb{Z}\).
+  Para justificar esta notación,
+  primeramente definimos:
+  \begin{definition}
+    Sea \(G\) un grupo.
+    Un subgrupo \(N\) de \(G\)
+    se dice \emph{normal}
+    (se anota \(N \lhd G\))
+    si para todo \(n \in N\) y \(g \in G\)
+    tenemos \(g n g^{-1} \in N\).
+  \end{definition}
+  Los subgrupos de un grupo abeliano son siempre normales.
+
+  En ciertas situaciones los cosets de un subgrupo
+  se pueden dotar con una operación
+  heredada del grupo \(G\) para dar un nuevo grupo,
+  el \emph{grupo cociente} o \emph{factor}
+  \begin{equation*}
+    G / N
+      = \{g N \colon g \in G\}
+  \end{equation*}
+  con operación
+  \begin{equation*}
+    (g N) \bullet (h N)
+      = (g h) N
+  \end{equation*}
+  Esto solo funciona si \(N \lhd G\),
+  en cuyo caso el mapa \(g \mapsto g N\)
+  es un homomorfismo de \(G\) a \(G / N\).%
+    \index{grupo!homomorfismo}
+
+  Ahora bien,
+  el coset \(m \mathbb{Z}\) es un subgrupo de \(\mathbb{Z}\),
+  y es un subgrupo normal
+  ya que todos los subgrupos de un grupo abeliano son normales.
+  Vemos que \(a + m \mathbb{Z}\) es precisamente el conjunto
+  \(r + m \mathbb{Z}\), donde \(r = a \mod m\),
+  y la suma en \(\mathbb{Z} / m \mathbb{Z}\)
+  es exactamente como la describimos en~\ref{sec:aritmetica-Zm}.
+
+  Otra notación común es \(\mathbb{Z} / (m)\),
+  usando la misma idea anterior
+  pero describiendo el conjunto de los múltiplos de \(m\)
+  como el ideal generado por \(m\),
+  vale decir el conjunto \(\{ r m \colon r \in \mathbb{Z}\}\).
+  Estudiaremos este importante concepto
+  en la sección~\ref{sec:dominios-euclidianos}.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

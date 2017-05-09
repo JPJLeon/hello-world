@@ -1,0 +1,254 @@
+\documentclass[english, spanish, fleqn, 10pt]{article}
+\usepackage[top = 2.5cm, bottom = 2cm, left = 2.5cm, right = 2.5cm]{geometry}
+\usepackage[es-noindentfirst]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, environ}
+\usepackage{caption}
+\usepackage{subcaption} % para las subfigures
+\usepackage{mathrsfs}
+\usepackage[colorlinks, urlcolor=blue,
+pdfauthor={Aldo Berrios Valenzuela}]{hyperref}
+\usepackage{fourier}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\renewcommand{\familydefault}{\sfdefault}
+%\setlength{\parindent}{0pt}					%Espacio de sangria
+\setlength{\parskip}{0.5mm}						%Interlinado entre párrafos
+\usepackage{fancyhdr, blindtext}		%Paquete de encabezado
+\usepackage{listings}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{webred}{rgb}{0.75,0,0}
+\definecolor{mblue}{rgb}{0.0705,0.345,0.7529}
+\definecolor{newmblue}{HTML}{004D99}
+\usepackage{longtable, colortbl, array}
+
+\definecolor{superGreenNew}{HTML}{169F01}
+\hypersetup{
+	colorlinks   = true,
+	citecolor    = superGreenNew
+}
+
+
+%==============================
+%Modificador de Titulos de secciones, subsecciones, etc
+\usepackage[explicit, noindentafter]{titlesec}
+
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{4pt plus 2pt minus 2pt}
+
+
+%==================================
+%Diseno para insertar codigos de programacion
+\definecolor{newGray}{HTML}{F8F8F8}
+\definecolor{anotherGray}{HTML}{DDDFFF}
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	backgroundcolor=\color{newGray},
+	frame=single,
+	rulecolor=\color{anotherGray},
+	xleftmargin=\parindent,
+	language=bash,
+	showstringspaces=false,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{mblue},
+	tabsize=2,
+	literate={\ \ }{{\ }}1	
+}
+\lstset{style=customc}
+
+%==================================
+%Macros útiles
+\newcommand{\comillas}[1]{``#1''}
+\newcommand{\comentarioc}[1]{\texttt{\textcolor{webred}{/* #1 */}}}
+
+\numberwithin{equation}{section}
+
+%=================================
+%comandos matemáticos personalizados de rápido acceso
+\newcommand{\nparentesis}[1]{\left( #1 \right)}
+\newcommand{\llaves}[1]{\left \{ #1 \right \}}
+\newcommand{\nabsoluto}[1]{\left| #1 \right|}
+\newcommand{\ncorchetes}[1]{\left[ #1 \right]}
+%=================================
+
+%cambia el espaciado entre el parrafo y antes del itemize
+\setlist[itemize]{itemsep=1mm, topsep=1.5mm}
+\setlist[enumerate]{itemsep=1mm, topsep=1.5mm}
+%===========================
+
+\theoremstyle{definition}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definition}{Definición}[section]
+\newtheorem{beforeExample}{Ejemplo}[section]
+\newtheorem{preposicion}{Preposición}[section]
+\newtheorem{corolario}{Corolario}[teorema]
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+\newenvironment{ejemplo}[1][]{\begin{beforeExample}[#1]\renewcommand{\qedsymbol}{$\blacksquare$}}{\qed\end{beforeExample}}
+
+\captionsetup{justification=centering, margin=2.3cm}
+
+% Para poder hacer "quote" con estilo github
+
+\newenvironment{newquote}{\begin{mdframed}[topline=false,
+		rightline=false, bottomline=false, linewidth=.3em,backgroundcolor=black!5, linecolor=black!60]\color{black!70}}{\end{mdframed}}
+%================================
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{INF221\quad Informática Teórica}
+\rhead{\textit{Clase \#3\quad Iteración de Punto Fijo}}
+
+\author{Aldo Berrios Valenzuela}
+\title{INF221 -- Informática Teórica\\[.4\baselineskip]Clase \#3\\\textit{Iteración de Punto Fijo}}
+\date{Martes 9 de Agosto de 2016}
+
+\usepackage{tikz,ifthen}
+\usetikzlibrary{automata,positioning, babel}
+\definecolor{navyblue}{RGB}{0,148,222}
+\usetikzlibrary{fit}
+\tikzset{shorten >=1pt,node distance=3cm,on grid, >=stealth, initial text=Inicio,
+	every state/.style={ draw=navyblue!50,very thick,fill=navyblue!20, minimum size=6mm},
+	bend angle=35, every loop/.style={looseness=13}}
+\usetikzlibrary{calc}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\begin{document}
+\maketitle
+\section{Iteración de Punto Fijo}
+\begin{definition}
+	Sea $g\nparentesis{x}$ una función. Un \emph{punto fijo} de $g$ es $x^*$ tal que $x^*=g\nparentesis{x^*}$.
+\end{definition}
+
+\begin{teorema}[Punto fijo de Brouwer, 1 dimensión]
+	Sea $g:\ncorchetes{a, b}\rightarrow\ncorchetes{a, b}$ una función continua. Entonces $g$ tiene \underline{al menos} un punto fijo.
+\end{teorema}
+\begin{proof}
+	Por definición de $g$, sabemos:
+	\begin{equation*}
+	a\leq g\nparentesis{x} \leq b
+	\end{equation*}
+	En particular, $a\leq g\nparentesis{a}$ y $g\nparentesis{b}\leq b$. Si alguna vez se cumple con igualdad estamos listos.
+	
+	Supongamos entonces $a<g\nparentesis{a}$ y $g\nparentesis{b}<b$. Consideremos $f\nparentesis{x}=g\nparentesis{x}-x$. Vemos que $f$ es continua, y $f\nparentesis{a}=g\nparentesis{a}-a>0$, $f\nparentesis{b}=g\nparentesis{b}-b<0$. Por el \textit{teorema del valor medio}, hay $x^*\in\ncorchetes{a, b}$ tal que $f\nparentesis{x^*}=0\rightsquigarrow g\nparentesis{x^*}=0$.
+\end{proof}
+
+\begin{definition}
+	Sea $g:\ncorchetes{a, b}\rightarrow \ncorchetes{a, b}$. Se dice que $g$ es una \emph{contracción} si existe $L$, $0<L<1$, tal que para todo $x, y\in\ncorchetes{a, b}$ es:
+	\begin{equation}
+	\nabsoluto{g\nparentesis{x}-g\nparentesis{y}}\leq L\nabsoluto{x-y}
+	\end{equation}
+	(condición de Lipschitz, $L$ es la constante de Lipschitz)
+\end{definition}
+
+\begin{teorema}[Contraction Mapping]
+	Suponga que $g:\ncorchetes{a, b}\rightarrow \ncorchetes{a, b}$ es continua y cumple la condición de Lipschitz. Entonces tiene un único punto fijo en $\ncorchetes{a, b}$.
+\end{teorema}
+
+\begin{proof}
+	Por Brouwer, $g$ tiene al menos un punto fijo. Para demostrar que es único, supongamos puntos fijos $c_1$, $c_2$:
+	\begin{equation}
+	\nabsoluto{c_1-c_2}=\nabsoluto{g\nparentesis{c_1}-g\nparentesis{c_2}}\leq L\nabsoluto{c_1-c_2}
+	\end{equation}
+	Como $0< L < 1$, esto es posible solo si $c_1=c_2$. Esto es algo bastante obvio, ya que en el fondo tomamos un área más grande y en cada iteración la vamos reduciendo hasta tal punto que $c_1=c_2$ (Figura \ref{03::ContractionMapping})
+	\begin{figure}[!h]
+		\centering
+		\begin{tikzpicture}
+		%[smooth, tension=0.8, smooth cycle]
+		%\draw plot [smooth, tension=0.8, smooth cycle] coordinates {(0, 0) (-0, -0.4) (0.2, -.9)  (0, -1.5) (.2, -1.9) (0.8, -2.2) (1.6, -2) (2, -2.1) (2.5, -2) (2.9, -2) (3.2, -1.8) (3.2, -1) (3.3, -0.2) (3.4, 0.5) (3.1, 1.2) (3.1, 2) (2.4, 2.2) (1.6, 2.3) (1, 2.1) (.5, 1.8) (.1, 1.7) (-.3, 1.4) (-.1, .8)};
+		
+		\draw plot [smooth, tension=0.8, smooth cycle] coordinates {(0.8, -1) (1.5, -1.3) (2.1, -1.2) (2.4, -1) (2.5, -0.4) (2.4, 0.4) (2.5, 1) (2.3, 1.4) (1.6, 1.3) (1, 1) (0.6, 0.7) (0.9, 0)};
+		
+		\draw plot [smooth, tension=0.8, smooth cycle] coordinates {(0.5+4, -1) (1.5+4, -1.3) (2.1+4, -1.2) (2.4+4, -1) (2.5+4, -0.4) (2.4+4, 0.4) (2.5+4, 1) (2.3+4, 1.4) (1.6+4, 1.3) (1+4, 1) (0.6+4, 0.9) (0.6+4, 0)};
+		
+		\draw [red!90!black!90] plot [smooth, tension = 0.8, smooth cycle] coordinates {(4.7, 0) (5.0, 0.5) (5.6, 0.6) (6.1, 0.6) (6.3, -0.5) (5.9, -0.7) (5.6, -0.5) (5.2, -0.7)};
+		
+		
+		\node at (1.4, 0.5) (x1) {\color{blue}$c_1$};
+		
+		\node at (1.6, -0.9) (x2) {\color{blue}$c_2$};
+		
+		\node at (1.8+4, -0.3) (x3) {$g\nparentesis{c_2}$};
+		
+		\node at (1.3+4, .20) (x4) {$g\nparentesis{c_1}$};
+		
+		\draw [->, blue] plot [smooth, tension = 0.8] coordinates {(1.6, 0.55) (3.7, 0.7) (0.95+4, .22)} node [yshift = 20pt, xshift = -50pt] (g1) {$g$};
+		
+		\draw [->, blue] plot [smooth, tension = 0.8] coordinates {(1.8, -0.85) (4, -0.9) (1.4+4, -0.35)} node [yshift = -25pt, xshift = -60pt] (g1) {$g$};
+		
+		%\draw [blue, ->] plot [smooth, tension=0.8] coordinates {(2.1, -.3) (3.4, -0.1) (4.2, 0.2)};
+		
+		
+		
+		
+		\end{tikzpicture}
+		\caption{Al iterar el proceso iremos acotando cada vez el área hasta converger en un punto. Cabe destacar, que cada vez que hacemos este mapeo, el área se contrae un factor $L$.}
+		\label{03::ContractionMapping}
+	\end{figure}
+\end{proof}
+
+Definamos la secuencia:
+\begin{equation}
+x_{n+1}=g\nparentesis{x_n}
+\end{equation}
+Si $g$ es una \textit{contracción} en $\ncorchetes{a, b}$, la secuencia converge al punto fijo $x^*$ de $g$ en $\ncorchetes{a, b}$.
+
+De partida, si
+\begin{equation*}
+\lim_{n\rightarrow \infty}x_n=x^*
+\end{equation*}
+existe, es un punto fijo de $g$. Si $x_0\in\ncorchetes{a, b}$, consideremos:
+\begin{align*}
+	\nabsoluto{x_{n+1}-x^*}=\nabsoluto{g\nparentesis{x_n}-g\nparentesis{x^*}}&\leq L\nabsoluto{x_n-x^*}\numberthis\label{03::DesigualdadContractionInitial}\\
+	&\leq \ldots\\
+	&\leq L^{n+1}\nabsoluto{x_0-x^*}\numberthis\label{03::DesigualdadContraction}
+\end{align*}
+Como $\nabsoluto{L} < 1$, $L^n\rightarrow 0$, y el lado izquierdo también $\rightarrow 0$ (para llegar a \eqref{03::DesigualdadContraction} sólo tenemos que desarrollar paso a paso \eqref{03::DesigualdadContractionInitial}).
+
+Si queremos llegar a $\nabsoluto{x_n-x^*}\leq \epsilon$.
+
+Sabemos que $\nabsoluto{x_n-x^*}\leq L^{n}\nabsoluto{x_0-x^*}$. Queremos deshacernos del $x^*$ desconocido al lado derecho:
+\begin{align*}
+	\nabsoluto{x_0-x^*}&=\nabsoluto{\nparentesis{x_0-x_1}+\nparentesis{x_1-x^*}}\\
+	&\leq \nabsoluto{x_0-x_1}+\nabsoluto{x_1-x^*}\\
+	&\leq \nabsoluto{x_0-x_1}+L\nabsoluto{x_0-x^*}\quad \Bigg / -L\nabsoluto{x_0-x^*}\\
+	\nparentesis{1-L}\nabsoluto{x_0-x^*}&\leq \nabsoluto{x_1-x_0}\\
+	\nabsoluto{x_0-x^*}&\leq \dfrac{\nabsoluto{x_1-x_0}}{1-L}
+\end{align*}
+O sea:
+\begin{equation}
+\nabsoluto{x_n-x^*}\leq \dfrac{L^n}{1-L}\nabsoluto{x_1-x_0}
+\end{equation}
+Queremos $\nabsoluto{x_n-x^*}\leq \epsilon$:
+\begin{align*}
+\epsilon&\leq \dfrac{L^n}{1-L}\nabsoluto{x_1-x_0}\\
+L^n&\geq \dfrac{\epsilon\nparentesis{1-L}}{\nabsoluto{x_1-x_0}}\\
+n&\geq \dfrac{1}{\ln\nparentesis{L}}\cdot \ln\nparentesis{\dfrac{\epsilon\nparentesis{1-L}}{\nabsoluto{x_1-x_0}}}
+\end{align*}
+
+No hemos supuesto $g$ diferenciable, pero en casos de interés lo es.
+
+La condición de Lipschitz es:
+\begin{align*}
+	\dfrac{\nabsoluto{g\nparentesis{x}-g\nparentesis{y}}}{\nabsoluto{x-y}}&\leq L\\
+	\nabsoluto{\dfrac{g\nparentesis{x}-g\nparentesis{y}}{x-y}}&\leq L
+\end{align*}
+Por el teorema del valor intermedio\footnote{\url{https://en.wikipedia.org/wiki/Mean_value_theorem}}:
+\begin{equation}
+\dfrac{g\nparentesis{x}-g\nparentesis{y}}{x-y}=g'\nparentesis{\zeta}, \qquad x\leq \zeta \leq y
+\end{equation}
+por lo tanto, $\nabsoluto{g'\nparentesis{\zeta}}\leq L$ para $\zeta \in \ncorchetes{a, b}$ es condición suficiente para Lipschitz, se aplica el teorema de contraction mapping hay un único punto fijo en $\ncorchetes{a, b}$ y $x_{n+1}=g\nparentesis{x_n}$ converge.
+
+\paragraph{Importante:} No buscamos encontrar $\zeta$, sólo demostrar que existe. Y por favor, $\zeta$ se lee \comillas{zeta}.
+
+
+\end{document}

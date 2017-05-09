@@ -1,0 +1,116 @@
+% secuencias-restringidas.tex
+%
+% Copyright (c) 2009, 2012-2014 Horst H. von Brand
+% Derechos reservados. Vea COPYRIGHT para detalles
+
+\section{Secuencias con restricciones}
+\label{sec:secuencias-restringidas}
+\index{combinatoria!secuencias restringidas}
+
+  También interesa poder contar reordenamientos
+  en los cuales hay ciertas restricciones,
+  como elementos en posiciones fijas
+  o elementos en posiciones fijas relativas entre sí.
+
+  Seguimos con nuestro ejemplo de \(\mathtt{BOOKKEEPER}\).
+  \begin{enumerate}
+  \item
+    ¿De cuántas formas se puede escribir esta palabra
+    si las dos \(\mathtt{O}\) siempre están juntas?
+  \item
+    ¿Cuántas formas hay de ordenar las letras
+    si siempre están \(\mathtt{BPR}\) juntas en ese orden?
+  \item
+    ¿Si \(\mathtt{BPR}\) están juntas,
+    pero en cualquier orden?
+  \item
+    ¿En cuántos aparecen \(\mathtt{BPR}\) en ese orden,
+    no necesariamente juntas?
+    % Podemos elegir las posiciones de BPR en \binom{10}{3} formas
+    % (el orden está predeterminado), las demás por multinomio
+  \item
+    ¿Cuántas maneras hay de ordenar las letras
+    si las \(\mathtt{O}\) están separadas por una letra?
+  \item
+    ¿Cuántas maneras hay de ordenarlas
+    si las \(\mathtt{E}\) están separadas siempre por una letra?
+  \item
+    ¿De cuántas maneras se pueden ordenar las letras
+    si las \(5\) vocales están al principio y las \(5\) consonantes al final?
+  \item
+    ¿Y si las vocales están en las posiciones impares?
+  \item
+    ¿Que pasa si las vocales
+    ocupan las posiciones \(2\), \(3\), \(6\), \(7\), \(9\)?
+  \item
+    ¿Cuántos ordenamientos hay
+    en los cuales las vocales están todas juntas?
+  \item
+    ¿Cuántos ordenamientos con \(\mathtt{B}\) en una posición impar hay?
+  \item
+    ¿Y si solo pedimos una \(\mathtt{O}\) en una posición par?
+  \item
+    ¿Cuántos ordenamientos hay con las tres \(\mathtt{E}\)
+    en posiciones impares?
+  \item
+    ¿Cuántos órdenes tienen la \(\mathtt{B}\) separadas de la \(\mathtt{R}\)
+    por dos letras?
+  \item
+    ¿Cuántos tienen la \(\mathtt{B}\) separadas de la \(\mathtt{R}\)
+    por \(k\) letras?
+  \end{enumerate}
+
+  Otra situación,
+  que puede enfrentarse mediante nuestra estrategia general
+  de construir el objeto de interés
+  en fases independientes,%
+    \index{combinatoria!regla del producto}
+  se presenta si queremos determinar
+  el número de maneras de ordenar las letras de \(\mathtt{MISSISSIPPI}\)
+  de forma que las vocales siempre estén separadas por consonantes.
+  Vemos que hay \(4\) \(\mathtt{I}\),
+  lo que deja \(5\) espacios en los cuales distribuir las consonantes.
+  Si llamamos \(x_0\) al número de consonantes
+  antes de la primera \(\mathtt{I}\),
+  \(x_1\) a \(x_3\) al número de consonantes entre \(\mathtt{I}\)
+  y finalmente \(x_4\) al número de consonantes
+  después de la última \(\mathtt{I}\),
+  quedan la ecuación:
+  \begin{equation*}
+    x_0 + x_1 + x_2 + x_3 + x_4
+      = 7
+  \end{equation*}
+  Restricciones son que \(x_0 \ge 0\),
+  \(x_k \ge 1\) para \(1 \le k \le 3\)
+  y \(x_4 \ge 0\).
+  Si definimos nuevas variables \(y_0 = x_0\),
+  \(y_k = x_k - 1\) para \(1 \le k \le 3\)
+  e \(y_4 = x_4\),
+  queda:
+  \begin{equation*}
+    y_0 + y_1 + y_2 + y_3 + y_4
+      = 4
+  \end{equation*}
+  lo que nos lleva a contar multiconjuntos:%
+    \index{multiconjunto!numero@número}
+  El número de soluciones es el número de multiconjuntos
+  de \(5\) elementos de los que tomamos \(4\).
+  Luego ordenamos el multiconjunto de consonantes
+  \(\{\mathtt{M}, \mathtt{S}^4, \mathtt{P}^2\}\),
+  distribuyendo las consonantes según los tramos definidos anteriormente.
+  Como estas dos decisiones
+  (número de consonantes en cada tramo
+   y orden de las consonantes)
+  son independientes,
+  aplicamos la regla del producto:
+  \begin{equation*}
+    \multiset{5}{4} \cdot \binom{7}{1, 4, 2}
+      = 7\,350
+  \end{equation*}
+
+% Fixme: Anunciar PIE, etc
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "clases"
+%%% End:

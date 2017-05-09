@@ -1,0 +1,19 @@
+/* lah.bc*/
+
+/* Copyright (c) 2013 Horst H. von Brand */
+/* Bajo licencia MIT. Vea LICENSE-MIT para detalles */
+
+define lah(n, k)
+{
+	ad = an = 1;
+
+	for(i = 1; i <= n; i++)
+		an *= i;
+	for(i = 1; i <= k; i++)
+		ad *= i;
+	for(i = 1; i < k; i++) {
+		an *= n - i;
+		ad *= i;
+	}
+	return an / ad;
+}
